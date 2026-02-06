@@ -15,13 +15,13 @@ export interface Category {
 }
 
 export const menCategories: { name: string; slug: string; icon: string }[] = [
-  { name: "Clippers (Máquinas de Corte)", slug: "clippers-profesionales", icon: "✂️" },
-  { name: "Trimmers (Perfiladores)", slug: "trimmers-perfiladores", icon: "🔧" },
-  { name: "Shavers (Afeitadoras)", slug: "shavers-afeitadoras", icon: "🪒" },
-  { name: "Tijeras Profesionales", slug: "tijeras-profesionales", icon: "✂️" },
-  { name: "Peines Profesionales", slug: "peines-profesionales", icon: "🪥" },
+  { name: "Clippers (Máquinas de Corte)", slug: "clippers", icon: "✂️" },
+  { name: "Trimmers (Perfiladores)", slug: "trimmers", icon: "🔧" },
+  { name: "Shavers (Afeitadoras)", slug: "shavers", icon: "🪒" },
+  { name: "Tijeras Profesionales", slug: "tijeras", icon: "✂️" },
+  { name: "Peines Profesionales", slug: "peines", icon: "🪥" },
   { name: "Cepillos", slug: "cepillos", icon: "🖌️" },
-  { name: "Navajas y Cuchillas", slug: "navajas-cuchillas", icon: "🔪" },
+  { name: "Navajas y Cuchillas", slug: "navajas", icon: "🔪" },
   { name: "Productos para el Cabello", slug: "productos-cabello", icon: "💈" },
   { name: "Productos para la Barba", slug: "productos-barba", icon: "🧔" },
   { name: "Ceras y Pomadas", slug: "ceras-pomadas", icon: "🫙" },
