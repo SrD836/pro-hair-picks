@@ -14,7 +14,168 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      affiliate_links: {
+        Row: {
+          affiliate_url: string
+          created_at: string | null
+          id: string
+          is_primary: boolean | null
+          platform: string | null
+          product_id: string | null
+        }
+        Insert: {
+          affiliate_url: string
+          created_at?: string | null
+          id?: string
+          is_primary?: boolean | null
+          platform?: string | null
+          product_id?: string | null
+        }
+        Update: {
+          affiliate_url?: string
+          created_at?: string | null
+          id?: string
+          is_primary?: boolean | null
+          platform?: string | null
+          product_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_links_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          gender: string | null
+          id: string
+          image_url: string | null
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          gender?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          gender?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      price_update_logs: {
+        Row: {
+          error_message: string | null
+          id: string
+          new_price: number | null
+          old_price: number | null
+          product_id: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          error_message?: string | null
+          id?: string
+          new_price?: number | null
+          old_price?: number | null
+          product_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          error_message?: string | null
+          id?: string
+          new_price?: number | null
+          old_price?: number | null
+          product_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "price_update_logs_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          amazon_asin: string | null
+          brand: string | null
+          category_id: string | null
+          classification: string | null
+          created_at: string | null
+          current_price: number | null
+          discount_percentage: number | null
+          features: Json | null
+          id: string
+          image_url: string | null
+          last_price_update: string | null
+          name: string
+          original_price: number | null
+          position: number | null
+        }
+        Insert: {
+          amazon_asin?: string | null
+          brand?: string | null
+          category_id?: string | null
+          classification?: string | null
+          created_at?: string | null
+          current_price?: number | null
+          discount_percentage?: number | null
+          features?: Json | null
+          id?: string
+          image_url?: string | null
+          last_price_update?: string | null
+          name: string
+          original_price?: number | null
+          position?: number | null
+        }
+        Update: {
+          amazon_asin?: string | null
+          brand?: string | null
+          category_id?: string | null
+          classification?: string | null
+          created_at?: string | null
+          current_price?: number | null
+          discount_percentage?: number | null
+          features?: Json | null
+          id?: string
+          image_url?: string | null
+          last_price_update?: string | null
+          name?: string
+          original_price?: number | null
+          position?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
