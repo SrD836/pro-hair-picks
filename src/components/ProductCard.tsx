@@ -1,6 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { SupabaseProduct } from "@/hooks/useCategory";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   product: SupabaseProduct;
@@ -9,18 +10,9 @@ interface ProductCardProps {
 }
 
 const classificationConfig: Record<string, { label: string; className: string }> = {
-  TOP: {
-    label: "TOP",
-    className: "bg-badge-top text-badge-top-foreground",
-  },
-  "CALIDAD-PRECIO": {
-    label: "CALIDAD-PRECIO",
-    className: "bg-badge-calidad text-badge-calidad-foreground",
-  },
-  COMIENZO: {
-    label: "COMIENZO",
-    className: "bg-badge-comienzo text-badge-comienzo-foreground",
-  },
+  TOP: { label: "TOP", className: "bg-badge-top text-badge-top-foreground" },
+  "CALIDAD-PRECIO": { label: "CALIDAD-PRECIO", className: "bg-badge-calidad text-badge-calidad-foreground" },
+  COMIENZO: { label: "COMIENZO", className: "bg-badge-comienzo text-badge-comienzo-foreground" },
 };
 
 const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
@@ -36,12 +28,12 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.4 }}
       className={`relative bg-card rounded-xl border transition-all duration-200 hover:shadow-card-hover ${
-        isFirst ? "border-secondary/50 shadow-md" : "border-border shadow-card"
+        isFirst ? "border-secondary/50 shadow-md ring-1 ring-secondary/20" : "border-border shadow-card"
       }`}
     >
       {/* Rank badge */}
       <div
-        className={`absolute -top-3 -left-2 w-10 h-10 rounded-lg flex items-center justify-center font-display font-bold text-sm z-10 ${
+        className={`absolute -top-3 -left-2 w-11 h-11 rounded-lg flex items-center justify-center font-display font-bold text-sm z-10 shadow-md ${
           isFirst
             ? "bg-secondary text-secondary-foreground"
             : "bg-primary text-primary-foreground"
@@ -51,62 +43,74 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
       </div>
 
       {isFirst && (
-        <div className="absolute top-0 right-0 bg-secondary text-secondary-foreground text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-xl">
+        <div className="absolute top-0 right-0 bg-secondary text-secondary-foreground text-xs font-bold px-3 py-1.5 rounded-bl-lg rounded-tr-xl shadow-sm">
           🏆 MEJOR OPCIÓN
         </div>
       )}
 
-      <div className="p-5 pt-6 flex flex-col sm:flex-row gap-5">
-        {/* Image */}
-        <div className="w-full sm:w-40 h-40 bg-muted rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
+      <div className="p-5 pt-7 flex flex-col sm:flex-row gap-5">
+        {/* Image area */}
+        <div className="w-full sm:w-44 h-44 bg-muted/50 rounded-lg flex items-center justify-center shrink-0 overflow-hidden border border-border/50">
           {product.image_url ? (
-            <img src={product.image_url} alt={product.name} className="w-full h-full object-contain" />
+            <img
+              src={product.image_url}
+              alt={product.name}
+              className="w-full h-full object-contain p-2"
+              loading="lazy"
+            />
           ) : (
-            <span className="text-5xl opacity-30">📷</span>
+            <div className="text-center text-muted-foreground">
+              <span className="text-5xl block mb-1 opacity-30">📷</span>
+              <span className="text-xs">300×300</span>
+            </div>
           )}
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 flex flex-col">
+          {/* Badges row */}
           <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${badge.className}`}>
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${badge.className}`}>
               {badge.label}
             </span>
             {product.brand && (
-              <span className="text-xs text-muted-foreground font-medium uppercase">
+              <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wide border border-border rounded-full px-2.5 py-0.5">
                 {product.brand}
               </span>
             )}
             {hasDiscount && (
-              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-destructive/10 text-destructive">
-                -{product.discount_percentage}%
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-destructive text-destructive-foreground">
+                -{product.discount_percentage}% descuento
               </span>
             )}
           </div>
 
+          {/* Product name */}
           <h3 className="font-display text-lg font-bold text-foreground mb-3 leading-tight">
             {product.name}
           </h3>
 
+          {/* Features checklist */}
           {features.length > 0 && (
             <ul className="space-y-1.5 mb-4">
-              {features.map((f, i) => (
+              {features.slice(0, 4).map((f, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="text-secondary mt-0.5 shrink-0">✓</span>
+                  <span className="text-secondary mt-0.5 shrink-0 font-bold">✓</span>
                   {f}
                 </li>
               ))}
             </ul>
           )}
 
-          {/* Price + CTA */}
-          <div className="flex flex-wrap items-center gap-3 mt-auto">
-            {product.current_price && (
+          {/* Price + Actions */}
+          <div className="flex flex-wrap items-center gap-4 mt-auto pt-2 border-t border-border/50">
+            {/* Price block */}
+            {product.current_price != null && (
               <div className="flex items-baseline gap-2">
-                <span className="text-xl font-bold text-foreground">
+                <span className="text-2xl font-bold text-foreground">
                   {product.current_price.toFixed(2)}€
                 </span>
-                {product.original_price && product.original_price > product.current_price && (
+                {product.original_price != null && product.original_price > product.current_price && (
                   <span className="text-sm text-muted-foreground line-through">
                     {product.original_price.toFixed(2)}€
                   </span>
@@ -114,15 +118,27 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
               </div>
             )}
 
-            <a
-              href={affiliateUrl || "#"}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary text-secondary-foreground font-semibold text-sm rounded-lg hover:opacity-90 transition-opacity"
-            >
-              Ver precio en Amazon
-              <ExternalLink className="w-4 h-4" />
-            </a>
+            {/* Buttons */}
+            <div className="flex items-center gap-3 ml-auto">
+              <a
+                href={affiliateUrl || "#"}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary text-secondary-foreground font-bold text-sm rounded-lg hover:opacity-90 transition-opacity shadow-sm"
+              >
+                Ver precio
+                <ExternalLink className="w-4 h-4" />
+              </a>
+              <button className="text-sm text-primary font-semibold hover:underline whitespace-nowrap">
+                Leer opiniones →
+              </button>
+            </div>
+          </div>
+
+          {/* Amazon logo text */}
+          <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
+            <span className="font-semibold">amazon.es</span>
+            <span>· Precio verificado</span>
           </div>
         </div>
       </div>
