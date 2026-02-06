@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
+import SimilarProductsSidebar from "@/components/SimilarProductsSidebar";
 import { useCategory, useCategoryProducts } from "@/hooks/useCategory";
 import { useAffiliateLinks } from "@/hooks/useAffiliateLinks";
 import { menCategories, womenCategories } from "@/data/categories";
@@ -12,8 +13,6 @@ const CategoryRanking = () => {
   const { data: affiliateLinks = [] } = useAffiliateLinks(products.map((p) => p.id));
 
   const isLoading = catLoading || prodLoading;
-
-  // Fallback to static categories for sidebar
   const staticCategories = gender === "mujer" ? womenCategories : menCategories;
 
   const today = new Date().toLocaleDateString("es-ES", {
@@ -24,13 +23,16 @@ const CategoryRanking = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
+      <div className="container mx-auto px-4 py-12">
         <div className="animate-pulse space-y-4 max-w-4xl">
-          <div className="h-8 bg-muted rounded w-2/3" />
-          <div className="h-4 bg-muted rounded w-1/3" />
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-48 bg-muted rounded-xl" />
-          ))}
+          <div className="h-6 bg-muted rounded w-1/3" />
+          <div className="h-10 bg-muted rounded w-2/3" />
+          <div className="h-4 bg-muted rounded w-1/4" />
+          <div className="mt-8 space-y-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-52 bg-muted rounded-xl" />
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -39,13 +41,16 @@ const CategoryRanking = () => {
   if (!category) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="font-display text-3xl font-bold text-foreground mb-4">Categoría no encontrada</h1>
-        <Link to="/" className="text-primary hover:underline">Volver al inicio</Link>
+        <h1 className="font-display text-3xl font-bold text-foreground mb-4">
+          Categoría no encontrada
+        </h1>
+        <Link to="/" className="text-primary hover:underline">
+          Volver al inicio
+        </Link>
       </div>
     );
   }
 
-  // Map affiliate links by product_id
   const linksByProduct = affiliateLinks.reduce<Record<string, string>>((acc, link) => {
     if (link.product_id && link.is_primary) acc[link.product_id] = link.affiliate_url;
     return acc;
@@ -55,7 +60,9 @@ const CategoryRanking = () => {
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
-        <Link to="/" className="hover:text-foreground transition-colors">Inicio</Link>
+        <Link to="/" className="hover:text-foreground transition-colors">
+          Inicio
+        </Link>
         <ChevronRight className="w-3 h-3" />
         <span className="capitalize">{gender}</span>
         <ChevronRight className="w-3 h-3" />
@@ -64,30 +71,58 @@ const CategoryRanking = () => {
 
       {/* Header */}
       <header className="mb-10">
-        <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+        <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground leading-tight">
           10 Mejores {category.name} en España
         </h1>
         {category.description && (
           <p className="text-muted-foreground mt-2 max-w-2xl">{category.description}</p>
         )}
-        <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-muted-foreground">
-          <span>📅 Actualizado: {today}</span>
+        <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            📅 Actualizado: <strong className="text-foreground">{today}</strong>
+          </span>
           <span>✅ Precios verificados diariamente</span>
           <span>🏷️ {products.length} productos analizados</span>
         </div>
       </header>
 
-      {/* Products list */}
+      {/* Main content with sidebar */}
       {products.length > 0 ? (
-        <div className="space-y-6 max-w-4xl">
-          {products.map((product, i) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={i}
-              affiliateUrl={linksByProduct[product.id]}
-            />
-          ))}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Product list */}
+          <div className="flex-1 space-y-6 max-w-4xl">
+            {products.map((product, i) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={i}
+                affiliateUrl={linksByProduct[product.id]}
+              />
+            ))}
+          </div>
+
+          {/* Sidebar */}
+          <div className="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 lg:self-start space-y-6">
+            <SimilarProductsSidebar products={products} currentIndex={0} />
+
+            {/* Quick nav */}
+            <div className="bg-card rounded-xl border border-border p-5">
+              <h3 className="font-display text-base font-bold text-foreground mb-3">
+                Ir al producto
+              </h3>
+              <div className="space-y-1">
+                {products.map((p) => (
+                  <div
+                    key={p.id}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer py-1"
+                  >
+                    <span className="font-bold text-primary">#{p.position}</span>{" "}
+                    <span className="truncate">{p.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="bg-card rounded-xl border border-border p-12 text-center max-w-2xl">
