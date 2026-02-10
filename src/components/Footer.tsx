@@ -18,28 +18,25 @@ const Footer = () => (
         <div>
           <h4 className="font-display font-semibold text-foreground mb-3">Hombre</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/hombre/clippers-profesionales" className="hover:text-foreground transition-colors">Clippers</Link></li>
-            <li><Link to="/hombre/trimmers-perfiladores" className="hover:text-foreground transition-colors">Trimmers</Link></li>
+            <li><Link to="/hombre/clippers" className="hover:text-foreground transition-colors">Clippers</Link></li>
+            <li><Link to="/hombre/trimmers" className="hover:text-foreground transition-colors">Trimmers</Link></li>
             <li><Link to="/hombre/tijeras-profesionales" className="hover:text-foreground transition-colors">Tijeras</Link></li>
             <li><Link to="/hombre/productos-barba" className="hover:text-foreground transition-colors">Barba</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="font-display font-semibold text-foreground mb-3">Mujer</h4>
+          <h4 className="font-display font-semibold text-foreground mb-3">Empresa</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/mujer/secadores-profesionales" className="hover:text-foreground transition-colors">Secadores</Link></li>
-            <li><Link to="/mujer/planchas-pelo" className="hover:text-foreground transition-colors">Planchas</Link></li>
-            <li><Link to="/mujer/tintes-coloracion" className="hover:text-foreground transition-colors">Tintes</Link></li>
-            <li><Link to="/mujer/extensiones" className="hover:text-foreground transition-colors">Extensiones</Link></li>
+            <li><Link to="/sobre-nosotros" className="hover:text-foreground transition-colors">Sobre Nosotros</Link></li>
+            <li><Link to="/contacto" className="hover:text-foreground transition-colors">Contacto</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="font-display font-semibold text-foreground mb-3">Legal</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><a href="#" className="hover:text-foreground transition-colors">Aviso Legal</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Política de Privacidad</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Cookies</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Afiliación Amazon</a></li>
+            <li><Link to="/politica-privacidad" className="hover:text-foreground transition-colors">Política de Privacidad</Link></li>
+            <li><Link to="/politica-cookies" className="hover:text-foreground transition-colors">Política de Cookies</Link></li>
+            <li><Link to="/terminos" className="hover:text-foreground transition-colors">Términos y Condiciones</Link></li>
           </ul>
         </div>
       </div>
