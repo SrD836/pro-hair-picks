@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Sparkles } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import SimilarProductsSidebar from "@/components/SimilarProductsSidebar";
+import { ROICalculator } from "@/components/ROICalculator";
+import { ProductQuiz } from "@/components/ProductQuiz";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { useCategory, useCategoryProducts } from "@/hooks/useCategory";
 import { useAffiliateLinks } from "@/hooks/useAffiliateLinks";
 import { menCategories, womenCategories } from "@/data/categories";
@@ -73,12 +77,30 @@ const CategoryRanking = () => {
 
       {/* Header */}
       <header className="mb-10">
-        <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground leading-tight">
-          10 Mejores {category.name} en España
-        </h1>
-        {category.description && (
-          <p className="text-muted-foreground mt-2 max-w-2xl">{category.description}</p>
-        )}
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground leading-tight">
+              10 Mejores {category.name} en España
+            </h1>
+            {category.description && (
+              <p className="text-muted-foreground mt-2 max-w-2xl">{category.description}</p>
+            )}
+          </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2 shrink-0">
+                <Sparkles className="w-4 h-4 text-secondary" />
+                ¿Ayuda para elegir?
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="font-display">Encuentra tu producto ideal</DialogTitle>
+              </DialogHeader>
+              <ProductQuiz category={category.name} />
+            </DialogContent>
+          </Dialog>
+        </div>
         <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
             📅 Actualizado: <strong className="text-foreground">{today}</strong>
@@ -129,6 +151,14 @@ const CategoryRanking = () => {
                       <div className="bg-card rounded-xl border border-border p-12 text-center">
                         <p className="text-muted-foreground">No hay productos en esta clasificación todavía.</p>
                       </div>
+                    )}
+
+                    {/* ROI Calculator after product list */}
+                    {filtered.length > 0 && filtered[0].current_price && (
+                      <ROICalculator
+                        productPrice={Number(filtered[0].current_price)}
+                        productName={filtered[0].name}
+                      />
                     )}
                   </div>
 

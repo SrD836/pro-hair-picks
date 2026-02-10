@@ -120,7 +120,13 @@ export type Database = {
       products: {
         Row: {
           amazon_asin: string | null
+          amazon_price: number | null
+          amazon_rating: number | null
+          amazon_reviews: number | null
+          amazon_title: string | null
+          amazon_url: string | null
           brand: string | null
+          category: string | null
           category_id: string | null
           classification: string | null
           created_at: string | null
@@ -129,14 +135,23 @@ export type Database = {
           features: Json | null
           id: string
           image_url: string | null
+          last_checked: string | null
           last_price_update: string | null
+          match_confidence: number | null
           name: string
           original_price: number | null
           position: number | null
+          price_range: string | null
         }
         Insert: {
           amazon_asin?: string | null
+          amazon_price?: number | null
+          amazon_rating?: number | null
+          amazon_reviews?: number | null
+          amazon_title?: string | null
+          amazon_url?: string | null
           brand?: string | null
+          category?: string | null
           category_id?: string | null
           classification?: string | null
           created_at?: string | null
@@ -145,14 +160,23 @@ export type Database = {
           features?: Json | null
           id?: string
           image_url?: string | null
+          last_checked?: string | null
           last_price_update?: string | null
+          match_confidence?: number | null
           name: string
           original_price?: number | null
           position?: number | null
+          price_range?: string | null
         }
         Update: {
           amazon_asin?: string | null
+          amazon_price?: number | null
+          amazon_rating?: number | null
+          amazon_reviews?: number | null
+          amazon_title?: string | null
+          amazon_url?: string | null
           brand?: string | null
+          category?: string | null
           category_id?: string | null
           classification?: string | null
           created_at?: string | null
@@ -161,10 +185,13 @@ export type Database = {
           features?: Json | null
           id?: string
           image_url?: string | null
+          last_checked?: string | null
           last_price_update?: string | null
+          match_confidence?: number | null
           name?: string
           original_price?: number | null
           position?: number | null
+          price_range?: string | null
         }
         Relationships: [
           {
@@ -176,12 +203,57 @@ export type Database = {
           },
         ]
       }
+      quiz_responses: {
+        Row: {
+          answers: Json
+          category: string
+          created_at: string | null
+          id: string
+          recommended_products: string[]
+          session_id: string
+        }
+        Insert: {
+          answers: Json
+          category: string
+          created_at?: string | null
+          id?: string
+          recommended_products: string[]
+          session_id: string
+        }
+        Update: {
+          answers?: Json
+          category?: string
+          created_at?: string | null
+          id?: string
+          recommended_products?: string[]
+          session_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      match_products_by_quiz: {
+        Args: {
+          p_budget: string
+          p_category: string
+          p_experience: string
+          p_limit?: number
+          p_usage: string
+        }
+        Returns: {
+          affiliate_link: string
+          brand: string
+          id: string
+          image_url: string
+          match_score: number
+          name: string
+          price: number
+          rating: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
