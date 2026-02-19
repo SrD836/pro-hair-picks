@@ -1,10 +1,14 @@
 import Hero from "@/components/Hero";
-import CategoryGrid from "@/components/CategoryGrid";
+import FeaturedCategories from "@/components/FeaturedCategories";
+import ProBarberTools from "@/components/ProBarberTools";
+import CizuraBanner from "@/components/CizuraBanner";
 
 const Index = () => (
   <>
     <Hero />
-    <CategoryGrid />
+    <FeaturedCategories />
+    <ProBarberTools />
+    <CizuraBanner />
   </>
 );
 

@@ -1,69 +1,68 @@
-import { Search } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const Hero = () => {
-  const [query, setQuery] = useState("");
-  const navigate = useNavigate();
+const BarberPattern = () => (
+  <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="barber-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+        {/* Scissors */}
+        <g transform="translate(20, 20) rotate(30)" fill="currentColor">
+          <ellipse cx="-6" cy="0" rx="8" ry="3" />
+          <ellipse cx="6" cy="0" rx="8" ry="3" />
+          <circle cx="0" cy="0" r="2" />
+        </g>
+        {/* Razor blade */}
+        <g transform="translate(60, 55) rotate(-15)" fill="currentColor">
+          <rect x="-10" y="-2" width="20" height="4" rx="1" />
+          <rect x="-12" y="-4" width="4" height="8" rx="1" />
+        </g>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#barber-pattern)" />
+  </svg>
+);
 
-  return (
-    <section className="relative overflow-hidden" style={{ background: "var(--gradient-hero)" }}>
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMC41IiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjZykiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiLz48L3N2Zz4=')] opacity-50" />
-      
-      <div className="container mx-auto px-4 py-20 md:py-28 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center"
-        >
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 leading-tight">
-            Encuentra los Mejores Productos Profesionales para{" "}
-            <span className="text-secondary">Peluquería</span>
-          </h1>
-          <p className="text-primary-foreground/80 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
-            Rankings actualizados, comparativas detalladas y los mejores precios verificados diariamente en Amazon y AliExpress.
-          </p>
+const Hero = () => (
+  <section className="relative overflow-hidden" style={{ background: "var(--gradient-hero)" }}>
+    <BarberPattern />
 
-          {/* Search bar */}
-          <div className="relative max-w-xl mx-auto">
-            <div className="flex bg-card rounded-xl shadow-hero overflow-hidden">
-              <div className="flex-1 flex items-center px-5">
-                <Search className="w-5 h-5 text-muted-foreground shrink-0" />
-                <input
-                  type="text"
-                  placeholder="Buscar productos, marcas o categorías..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="w-full px-3 py-4 bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-base"
-                />
-              </div>
-              <button className="px-6 py-4 bg-secondary text-secondary-foreground font-semibold hover:opacity-90 transition-opacity text-sm">
-                Buscar
-              </button>
-            </div>
-          </div>
+    <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-3xl mx-auto text-center"
+      >
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-secondary/30 bg-secondary/10 mb-8">
+          <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+          <span className="text-secondary text-sm font-medium">Rankings actualizados diariamente</span>
+        </div>
 
-          {/* Trust signals */}
-          <div className="flex flex-wrap justify-center gap-6 mt-8 text-primary-foreground/70 text-sm">
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-secondary" />
-              +2.000 productos analizados
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-secondary" />
-              Precios actualizados diariamente
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-secondary" />
-              49 categorías profesionales
-            </span>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+        <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 leading-tight">
+          El catálogo profesional que tu{" "}
+          <span className="text-secondary">barbería</span> necesita
+        </h1>
+
+        <p className="text-primary-foreground/70 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+          Rankings honestos, precios reales, herramientas que funcionan.
+        </p>
+
+        <div className="flex flex-wrap justify-center gap-8 text-primary-foreground/60 text-sm">
+          <span className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+            +2.000 productos
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+            49 categorías
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+            Precios verificados
+          </span>
+        </div>
+      </motion.div>
+    </div>
+  </section>
+);
 
 export default Hero;
