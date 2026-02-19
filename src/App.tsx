@@ -9,8 +9,8 @@ import Footer from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import Index from "./pages/Index";
-import CategoryRanking from "./pages/CategoryRanking";
-import ClippersRanking from "./pages/ClippersRanking";
+import CategoryProductsPage from "./pages/CategoryProductsPage";
+import GenderRedirect from "./pages/GenderRedirect";
 import NotFound from "./pages/NotFound";
 
 // Lazy load non-critical pages
@@ -31,8 +31,8 @@ function AppContent() {
         <Suspense fallback={<div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Cargando...</div>}>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/categorias/clippers" element={<ClippersRanking />} />
-            <Route path="/:gender/:slug" element={<CategoryRanking />} />
+            <Route path="/categorias/:categoria" element={<CategoryProductsPage />} />
+            <Route path="/:gender/:slug" element={<GenderRedirect />} />
             <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
             <Route path="/politica-cookies" element={<PoliticaCookies />} />
             <Route path="/terminos" element={<Terminos />} />
