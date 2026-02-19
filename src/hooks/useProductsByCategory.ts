@@ -20,14 +20,28 @@ export interface Product {
 const TIER_ORDER: Record<string, number> = { ELITE: 0, VALUE: 1, STARTER: 2 };
 
 export const useProductsByCategory = (category: string) => {
-  return useQuery({
+  return useQuery<Product[], Error>({
     queryKey: ["products", category],
     queryFn: async () => {
+      console.log("[useProductsByCategory] Querying category:", category);
+
       const { data, error } = await supabase
         .from("products")
         .select("*")
         .eq("category", category);
-      if (error) throw error;
+
+      console.log("[useProductsByCategory] Result:", { data, error, count: data?.length });
+
+      if (error) {
+        console.error("[useProductsByCategory] Supabase error:", error);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        console.warn("[useProductsByCategory] No products found for category:", category);
+        return [];
+      }
+
       return (data as unknown as Product[]).sort(
         (a, b) => (TIER_ORDER[a.price_range] ?? 99) - (TIER_ORDER[b.price_range] ?? 99)
       );
