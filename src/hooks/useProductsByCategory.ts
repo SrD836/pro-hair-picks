@@ -28,7 +28,7 @@ export const useProductsByCategory = (category: string) => {
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("category", category);
+        .ilike("category", category);
 
       console.log("[useProductsByCategory] Result:", { data, error, count: data?.length });
 
