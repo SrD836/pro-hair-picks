@@ -19,6 +19,7 @@ const PoliticaCookies = lazy(() => import("./pages/PoliticaCookies"));
 const Terminos = lazy(() => import("./pages/Terminos"));
 const SobreNosotros = lazy(() => import("./pages/SobreNosotros"));
 const Contacto = lazy(() => import("./pages/Contacto"));
+const GestionarMiLocal = lazy(() => import("./pages/GestionarMiLocal"));
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/categorias/:categoria" element={<CategoryProductsPage />} />
+            <Route path="/gestionar-mi-local" element={<GestionarMiLocal />} />
             <Route path="/:gender/:slug" element={<GenderRedirect />} />
             <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
             <Route path="/politica-cookies" element={<PoliticaCookies />} />

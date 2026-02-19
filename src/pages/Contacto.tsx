@@ -67,7 +67,7 @@ const Contacto = () => {
         <div className="md:col-span-2">
           {sent ? (
             <Card className="p-8 text-center border-border">
-              <CheckCircle className="w-12 h-12 text-primary mx-auto mb-4" />
+              <CheckCircle className="w-12 h-12 text-secondary mx-auto mb-4" />
               <h2 className="font-display text-xl font-bold text-foreground mb-2">¡Mensaje enviado!</h2>
               <p className="text-muted-foreground">Gracias por contactarnos. Te responderemos en un plazo de 24-48 horas.</p>
               <Button onClick={() => { setSent(false); setName(""); setEmail(""); setMessage(""); }} variant="outline" className="mt-6">
@@ -100,9 +100,9 @@ const Contacto = () => {
 
         <div className="space-y-4">
           <Card className="p-5 border-border">
-            <Mail className="w-6 h-6 text-primary mb-2" />
+            <Mail className="w-6 h-6 text-secondary mb-2" />
             <h3 className="font-bold text-foreground text-sm">Email directo</h3>
-            <a href="mailto:contacto@probarber.es" className="text-primary text-sm hover:underline">contacto@probarber.es</a>
+            <a href="mailto:contacto@guiadelsalon.es" className="text-secondary text-sm hover:underline">contacto@guiadelsalon.es</a>
           </Card>
           <Card className="p-5 border-border">
             <p className="text-sm text-muted-foreground">⏱️ Tiempo de respuesta habitual: <strong className="text-foreground">24-48 horas</strong></p>

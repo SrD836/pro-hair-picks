@@ -16,7 +16,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-2">
             <span className="text-2xl">💈</span>
             <span className="font-display text-xl font-bold text-foreground">
-              ProBarber<span className="text-primary">.es</span>
+              GuiaDelSalon<span className="text-secondary">.es</span>
             </span>
           </Link>
 
@@ -43,8 +43,8 @@ const Navbar = () => {
               onToggle={() => setOpenDropdown(openDropdown === "mixto" ? null : "mixto")}
               onClose={() => setOpenDropdown(null)}
             />
-            <Link to="/" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Blog
+            <Link to="/gestionar-mi-local" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Gestionar mi local
             </Link>
           </div>
 
@@ -76,6 +76,9 @@ const Navbar = () => {
               <MobileGroupedSection label="Hombre" groups={menGroups} onClose={() => setMobileOpen(false)} />
               <MobileGroupedSection label="Mujer" groups={womenGroups} onClose={() => setMobileOpen(false)} />
               <MobileFlatSection label="Mixto" items={mixedCategories} onClose={() => setMobileOpen(false)} />
+              <Link to="/gestionar-mi-local" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-foreground">
+                Gestionar mi local
+              </Link>
             </div>
           </motion.div>
         )}
@@ -239,7 +242,7 @@ function MobileGroupedSection({
         </div>
       )}
       {allItems.length > 6 && (
-        <button onClick={() => setExpanded(!expanded)} className="mt-1 text-sm text-primary font-medium">
+        <button onClick={() => setExpanded(!expanded)} className="mt-1 text-sm text-secondary font-medium">
           {expanded ? "Ver menos" : `Ver las ${allItems.length} categorías`}
         </button>
       )}

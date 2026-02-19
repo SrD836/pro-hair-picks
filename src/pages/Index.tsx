@@ -1,14 +1,14 @@
 import Hero from "@/components/Hero";
 import FeaturedCategories from "@/components/FeaturedCategories";
-import ProBarberTools from "@/components/ProBarberTools";
-import CizuraBanner from "@/components/CizuraBanner";
+import PhotoSections from "@/components/PhotoSections";
+import SalonTools from "@/components/SalonTools";
 
 const Index = () => (
   <>
     <Hero />
+    <PhotoSections />
     <FeaturedCategories />
-    <ProBarberTools />
-    <CizuraBanner />
+    <SalonTools />
   </>
 );
 

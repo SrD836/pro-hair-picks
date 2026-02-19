@@ -1,68 +1,91 @@
 import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
-const BarberPattern = () => (
-  <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <pattern id="barber-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-        {/* Scissors */}
-        <g transform="translate(20, 20) rotate(30)" fill="currentColor">
-          <ellipse cx="-6" cy="0" rx="8" ry="3" />
-          <ellipse cx="6" cy="0" rx="8" ry="3" />
-          <circle cx="0" cy="0" r="2" />
-        </g>
-        {/* Razor blade */}
-        <g transform="translate(60, 55) rotate(-15)" fill="currentColor">
-          <rect x="-10" y="-2" width="20" height="4" rx="1" />
-          <rect x="-12" y="-4" width="4" height="8" rx="1" />
-        </g>
-      </pattern>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#barber-pattern)" />
-  </svg>
-);
+function useCountUp(target: number, duration = 2000) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
 
-const Hero = () => (
-  <section className="relative overflow-hidden" style={{ background: "var(--gradient-hero)" }}>
-    <BarberPattern />
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const start = performance.now();
+          const step = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            setCount(Math.floor(progress * target));
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration]);
 
-    <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="max-w-3xl mx-auto text-center"
-      >
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-secondary/30 bg-secondary/10 mb-8">
-          <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-          <span className="text-secondary text-sm font-medium">Rankings actualizados diariamente</span>
-        </div>
+  return { count, ref };
+}
 
-        <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 leading-tight">
-          El catálogo profesional que tu{" "}
-          <span className="text-secondary">barbería</span> necesita
-        </h1>
+const Hero = () => {
+  const c1 = useCountUp(431);
+  const c2 = useCountUp(47);
 
-        <p className="text-primary-foreground/70 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
-          Rankings honestos, precios reales, herramientas que funcionan.
-        </p>
+  return (
+    <section className="relative overflow-hidden min-h-[70vh] flex items-center">
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/hero-barbershop.jpg')" }}
+      />
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80" />
 
-        <div className="flex flex-wrap justify-center gap-8 text-primary-foreground/60 text-sm">
-          <span className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
-            +2.000 productos
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
-            49 categorías
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
-            Precios verificados
-          </span>
-        </div>
-      </motion.div>
-    </div>
-  </section>
-);
+      <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="max-w-3xl mx-auto text-center"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-secondary/40 bg-secondary/10 mb-8 backdrop-blur-sm">
+            <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+            <span className="text-secondary text-sm font-medium">Rankings actualizados diariamente</span>
+          </div>
+
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            El catálogo profesional que tu{" "}
+            <span className="shimmer-gold">barbería</span> necesita
+          </h1>
+
+          <p className="text-white/70 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
+            Rankings honestos, precios reales, herramientas que funcionan.
+          </p>
+
+          {/* Animated counters */}
+          <div className="flex flex-wrap justify-center gap-8 text-white/80 text-sm">
+            <div ref={c1.ref} className="flex items-center gap-2">
+              <span className="font-display text-2xl font-bold text-secondary">{c1.count}</span>
+              <span>productos analizados</span>
+            </div>
+            <div className="w-px h-8 bg-white/20" />
+            <div ref={c2.ref} className="flex items-center gap-2">
+              <span className="font-display text-2xl font-bold text-secondary">{c2.count}</span>
+              <span>categorías</span>
+            </div>
+            <div className="w-px h-8 bg-white/20" />
+            <div className="flex items-center gap-2">
+              <span className="font-display text-2xl font-bold text-secondary">✓</span>
+              <span>Precios actualizados hoy</span>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
 export default Hero;
