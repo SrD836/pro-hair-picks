@@ -10,6 +10,7 @@ import { CookieBanner } from "@/components/CookieBanner";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import Index from "./pages/Index";
 import CategoryRanking from "./pages/CategoryRanking";
+import ClippersRanking from "./pages/ClippersRanking";
 import NotFound from "./pages/NotFound";
 
 // Lazy load non-critical pages
@@ -30,6 +31,7 @@ function AppContent() {
         <Suspense fallback={<div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Cargando...</div>}>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/categorias/clippers" element={<ClippersRanking />} />
             <Route path="/:gender/:slug" element={<CategoryRanking />} />
             <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
             <Route path="/politica-cookies" element={<PoliticaCookies />} />

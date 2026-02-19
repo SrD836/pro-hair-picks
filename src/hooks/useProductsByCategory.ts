@@ -12,33 +12,26 @@ export interface Product {
   current_price: number;
   amazon_reviews: number;
   amazon_rating: number;
-  features: { spec1?: string; spec2?: string; spec3?: string };
+  features: Record<string, string>;
+  image_url?: string;
+  position?: number;
 }
 
-const PRICE_RANGE_ORDER: Record<string, number> = {
-  ELITE: 0,
-  VALUE: 1,
-  STARTER: 2,
-};
+const TIER_ORDER: Record<string, number> = { ELITE: 0, VALUE: 1, STARTER: 2 };
 
-export function useProductsByCategory(categoria: string) {
-  return useQuery<Product[]>({
-    queryKey: ["products-by-category", categoria],
+export const useProductsByCategory = (category: string) => {
+  return useQuery({
+    queryKey: ["products", category],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("id, category, price_range, name, brand, amazon_asin, amazon_url, current_price, amazon_reviews, amazon_rating, features")
-        .eq("category", categoria);
-
+        .select("*")
+        .eq("category", category);
       if (error) throw error;
-
-      return (data ?? [])
-        .sort(
-          (a, b) =>
-            (PRICE_RANGE_ORDER[a.price_range ?? ""] ?? 99) -
-            (PRICE_RANGE_ORDER[b.price_range ?? ""] ?? 99)
-        ) as Product[];
+      return (data as unknown as Product[]).sort(
+        (a, b) => (TIER_ORDER[a.price_range] ?? 99) - (TIER_ORDER[b.price_range] ?? 99)
+      );
     },
-    enabled: !!categoria,
+    enabled: !!category,
   });
-}
+};
