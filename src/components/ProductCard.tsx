@@ -59,10 +59,7 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
               loading="lazy"
             />
           ) : (
-            <div className="text-center text-muted-foreground">
-              <span className="text-5xl block mb-1 opacity-30">📷</span>
-              <span className="text-xs">300×300</span>
-            </div>
+            <span className="text-5xl opacity-20">✂️</span>
           )}
         </div>
 
