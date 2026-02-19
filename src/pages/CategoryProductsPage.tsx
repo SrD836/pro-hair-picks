@@ -1,18 +1,20 @@
 import { Link, useParams } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { useProductsByCategory } from "@/hooks/useProductsByCategory";
+import { getCategoryNameBySlug } from "@/data/categories";
 import ClipperProductCard from "@/components/ClipperProductCard";
 import CizuraBanner from "@/components/CizuraBanner";
 
 const CategoryProductsPage = () => {
   const { categoria } = useParams<{ categoria: string }>();
-  const categoryName = categoria || "";
+  const slug = categoria || "";
+
+  // Resolve slug → exact DB category name, fallback to slug itself
+  const categoryName = getCategoryNameBySlug(slug) || slug;
   const { data: products = [], isLoading } = useProductsByCategory(categoryName);
 
   const today = new Date().toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
-
-  // Format display name: "clippers" → "Clippers"
-  const displayName = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
+  const displayName = categoryName;
 
   if (isLoading) {
     return (
