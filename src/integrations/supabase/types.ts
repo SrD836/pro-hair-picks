@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      actual_expenses: {
+        Row: {
+          actual_amount: number | null
+          actual_hours: number | null
+          campaign_id: string | null
+          category: string
+          date: string | null
+          description: string | null
+          id: string
+        }
+        Insert: {
+          actual_amount?: number | null
+          actual_hours?: number | null
+          campaign_id?: string | null
+          category: string
+          date?: string | null
+          description?: string | null
+          id?: string
+        }
+        Update: {
+          actual_amount?: number | null
+          actual_hours?: number | null
+          campaign_id?: string | null
+          category?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "actual_expenses_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       affiliate_links: {
         Row: {
           affiliate_url: string
@@ -48,6 +86,65 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      budget_estimates: {
+        Row: {
+          campaign_id: string | null
+          category: string
+          estimated_amount: number | null
+          estimated_hours: number | null
+          id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          category: string
+          estimated_amount?: number | null
+          estimated_hours?: number | null
+          id?: string
+        }
+        Update: {
+          campaign_id?: string | null
+          category?: string
+          estimated_amount?: number | null
+          estimated_hours?: number | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budget_estimates_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          client_name: string | null
+          end_date: string | null
+          id: string
+          name: string
+          start_date: string | null
+          status: string | null
+        }
+        Insert: {
+          client_name?: string | null
+          end_date?: string | null
+          id?: string
+          name: string
+          start_date?: string | null
+          status?: string | null
+        }
+        Update: {
+          client_name?: string | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          start_date?: string | null
+          status?: string | null
+        }
+        Relationships: []
       }
       categories: {
         Row: {
