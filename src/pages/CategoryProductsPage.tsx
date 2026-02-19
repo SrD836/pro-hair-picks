@@ -3,7 +3,6 @@ import { ChevronRight } from "lucide-react";
 import { useProductsByCategory } from "@/hooks/useProductsByCategory";
 import { getCategoryNameBySlug } from "@/data/categories";
 import ClipperProductCard from "@/components/ClipperProductCard";
-import CizuraBanner from "@/components/CizuraBanner";
 
 const CategoryProductsPage = () => {
   const { categoria } = useParams<{ categoria: string }>();
@@ -55,10 +54,7 @@ const CategoryProductsPage = () => {
       <div className="max-w-4xl space-y-6">
         {products.length > 0 ? (
           products.map((product, i) => (
-            <div key={product.id}>
-              <ClipperProductCard product={product} index={i} />
-              {i === 1 && <div className="mt-6"><CizuraBanner /></div>}
-            </div>
+            <ClipperProductCard key={product.id} product={product} index={i} />
           ))
         ) : (
           <div className="bg-card rounded-xl border border-border p-12 text-center">
