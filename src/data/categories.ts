@@ -1,92 +1,140 @@
-export interface Product {
-  rank: number;
-  name: string;
-  classification: "top" | "calidad-precio" | "comienzo";
-  features?: string[];
-  imageUrl?: string;
-}
-
-export interface Category {
-  name: string;
-  slug: string;
-  gender: "hombre" | "mujer";
+export interface CategoryItem {
+  name: string;       // Exact DB category name
+  slug: string;       // URL-friendly slug
   icon: string;
-  products: Product[];
 }
 
-export const menCategories: { name: string; slug: string; icon: string }[] = [
-  { name: "Clippers (Máquinas de Corte)", slug: "clippers", icon: "✂️" },
-  { name: "Trimmers (Perfiladores)", slug: "trimmers", icon: "🔧" },
-  { name: "Shavers (Afeitadoras)", slug: "shavers", icon: "🪒" },
-  { name: "Tijeras Profesionales", slug: "tijeras", icon: "✂️" },
-  { name: "Peines Profesionales", slug: "peines", icon: "🪥" },
-  { name: "Cepillos", slug: "cepillos", icon: "🖌️" },
-  { name: "Navajas y Cuchillas", slug: "navajas", icon: "🔪" },
-  { name: "Productos para el Cabello", slug: "productos-cabello", icon: "💈" },
-  { name: "Productos para la Barba", slug: "productos-barba", icon: "🧔" },
-  { name: "Ceras y Pomadas", slug: "ceras-pomadas", icon: "🫙" },
-  { name: "After Shave y Bálsamos", slug: "after-shave-balsamos", icon: "🧴" },
-  { name: "Sillones de Barbero", slug: "sillones-barbero", icon: "💺" },
-  { name: "Lavacabezas", slug: "lavacabezas", icon: "🚿" },
-  { name: "Postes de Barbero", slug: "postes-barbero", icon: "🏪" },
-  { name: "Tocadores y Espejos LED", slug: "tocadores-espejos-led", icon: "🪞" },
-  { name: "Sillas de Espera", slug: "sillas-espera", icon: "🪑" },
-  { name: "Esterilizadores", slug: "esterilizadores", icon: "🧫" },
-  { name: "Mantenimiento de Máquinas", slug: "mantenimiento-maquinas", icon: "🛠️" },
-  { name: "Desechables", slug: "desechables", icon: "🗑️" },
-  { name: "Calentadores de Toallas", slug: "calentadores-toallas", icon: "🔥" },
-  { name: "Vaporizadores Faciales", slug: "vaporizadores-faciales", icon: "💨" },
-  { name: "Calentadores de Cera", slug: "calentadores-cera", icon: "🕯️" },
-  { name: "Talqueras y Brochas", slug: "talqueras-brochas", icon: "🖌️" },
-  { name: "Pulverizadores de Agua", slug: "pulverizadores-agua", icon: "💧" },
-  { name: "Alfombras Antifatiga", slug: "alfombras-antifatiga", icon: "🧱" },
-  { name: "Organizadores de Estación", slug: "organizadores-estacion", icon: "📦" },
-  { name: "Mochilas y Maletines", slug: "mochilas-maletines", icon: "🎒" },
-  { name: "Capas y Delantales", slug: "capas-delantales", icon: "👔" },
-  { name: "Aros de Luz y Trípodes", slug: "aros-luz-tripodes", icon: "💡" },
+export interface CategoryGroup {
+  section: string;
+  items: CategoryItem[];
+}
+
+// Helper to generate slug from category name
+function toSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")  // remove accents
+    .replace(/[()]/g, "")       // remove parentheses
+    .replace(/\s+/g, "-")       // spaces → hyphens
+    .replace(/-+/g, "-")        // collapse multiple hyphens
+    .replace(/^-|-$/g, "");     // trim hyphens
+}
+
+// ── HOMBRE ──────────────────────────────────────────
+export const menGroups: CategoryGroup[] = [
+  {
+    section: "Hardware Core",
+    items: [
+      { name: "Clippers", slug: "clippers", icon: "✂️" },
+      { name: "Trimmers", slug: "trimmers", icon: "🔧" },
+      { name: "Cortapelos Nariz/Orejas", slug: "cortapelos-nariz-orejas", icon: "👃" },
+      { name: "Shavers (afeitadoras)", slug: "shavers-afeitadoras", icon: "🪒" },
+      { name: "Navajas y cuchillas", slug: "navajas-y-cuchillas", icon: "🔪" },
+    ],
+  },
+  {
+    section: "Styling",
+    items: [
+      { name: "Ceras y pomadas", slug: "ceras-y-pomadas", icon: "🫙" },
+      { name: "Productos para la barba", slug: "productos-para-la-barba", icon: "🧔" },
+      { name: "Aceites y Serums Barba", slug: "aceites-y-serums-barba", icon: "🧴" },
+      { name: "Kits de Fade/Degradado", slug: "kits-de-fade-degradado", icon: "💈" },
+      { name: "Afther shave y bálsamos", slug: "afther-shave-y-balsamos", icon: "🧊" },
+    ],
+  },
+  {
+    section: "Mobiliario",
+    items: [
+      { name: "Sillones de barbero hidráulico", slug: "sillones-de-barbero-hidraulico", icon: "💺" },
+      { name: "Lavacabezas (portátiles y fijos)", slug: "lavacabezas-portatiles-y-fijos", icon: "🚿" },
+      { name: "Tocadores y espejos con LED", slug: "tocadores-y-espejos-con-led", icon: "🪞" },
+      { name: "Sillas de espera", slug: "sillas-de-espera", icon: "🪑" },
+    ],
+  },
+  {
+    section: "Equipamiento",
+    items: [
+      { name: "Esterilizadores y desinfección", slug: "esterilizadores-y-desinfeccion", icon: "🧫" },
+      { name: "Mantenimiento de máquinas", slug: "mantenimiento-de-maquinas", icon: "🛠️" },
+      { name: "Desechables", slug: "desechables", icon: "🗑️" },
+      { name: "Calentadores de toallas", slug: "calentadores-de-toallas", icon: "🔥" },
+      { name: "Talqueras y brochas quita pelos", slug: "talqueras-y-brochas-quita-pelos", icon: "🖌️" },
+      { name: "Pulverizadores de agua", slug: "pulverizadores-de-agua", icon: "💧" },
+      { name: "Organizadores de estación", slug: "organizadores-de-estacion", icon: "📦" },
+    ],
+  },
 ];
 
-export const womenCategories: { name: string; slug: string; icon: string }[] = [
-  { name: "Secadores Profesionales", slug: "secadores-profesionales", icon: "💨" },
-  { name: "Planchas de Pelo", slug: "planchas-pelo", icon: "🔥" },
-  { name: "Herramientas Ondas y Rizos", slug: "herramientas-ondas-rizos", icon: "🌀" },
-  { name: "Cepillos Eléctricos", slug: "cepillos-electricos", icon: "🖌️" },
-  { name: "Tintes y Coloración", slug: "tintes-coloracion", icon: "🎨" },
-  { name: "Decoloración", slug: "decoloracion", icon: "⭐" },
-  { name: "Champús Técnicos", slug: "champus-tecnicos", icon: "🧴" },
-  { name: "Tratamientos Capilares", slug: "tratamientos-capilares", icon: "💆" },
-  { name: "Alisados Profesionales", slug: "alisados-profesionales", icon: "✨" },
-  { name: "Tijeras de Peluquería", slug: "tijeras-peluqueria", icon: "✂️" },
-  { name: "Cepillos Térmicos", slug: "cepillos-termicos", icon: "🌡️" },
-  { name: "Productos Styling", slug: "productos-styling", icon: "💅" },
-  { name: "Extensiones", slug: "extensiones", icon: "💇" },
-  { name: "Sillones de Tocador", slug: "sillones-tocador", icon: "💺" },
-  { name: "Lavacabezas Profesionales", slug: "lavacabezas-profesionales", icon: "🚿" },
-  { name: "Toallas Profesionales", slug: "toallas-profesionales", icon: "🛁" },
-  { name: "Capas de Tinte", slug: "capas-tinte", icon: "👔" },
-  { name: "Guantes Profesionales", slug: "guantes-profesionales", icon: "🧤" },
-  { name: "Maniquíes de Práctica", slug: "maniquies-practica", icon: "👩" },
-  { name: "Espejos de Mano", slug: "espejos-mano", icon: "🪞" },
+// ── MUJER ──────────────────────────────────────────
+export const womenGroups: CategoryGroup[] = [
+  {
+    section: "Herramientas Térmicas",
+    items: [
+      { name: "Secadores profesionales", slug: "secadores-profesionales", icon: "💨" },
+      { name: "Planchas de pelo", slug: "planchas-de-pelo", icon: "🔥" },
+      { name: "Herramientas ondas y rizos", slug: "herramientas-ondas-y-rizos", icon: "🌀" },
+      { name: "Cepillos eléctricos", slug: "cepillos-electricos", icon: "🖌️" },
+      { name: "Rizadores Automáticos", slug: "rizadores-automaticos", icon: "💫" },
+    ],
+  },
+  {
+    section: "Color",
+    items: [
+      { name: "Tintes", slug: "tintes", icon: "🎨" },
+      { name: "Decoloración", slug: "decoloracion", icon: "⭐" },
+      { name: "Baños de color", slug: "banos-de-color", icon: "🌈" },
+    ],
+  },
+  {
+    section: "Tratamiento",
+    items: [
+      { name: "Champús técnicos", slug: "champus-tecnicos", icon: "🧴" },
+      { name: "Tratamientos capilares profundos", slug: "tratamientos-capilares-profundos", icon: "💆" },
+      { name: "Alisados profesionales", slug: "alisados-profesionales", icon: "✨" },
+      { name: "Protectores térmicos", slug: "protectores-termicos", icon: "🛡️" },
+    ],
+  },
+  {
+    section: "Corte/Styling",
+    items: [
+      { name: "Tijeras profesionales", slug: "tijeras-profesionales", icon: "✂️" },
+      { name: "Cepillos térmicos", slug: "cepillos-termicos", icon: "🌡️" },
+      { name: "Cepillos Desenredantes", slug: "cepillos-desenredantes", icon: "🪮" },
+      { name: "Lacas", slug: "lacas", icon: "💅" },
+      { name: "Espuma", slug: "espuma", icon: "🫧" },
+    ],
+  },
+  {
+    section: "Técnico",
+    items: [
+      { name: "Extensiones", slug: "extensiones", icon: "💇" },
+      { name: "Medidores de humedad capilar", slug: "medidores-de-humedad-capilar", icon: "📊" },
+    ],
+  },
 ];
 
-// Sample products for Clippers category
-export const clippersProducts: Product[] = [
-  // TOP
-  { rank: 1, name: "StyleCraft Instinct Metal Edition", classification: "top", features: ["Motor de 11.500 RPM", "Cuchilla DLC de titanio", "Batería de litio 4h", "Diseño ergonómico premium"] },
-  { rank: 2, name: "JRL Onyx 2020C", classification: "top", features: ["Motor Cool Blade Technology", "Pantalla LCD", "Batería 4.5h", "Cuerpo de fibra de carbono"] },
-  { rank: 3, name: "BaBylissPRO GoldFX Boost+", classification: "top", features: ["Motor Ferrari de alto rendimiento", "Cuchilla DLC 2.0", "Batería dual de litio", "Acabado dorado premium"] },
-  { rank: 4, name: "Wahl Hi-Viz", classification: "top", features: ["Motor profesional potente", "Cuchillas de precisión autoafilables", "Diseño de alta visibilidad", "Incluye 6 peines guía"] },
-  { rank: 5, name: "Lim Hair Devourer 15k", classification: "top", features: ["Motor 15.000 RPM", "Cuchilla cerámica japonesa", "Batería 5h autonomía", "Ultra silenciosa"] },
-  // CALIDAD-PRECIO
-  { rank: 6, name: "Wahl Magic Clip Cordless (Ed. Burdeos)", classification: "calidad-precio", features: ["Cuchillas Stagger-Tooth", "90 min autonomía", "Ideal para degradados", "Marca de confianza"] },
-  { rank: 7, name: "Gamma+ Boosted", classification: "calidad-precio", features: ["Motor magnético Modena", "Cuchilla DLC estacionaria", "Ligera y potente", "Gran relación calidad-precio"] },
-  { rank: 8, name: "Kiepe Diavel", classification: "calidad-precio", features: ["Fabricación italiana", "Motor lineal potente", "Cuchilla de acero", "Diseño compacto"] },
-  // COMIENZO
-  { rank: 9, name: "Kemei 1986", classification: "comienzo", features: ["Precio imbatible", "Cable e inalámbrica", "Pantalla LCD", "Ideal para principiantes"] },
-  { rank: 10, name: "Madeshow M10", classification: "comienzo", features: ["Motor silencioso", "Cuchilla de cerámica", "Ligera y compacta", "Batería recargable USB"] },
+// ── MIXTO ──────────────────────────────────────────
+export const mixedCategories: CategoryItem[] = [
+  { name: "Capas y delantales", slug: "capas-y-delantales", icon: "👔" },
+  { name: "Vaporizadores faciales", slug: "vaporizadores-faciales", icon: "💨" },
+  { name: "Calentadores de cera", slug: "calentadores-de-cera", icon: "🕯️" },
+  { name: "Sillones de tocador", slug: "sillones-de-tocador", icon: "💺" },
+  { name: "Maniquíes de práctica", slug: "maniquies-de-practica", icon: "👩" },
+  { name: "Productos para el cabello", slug: "productos-para-el-cabello", icon: "💈" },
 ];
 
-export function getCategoryBySlug(gender: "hombre" | "mujer", slug: string) {
-  const categories = gender === "hombre" ? menCategories : womenCategories;
-  return categories.find(c => c.slug === slug);
+// ── Flat lists for backwards compat ─────────────────
+export const menCategories = menGroups.flatMap((g) => g.items);
+export const womenCategories = womenGroups.flatMap((g) => g.items);
+export const allCategories = [...menCategories, ...womenCategories, ...mixedCategories];
+
+// ── Slug → DB name map ──────────────────────────────
+const _slugToName: Record<string, string> = {};
+for (const cat of allCategories) {
+  _slugToName[cat.slug] = cat.name;
+}
+export const slugToName = _slugToName;
+
+export function getCategoryNameBySlug(slug: string): string | undefined {
+  return slugToName[slug];
 }
