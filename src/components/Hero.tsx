@@ -51,6 +51,16 @@ const Hero = () => {
           transition={{ duration: 0.7 }}
           className="max-w-3xl mx-auto text-center"
         >
+          {/* Logo en el hero */}
+          <div className="flex justify-center mb-8">
+            <img
+              src="/logo-full.png"
+              alt="Guía del Salón"
+              className="h-40 w-auto md:h-56"
+              style={{ filter: "invert(1) brightness(1.8)" }}
+            />
+          </div>
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 mb-8 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
             <span className="text-white/80 text-sm font-medium">Seleccionado por profesionales</span>

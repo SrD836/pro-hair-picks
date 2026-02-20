@@ -13,8 +13,13 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="Guia del Salon" className="h-10 w-auto" />
+          <Link to="/" className="flex items-center">
+            <img
+              src="/logo-compact.png"
+              alt="Guía del Salón"
+              className="h-12 w-auto"
+              style={{ filter: "invert(1) brightness(2)" }}
+            />
           </Link>
 
           {/* Desktop Nav */}

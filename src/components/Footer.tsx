@@ -3,11 +3,20 @@ import { Link } from "react-router-dom";
 const Footer = () => (
   <footer className="bg-card border-t border-border mt-20">
     <div className="container mx-auto px-4 py-12">
+      {/* Logo centrado en la cabecera del footer */}
+      <div className="flex justify-center mb-10">
+        <Link to="/">
+          <img
+            src="/logo-full.png"
+            alt="Guía del Salón"
+            className="h-24 w-auto"
+            style={{ filter: "invert(1) brightness(1.5)" }}
+          />
+        </Link>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
         <div className="col-span-2 md:col-span-1">
-          <Link to="/" className="flex items-center gap-2 mb-4">
-            <img src="/logo.png" alt="Guia del Salon" className="h-12 w-auto opacity-80" />
-          </Link>
           <p className="text-sm text-muted-foreground">
             Seleccionado por profesionales. Probado en salones reales.
           </p>
