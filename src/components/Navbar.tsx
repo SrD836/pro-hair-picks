@@ -17,8 +17,7 @@ const Navbar = () => {
             <img
               src="/logo-compact.png"
               alt="Guía del Salón"
-              className="h-12 w-auto"
-              style={{ filter: "invert(1) brightness(2)" }}
+              className="h-10 w-auto"
             />
           </Link>
 

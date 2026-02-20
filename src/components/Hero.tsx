@@ -52,12 +52,11 @@ const Hero = () => {
           className="max-w-3xl mx-auto text-center"
         >
           {/* Logo en el hero */}
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center mb-6">
             <img
               src="/logo-full.png"
               alt="Guía del Salón"
-              className="h-40 w-auto md:h-56"
-              style={{ filter: "invert(1) brightness(1.8)" }}
+              className="h-40 w-auto md:h-52 drop-shadow-2xl"
             />
           </div>
 
