@@ -4,13 +4,12 @@ const Footer = () => (
   <footer className="bg-card border-t border-border mt-20">
     <div className="container mx-auto px-4 py-12">
       {/* Logo centrado en la cabecera del footer */}
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center mb-8 pt-10">
         <Link to="/">
           <img
             src="/logo-full.png"
             alt="Guía del Salón"
-            className="h-24 w-auto"
-            style={{ filter: "invert(1) brightness(1.5)" }}
+            className="h-20 w-auto opacity-90"
           />
         </Link>
       </div>
