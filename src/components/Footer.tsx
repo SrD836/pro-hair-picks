@@ -6,10 +6,7 @@ const Footer = () => (
       <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
         <div className="col-span-2 md:col-span-1">
           <Link to="/" className="flex items-center gap-2 mb-4">
-            <span className="text-2xl">💈</span>
-            <span className="font-display text-lg font-bold text-foreground">
-              GuiaDelSalon<span className="text-secondary">.com</span>
-            </span>
+            <img src="/logo.png" alt="Guia del Salon" className="h-12 w-auto opacity-80" />
           </Link>
           <p className="text-sm text-muted-foreground">
             Seleccionado por profesionales. Probado en salones reales.
