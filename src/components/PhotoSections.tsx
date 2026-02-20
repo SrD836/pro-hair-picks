@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { Scissors, Sparkles, Users } from "lucide-react";
 
 function useFadeIn() {
   const ref = useRef<HTMLDivElement>(null);
@@ -11,7 +11,7 @@ function useFadeIn() {
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -20,73 +20,129 @@ function useFadeIn() {
   return { ref, visible };
 }
 
+function useCountUp(target: number, duration = 1500) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const start = performance.now();
+          const step = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            setCount(Math.floor(progress * target));
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration]);
+
+  return { count, ref };
+}
+
 const sections = [
   {
     title: "Barbería & Hombre",
-    description: "Clippers, trimmers, navajas y todo el equipamiento que necesitas",
+    subtitle: "Desde el fade perfecto hasta el afeitado clásico",
     image: "/images/section-barber.jpg",
     link: "/categorias/clippers",
-    linkText: "Ver productos de hombre",
+    linkText: "Explorar productos de hombre",
+    icon: Scissors,
+    categoryCount: 22,
   },
   {
     title: "Peluquería & Mujer",
-    description: "Secadores, planchas, tintes y tratamientos profesionales",
+    subtitle: "Herramientas que los profesionales eligen cada día",
     image: "/images/section-salon.jpg",
     link: "/categorias/secadores-profesionales",
-    linkText: "Ver productos de mujer",
+    linkText: "Explorar productos de mujer",
+    icon: Sparkles,
+    categoryCount: 16,
   },
   {
     title: "Salón Mixto",
-    description: "Capas, maniquíes y productos comunes para todo tipo de salón",
+    subtitle: "Equipamiento para salones que lo quieren todo",
     image: "/images/section-mixto.jpg",
     link: "/categorias/capas-y-delantales",
-    linkText: "Ver productos mixtos",
+    linkText: "Explorar productos mixtos",
+    icon: Users,
+    categoryCount: 6,
   },
 ];
 
 const PhotoSections = () => (
-  <section className="container mx-auto px-4 py-16 md:py-20 space-y-8">
-    {sections.map((s, i) => {
-      const isReversed = i % 2 === 1;
-      return <PhotoCard key={s.title} section={s} reversed={isReversed} index={i} />;
-    })}
+  <section className="py-16 md:py-24 space-y-0">
+    {sections.map((s, i) => (
+      <PhotoCard key={s.title} section={s} index={i} />
+    ))}
   </section>
 );
 
-function PhotoCard({ section, reversed, index }: { section: typeof sections[0]; reversed: boolean; index: number }) {
+function PhotoCard({ section, index }: { section: typeof sections[0]; index: number }) {
   const fade = useFadeIn();
+  const counter = useCountUp(section.categoryCount);
+  const Icon = section.icon;
 
   return (
     <div
       ref={fade.ref}
-      className={`flex flex-col ${reversed ? "md:flex-row-reverse" : "md:flex-row"} gap-6 items-stretch transition-all duration-700 ${fade.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+      className="relative overflow-hidden min-h-[50vh] md:min-h-[60vh] flex items-center"
     >
-      {/* Image */}
-      <Link
-        to={section.link}
-        className="relative overflow-hidden rounded-2xl md:w-1/2 aspect-[4/3] group"
-      >
-        <img
-          src={section.image}
-          alt={section.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <h3 className="font-display text-2xl font-bold text-white">{section.title}</h3>
-        </div>
-      </Link>
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url('${section.image}')` }}
+      />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
 
-      {/* Text */}
-      <div className="md:w-1/2 flex flex-col justify-center p-4 md:p-8">
-        <p className="text-muted-foreground text-lg mb-6">{section.description}</p>
-        <Link
-          to={section.link}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:opacity-90 transition-opacity w-fit text-sm"
+      {/* Content — slides in from left */}
+      <div className="container mx-auto px-4 relative z-10">
+        <div
+          className={`max-w-lg transition-all duration-700 ease-out ${fade.visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}
+          style={{ transitionDelay: "0.1s" }}
         >
-          {section.linkText} →
-        </Link>
+          {/* Icon */}
+          <div className="inline-flex items-center gap-2 mb-4">
+            <Icon className="w-5 h-5 text-secondary" />
+            <span className="text-secondary text-sm font-medium uppercase tracking-wider">
+              {section.title}
+            </span>
+          </div>
+
+          {/* Big number */}
+          <div className="mb-4">
+            <span
+              ref={counter.ref}
+              className="font-display text-6xl md:text-7xl font-bold text-white/90"
+            >
+              {counter.count}
+            </span>
+            <span className="text-white/50 text-lg ml-2">categorías</span>
+          </div>
+
+          {/* Subtitle */}
+          <p className="text-white/70 text-lg md:text-xl mb-8 leading-relaxed italic">
+            {section.subtitle}
+          </p>
+
+          {/* CTA with underline hover */}
+          <Link
+            to={section.link}
+            className="cta-underline text-secondary font-semibold text-base hover:text-secondary/80 transition-colors"
+          >
+            {section.linkText} →
+          </Link>
+        </div>
       </div>
     </div>
   );

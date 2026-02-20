@@ -102,7 +102,7 @@ const Contacto = () => {
           <Card className="p-5 border-border">
             <Mail className="w-6 h-6 text-secondary mb-2" />
             <h3 className="font-bold text-foreground text-sm">Email directo</h3>
-            <a href="mailto:contacto@guiadelsalon.es" className="text-secondary text-sm hover:underline">contacto@guiadelsalon.es</a>
+            <a href="mailto:contacto@guiadelsalon.com" className="text-secondary text-sm hover:underline">contacto@guiadelsalon.com</a>
           </Card>
           <Card className="p-5 border-border">
             <p className="text-sm text-muted-foreground">⏱️ Tiempo de respuesta habitual: <strong className="text-foreground">24-48 horas</strong></p>
