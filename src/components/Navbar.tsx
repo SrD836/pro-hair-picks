@@ -16,7 +16,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-2">
             <span className="text-2xl">💈</span>
             <span className="font-display text-xl font-bold text-foreground">
-              GuiaDelSalon<span className="text-secondary">.es</span>
+              GuiaDelSalon<span className="text-secondary">.com</span>
             </span>
           </Link>
 

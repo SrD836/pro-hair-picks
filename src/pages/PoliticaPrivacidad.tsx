@@ -12,12 +12,12 @@ const PoliticaPrivacidad = () => (
     <div className="prose prose-sm max-w-none space-y-6 text-foreground/90 leading-relaxed">
       <section>
         <h2 className="font-display text-xl font-bold text-foreground mt-8 mb-3">1. Responsable del tratamiento</h2>
-        <p>El responsable del tratamiento de los datos personales recogidos en este sitio web es <strong>David [Apellido]</strong>, con domicilio en España. Para cualquier consulta relacionada con la privacidad, puede contactar en: <a href="mailto:contacto@guiadelsalon.es" className="text-secondary hover:underline">contacto@guiadelsalon.es</a>.</p>
+        <p>El responsable del tratamiento de los datos personales recogidos en este sitio web es <strong>David [Apellido]</strong>, con domicilio en España. Para cualquier consulta relacionada con la privacidad, puede contactar en: <a href="mailto:contacto@guiadelsalon.com" className="text-secondary hover:underline">contacto@guiadelsalon.com</a>.</p>
       </section>
 
       <section>
         <h2 className="font-display text-xl font-bold text-foreground mt-8 mb-3">2. Datos que recopilamos</h2>
-        <p>En GuiaDelSalon.es recopilamos los siguientes tipos de información:</p>
+        <p>En GuiaDelSalon.com recopilamos los siguientes tipos de información:</p>
         <ul className="list-disc pl-6 space-y-1">
           <li><strong>Datos de navegación:</strong> dirección IP, tipo de navegador, sistema operativo, páginas visitadas, tiempo de permanencia y comportamiento de navegación.</li>
           <li><strong>Datos de contacto:</strong> nombre, correo electrónico y mensaje cuando utiliza nuestro formulario de contacto.</li>
@@ -69,7 +69,7 @@ const PoliticaPrivacidad = () => (
           <li>Solicitar la limitación del tratamiento.</li>
           <li>Solicitar la portabilidad de sus datos.</li>
         </ul>
-        <p className="mt-2">Para ejercer estos derechos, contacte con nosotros en <a href="mailto:contacto@guiadelsalon.es" className="text-secondary hover:underline">contacto@guiadelsalon.es</a>. También tiene derecho a presentar una reclamación ante la <strong>Agencia Española de Protección de Datos (AEPD)</strong>: <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" className="text-secondary hover:underline">www.aepd.es</a>.</p>
+        <p className="mt-2">Para ejercer estos derechos, contacte con nosotros en <a href="mailto:contacto@guiadelsalon.com" className="text-secondary hover:underline">contacto@guiadelsalon.com</a>. También tiene derecho a presentar una reclamación ante la <strong>Agencia Española de Protección de Datos (AEPD)</strong>: <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" className="text-secondary hover:underline">www.aepd.es</a>.</p>
       </section>
 
       <section>

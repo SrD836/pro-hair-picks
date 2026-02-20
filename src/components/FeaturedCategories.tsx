@@ -61,7 +61,7 @@ function CategoryBlock({
           <Link
             key={cat.slug}
             to={`/categorias/${cat.slug}`}
-            className="group flex items-center gap-3 px-4 py-3 bg-card rounded-xl border border-border hover:border-secondary/40 hover:shadow-card-hover transition-all duration-200"
+            className="group flex items-center gap-3 px-4 py-3 bg-card rounded-xl border border-border hover:border-secondary/40 hover:shadow-card-hover transition-all duration-200 hover:scale-[1.03]"
           >
             <span className="text-xl group-hover:scale-110 transition-transform duration-200">
               {cat.icon}
@@ -83,7 +83,7 @@ const FeaturedCategories = () => (
         Categorías Destacadas
       </h2>
       <p className="text-muted-foreground max-w-lg mx-auto">
-        Las categorías más consultadas por profesionales del sector
+        Lo más consultado por profesionales del sector
       </p>
     </div>
 
