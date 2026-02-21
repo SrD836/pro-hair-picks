@@ -8,8 +8,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { CompareProvider } from "@/hooks/useCompare";
+import CompareBar from "@/components/CompareBar";
 import Index from "./pages/Index";
 import CategoryProductsPage from "./pages/CategoryProductsPage";
+import CompararPage from "./pages/CompararPage";
 import GenderRedirect from "./pages/GenderRedirect";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +36,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/categorias/:categoria" element={<CategoryProductsPage />} />
+            <Route path="/comparar" element={<CompararPage />} />
             <Route path="/gestionar-mi-local" element={<GestionarMiLocal />} />
             <Route path="/:gender/:slug" element={<GenderRedirect />} />
             <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
@@ -45,6 +49,7 @@ function AppContent() {
         </Suspense>
       </main>
       <Footer />
+      <CompareBar />
       <CookieBanner />
     </div>
   );
@@ -55,7 +60,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AppContent />
+        <CompareProvider>
+          <AppContent />
+        </CompareProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

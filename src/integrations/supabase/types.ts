@@ -263,6 +263,7 @@ export type Database = {
           original_price: number | null
           position: number | null
           price_range: string | null
+          tech_specs: Json | null
         }
         Insert: {
           amazon_asin?: string | null
@@ -288,6 +289,7 @@ export type Database = {
           original_price?: number | null
           position?: number | null
           price_range?: string | null
+          tech_specs?: Json | null
         }
         Update: {
           amazon_asin?: string | null
@@ -313,6 +315,7 @@ export type Database = {
           original_price?: number | null
           position?: number | null
           price_range?: string | null
+          tech_specs?: Json | null
         }
         Relationships: [
           {

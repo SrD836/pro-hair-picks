@@ -9,8 +9,10 @@ const tools = [
     icon: GitCompare,
     title: "Comparador",
     description: "Compara dos productos lado a lado: especificaciones, precio y valoración.",
-    cta: "Próximamente",
-    disabled: true,
+    cta: "Comparar",
+    disabled: false,
+    href: "/comparar",
+    isLink: true,
   },
   {
     icon: HelpCircle,
@@ -71,6 +73,10 @@ const ProBarberTools = () => (
               {tool.disabled ? (
                 <Button variant="outline" size="sm" disabled className="w-full">
                   {tool.cta}
+                </Button>
+              ) : (tool as any).isLink ? (
+                <Button asChild variant="secondary" size="sm" className="w-full">
+                  <Link to={(tool as any).href}>{tool.cta}</Link>
                 </Button>
               ) : (
                 <Button asChild variant="secondary" size="sm" className="w-full">

@@ -1,7 +1,8 @@
-import { Star, ExternalLink, Zap, Battery, Ruler } from "lucide-react";
+import { Star, ExternalLink, Zap, Battery, Ruler, GitCompare, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import type { Product } from "@/hooks/useProductsByCategory";
+import { useCompare } from "@/hooks/useCompare";
 
 const tierConfig: Record<string, { label: string; className: string }> = {
   ELITE: { label: "ELITE", className: "bg-amber-500/20 text-amber-400 border-amber-500/40" },
@@ -37,6 +38,13 @@ interface Props {
 const ClipperProductCard = ({ product, index }: Props) => {
   const tier = tierConfig[product.price_range] ?? tierConfig.STARTER;
   const features = product.features ?? {};
+  const { add, remove, has, isFull } = useCompare();
+  const isSelected = has(product.id);
+
+  const toggleCompare = () => {
+    if (isSelected) remove(product.id);
+    else add(product);
+  };
 
   return (
     <motion.article
@@ -105,15 +113,29 @@ const ClipperProductCard = ({ product, index }: Props) => {
                 {product.current_price.toFixed(2)}€
               </span>
             )}
-            <a
-              href={product.amazon_url || "#"}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              className="ml-auto inline-flex items-center gap-2 px-5 py-2.5 bg-secondary text-secondary-foreground font-bold text-sm rounded-lg hover:opacity-90 transition-opacity shadow-sm"
-            >
-              Ver precio en Amazon
-              <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="flex items-center gap-2 ml-auto">
+              <button
+                onClick={toggleCompare}
+                disabled={!isSelected && isFull}
+                className={`inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border transition-colors ${
+                  isSelected
+                    ? "bg-primary/10 text-primary border-primary/30"
+                    : "bg-muted text-muted-foreground border-border hover:border-primary/30 hover:text-primary"
+                } disabled:opacity-40 disabled:cursor-not-allowed`}
+              >
+                {isSelected ? <Check className="w-3.5 h-3.5" /> : <GitCompare className="w-3.5 h-3.5" />}
+                {isSelected ? "Añadido" : "Comparar"}
+              </button>
+              <a
+                href={product.amazon_url || "#"}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary text-secondary-foreground font-bold text-sm rounded-lg hover:opacity-90 transition-opacity shadow-sm"
+              >
+                Ver precio en Amazon
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
