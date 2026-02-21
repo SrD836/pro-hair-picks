@@ -37,6 +37,9 @@ const Navbar = () => {
             <GroupedDropdown label="Hombre" groups={menGroups} isOpen={openDropdown === "hombre"} onToggle={() => setOpenDropdown(openDropdown === "hombre" ? null : "hombre")} onClose={() => setOpenDropdown(null)} />
             <GroupedDropdown label="Mujer" groups={womenGroups} isOpen={openDropdown === "mujer"} onToggle={() => setOpenDropdown(openDropdown === "mujer" ? null : "mujer")} onClose={() => setOpenDropdown(null)} />
             <FlatDropdown label="Mixto" items={mixedCategories} isOpen={openDropdown === "mixto"} onToggle={() => setOpenDropdown(openDropdown === "mixto" ? null : "mixto")} onClose={() => setOpenDropdown(null)} />
+            <Link to="/blog" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
+              Blog
+            </Link>
             <Link to="/gestionar-mi-local" className="hidden px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Gestionar mi local
             </Link>
@@ -62,6 +65,9 @@ const Navbar = () => {
               <MobileGroupedSection label="Hombre" groups={menGroups} onClose={() => setMobileOpen(false)} />
               <MobileGroupedSection label="Mujer" groups={womenGroups} onClose={() => setMobileOpen(false)} />
               <MobileFlatSection label="Mixto" items={mixedCategories} onClose={() => setMobileOpen(false)} />
+              <Link to="/blog" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
+                Blog
+              </Link>
               <Link to="/gestionar-mi-local" onClick={() => setMobileOpen(false)} className="hidden px-2 py-2 font-display font-semibold text-foreground">
                 Gestionar mi local
               </Link>

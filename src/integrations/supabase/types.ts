@@ -87,6 +87,86 @@ export type Database = {
           },
         ]
       }
+      blog_posts: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: string | null
+          cover_image_url: string | null
+          dislikes: number | null
+          excerpt: string | null
+          id: string
+          is_published: boolean | null
+          likes: number | null
+          published_at: string | null
+          read_time_minutes: number | null
+          slug: string
+          title: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content?: string | null
+          cover_image_url?: string | null
+          dislikes?: number | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean | null
+          likes?: number | null
+          published_at?: string | null
+          read_time_minutes?: number | null
+          slug: string
+          title: string
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: string | null
+          cover_image_url?: string | null
+          dislikes?: number | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean | null
+          likes?: number | null
+          published_at?: string | null
+          read_time_minutes?: number | null
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      blog_reactions: {
+        Row: {
+          created_at: string | null
+          id: string
+          post_id: string | null
+          reaction: string | null
+          session_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          reaction?: string | null
+          session_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          reaction?: string | null
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_reactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       budget_estimates: {
         Row: {
           campaign_id: string | null
