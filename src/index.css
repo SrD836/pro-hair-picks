@@ -228,6 +228,45 @@
   transform-origin: bottom left;
 }
 
+/* ── Blog prose typography ────────────────────── */
+.prose-blog {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.8;
+  color: hsl(43, 62%, 90%);
+}
+.prose-blog h2, .prose-blog h3, .prose-blog h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: hsl(43, 62%, 90%);
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+}
+.prose-blog h2 { font-size: 1.75rem; }
+.prose-blog h3 { font-size: 1.35rem; }
+.prose-blog p { margin-bottom: 1.25em; }
+.prose-blog a { color: hsl(37, 39%, 63%); text-decoration: underline; }
+.prose-blog a:hover { color: hsl(37, 42%, 69%); }
+.prose-blog ul, .prose-blog ol { padding-left: 1.5em; margin-bottom: 1.25em; }
+.prose-blog li { margin-bottom: 0.5em; }
+.prose-blog blockquote {
+  border-left: 3px solid hsl(37, 39%, 63%);
+  padding-left: 1em;
+  margin: 1.5em 0;
+  color: hsl(30, 16%, 52%);
+  font-style: italic;
+}
+.prose-blog img {
+  border-radius: 8px;
+  margin: 1.5em 0;
+  max-width: 100%;
+}
+.prose-blog code {
+  background: hsl(23, 30%, 13%);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
 /* ── Reduced motion: disable all animations ──── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

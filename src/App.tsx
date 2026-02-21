@@ -30,6 +30,8 @@ const Contacto = lazy(() => import("./pages/Contacto"));
 const GestionarMiLocal = lazy(() => import("./pages/GestionarMiLocal"));
 const CalculadoraROI = lazy(() => import("./pages/CalculadoraROI"));
 const QuizPage = lazy(() => import("./pages/QuizPage"));
+const BlogPage = lazy(() => import("./pages/BlogPage"));
+const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
 
 const queryClient = new QueryClient();
 
@@ -45,6 +47,8 @@ function AnimatedRoutes() {
           <Route path="/gestionar-mi-local" element={<GestionarMiLocal />} />
           <Route path="/calculadora-roi" element={<CalculadoraROI />} />
           <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/:gender/:slug" element={<GenderRedirect />} />
           <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
           <Route path="/politica-cookies" element={<PoliticaCookies />} />
