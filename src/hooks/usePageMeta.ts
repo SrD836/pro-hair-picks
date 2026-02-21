@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
+const SITE_ORIGIN = "https://guiadelsalon.com";
+
 const ROUTE_META: Record<string, { title: string; description: string }> = {
   "/": {
     title: "GuiaDelSalon.com — Los Mejores Productos de Peluquería Profesional",
@@ -42,5 +44,15 @@ export function usePageMeta() {
       const descTag = document.querySelector('meta[name="description"]');
       if (descTag) descTag.setAttribute("content", meta.description);
     }
+
+    // Canonical tag
+    const canonical = SITE_ORIGIN + pathname;
+    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!link) {
+      link = document.createElement("link");
+      link.setAttribute("rel", "canonical");
+      document.head.appendChild(link);
+    }
+    link.setAttribute("href", canonical);
   }, [pathname]);
 }
