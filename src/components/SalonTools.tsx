@@ -40,7 +40,7 @@ const tools = [
 ];
 
 const SalonTools = () => (
-  <section className="bg-accent/50 py-16 md:py-20">
+  <section className="bg-muted py-16 md:py-20">
     <div className="container mx-auto px-4">
       <div className="text-center mb-12">
         <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
@@ -60,8 +60,8 @@ const SalonTools = () => (
             viewport={{ once: true }}
             transition={{ delay: i * 0.08, duration: 0.35 }}
           >
-            <div className="group h-full flex flex-col p-5 rounded-lg border border-border bg-card/60 backdrop-blur-sm hover:border-secondary/50 hover:shadow-gold transition-all duration-300 relative overflow-hidden glass-border-hover">
-              <div className="p-2.5 rounded-xl bg-secondary/10 text-secondary w-fit mb-4">
+            <div className="group h-full flex flex-col p-5 rounded-sm border border-border border-t-2 border-t-secondary bg-card backdrop-blur-sm hover:border-secondary/50 hover:shadow-gold transition-all duration-300 relative overflow-hidden glass-border-hover">
+              <div className="p-2.5 rounded-sm bg-secondary/10 text-secondary w-fit mb-4">
                 <tool.icon className="w-5 h-5" />
               </div>
               <h3 className="font-display text-base font-bold text-foreground mb-2">
