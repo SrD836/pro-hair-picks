@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import ScissorsSpinner from "@/components/ScissorsSpinner";
-import { getBlogImage } from "@/lib/blogImage";
+const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800";
 
 /* Session ID for anonymous reactions */
 function getSessionId() {
@@ -125,7 +125,7 @@ const BlogPostPage = () => {
     <article className="min-h-screen bg-background">
       {/* Hero */}
       <div className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={getBlogImage(post)} alt={post.title} className="w-full h-full object-cover" />
+          <img src={post.cover_image_url || FALLBACK_IMAGE} alt={post.title} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 max-w-4xl mx-auto">
             {post.category && <Badge variant="secondary" className="mb-3">{post.category}</Badge>}
@@ -244,7 +244,7 @@ function RelatedCard({ post }: { post: any }) {
       to={`/blog/${post.slug}`}
       className="block bg-card border border-border rounded-lg overflow-hidden hover:border-secondary/40 transition-colors"
     >
-      <img src={getBlogImage(post)} alt={post.title} className="w-full h-32 object-cover" loading="lazy" />
+      <img src={post.cover_image_url || FALLBACK_IMAGE} alt={post.title} className="w-full h-32 object-cover" loading="lazy" />
       <div className="p-3">
         <h4 className="font-display text-sm text-foreground line-clamp-2">{post.title}</h4>
         {post.read_time_minutes && (
