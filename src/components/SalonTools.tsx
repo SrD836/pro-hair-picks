@@ -9,8 +9,10 @@ const tools = [
     icon: GitCompare,
     title: "Comparador",
     description: "Compara dos productos lado a lado: especificaciones, precio y valoración.",
-    cta: "Próximamente",
-    disabled: true,
+    cta: "Comparar",
+    disabled: false,
+    href: "/comparar",
+    isLink: true,
   },
   {
     icon: HelpCircle,
