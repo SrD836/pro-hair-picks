@@ -32,7 +32,7 @@ const mixedTop: FeaturedCat[] = [
 
 const staggerContainer = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
+  show: { transition: { staggerChildren: 0.08 } },
 };
 
 const staggerItem = {
@@ -79,7 +79,7 @@ function CategoryBlock({
               to={`/categorias/${cat.slug}`}
               className="group flex items-center gap-3 px-4 py-3 bg-card rounded-xl border border-border hover:border-secondary/40 hover:bg-[hsl(42,58%,96%)] hover:shadow-card-hover transition-all duration-200"
             >
-              <span className="text-xl group-hover:animate-bounce transition-transform duration-200">
+              <span className="text-xl transition-transform duration-200 group-hover:scale-[1.2]">
                 {cat.icon}
               </span>
               <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors">
