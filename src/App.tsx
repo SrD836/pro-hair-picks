@@ -7,6 +7,7 @@ import { lazy, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
+import SuggestionButton from "@/components/SuggestionButton";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { CompareProvider } from "@/hooks/useCompare";
 import CompareBar from "@/components/CompareBar";
@@ -50,6 +51,7 @@ function AppContent() {
       </main>
       <Footer />
       <CompareBar />
+      <SuggestionButton />
       <CookieBanner />
     </div>
   );
