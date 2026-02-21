@@ -10,7 +10,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -22,7 +22,7 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "h-12" : "h-16"}`}>
+        <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "py-2" : "py-4"}`}>
           {/* Logo */}
           <Link to="/" className="flex items-center group">
             <img
