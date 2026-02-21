@@ -125,7 +125,7 @@ const BlogPostPage = () => {
       {/* Hero */}
       {post.cover_image_url && (
         <div className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover" />
+          <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = `https://picsum.photos/seed/${post.slug}/800/450`; }} />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 max-w-4xl mx-auto">
             {post.category && <Badge variant="secondary" className="mb-3">{post.category}</Badge>}
@@ -249,7 +249,7 @@ function RelatedCard({ post }: { post: any }) {
       className="block bg-card border border-border rounded-lg overflow-hidden hover:border-secondary/40 transition-colors"
     >
       {post.cover_image_url && (
-        <img src={post.cover_image_url} alt={post.title} className="w-full h-32 object-cover" loading="lazy" />
+        <img src={post.cover_image_url} alt={post.title} className="w-full h-32 object-cover" loading="lazy" onError={(e) => { e.currentTarget.src = `https://picsum.photos/seed/${post.slug}/800/450`; }} />
       )}
       <div className="p-3">
         <h4 className="font-display text-sm text-foreground line-clamp-2">{post.title}</h4>
