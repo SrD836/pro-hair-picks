@@ -1,7 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { SupabaseProduct } from "@/hooks/useCategory";
-import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   product: SupabaseProduct;
@@ -27,16 +26,15 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.4 }}
-      className={`relative bg-card rounded-xl border transition-all duration-200 hover:shadow-card-hover ${
+      whileHover={{ y: -4 }}
+      className={`relative bg-card rounded-xl border transition-all duration-200 hover:shadow-gold ${
         isFirst ? "border-secondary/50 shadow-md ring-1 ring-secondary/20" : "border-border shadow-card"
       }`}
     >
       {/* Rank badge */}
       <div
         className={`absolute -top-3 -left-2 w-11 h-11 rounded-lg flex items-center justify-center font-display font-bold text-sm z-10 shadow-md ${
-          isFirst
-            ? "bg-secondary text-secondary-foreground"
-            : "bg-primary text-primary-foreground"
+          isFirst ? "bg-secondary text-secondary-foreground" : "bg-primary text-primary-foreground"
         }`}
       >
         #{product.position || index + 1}
@@ -49,13 +47,13 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
       )}
 
       <div className="p-5 pt-7 flex flex-col sm:flex-row gap-5">
-        {/* Image area */}
-        <div className="w-full sm:w-44 h-44 bg-muted/50 rounded-lg flex items-center justify-center shrink-0 overflow-hidden border border-border/50">
+        {/* Image area with zoom on hover */}
+        <div className="w-full sm:w-44 h-44 bg-muted/50 rounded-lg flex items-center justify-center shrink-0 overflow-hidden border border-border/50 group">
           {product.image_url ? (
             <img
               src={product.image_url}
               alt={product.name}
-              className="w-full h-full object-contain p-2"
+              className="w-full h-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
             />
           ) : (
@@ -67,7 +65,7 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
         <div className="flex-1 min-w-0 flex flex-col">
           {/* Badges row */}
           <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${badge.className}`}>
+            <span className={`shimmer-badge text-xs font-bold px-2.5 py-1 rounded-full ${badge.className}`}>
               {badge.label}
             </span>
             {product.brand && (
@@ -101,7 +99,6 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
 
           {/* Price + Actions */}
           <div className="flex flex-wrap items-center gap-4 mt-auto pt-2 border-t border-border/50">
-            {/* Price block */}
             {product.current_price != null && (
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-foreground">
@@ -115,7 +112,6 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
               </div>
             )}
 
-            {/* Buttons */}
             <div className="flex items-center gap-3 ml-auto">
               <a
                 href={affiliateUrl || "#"}
@@ -132,7 +128,6 @@ const ProductCard = ({ product, index, affiliateUrl }: ProductCardProps) => {
             </div>
           </div>
 
-          {/* Amazon logo text */}
           <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
             <span className="font-semibold">amazon.es</span>
             <span>· Precio verificado</span>

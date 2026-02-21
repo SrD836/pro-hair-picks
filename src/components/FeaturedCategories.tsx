@@ -30,6 +30,16 @@ const mixedTop: FeaturedCat[] = [
   { name: "Productos para el cabello", slug: "productos-para-el-cabello", icon: "💈" },
 ];
 
+const staggerContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } },
+};
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" as const } },
+};
+
 function CategoryBlock({
   title,
   icon: Icon,
@@ -56,22 +66,29 @@ function CategoryBlock({
         <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
       </div>
 
-      <div className="grid grid-cols-1 gap-2">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="grid grid-cols-1 gap-2"
+      >
         {categories.map((cat) => (
-          <Link
-            key={cat.slug}
-            to={`/categorias/${cat.slug}`}
-            className="group flex items-center gap-3 px-4 py-3 bg-card rounded-xl border border-border hover:border-secondary/40 hover:shadow-card-hover transition-all duration-200 hover:scale-[1.03]"
-          >
-            <span className="text-xl group-hover:scale-110 transition-transform duration-200">
-              {cat.icon}
-            </span>
-            <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors">
-              {cat.name}
-            </span>
-          </Link>
+          <motion.div key={cat.slug} variants={staggerItem}>
+            <Link
+              to={`/categorias/${cat.slug}`}
+              className="group flex items-center gap-3 px-4 py-3 bg-card rounded-xl border border-border hover:border-secondary/40 hover:bg-[hsl(42,58%,96%)] hover:shadow-card-hover transition-all duration-200"
+            >
+              <span className="text-xl group-hover:animate-bounce transition-transform duration-200">
+                {cat.icon}
+              </span>
+              <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors">
+                {cat.name}
+              </span>
+            </Link>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
