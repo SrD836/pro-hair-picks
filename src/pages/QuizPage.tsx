@@ -110,35 +110,77 @@ const QuizPage = () => {
     setAnswers([]);
   };
 
-  /* ─── Supabase query ──────────────────────────── */
+  /* ─── Supabase query with cascading fallback ── */
   const [minPrice, maxPrice] = useMemo(() => {
     if (!budget) return [0, 99999];
     const [a, b] = budget.split("-").map(Number);
     return [a, b];
   }, [budget]);
 
+  // Related categories for fallback step 3
+  const relatedCategories = useMemo(() => {
+    if (!salon) return [];
+    return (productOptionsBySalon[salon] || [])
+      .map((o) => o.value)
+      .filter((v) => v !== category);
+  }, [salon, category]);
+
   const { data: products = [], isLoading } = useQuery({
-    queryKey: ["quiz-results", category, budget, priority],
+    queryKey: ["quiz-results", category, budget, priority, salon],
     enabled: step === 4 && !!category && !!budget && !!priority,
     queryFn: async () => {
-      let query = supabase
-        .from("products")
-        .select("*, categories!inner(name)")
-        .ilike("categories.name", category)
-        .gte("current_price", minPrice)
-        .lte("current_price", maxPrice);
+      const applySort = (q: any) => {
+        if (priority === "top") {
+          return q.order("classification", { ascending: true }).order("amazon_rating", { ascending: false });
+        } else if (priority === "calidad-precio") {
+          return q.order("amazon_rating", { ascending: false }).order("current_price", { ascending: true });
+        }
+        return q.order("amazon_rating", { ascending: false });
+      };
 
-      if (priority === "top") {
-        query = query.order("classification", { ascending: true }).order("amazon_rating", { ascending: false });
-      } else if (priority === "calidad-precio") {
-        query = query.order("amazon_rating", { ascending: false }).order("current_price", { ascending: true });
-      } else {
-        query = query.order("amazon_rating", { ascending: false });
+      // Step 1: exact category + price range
+      const { data: d1, error: e1 } = await applySort(
+        supabase
+          .from("products")
+          .select("*")
+          .ilike("category", category)
+          .gte("current_price", minPrice)
+          .lte("current_price", maxPrice)
+      ).limit(3);
+      if (e1) throw e1;
+      if (d1 && d1.length >= 3) return d1;
+
+      // Step 2: same category, no price filter
+      const { data: d2, error: e2 } = await supabase
+        .from("products")
+        .select("*")
+        .ilike("category", category)
+        .order("amazon_rating", { ascending: false })
+        .limit(3);
+      if (e2) throw e2;
+      if (d2 && d2.length >= 3) return d2;
+
+      // Step 3: related categories from same salon type
+      if (relatedCategories.length > 0) {
+        const allCats = [category, ...relatedCategories];
+        const { data: d3, error: e3 } = await supabase
+          .from("products")
+          .select("*")
+          .in("category", allCats)
+          .order("amazon_rating", { ascending: false })
+          .limit(3);
+        if (e3) throw e3;
+        if (d3 && d3.length > 0) return d3;
       }
 
-      const { data, error } = await query.limit(3);
-      if (error) throw error;
-      return data || [];
+      // Final fallback: top rated products overall
+      const { data: d4, error: e4 } = await supabase
+        .from("products")
+        .select("*")
+        .order("amazon_rating", { ascending: false })
+        .limit(3);
+      if (e4) throw e4;
+      return d4 || [];
     },
   });
 
@@ -221,9 +263,7 @@ const QuizPage = () => {
             {isLoading ? (
               <p className="text-center text-muted-foreground py-12">Buscando los mejores productos…</p>
             ) : products.length === 0 ? (
-              <p className="text-center text-muted-foreground py-12">
-                No encontramos productos con esos filtros. Prueba con otro presupuesto.
-              </p>
+              <p className="text-center text-muted-foreground py-12">Cargando recomendaciones…</p>
             ) : (
               <div className="space-y-6">
                 {products.map((p: any, i: number) => (
