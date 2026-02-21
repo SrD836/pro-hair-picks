@@ -44,8 +44,8 @@ const Hero = () => {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/hero-barbershop.jpg')" }}
       />
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-black/85" />
+      {/* Dark overlay matching palette */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(24,29%,9%)]/85 via-[hsl(24,29%,9%)]/70 to-transparent" />
       {/* Floating particles */}
       <HeroParticles />
 
@@ -65,13 +65,13 @@ const Hero = () => {
             />
           </div>
 
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 mb-8 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-secondary/20 bg-card/30 mb-8 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-            <span className="text-white/80 text-sm font-medium">Seleccionado por profesionales</span>
+            <span className="text-foreground/80 text-sm font-medium">Seleccionado por profesionales</span>
           </div>
 
           {/* Stagger "cut" title */}
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
             {titleWords.map((word, i) => (
               <motion.span
                 key={i}
@@ -105,31 +105,37 @@ const Hero = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.5 }}
-            className="text-white/60 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed"
+            className="text-muted-foreground text-lg md:text-xl mb-4 max-w-2xl mx-auto leading-relaxed"
           >
             Probado en salones reales. Rankings honestos, precios reales, herramientas que funcionan.
           </motion.p>
+
+          {/* Decorative gold line */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ delay: 1.4, duration: 0.6, ease: "easeOut" }}
+            className="w-[60px] h-px bg-secondary mx-auto mb-10"
+          />
 
           {/* Animated counters */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.4, duration: 0.5 }}
-            className="flex flex-wrap justify-center gap-8 text-white/70 text-sm"
+            className="flex flex-wrap justify-center gap-6 text-sm"
           >
-            <div ref={c1.ref} className="flex items-center gap-2">
+            <div ref={c1.ref} className="flex items-center gap-2 px-4 py-2 rounded-sm bg-card/50 border border-secondary/30 backdrop-blur-sm">
               <span className="font-display text-2xl font-bold text-secondary">{c1.count}</span>
-              <span>productos analizados</span>
+              <span className="text-muted-foreground">productos analizados</span>
             </div>
-            <div className="w-px h-8 bg-white/15" />
-            <div ref={c2.ref} className="flex items-center gap-2">
+            <div ref={c2.ref} className="flex items-center gap-2 px-4 py-2 rounded-sm bg-card/50 border border-secondary/30 backdrop-blur-sm">
               <span className="font-display text-2xl font-bold text-secondary">{c2.count}</span>
-              <span>categorías</span>
+              <span className="text-muted-foreground">categorías</span>
             </div>
-            <div className="w-px h-8 bg-white/15" />
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-sm bg-card/50 border border-secondary/30 backdrop-blur-sm">
               <span className="font-display text-2xl font-bold text-secondary">✓</span>
-              <span>Precios actualizados hoy</span>
+              <span className="text-muted-foreground">Precios actualizados hoy</span>
             </div>
           </motion.div>
         </motion.div>

@@ -17,7 +17,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-border transition-all duration-300 ${
+      className={`sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border transition-all duration-300 ${
         scrolled ? "shadow-md" : ""
       }`}
     >
@@ -28,7 +28,7 @@ const Navbar = () => {
             <img
               src="/logo-compact.png"
               alt="Guía del Salón"
-              className={`w-auto dark:brightness-0 dark:invert transition-all duration-300 group-hover:rotate-[5deg] ${scrolled ? "h-7" : "h-10"}`}
+              className={`w-auto brightness-0 invert transition-all duration-300 group-hover:rotate-[5deg] ${scrolled ? "h-7" : "h-10"}`}
             />
           </Link>
 
@@ -57,7 +57,7 @@ const Navbar = () => {
       {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden border-t border-border bg-card">
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden border-t border-border bg-background">
             <div className="p-4 space-y-4 max-h-[80vh] overflow-y-auto">
               <MobileGroupedSection label="Hombre" groups={menGroups} onClose={() => setMobileOpen(false)} />
               <MobileGroupedSection label="Mujer" groups={womenGroups} onClose={() => setMobileOpen(false)} />

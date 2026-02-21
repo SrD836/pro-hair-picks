@@ -60,10 +60,10 @@ function CategoryBlock({
       className="space-y-4"
     >
       <div className="flex items-center gap-3 mb-5">
-        <div className="p-2.5 rounded-xl bg-secondary/10 text-secondary">
+        <div className="p-2.5 rounded-sm bg-secondary/10 text-secondary">
           <Icon className="w-5 h-5" />
         </div>
-        <h3 className="font-display text-xl font-bold text-foreground">{title}</h3>
+        <h3 className="font-display text-xl font-bold text-secondary">{title}</h3>
       </div>
 
       <motion.div
@@ -77,9 +77,9 @@ function CategoryBlock({
           <motion.div key={cat.slug} variants={staggerItem}>
             <Link
               to={`/categorias/${cat.slug}`}
-              className="group flex items-center gap-3 px-4 py-3 bg-card rounded-xl border border-border hover:border-secondary/40 hover:bg-[hsl(42,58%,96%)] hover:shadow-card-hover transition-all duration-200"
+              className="group flex items-center gap-3 px-4 py-3 bg-card rounded-sm border border-border hover:border-l-[3px] hover:border-l-secondary hover:bg-accent hover:translate-x-1 transition-all duration-200"
             >
-              <span className="text-xl transition-transform duration-200 group-hover:scale-[1.2]">
+              <span className="text-xl text-secondary transition-transform duration-200 group-hover:scale-[1.2]">
                 {cat.icon}
               </span>
               <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors">

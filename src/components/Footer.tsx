@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const Footer = () => (
-  <footer className="bg-card border-t border-border mt-20">
+  <footer className="bg-[hsl(26,33%,5%)] border-t border-secondary/20 mt-20">
     <div className="container mx-auto px-4 py-12">
       {/* Logo centrado en la cabecera del footer */}
       <div className="flex justify-center mb-8 pt-10">
@@ -9,7 +9,7 @@ const Footer = () => (
           <img
             src="/logo-full.png"
             alt="Guía del Salón"
-            className="h-20 w-auto dark:brightness-0 dark:invert opacity-90"
+            className="h-20 w-auto brightness-0 invert opacity-90"
           />
         </Link>
       </div>
@@ -61,7 +61,7 @@ const Footer = () => (
           </ul>
         </div>
       </div>
-      <div className="border-t border-border mt-10 pt-6 text-center text-xs text-muted-foreground">
+      <div className="border-t border-secondary/20 mt-10 pt-6 text-center text-xs text-muted-foreground">
         <p>© 2025 GuiaDelSalon.com — Como asociado de Amazon, ganamos con las compras que cumplan los requisitos.</p>
       </div>
     </div>
