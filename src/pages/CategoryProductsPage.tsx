@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { ChevronRight } from "lucide-react";
 import { useProductsByCategory } from "@/hooks/useProductsByCategory";
 import { getCategoryNameBySlug } from "@/data/categories";
@@ -31,6 +32,10 @@ const CategoryProductsPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Helmet>
+        <title>{displayName} | Guía del Salón</title>
+        <meta name="description" content={`Los mejores ${displayName} para profesionales. Comparativa actualizada con precios y especificaciones técnicas.`} />
+      </Helmet>
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
         <Link to="/" className="hover:text-foreground transition-colors">Inicio</Link>

@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Clock, Calendar, ThumbsUp, ThumbsDown, Link2, Share2, ArrowLeft } from "lucide-react";
@@ -123,6 +124,13 @@ const BlogPostPage = () => {
 
   return (
     <article className="min-h-screen bg-background">
+      <Helmet>
+        <title>{post.title} | Blog Guía del Salón</title>
+        <meta name="description" content={post.excerpt || post.title} />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:image" content={post.cover_image_url || FALLBACK_IMAGE} />
+        {post.published_at && <meta property="article:published_time" content={post.published_at} />}
+      </Helmet>
       {/* Hero */}
       <div className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
           <img src={post.cover_image_url || FALLBACK_IMAGE} alt={post.title} className="w-full h-full object-cover" />
