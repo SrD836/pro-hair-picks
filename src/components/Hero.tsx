@@ -56,7 +56,7 @@ const Hero = () => {
             <img
               src="/logo-full.png"
               alt="Guía del Salón"
-              className="h-40 w-auto md:h-52 drop-shadow-2xl"
+              className="h-40 w-auto md:h-52 brightness-0 invert drop-shadow-lg"
             />
           </div>
 

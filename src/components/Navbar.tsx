@@ -17,7 +17,7 @@ const Navbar = () => {
             <img
               src="/logo-compact.png"
               alt="Guía del Salón"
-              className="h-10 w-auto"
+              className="h-10 w-auto brightness-0 invert"
             />
           </Link>
 
