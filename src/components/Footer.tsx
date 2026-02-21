@@ -9,7 +9,7 @@ const Footer = () => (
           <img
             src="/logo-full.png"
             alt="Guía del Salón"
-            className="h-20 w-auto brightness-0 invert opacity-90"
+            className="h-20 w-auto dark:brightness-0 dark:invert opacity-90"
           />
         </Link>
       </div>
