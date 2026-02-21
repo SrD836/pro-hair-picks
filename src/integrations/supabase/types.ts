@@ -354,6 +354,24 @@ export type Database = {
         }
         Relationships: []
       }
+      suggestions: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
