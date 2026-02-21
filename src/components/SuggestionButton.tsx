@@ -11,6 +11,11 @@ import {
 } from "@/components/ui/drawer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const SuggestionButton = () => {
   const [open, setOpen] = useState(false);
@@ -35,14 +40,21 @@ const SuggestionButton = () => {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <button
-          className="fixed bottom-6 left-6 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors"
-          aria-label="Enviar sugerencia"
-        >
-          <Lightbulb className="w-5 h-5" />
-        </button>
-      </DrawerTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DrawerTrigger asChild>
+            <button
+              className="fixed bottom-6 left-6 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors animate-suggestion-pulse"
+              aria-label="Enviar sugerencia"
+            >
+              <Lightbulb className="w-5 h-5" />
+            </button>
+          </DrawerTrigger>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={8}>
+          <p>¿Tienes sugerencias?</p>
+        </TooltipContent>
+      </Tooltip>
       <DrawerContent>
         <div className="mx-auto w-full max-w-md px-4 pb-8">
           <DrawerHeader className="px-0">

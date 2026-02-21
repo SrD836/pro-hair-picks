@@ -50,11 +50,15 @@
     --wood-dark: 30 30% 7%;
     --wood-medium: 30 20% 12%;
 
+    --gold: 42 58% 54%;
+    --gold-glow: 42 75% 65%;
+
     --gradient-hero: linear-gradient(135deg, hsl(30, 30%, 6%) 0%, hsl(30, 15%, 14%) 100%);
     --gradient-card-hover: linear-gradient(135deg, hsl(39, 33%, 98%) 0%, hsl(42, 58%, 96%) 100%);
 
     --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
     --shadow-card-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+    --shadow-gold: 0 8px 30px -4px hsla(42, 58%, 54%, 0.35), 0 4px 12px -2px hsla(42, 58%, 54%, 0.2);
     --shadow-hero: 0 20px 60px -15px rgba(30, 20, 10, 0.3);
 
     --sidebar-background: 0 0% 98%;
@@ -89,6 +93,9 @@
     --border: 30 10% 18%;
     --input: 30 10% 18%;
     --ring: 42 58% 54%;
+    --gold: 42 58% 54%;
+    --gold-glow: 42 75% 65%;
+    --shadow-gold: 0 8px 30px -4px hsla(42, 58%, 54%, 0.3), 0 4px 12px -2px hsla(42, 58%, 54%, 0.15);
     --sidebar-background: 30 10% 10%;
     --sidebar-foreground: 39 20% 92%;
     --sidebar-primary: 42 58% 54%;
@@ -114,7 +121,7 @@
   }
 }
 
-/* Shimmer animation for hero title — subtle gold accent */
+/* ── Shimmer gold for hero title ──────────────── */
 @keyframes shimmer-gold {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
@@ -136,7 +143,81 @@
   animation: shimmer-gold 4s linear infinite;
 }
 
-/* Slide in from left animation */
+/* ── Shimmer badge for tier labels ────────────── */
+.shimmer-badge {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsla(42, 75%, 65%, 0.35) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-gold 3s linear infinite;
+  pointer-events: none;
+}
+
+/* ── Gold shadow utility ─────────────────────── */
+.shadow-gold {
+  box-shadow: var(--shadow-gold);
+}
+
+/* ── Gold shimmer skeleton ───────────────────── */
+@keyframes gold-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-gold-shimmer {
+  animation: gold-shimmer 1.8s ease-in-out infinite;
+}
+
+/* ── Suggestion button pulse ─────────────────── */
+@keyframes suggestion-pulse {
+  0%, 90%, 100% { box-shadow: 0 0 0 0 hsla(30, 20%, 8%, 0.4); }
+  95% { box-shadow: 0 0 0 10px hsla(30, 20%, 8%, 0); }
+}
+.animate-suggestion-pulse {
+  animation: suggestion-pulse 8s ease-in-out infinite;
+}
+
+/* ── Glassmorphism border hover for tool cards ── */
+@keyframes border-travel {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.glass-border-hover {
+  position: relative;
+}
+.glass-border-hover::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(42, 58%, 54%) 50%,
+    transparent 100%
+  );
+  background-size: 300% 100%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+.glass-border-hover:hover::before {
+  opacity: 1;
+  animation: border-travel 2s linear infinite;
+}
+
+/* ── Slide in from left animation ────────────── */
 @keyframes slide-in-left {
   from { opacity: 0; transform: translateX(-40px); }
   to { opacity: 1; transform: translateX(0); }
@@ -146,7 +227,7 @@
   animation: slide-in-left 0.7s ease-out forwards;
 }
 
-/* Hover underline for CTAs */
+/* ── Hover underline for CTAs ────────────────── */
 .cta-underline {
   position: relative;
   display: inline-block;
@@ -166,4 +247,19 @@
 .cta-underline:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+
+/* ── Reduced motion: disable all animations ──── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .shimmer-gold {
+    animation: none;
+    background: hsl(42, 58%, 54%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
 }

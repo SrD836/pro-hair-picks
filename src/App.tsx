@@ -2,12 +2,16 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import { AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
 import SuggestionButton from "@/components/SuggestionButton";
+import ScissorsCursor from "@/components/ScissorsCursor";
+import PageTransition from "@/components/PageTransition";
+import ScissorsSpinner from "@/components/ScissorsSpinner";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { CompareProvider } from "@/hooks/useCompare";
 import CompareBar from "@/components/CompareBar";
@@ -29,37 +33,50 @@ const QuizPage = lazy(() => import("./pages/QuizPage"));
 
 const queryClient = new QueryClient();
 
+function AnimatedRoutes() {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <PageTransition key={location.pathname}>
+        <Routes location={location}>
+          <Route path="/" element={<Index />} />
+          <Route path="/categorias/:categoria" element={<CategoryProductsPage />} />
+          <Route path="/comparar" element={<CompararPage />} />
+          <Route path="/gestionar-mi-local" element={<GestionarMiLocal />} />
+          <Route path="/calculadora-roi" element={<CalculadoraROI />} />
+          <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/:gender/:slug" element={<GenderRedirect />} />
+          <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
+          <Route path="/politica-cookies" element={<PoliticaCookies />} />
+          <Route path="/terminos" element={<Terminos />} />
+          <Route path="/sobre-nosotros" element={<SobreNosotros />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </PageTransition>
+    </AnimatePresence>
+  );
+}
+
 function AppContent() {
   usePageMeta();
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">
-        <Suspense fallback={<div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Cargando...</div>}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/categorias/:categoria" element={<CategoryProductsPage />} />
-            <Route path="/comparar" element={<CompararPage />} />
-            <Route path="/gestionar-mi-local" element={<GestionarMiLocal />} />
-            <Route path="/calculadora-roi" element={<CalculadoraROI />} />
-            <Route path="/quiz" element={<QuizPage />} />
-            <Route path="/:gender/:slug" element={<GenderRedirect />} />
-            <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
-            <Route path="/politica-cookies" element={<PoliticaCookies />} />
-            <Route path="/terminos" element={<Terminos />} />
-            <Route path="/sobre-nosotros" element={<SobreNosotros />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+        <Suspense fallback={<div className="container mx-auto px-4 py-20 text-center"><ScissorsSpinner className="py-12" /></div>}>
+          <AnimatedRoutes />
         </Suspense>
       </main>
       <Footer />
       <CompareBar />
       <SuggestionButton />
       <CookieBanner />
+      <ScissorsCursor />
     </div>
   );
 }
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import HeroParticles from "./HeroParticles";
 
 function useCountUp(target: number, duration = 2000) {
   const [count, setCount] = useState(0);
@@ -30,6 +31,8 @@ function useCountUp(target: number, duration = 2000) {
   return { count, ref };
 }
 
+const titleWords = ["El", "catálogo", "profesional", "que", "tu"];
+
 const Hero = () => {
   const c1 = useCountUp(431);
   const c2 = useCountUp(47);
@@ -43,15 +46,17 @@ const Hero = () => {
       />
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-black/85" />
+      {/* Floating particles */}
+      <HeroParticles />
 
       <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
           className="max-w-3xl mx-auto text-center"
         >
-          {/* Logo en el hero */}
+          {/* Logo */}
           <div className="flex justify-center mb-6">
             <img
               src="/logo-full.png"
@@ -65,17 +70,53 @@ const Hero = () => {
             <span className="text-white/80 text-sm font-medium">Seleccionado por profesionales</span>
           </div>
 
+          {/* Stagger "cut" title */}
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            El catálogo profesional que tu{" "}
-            <span className="shimmer-gold">salón</span> necesita
+            {titleWords.map((word, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 20, rotateX: -90 }}
+                animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ delay: 0.3 + i * 0.1, duration: 0.5, ease: "easeOut" }}
+                className="inline-block mr-[0.3em]"
+              >
+                {word}
+              </motion.span>
+            ))}
+            <motion.span
+              initial={{ opacity: 0, y: 20, rotateX: -90 }}
+              animate={{ opacity: 1, y: 0, rotateX: 0 }}
+              transition={{ delay: 0.3 + titleWords.length * 0.1, duration: 0.5, ease: "easeOut" }}
+              className="shimmer-gold inline-block mr-[0.3em]"
+            >
+              salón
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 20, rotateX: -90 }}
+              animate={{ opacity: 1, y: 0, rotateX: 0 }}
+              transition={{ delay: 0.3 + (titleWords.length + 1) * 0.1, duration: 0.5, ease: "easeOut" }}
+              className="inline-block"
+            >
+              necesita
+            </motion.span>
           </h1>
 
-          <p className="text-white/60 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.5 }}
+            className="text-white/60 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed"
+          >
             Probado en salones reales. Rankings honestos, precios reales, herramientas que funcionan.
-          </p>
+          </motion.p>
 
           {/* Animated counters */}
-          <div className="flex flex-wrap justify-center gap-8 text-white/70 text-sm">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 0.5 }}
+            className="flex flex-wrap justify-center gap-8 text-white/70 text-sm"
+          >
             <div ref={c1.ref} className="flex items-center gap-2">
               <span className="font-display text-2xl font-bold text-secondary">{c1.count}</span>
               <span>productos analizados</span>
@@ -90,7 +131,7 @@ const Hero = () => {
               <span className="font-display text-2xl font-bold text-secondary">✓</span>
               <span>Precios actualizados hoy</span>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

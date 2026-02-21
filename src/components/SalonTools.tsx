@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { GitCompare, HelpCircle, Calculator, Store } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -10,7 +9,6 @@ const tools = [
     title: "Comparador",
     description: "Compara dos productos lado a lado: especificaciones, precio y valoración.",
     cta: "Comparar",
-    disabled: false,
     href: "/comparar",
     isLink: true,
   },
@@ -19,7 +17,6 @@ const tools = [
     title: "Quiz del Producto Ideal",
     description: "Responde 4 preguntas y te recomendamos la herramienta perfecta para ti.",
     cta: "Empezar quiz",
-    disabled: false,
     href: "/quiz",
     isLink: true,
   },
@@ -28,7 +25,6 @@ const tools = [
     title: "Calculadora ROI",
     description: "Calcula cuánto tardarás en amortizar tu próxima inversión en equipo.",
     cta: "Usar ahora",
-    disabled: false,
     href: "/calculadora-roi",
     isLink: true,
   },
@@ -37,7 +33,6 @@ const tools = [
     title: "Gestionar mi local",
     description: "Ranking de software de gestión: agenda, facturación VeriFactu y más.",
     cta: "Ver ranking",
-    disabled: false,
     href: "/gestionar-mi-local",
     isLink: true,
     hidden: true,
@@ -65,7 +60,7 @@ const SalonTools = () => (
             viewport={{ once: true }}
             transition={{ delay: i * 0.08, duration: 0.35 }}
           >
-            <Card className="h-full flex flex-col p-5 border-border hover:border-secondary/30 hover:shadow-card-hover transition-all duration-200 hover:scale-[1.02]">
+            <div className="group h-full flex flex-col p-5 rounded-lg border border-border bg-card/60 backdrop-blur-sm hover:border-secondary/50 hover:shadow-gold transition-all duration-300 relative overflow-hidden glass-border-hover">
               <div className="p-2.5 rounded-xl bg-secondary/10 text-secondary w-fit mb-4">
                 <tool.icon className="w-5 h-5" />
               </div>
@@ -75,11 +70,7 @@ const SalonTools = () => (
               <p className="text-sm text-muted-foreground mb-4 flex-1">
                 {tool.description}
               </p>
-              {tool.disabled ? (
-                <Button variant="outline" size="sm" disabled className="w-full">
-                  {tool.cta}
-                </Button>
-              ) : tool.isLink ? (
+              {tool.isLink ? (
                 <Button asChild variant="secondary" size="sm" className="w-full">
                   <Link to={tool.href!}>{tool.cta}</Link>
                 </Button>
@@ -88,7 +79,7 @@ const SalonTools = () => (
                   <a href={tool.href}>{tool.cta}</a>
                 </Button>
               )}
-            </Card>
+            </div>
           </motion.div>
         ))}
       </div>
