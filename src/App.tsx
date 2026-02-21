@@ -24,6 +24,7 @@ const Terminos = lazy(() => import("./pages/Terminos"));
 const SobreNosotros = lazy(() => import("./pages/SobreNosotros"));
 const Contacto = lazy(() => import("./pages/Contacto"));
 const GestionarMiLocal = lazy(() => import("./pages/GestionarMiLocal"));
+const CalculadoraROI = lazy(() => import("./pages/CalculadoraROI"));
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ function AppContent() {
             <Route path="/categorias/:categoria" element={<CategoryProductsPage />} />
             <Route path="/comparar" element={<CompararPage />} />
             <Route path="/gestionar-mi-local" element={<GestionarMiLocal />} />
+            <Route path="/calculadora-roi" element={<CalculadoraROI />} />
             <Route path="/:gender/:slug" element={<GenderRedirect />} />
             <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
             <Route path="/politica-cookies" element={<PoliticaCookies />} />
