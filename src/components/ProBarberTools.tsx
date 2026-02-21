@@ -18,8 +18,10 @@ const tools = [
     icon: HelpCircle,
     title: "Quiz del Producto Ideal",
     description: "Responde 4 preguntas y te recomendamos la herramienta perfecta para ti.",
-    cta: "Próximamente",
-    disabled: true,
+    cta: "Empezar quiz",
+    disabled: false,
+    href: "/quiz",
+    isLink: true,
   },
   {
     icon: Calculator,
