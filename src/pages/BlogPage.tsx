@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Search, Clock, Heart, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { getBlogImage } from "@/lib/blogImage";
 
 const BlogPage = () => {
   const [search, setSearch] = useState("");
@@ -117,17 +118,14 @@ const BlogPage = () => {
                   className="group block bg-card border border-border rounded-xl overflow-hidden hover:border-secondary/50 hover:shadow-gold transition-all duration-300"
                 >
                   {/* Cover */}
-                  {post.cover_image_url && (
-                    <div className="aspect-[16/9] overflow-hidden">
-                      <img
-                        src={post.cover_image_url}
-                        alt={post.title}
-                        className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
-                        loading="lazy"
-                        onError={(e) => { e.currentTarget.src = `https://picsum.photos/seed/${post.slug}/800/450`; }}
-                      />
-                    </div>
-                  )}
+                  <div className="aspect-[16/9] overflow-hidden">
+                    <img
+                      src={getBlogImage(post)}
+                      alt={post.title}
+                      className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
 
                   <div className="p-5">
                     {/* Category badge */}
