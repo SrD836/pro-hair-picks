@@ -130,10 +130,24 @@ const BlogPostPage = () => {
         <meta property="og:title" content={post.title} />
         <meta property="og:image" content={post.cover_image_url || FALLBACK_IMAGE} />
         {post.published_at && <meta property="article:published_time" content={post.published_at} />}
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: post.title,
+          description: post.excerpt || post.title,
+          image: post.cover_image_url || FALLBACK_IMAGE,
+          datePublished: post.published_at || post.id,
+          author: { "@type": "Organization", name: "Guía del Salón" },
+          publisher: {
+            "@type": "Organization",
+            name: "Guía del Salón",
+            logo: { "@type": "ImageObject", url: "https://guiadelsalon.com/logo-full.png" },
+          },
+        })}</script>
       </Helmet>
       {/* Hero */}
       <div className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={post.cover_image_url || FALLBACK_IMAGE} alt={post.title} className="w-full h-full object-cover" />
+          <img src={post.cover_image_url || FALLBACK_IMAGE} alt={post.title} className="w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 max-w-4xl mx-auto">
             {post.category && <Badge variant="secondary" className="mb-3">{post.category}</Badge>}
