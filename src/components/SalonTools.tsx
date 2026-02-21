@@ -27,7 +27,8 @@ const tools = [
     description: "Calcula cuánto tardarás en amortizar tu próxima inversión en equipo.",
     cta: "Usar ahora",
     disabled: false,
-    href: "#roi",
+    href: "/calculadora-roi",
+    isLink: true,
   },
   {
     icon: Store,
