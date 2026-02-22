@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import ScissorsSpinner from "@/components/ScissorsSpinner";
+import { AuthorBox } from "@/components/AuthorBox";
+import { DisclaimerAI } from "@/components/DisclaimerAI";
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800";
 
 /* Session ID for anonymous reactions */
@@ -182,6 +184,10 @@ const BlogPostPage = () => {
               className="prose-blog"
               dangerouslySetInnerHTML={{ __html: post.content ?? "" }}
             />
+
+            {/* E-E-A-T: Author & AI disclaimer */}
+            <AuthorBox />
+            <DisclaimerAI />
 
             {/* Share buttons */}
             <div className="flex items-center gap-3 mt-10 pt-6 border-t border-border">
