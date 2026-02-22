@@ -8,6 +8,22 @@ const ROUTE_META: Record<string, { title: string; description: string }> = {
     title: "GuiaDelSalon.com — Los Mejores Productos de Peluquería Profesional",
     description: "Rankings y comparativas de los mejores productos profesionales para peluquería y barbería en España. Seleccionado por profesionales.",
   },
+  "/blog": {
+    title: "Blog | Guía del Salón",
+    description: "Consejos, tendencias y guías para profesionales del salón. Artículos sobre técnicas, productos y negocio.",
+  },
+  "/comparar": {
+    title: "Comparar Productos | Guía del Salón",
+    description: "Compara productos profesionales de peluquería y barbería lado a lado. Precios, características y especificaciones técnicas.",
+  },
+  "/quiz": {
+    title: "Recomendador de Productos | Guía del Salón",
+    description: "Encuentra el producto perfecto para tu salón con nuestro quiz personalizado. Responde 4 preguntas y obtén recomendaciones.",
+  },
+  "/calculadora-roi": {
+    title: "Calculadora ROI | Guía del Salón",
+    description: "Calcula el retorno de inversión de tus herramientas de peluquería. Descubre cuánto puedes ahorrar con el equipo adecuado.",
+  },
   "/politica-privacidad": {
     title: "Política de Privacidad — GuiaDelSalon.com",
     description: "Información sobre cómo tratamos tus datos personales, cookies de Google AdSense y tus derechos RGPD.",
