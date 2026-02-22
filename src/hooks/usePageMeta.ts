@@ -44,6 +44,10 @@ const ROUTE_META: Record<string, { title: string; description: string }> = {
     title: "Contacto — GuiaDelSalon.com",
     description: "Contacta con nosotros para consultas, sugerencias o colaboraciones. Respondemos en 24-48 horas.",
   },
+  "/calculadora-precio": {
+    title: "Calculadora de Precios para Barberos — GuiaDelSalon.com",
+    description: "Calcula el precio ideal de tus servicios de barbería. Herramienta gratuita para barberos profesionales.",
+  },
   "/gestionar-mi-local": {
     title: "Gestionar mi Local — GuiaDelSalon.com",
     description: "Ranking de los mejores softwares de gestión para peluquerías y barberías en España.",

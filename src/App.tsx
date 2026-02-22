@@ -30,6 +30,7 @@ const SobreNosotros = lazy(() => import("./pages/SobreNosotros"));
 const Contacto = lazy(() => import("./pages/Contacto"));
 const GestionarMiLocal = lazy(() => import("./pages/GestionarMiLocal"));
 const CalculadoraROI = lazy(() => import("./pages/CalculadoraROI"));
+const CalculadoraPrecio = lazy(() => import("./pages/CalculadoraPrecio"));
 const QuizPage = lazy(() => import("./pages/QuizPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
 const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
@@ -47,6 +48,7 @@ function AnimatedRoutes() {
           <Route path="/comparar" element={<CompararPage />} />
           <Route path="/gestionar-mi-local" element={<GestionarMiLocal />} />
           <Route path="/calculadora-roi" element={<CalculadoraROI />} />
+          <Route path="/calculadora-precio" element={<CalculadoraPrecio />} />
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
