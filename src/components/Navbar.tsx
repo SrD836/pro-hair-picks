@@ -40,6 +40,9 @@ const Navbar = () => {
             <Link to="/blog" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
               Blog
             </Link>
+            <Link to="/calculadora-precio" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
+              Calculadora Precios
+            </Link>
             <Link to="/gestionar-mi-local" className="hidden px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Gestionar mi local
             </Link>
@@ -67,6 +70,9 @@ const Navbar = () => {
               <MobileFlatSection label="Mixto" items={mixedCategories} onClose={() => setMobileOpen(false)} />
               <Link to="/blog" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
                 Blog
+              </Link>
+              <Link to="/calculadora-precio" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
+                Calculadora Precios
               </Link>
               <Link to="/gestionar-mi-local" onClick={() => setMobileOpen(false)} className="hidden px-2 py-2 font-display font-semibold text-foreground">
                 Gestionar mi local
