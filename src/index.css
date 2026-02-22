@@ -267,6 +267,47 @@
   font-size: 0.9em;
 }
 
+/* ── Amazon affiliate CTA blocks ─────────────── */
+.amazon-cta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: #fffbeb;
+  border: 1px solid #fbbf24;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f59e0b;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+}
+.cta-button:hover {
+  background: #d97706;
+}
+
+/* ── Amazon recommended block (fallback) ─────── */
+.amazon-recommended-block {
+  background: #f8f7f4;
+  border: 1px solid #e7e5e4;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin: 2rem 0;
+}
+.amazon-recommended-block h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #44403c;
+  margin: 0 0 1rem 0;
+}
+
 /* ── Reduced motion: disable all animations ──── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
