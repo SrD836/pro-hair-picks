@@ -62,7 +62,7 @@ const Footer = () => (
         </div>
       </div>
       <div className="border-t border-secondary/20 mt-10 pt-6 text-center text-xs text-muted-foreground">
-        <p>© 2025 GuiaDelSalon.com — Como asociado de Amazon, ganamos con las compras que cumplan los requisitos.</p>
+        <p>© {new Date().getFullYear()} GuiaDelSalon.com — Como asociado de Amazon, ganamos con las compras que cumplan los requisitos.</p>
       </div>
     </div>
   </footer>
