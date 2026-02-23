@@ -4,7 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Clock, Calendar, ThumbsUp, ThumbsDown, Link2, Share2, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -26,6 +27,8 @@ function getSessionId() {
 
 const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { lang } = useLanguage();
+  const isEN = lang === "en";
   const queryClient = useQueryClient();
   const sessionId = getSessionId();
   const [voted, setVoted] = useState<"like" | "dislike" | null>(null);
@@ -36,7 +39,7 @@ const BlogPostPage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
-        .select("*")
+        .select("*, title_en, excerpt_en, content_en")
         .eq("slug", slug!)
         .eq("is_published", true)
         .single();
@@ -122,21 +125,25 @@ const BlogPostPage = () => {
   };
 
   if (isLoading) return <div className="container mx-auto px-4 py-20"><ScissorsSpinner /></div>;
-  if (!post) return <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Post no encontrado</div>;
+   if (!post) return <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Post no encontrado</div>;
+
+   const localTitle = (isEN && post.title_en) || post.title;
+   const localExcerpt = (isEN && post.excerpt_en) || post.excerpt;
+   const localContent = (isEN && post.content_en) || post.content;
 
   return (
     <article className="min-h-screen bg-background">
       <Helmet>
-        <title>{post.title} | Blog Guía del Salón</title>
-        <meta name="description" content={post.excerpt || post.title} />
-        <meta property="og:title" content={post.title} />
+        <title>{localTitle} | Blog Guía del Salón</title>
+        <meta name="description" content={localExcerpt || localTitle} />
+        <meta property="og:title" content={localTitle} />
         <meta property="og:image" content={post.cover_image_url || FALLBACK_IMAGE} />
         {post.published_at && <meta property="article:published_time" content={post.published_at} />}
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Article",
-          headline: post.title,
-          description: post.excerpt || post.title,
+          headline: localTitle,
+          description: localExcerpt || localTitle,
           image: post.cover_image_url || FALLBACK_IMAGE,
           datePublished: post.published_at || post.id,
           author: { "@type": "Organization", name: "Guía del Salón" },
@@ -153,7 +160,7 @@ const BlogPostPage = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 max-w-4xl mx-auto">
             {post.category && <Badge variant="secondary" className="mb-3">{post.category}</Badge>}
-            <h1 className="font-display text-3xl md:text-5xl text-foreground leading-tight">{post.title}</h1>
+            <h1 className="font-display text-3xl md:text-5xl text-foreground leading-tight">{localTitle}</h1>
             <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
               {post.read_time_minutes && (
                 <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {post.read_time_minutes} min lectura</span>
@@ -182,7 +189,7 @@ const BlogPostPage = () => {
             {/* Article body */}
             <div
               className="prose-blog"
-              dangerouslySetInnerHTML={{ __html: post.content ?? "" }}
+              dangerouslySetInnerHTML={{ __html: localContent ?? "" }}
             />
 
             {/* E-E-A-T: Author & AI disclaimer */}

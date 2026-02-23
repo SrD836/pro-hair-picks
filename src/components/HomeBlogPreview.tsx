@@ -6,13 +6,14 @@ import { ArrowRight, Clock, BookOpen } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const HomeBlogPreview = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const isEN = lang === "en";
   const { data: posts } = useQuery({
     queryKey: ["blog-preview"],
     queryFn: async () => {
       const { data } = await supabase
         .from("blog_posts")
-        .select("slug, title, excerpt, cover_image_url, category, published_at, read_time_minutes")
+        .select("slug, title, title_en, excerpt, excerpt_en, cover_image_url, category, published_at, read_time_minutes")
         .eq("is_published", true)
         .order("published_at", { ascending: false })
         .limit(3);
@@ -95,11 +96,11 @@ const HomeBlogPreview = () => {
                   )}
                 </div>
                 <h3 className="font-display text-lg font-bold text-foreground mb-2 line-clamp-2 group-hover:text-secondary transition-colors">
-                  {post.title}
+                  {(isEN && post.title_en) || post.title}
                 </h3>
-                {post.excerpt && (
+                {(post.excerpt || post.excerpt_en) && (
                   <p className="text-sm text-muted-foreground line-clamp-2">
-                    {post.excerpt}
+                    {(isEN && post.excerpt_en) || post.excerpt}
                   </p>
                 )}
               </div>
