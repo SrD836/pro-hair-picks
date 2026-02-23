@@ -10,7 +10,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800";
 
 const BlogPage = () => {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const isEN = lang === "en";
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -54,12 +54,12 @@ const BlogPage = () => {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="font-display text-4xl md:text-5xl text-foreground text-center mb-2"
+         className="font-display text-4xl md:text-5xl text-foreground text-center mb-2"
         >
-          Nuestro <span className="text-secondary">Blog</span>
+          {t("blog.pageTitle")} <span className="text-secondary">{t("blog.pageTitleBold")}</span>
         </motion.h1>
         <p className="text-center text-muted-foreground mb-8">
-          Consejos, tendencias y guías para profesionales del salón
+          {t("blog.pageSubtitle")}
         </p>
 
         {/* Search */}
@@ -67,7 +67,7 @@ const BlogPage = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Buscar artículos..."
+            placeholder={t("blog.searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-secondary text-sm"
@@ -84,7 +84,7 @@ const BlogPage = () => {
                 : "bg-card border border-border text-muted-foreground hover:text-foreground"
             }`}
           >
-            Todos
+            {t("blog.all")}
           </button>
           {categories.map((cat) => (
             <button
@@ -111,7 +111,7 @@ const BlogPage = () => {
             ))}
           </div>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-muted-foreground py-12">No se encontraron artículos.</p>
+          <p className="text-center text-muted-foreground py-12">{t("blog.noResults")}</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((post, i) => (

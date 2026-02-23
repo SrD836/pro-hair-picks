@@ -103,6 +103,7 @@ export type Database = {
           published_at: string | null
           read_time_minutes: number | null
           slug: string
+          slug_en: string | null
           title: string
           title_en: string | null
         }
@@ -121,6 +122,7 @@ export type Database = {
           published_at?: string | null
           read_time_minutes?: number | null
           slug: string
+          slug_en?: string | null
           title: string
           title_en?: string | null
         }
@@ -139,6 +141,7 @@ export type Database = {
           published_at?: string | null
           read_time_minutes?: number | null
           slug?: string
+          slug_en?: string | null
           title?: string
           title_en?: string | null
         }

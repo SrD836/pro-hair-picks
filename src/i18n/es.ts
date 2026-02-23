@@ -41,6 +41,12 @@ export const es = {
     subtitle: "Guías, reviews y consejos para profesionales del salón",
     viewAll: "Ver todo el blog",
     min: "min",
+    pageTitle: "Nuestro",
+    pageTitleBold: "Blog",
+    pageSubtitle: "Consejos, tendencias y guías para profesionales del salón",
+    searchPlaceholder: "Buscar artículos...",
+    all: "Todos",
+    noResults: "No se encontraron artículos.",
   },
   bento: {
     featuredCategories: "Categorías Destacadas",

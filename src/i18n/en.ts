@@ -41,6 +41,12 @@ export const en = {
     subtitle: "Guides, reviews and tips for salon professionals",
     viewAll: "View all blog posts",
     min: "min",
+    pageTitle: "Our",
+    pageTitleBold: "Blog",
+    pageSubtitle: "Tips, trends and guides for salon professionals",
+    searchPlaceholder: "Search articles...",
+    all: "All",
+    noResults: "No articles found.",
   },
   bento: {
     featuredCategories: "Featured Categories",
