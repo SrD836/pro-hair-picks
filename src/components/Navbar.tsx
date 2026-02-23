@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 import { ChevronDown, Search, Menu, X } from "lucide-react";
 import { menGroups, womenGroups, mixedCategories, type CategoryGroup, type CategoryItem } from "@/data/categories";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/i18n/LanguageContext";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const Navbar = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -34,23 +37,25 @@ const Navbar = () => {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            <GroupedDropdown label="Hombre" groups={menGroups} isOpen={openDropdown === "hombre"} onToggle={() => setOpenDropdown(openDropdown === "hombre" ? null : "hombre")} onClose={() => setOpenDropdown(null)} />
-            <GroupedDropdown label="Mujer" groups={womenGroups} isOpen={openDropdown === "mujer"} onToggle={() => setOpenDropdown(openDropdown === "mujer" ? null : "mujer")} onClose={() => setOpenDropdown(null)} />
-            <FlatDropdown label="Mixto" items={mixedCategories} isOpen={openDropdown === "mixto"} onToggle={() => setOpenDropdown(openDropdown === "mixto" ? null : "mixto")} onClose={() => setOpenDropdown(null)} />
+            <GroupedDropdown label={t("nav.men")} groups={menGroups} isOpen={openDropdown === "hombre"} onToggle={() => setOpenDropdown(openDropdown === "hombre" ? null : "hombre")} onClose={() => setOpenDropdown(null)} />
+            <GroupedDropdown label={t("nav.women")} groups={womenGroups} isOpen={openDropdown === "mujer"} onToggle={() => setOpenDropdown(openDropdown === "mujer" ? null : "mujer")} onClose={() => setOpenDropdown(null)} />
+            <FlatDropdown label={t("nav.mixed")} items={mixedCategories} isOpen={openDropdown === "mixto"} onToggle={() => setOpenDropdown(openDropdown === "mixto" ? null : "mixto")} onClose={() => setOpenDropdown(null)} />
             <Link to="/blog" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
-              Blog
+              {t("nav.blog")}
             </Link>
             <Link to="/calculadora-precio" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
-              Calculadora Precios
+              {t("nav.priceCalculator")}
             </Link>
             <Link to="/gestionar-mi-local" className="hidden px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Gestionar mi local
+              {t("nav.manageMyShop")}
             </Link>
+            <LanguageSelector />
           </div>
 
           {/* Search + Mobile toggle */}
           <div className="flex items-center gap-2">
-            <Link to="/" className="p-2 rounded-lg hover:bg-muted transition-colors">
+            <LanguageSelector />
+            <Link to="/" className="p-2 rounded-lg hover:bg-muted transition-colors md:block">
               <Search className="w-5 h-5 text-muted-foreground" />
             </Link>
             <button className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors" onClick={() => setMobileOpen(!mobileOpen)}>
@@ -65,17 +70,17 @@ const Navbar = () => {
         {mobileOpen && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-hidden border-t border-border bg-background">
             <div className="p-4 space-y-4 max-h-[80vh] overflow-y-auto">
-              <MobileGroupedSection label="Hombre" groups={menGroups} onClose={() => setMobileOpen(false)} />
-              <MobileGroupedSection label="Mujer" groups={womenGroups} onClose={() => setMobileOpen(false)} />
-              <MobileFlatSection label="Mixto" items={mixedCategories} onClose={() => setMobileOpen(false)} />
+              <MobileGroupedSection label={t("nav.men")} groups={menGroups} onClose={() => setMobileOpen(false)} />
+              <MobileGroupedSection label={t("nav.women")} groups={womenGroups} onClose={() => setMobileOpen(false)} />
+              <MobileFlatSection label={t("nav.mixed")} items={mixedCategories} onClose={() => setMobileOpen(false)} />
               <Link to="/blog" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
-                Blog
+                {t("nav.blog")}
               </Link>
               <Link to="/calculadora-precio" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
-                Calculadora Precios
+                {t("nav.priceCalculator")}
               </Link>
               <Link to="/gestionar-mi-local" onClick={() => setMobileOpen(false)} className="hidden px-2 py-2 font-display font-semibold text-foreground">
-                Gestionar mi local
+                {t("nav.manageMyShop")}
               </Link>
             </div>
           </motion.div>

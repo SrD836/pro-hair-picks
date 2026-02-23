@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import PhotoSections from "@/components/PhotoSections";
 import HomeBlogPreview from "@/components/HomeBlogPreview";
 import HomeBentoGrid from "@/components/HomeBentoGrid";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const websiteSchema = JSON.stringify({
   "@context": "https://schema.org",
@@ -16,20 +17,24 @@ const websiteSchema = JSON.stringify({
   },
 });
 
-const Index = () => (
-  <>
-    <Helmet>
-      <title>Guía del Salón | Equipamiento profesional para peluquerías y barberías</title>
-      <meta name="description" content="La guía definitiva de equipamiento para profesionales del salón. Compara clippers, secadores, planchas y más. Seleccionado por expertos." />
-      <meta property="og:title" content="Guía del Salón" />
-      <meta property="og:image" content="/logo-full.png" />
-      <script type="application/ld+json">{websiteSchema}</script>
-    </Helmet>
-    <Hero />
-    <PhotoSections />
-    <HomeBlogPreview />
-    <HomeBentoGrid />
-  </>
-);
+const Index = () => {
+  const { t } = useLanguage();
+
+  return (
+    <>
+      <Helmet>
+        <title>{t("meta.homeTitle")}</title>
+        <meta name="description" content={t("meta.homeDescription")} />
+        <meta property="og:title" content="Guía del Salón" />
+        <meta property="og:image" content="/logo-full.png" />
+        <script type="application/ld+json">{websiteSchema}</script>
+      </Helmet>
+      <Hero />
+      <PhotoSections />
+      <HomeBlogPreview />
+      <HomeBentoGrid />
+    </>
+  );
+};
 
 export default Index;

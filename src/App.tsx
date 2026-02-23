@@ -16,6 +16,7 @@ import ScissorsSpinner from "@/components/ScissorsSpinner";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { CompareProvider } from "@/hooks/useCompare";
 import CompareBar from "@/components/CompareBar";
+import { LanguageProvider } from "@/i18n/LanguageContext";
 import Index from "./pages/Index";
 import CategoryProductsPage from "./pages/CategoryProductsPage";
 import CompararPage from "./pages/CompararPage";
@@ -88,13 +89,15 @@ const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <CompareProvider>
-            <AppContent />
-          </CompareProvider>
-        </BrowserRouter>
+        <LanguageProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <CompareProvider>
+              <AppContent />
+            </CompareProvider>
+          </BrowserRouter>
+        </LanguageProvider>
       </TooltipProvider>
     </QueryClientProvider>
   </HelmetProvider>

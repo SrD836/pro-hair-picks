@@ -16,11 +16,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const SuggestionButton = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async () => {
     if (!message.trim()) return;
@@ -29,11 +31,11 @@ const SuggestionButton = () => {
     setLoading(false);
 
     if (error) {
-      toast({ title: "Error", description: "No se pudo enviar. Inténtalo de nuevo.", variant: "destructive" });
+      toast({ title: t("suggestion.error"), description: t("suggestion.errorDesc"), variant: "destructive" });
       return;
     }
 
-    toast({ title: "¡Gracias!", description: "Tu sugerencia ha sido enviada." });
+    toast({ title: t("suggestion.thanks"), description: t("suggestion.thanksDesc") });
     setMessage("");
     setTimeout(() => setOpen(false), 2000);
   };
@@ -45,30 +47,30 @@ const SuggestionButton = () => {
           <DrawerTrigger asChild>
             <button
               className="fixed bottom-6 left-6 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors animate-suggestion-pulse"
-              aria-label="Enviar sugerencia"
+              aria-label={t("suggestion.tooltip")}
             >
               <Lightbulb className="w-5 h-5" />
             </button>
           </DrawerTrigger>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={8}>
-          <p>¿Tienes sugerencias?</p>
+          <p>{t("suggestion.tooltip")}</p>
         </TooltipContent>
       </Tooltip>
       <DrawerContent>
         <div className="mx-auto w-full max-w-md px-4 pb-8">
           <DrawerHeader className="px-0">
-            <DrawerTitle className="font-display">¿Qué categorías te gustaría ver?</DrawerTitle>
+            <DrawerTitle className="font-display">{t("suggestion.title")}</DrawerTitle>
           </DrawerHeader>
           <Textarea
-            placeholder="Cuéntanos qué productos o categorías echas en falta..."
+            placeholder={t("suggestion.placeholder")}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             rows={4}
             className="mb-4"
           />
           <Button onClick={handleSubmit} disabled={loading || !message.trim()} className="w-full">
-            {loading ? "Enviando..." : "Enviar sugerencia"}
+            {loading ? t("suggestion.sending") : t("suggestion.send")}
           </Button>
         </div>
       </DrawerContent>
