@@ -91,6 +91,7 @@ export type Database = {
         Row: {
           author: string | null
           category: string | null
+          category_en: string | null
           content: string | null
           content_en: string | null
           cover_image_url: string | null
@@ -110,6 +111,7 @@ export type Database = {
         Insert: {
           author?: string | null
           category?: string | null
+          category_en?: string | null
           content?: string | null
           content_en?: string | null
           cover_image_url?: string | null
@@ -129,6 +131,7 @@ export type Database = {
         Update: {
           author?: string | null
           category?: string | null
+          category_en?: string | null
           content?: string | null
           content_en?: string | null
           cover_image_url?: string | null
