@@ -20,7 +20,7 @@ const BlogPage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
-        .select("*, title_en, excerpt_en, content_en")
+        .select("*, title_en, excerpt_en, content_en, category_en")
         .eq("is_published", true)
         .order("published_at", { ascending: false });
       if (error) throw error;
@@ -28,9 +28,20 @@ const BlogPage = () => {
     },
   });
 
+  // Build category list (use original category as key, with EN translation for display)
+  const categoryMap = useMemo(() => {
+    const map = new Map<string, string>(); // category -> display name
+    posts.forEach((p) => {
+      if (p.category && !map.has(p.category)) {
+        map.set(p.category, (isEN && (p as any).category_en) || p.category);
+      }
+    });
+    return map;
+  }, [posts, isEN]);
+
   const categories = useMemo(
-    () => [...new Set(posts.map((p) => p.category).filter(Boolean))],
-    [posts]
+    () => [...categoryMap.keys()],
+    [categoryMap]
   );
 
   const filtered = useMemo(() => {
@@ -96,7 +107,7 @@ const BlogPage = () => {
                   : "bg-card border border-border text-muted-foreground hover:text-foreground"
               }`}
             >
-              {cat}
+              {categoryMap.get(cat) || cat}
             </button>
           ))}
         </div>
@@ -139,7 +150,7 @@ const BlogPage = () => {
                     {/* Category badge */}
                     {post.category && (
                       <Badge variant="secondary" className="mb-3 text-xs">
-                        {post.category}
+                        {(isEN && (post as any).category_en) || post.category}
                       </Badge>
                     )}
 
