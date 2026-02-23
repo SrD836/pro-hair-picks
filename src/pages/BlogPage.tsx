@@ -6,9 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Search, Clock, Heart, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/i18n/LanguageContext";
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800";
 
 const BlogPage = () => {
+  const { lang } = useLanguage();
+  const isEN = lang === "en";
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
@@ -17,7 +20,7 @@ const BlogPage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
-        .select("*")
+        .select("*, title_en, excerpt_en, content_en")
         .eq("is_published", true)
         .order("published_at", { ascending: false });
       if (error) throw error;
@@ -141,12 +144,12 @@ const BlogPage = () => {
                     )}
 
                     <h2 className="font-display text-lg text-foreground mb-2 line-clamp-2 group-hover:text-secondary transition-colors">
-                      {post.title}
+                      {(isEN && post.title_en) || post.title}
                     </h2>
 
-                    {post.excerpt && (
+                    {(post.excerpt || post.excerpt_en) && (
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                        {post.excerpt}
+                        {(isEN && post.excerpt_en) || post.excerpt}
                       </p>
                     )}
 

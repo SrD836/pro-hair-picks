@@ -92,9 +92,11 @@ export type Database = {
           author: string | null
           category: string | null
           content: string | null
+          content_en: string | null
           cover_image_url: string | null
           dislikes: number | null
           excerpt: string | null
+          excerpt_en: string | null
           id: string
           is_published: boolean | null
           likes: number | null
@@ -102,14 +104,17 @@ export type Database = {
           read_time_minutes: number | null
           slug: string
           title: string
+          title_en: string | null
         }
         Insert: {
           author?: string | null
           category?: string | null
           content?: string | null
+          content_en?: string | null
           cover_image_url?: string | null
           dislikes?: number | null
           excerpt?: string | null
+          excerpt_en?: string | null
           id?: string
           is_published?: boolean | null
           likes?: number | null
@@ -117,14 +122,17 @@ export type Database = {
           read_time_minutes?: number | null
           slug: string
           title: string
+          title_en?: string | null
         }
         Update: {
           author?: string | null
           category?: string | null
           content?: string | null
+          content_en?: string | null
           cover_image_url?: string | null
           dislikes?: number | null
           excerpt?: string | null
+          excerpt_en?: string | null
           id?: string
           is_published?: boolean | null
           likes?: number | null
@@ -132,6 +140,7 @@ export type Database = {
           read_time_minutes?: number | null
           slug?: string
           title?: string
+          title_en?: string | null
         }
         Relationships: []
       }
