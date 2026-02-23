@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import Hero from "@/components/Hero";
 import PhotoSections from "@/components/PhotoSections";
+import HomeBlogPreview from "@/components/HomeBlogPreview";
 import HomeBentoGrid from "@/components/HomeBentoGrid";
 
 const websiteSchema = JSON.stringify({
@@ -26,6 +27,7 @@ const Index = () => (
     </Helmet>
     <Hero />
     <PhotoSections />
+    <HomeBlogPreview />
     <HomeBentoGrid />
   </>
 );
