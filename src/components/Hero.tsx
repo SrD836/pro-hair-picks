@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import HeroParticles from "./HeroParticles";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 function useCountUp(target: number, duration = 2000) {
   const [count, setCount] = useState(0);
@@ -31,22 +32,20 @@ function useCountUp(target: number, duration = 2000) {
   return { count, ref };
 }
 
-const titleWords = ["El", "catálogo", "profesional", "que", "tu"];
-
 const Hero = () => {
   const c1 = useCountUp(431);
   const c2 = useCountUp(47);
+  const { t } = useLanguage();
+
+  const titleWords = t("hero.titleWords").split(",");
 
   return (
     <section className="relative overflow-hidden min-h-[70vh] flex items-center">
-      {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/hero-barbershop.jpg')" }}
       />
-      {/* Dark overlay matching palette */}
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(24,29%,9%)]/85 via-[hsl(24,29%,9%)]/70 to-transparent" />
-      {/* Floating particles */}
       <HeroParticles />
 
       <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
@@ -56,7 +55,6 @@ const Hero = () => {
           transition={{ duration: 0.5 }}
           className="max-w-3xl mx-auto text-center"
         >
-          {/* Logo */}
           <div className="flex justify-center mb-6">
             <img
               src="/logo-full.png"
@@ -67,10 +65,9 @@ const Hero = () => {
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-secondary/20 bg-card/30 mb-8 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-            <span className="text-foreground/80 text-sm font-medium">Seleccionado por profesionales</span>
+            <span className="text-foreground/80 text-sm font-medium">{t("hero.badge")}</span>
           </div>
 
-          {/* Stagger "cut" title */}
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
             {titleWords.map((word, i) => (
               <motion.span
@@ -89,7 +86,7 @@ const Hero = () => {
               transition={{ delay: 0.3 + titleWords.length * 0.1, duration: 0.5, ease: "easeOut" }}
               className="shimmer-gold inline-block mr-[0.3em]"
             >
-              salón
+              {t("hero.titleHighlight")}
             </motion.span>
             <motion.span
               initial={{ opacity: 0, y: 20, rotateX: -90 }}
@@ -97,7 +94,7 @@ const Hero = () => {
               transition={{ delay: 0.3 + (titleWords.length + 1) * 0.1, duration: 0.5, ease: "easeOut" }}
               className="inline-block"
             >
-              necesita
+              {t("hero.titleEnd")}
             </motion.span>
           </h1>
 
@@ -107,10 +104,9 @@ const Hero = () => {
             transition={{ delay: 1.2, duration: 0.5 }}
             className="text-muted-foreground text-lg md:text-xl mb-4 max-w-2xl mx-auto leading-relaxed"
           >
-            Probado en salones reales. Rankings honestos, precios reales, herramientas que funcionan.
+            {t("hero.subtitle")}
           </motion.p>
 
-          {/* Decorative gold line */}
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
@@ -118,7 +114,6 @@ const Hero = () => {
             className="w-[60px] h-px bg-secondary mx-auto mb-10"
           />
 
-          {/* Animated counters */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -127,15 +122,15 @@ const Hero = () => {
           >
             <div ref={c1.ref} className="flex items-center gap-2 px-4 py-2 rounded-sm bg-card/50 border border-secondary/30 backdrop-blur-sm">
               <span className="font-display text-2xl font-bold text-secondary">{c1.count}</span>
-              <span className="text-muted-foreground">productos analizados</span>
+              <span className="text-muted-foreground">{t("hero.productsAnalyzed")}</span>
             </div>
             <div ref={c2.ref} className="flex items-center gap-2 px-4 py-2 rounded-sm bg-card/50 border border-secondary/30 backdrop-blur-sm">
               <span className="font-display text-2xl font-bold text-secondary">{c2.count}</span>
-              <span className="text-muted-foreground">categorías</span>
+              <span className="text-muted-foreground">{t("hero.categories")}</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-sm bg-card/50 border border-secondary/30 backdrop-blur-sm">
               <span className="font-display text-2xl font-bold text-secondary">✓</span>
-              <span className="text-muted-foreground">Precios actualizados hoy</span>
+              <span className="text-muted-foreground">{t("hero.pricesUpdated")}</span>
             </div>
           </motion.div>
         </motion.div>

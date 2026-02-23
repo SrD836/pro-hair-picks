@@ -326,6 +326,7 @@ export type Database = {
           amazon_reviews: number | null
           amazon_title: string | null
           amazon_url: string | null
+          amazon_url_us: string | null
           brand: string | null
           category: string | null
           category_id: string | null
@@ -352,6 +353,7 @@ export type Database = {
           amazon_reviews?: number | null
           amazon_title?: string | null
           amazon_url?: string | null
+          amazon_url_us?: string | null
           brand?: string | null
           category?: string | null
           category_id?: string | null
@@ -378,6 +380,7 @@ export type Database = {
           amazon_reviews?: number | null
           amazon_title?: string | null
           amazon_url?: string | null
+          amazon_url_us?: string | null
           brand?: string | null
           category?: string | null
           category_id?: string | null

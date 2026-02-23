@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { Scissors, Sparkles, Users } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 function useFadeIn() {
   const ref = useRef<HTMLDivElement>(null);
@@ -49,45 +50,49 @@ function useCountUp(target: number, duration = 1500) {
   return { count, ref };
 }
 
-const sections = [
-  {
-    title: "Barbería & Hombre",
-    subtitle: "Desde el fade perfecto hasta el afeitado clásico",
-    image: "/images/section-barber.jpg",
-    link: "/categorias/clippers",
-    linkText: "Explorar productos de hombre",
-    icon: Scissors,
-    categoryCount: 22,
-  },
-  {
-    title: "Peluquería & Mujer",
-    subtitle: "Herramientas que los profesionales eligen cada día",
-    image: "/images/section-salon.jpg",
-    link: "/categorias/secadores-profesionales",
-    linkText: "Explorar productos de mujer",
-    icon: Sparkles,
-    categoryCount: 16,
-  },
-  {
-    title: "Salón Mixto",
-    subtitle: "Equipamiento para salones que lo quieren todo",
-    image: "/images/section-mixto.jpg",
-    link: "/categorias/capas-y-delantales",
-    linkText: "Explorar productos mixtos",
-    icon: Users,
-    categoryCount: 6,
-  },
-];
+const PhotoSections = () => {
+  const { t } = useLanguage();
 
-const PhotoSections = () => (
-  <section className="py-16 md:py-24 space-y-0">
-    {sections.map((s, i) => (
-      <PhotoCard key={s.title} section={s} index={i} />
-    ))}
-  </section>
-);
+  const sections = [
+    {
+      title: t("sections.barber.title"),
+      subtitle: t("sections.barber.subtitle"),
+      image: "/images/section-barber.jpg",
+      link: "/categorias/clippers",
+      linkText: t("sections.barber.cta"),
+      icon: Scissors,
+      categoryCount: 22,
+    },
+    {
+      title: t("sections.salon.title"),
+      subtitle: t("sections.salon.subtitle"),
+      image: "/images/section-salon.jpg",
+      link: "/categorias/secadores-profesionales",
+      linkText: t("sections.salon.cta"),
+      icon: Sparkles,
+      categoryCount: 16,
+    },
+    {
+      title: t("sections.mixed.title"),
+      subtitle: t("sections.mixed.subtitle"),
+      image: "/images/section-mixto.jpg",
+      link: "/categorias/capas-y-delantales",
+      linkText: t("sections.mixed.cta"),
+      icon: Users,
+      categoryCount: 6,
+    },
+  ];
 
-function PhotoCard({ section, index }: { section: typeof sections[0]; index: number }) {
+  return (
+    <section className="py-16 md:py-24 space-y-0">
+      {sections.map((s, i) => (
+        <PhotoCard key={i} section={s} index={i} categoriesLabel={t("sections.categoriesLabel")} />
+      ))}
+    </section>
+  );
+};
+
+function PhotoCard({ section, index, categoriesLabel }: { section: { title: string; subtitle: string; image: string; link: string; linkText: string; icon: any; categoryCount: number }; index: number; categoriesLabel: string }) {
   const fade = useFadeIn();
   const counter = useCountUp(section.categoryCount);
   const Icon = section.icon;
@@ -97,21 +102,17 @@ function PhotoCard({ section, index }: { section: typeof sections[0]; index: num
       ref={fade.ref}
       className="relative overflow-hidden min-h-[50vh] md:min-h-[60vh] flex items-center"
     >
-      {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url('${section.image}')` }}
       />
-      {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
 
-      {/* Content — slides in from left */}
       <div className="container mx-auto px-4 relative z-10">
         <div
           className={`max-w-lg transition-all duration-700 ease-out ${fade.visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}
           style={{ transitionDelay: "0.1s" }}
         >
-          {/* Icon */}
           <div className="inline-flex items-center gap-2 mb-4">
             <Icon className="w-5 h-5 text-secondary" />
             <span className="text-secondary text-sm font-medium uppercase tracking-wider">
@@ -119,7 +120,6 @@ function PhotoCard({ section, index }: { section: typeof sections[0]; index: num
             </span>
           </div>
 
-          {/* Big number */}
           <div className="mb-4">
             <span
               ref={counter.ref}
@@ -127,15 +127,13 @@ function PhotoCard({ section, index }: { section: typeof sections[0]; index: num
             >
               {counter.count}
             </span>
-            <span className="text-white/50 text-lg ml-2">categorías</span>
+            <span className="text-white/50 text-lg ml-2">{categoriesLabel}</span>
           </div>
 
-          {/* Subtitle */}
           <p className="text-white/70 text-lg md:text-xl mb-8 leading-relaxed italic">
             {section.subtitle}
           </p>
 
-          {/* CTA with underline hover */}
           <Link
             to={section.link}
             className="cta-underline text-secondary font-semibold text-base hover:text-secondary/80 transition-colors"

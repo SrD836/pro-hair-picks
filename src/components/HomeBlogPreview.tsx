@@ -3,8 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Clock, BookOpen } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const HomeBlogPreview = () => {
+  const { t } = useLanguage();
   const { data: posts } = useQuery({
     queryKey: ["blog-preview"],
     queryFn: async () => {
@@ -22,7 +24,6 @@ const HomeBlogPreview = () => {
 
   return (
     <section className="container mx-auto px-4 py-16 md:py-20">
-      {/* Header */}
       <div className="flex items-end justify-between mb-10">
         <div>
           <motion.div
@@ -33,26 +34,25 @@ const HomeBlogPreview = () => {
           >
             <BookOpen className="w-5 h-5 text-secondary" />
             <span className="text-sm font-semibold text-secondary uppercase tracking-wider">
-              Blog
+              {t("blog.sectionLabel")}
             </span>
           </motion.div>
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-            Últimos Artículos
+            {t("blog.latestArticles")}
           </h2>
           <p className="text-muted-foreground mt-2 max-w-md">
-            Guías, reviews y consejos para profesionales del salón
+            {t("blog.subtitle")}
           </p>
         </div>
         <Link
           to="/blog"
           className="hidden md:inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold hover:bg-secondary/90 transition-colors"
         >
-          Ver todo el blog
+          {t("blog.viewAll")}
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
 
-      {/* Cards grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {posts.map((post, i) => (
           <motion.article
@@ -90,7 +90,7 @@ const HomeBlogPreview = () => {
                   {post.read_time_minutes && (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Clock className="w-3 h-3" />
-                      {post.read_time_minutes} min
+                      {post.read_time_minutes} {t("blog.min")}
                     </span>
                   )}
                 </div>
@@ -108,13 +108,12 @@ const HomeBlogPreview = () => {
         ))}
       </div>
 
-      {/* Mobile CTA */}
       <div className="mt-8 text-center md:hidden">
         <Link
           to="/blog"
           className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold hover:bg-secondary/90 transition-colors"
         >
-          Ver todo el blog
+          {t("blog.viewAll")}
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

@@ -16,6 +16,7 @@ export interface Product {
   image_url?: string;
   position?: number;
   tech_specs?: Record<string, string>;
+  amazon_url_us?: string;
 }
 
 const TIER_ORDER: Record<string, number> = { ELITE: 0, VALUE: 1, STARTER: 2 };
@@ -28,7 +29,7 @@ export const useProductsByCategory = (category: string) => {
 
       const { data, error } = await supabase
         .from("products")
-        .select("id, category, price_range, name, brand, amazon_asin, amazon_url, current_price, amazon_reviews, amazon_rating, features, image_url, position, tech_specs")
+        .select("id, category, price_range, name, brand, amazon_asin, amazon_url, amazon_url_us, current_price, amazon_reviews, amazon_rating, features, image_url, position, tech_specs")
         .ilike("category", category);
 
       console.log("[useProductsByCategory] Result:", { data, error, count: data?.length });
