@@ -52,7 +52,6 @@ const Navbar = () => {
             <Link to="/gestionar-mi-local" className="hidden px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               {t("nav.manageMyShop")}
             </Link>
-            <LanguageSelector />
           </div>
 
           {/* Search + Mobile toggle */}
