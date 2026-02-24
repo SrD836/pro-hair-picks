@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -9,9 +9,11 @@ import {
   type SkinTone,
   type Undertone,
   type EyeColor,
+  type FantasyColor,
   type UserProfile,
   type ColorRecommendation,
   getRecommendation,
+  FANTASY_COLORS,
 } from "@/lib/colorMatchEngine";
 
 /* ── Step option type ──────────────────────────── */
@@ -19,16 +21,16 @@ interface StepOption<T extends string> {
   value: T;
   label: { es: string; en: string };
   desc?: { es: string; en: string };
-  color?: string; // preview swatch
+  color?: string;
   emoji?: string;
 }
 
 /* ── Steps config ──────────────────────────────── */
 const SKIN_OPTIONS: StepOption<SkinTone>[] = [
-  { value: "light", label: { es: "Clara", en: "Light" }, color: "#f5dcc3", desc: { es: "Piel tipo I-II (muy clara a clara)", en: "Type I-II (very light to light)" } },
-  { value: "medium", label: { es: "Media", en: "Medium" }, color: "#d4a574", desc: { es: "Piel tipo III (melocotón/beige)", en: "Type III (peach/beige)" } },
-  { value: "tan", label: { es: "Bronceada", en: "Tan" }, color: "#a0764a", desc: { es: "Piel tipo IV-V (oliva/dorada)", en: "Type IV-V (olive/golden)" } },
-  { value: "dark", label: { es: "Oscura", en: "Dark" }, color: "#6b4226", desc: { es: "Piel tipo VI (oscura a muy oscura)", en: "Type VI (dark to very dark)" } },
+  { value: "light", label: { es: "Clara", en: "Light" }, color: "#f5dcc3", desc: { es: "Piel tipo I-II · Todo tipo de cabello: liso, ondulado, rizado", en: "Type I-II · All hair types: straight, wavy, curly" } },
+  { value: "medium", label: { es: "Media", en: "Medium" }, color: "#d4a574", desc: { es: "Piel tipo III · Melocotón/beige · Cualquier textura capilar", en: "Type III · Peach/beige · Any hair texture" } },
+  { value: "tan", label: { es: "Bronceada", en: "Tan" }, color: "#a0764a", desc: { es: "Piel tipo IV-V · Oliva/dorada · Incluye cabello afro y rizado", en: "Type IV-V · Olive/golden · Includes afro & curly hair" } },
+  { value: "dark", label: { es: "Oscura", en: "Dark" }, color: "#6b4226", desc: { es: "Piel tipo VI · Oscura a muy oscura · Todas las texturas", en: "Type VI · Dark to very dark · All textures" } },
 ];
 
 const UNDERTONE_OPTIONS: StepOption<Undertone>[] = [
@@ -69,6 +71,8 @@ const LOADING_MSGS = [
   { es: "Generando tu paleta ideal...", en: "Generating your ideal palette..." },
 ];
 
+const AFFILIATE_TAG = "guiadelsalon-21";
+
 /* ── Component ─────────────────────────────────── */
 export default function ColorMatchPage() {
   const { lang } = useLanguage();
@@ -80,6 +84,7 @@ export default function ColorMatchPage() {
   const [eyeColor, setEyeColor] = useState<EyeColor | null>(null);
   const [naturalLevel, setNaturalLevel] = useState<number | null>(null);
   const [currentLevel, setCurrentLevel] = useState<number | null>(null);
+  const [currentFantasy, setCurrentFantasy] = useState<FantasyColor | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState(0);
   const [result, setResult] = useState<ColorRecommendation | null>(null);
@@ -89,20 +94,20 @@ export default function ColorMatchPage() {
     { es: "¿Cuál es tu subtono?", en: "What is your undertone?" },
     { es: "¿De qué color son tus ojos?", en: "What is your eye color?" },
     { es: "¿Cuál es tu nivel natural de cabello?", en: "What is your natural hair level?" },
-    { es: "¿Cuál es tu nivel actual de cabello?", en: "What is your current hair level?" },
+    { es: "¿Cuál es tu color actual de cabello?", en: "What is your current hair color?" },
   ];
 
   const totalSteps = 5;
   const progress = ((step + 1) / totalSteps) * 100;
 
-  const canProceed = [skinTone, undertone, eyeColor, naturalLevel, currentLevel][step] !== null;
+  const step4Selected = currentLevel !== null || currentFantasy !== null;
+  const canProceed = [skinTone, undertone, eyeColor, naturalLevel, step4Selected][step] !== null && [skinTone, undertone, eyeColor, naturalLevel, step4Selected][step] !== false;
 
   const runAnalysis = useCallback(() => {
-    if (!skinTone || !undertone || !eyeColor || !naturalLevel || !currentLevel) return;
+    if (!skinTone || !undertone || !eyeColor || !naturalLevel || (!currentLevel && !currentFantasy)) return;
     setLoading(true);
     setLoadingMsg(0);
 
-    // Cycle through loading messages
     let i = 0;
     const interval = setInterval(() => {
       i++;
@@ -110,12 +115,19 @@ export default function ColorMatchPage() {
         setLoadingMsg(i);
       } else {
         clearInterval(interval);
-        const profile: UserProfile = { skinTone, undertone, eyeColor, naturalLevel, currentLevel };
+        const profile: UserProfile = {
+          skinTone,
+          undertone,
+          eyeColor,
+          naturalLevel,
+          currentLevel: currentFantasy ? 0 : (currentLevel ?? naturalLevel),
+          currentFantasy,
+        };
         setResult(getRecommendation(profile));
         setLoading(false);
       }
     }, 900);
-  }, [skinTone, undertone, eyeColor, naturalLevel, currentLevel]);
+  }, [skinTone, undertone, eyeColor, naturalLevel, currentLevel, currentFantasy]);
 
   const handleNext = () => {
     if (step < totalSteps - 1) {
@@ -132,6 +144,7 @@ export default function ColorMatchPage() {
     setEyeColor(null);
     setNaturalLevel(null);
     setCurrentLevel(null);
+    setCurrentFantasy(null);
     setResult(null);
     setLoading(false);
   };
@@ -149,6 +162,9 @@ export default function ColorMatchPage() {
   const metaDesc = lang === "es"
     ? "Descubre tu color de cabello ideal con nuestro algoritmo de visagismo profesional. Análisis de subtono, estación cromática y recomendaciones personalizadas."
     : "Discover your ideal hair color with our professional visagism algorithm. Undertone analysis, seasonal color matching, and personalized recommendations.";
+
+  const buildAmazonUrl = (searchTerm: string) =>
+    `https://www.amazon.es/s?k=${searchTerm}&tag=${AFFILIATE_TAG}`;
 
   // ── Loading screen ──
   if (loading) {
@@ -248,8 +264,25 @@ export default function ColorMatchPage() {
                 </div>
               </div>
 
-              {/* Safety warning */}
-              {result.requiresSalon && (
+              {/* Decolorization warning */}
+              {result.requiresDecolor && (
+                <div className="flex items-start gap-3 bg-destructive/10 border border-destructive/30 rounded-lg p-4">
+                  <FlaskConical className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-bold text-foreground">
+                      {lang === "es" ? "Decoloración previa necesaria" : "Prior bleaching required"}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {lang === "es"
+                        ? "Tu color actual requiere un proceso de decoloración profesional antes de aplicar el tinte recomendado. No lo hagas en casa: visita un salón para proteger tu cabello."
+                        : "Your current color requires a professional bleaching process before applying the recommended dye. Don't attempt this at home — visit a salon to protect your hair."}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Safety warning (level jump) */}
+              {result.requiresSalon && !result.requiresDecolor && (
                 <div className="flex items-start gap-3 bg-destructive/10 border border-destructive/30 rounded-lg p-4">
                   <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
                   <div>
@@ -267,7 +300,7 @@ export default function ColorMatchPage() {
 
               {/* CTA */}
               <Button
-                onClick={() => window.open("https://www.amazon.es/s?k=tinte+capilar+profesional&tag=guiadelsalon-21", "_blank")}
+                onClick={() => window.open(buildAmazonUrl(result.amazonSearchTerm), "_blank")}
                 className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2"
                 size="lg"
               >
@@ -302,6 +335,11 @@ export default function ColorMatchPage() {
             {lang === "es"
               ? "Descubre tu color ideal con nuestro algoritmo de visagismo profesional"
               : "Discover your ideal color with our professional visagism algorithm"}
+          </p>
+          <p className="text-xs text-muted-foreground/70">
+            {lang === "es"
+              ? "Para todo tipo de cabello: liso, ondulado, rizado y afro"
+              : "For all hair types: straight, wavy, curly & afro"}
           </p>
         </div>
 
@@ -417,26 +455,67 @@ export default function ColorMatchPage() {
               </div>
             )}
 
-            {/* Step 4: Current level */}
+            {/* Step 4: Current color (Natural + Fantasy) */}
             {step === 4 && (
               <>
-                <div className="grid grid-cols-5 gap-2">
-                  {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
-                    <button
-                      key={lv}
-                      onClick={() => setCurrentLevel(lv)}
-                      className={`p-2 rounded-lg border-2 transition-all flex flex-col items-center gap-1 ${
-                        currentLevel === lv
-                          ? "border-secondary bg-accent/60"
-                          : "border-border hover:border-secondary/50 bg-card"
-                      }`}
-                    >
-                      <div className="w-8 h-8 rounded-full border border-border" style={{ backgroundColor: LEVEL_COLORS[lv] }} />
-                      <span className="text-[10px] text-muted-foreground text-center leading-tight">{l(LEVEL_LABELS[lv])}</span>
-                    </button>
-                  ))}
+                {/* Natural levels section */}
+                <div>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+                    {lang === "es" ? "Color natural / teñido convencional" : "Natural / conventional dyed color"}
+                  </p>
+                  <div className="grid grid-cols-5 gap-2">
+                    {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
+                      <button
+                        key={lv}
+                        onClick={() => { setCurrentLevel(lv); setCurrentFantasy(null); }}
+                        className={`p-2 rounded-lg border-2 transition-all flex flex-col items-center gap-1 ${
+                          currentLevel === lv && !currentFantasy
+                            ? "border-secondary bg-accent/60"
+                            : "border-border hover:border-secondary/50 bg-card"
+                        }`}
+                      >
+                        <div className="w-8 h-8 rounded-full border border-border" style={{ backgroundColor: LEVEL_COLORS[lv] }} />
+                        <span className="text-[10px] text-muted-foreground text-center leading-tight">{l(LEVEL_LABELS[lv])}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                {naturalLevel && currentLevel && Math.abs(naturalLevel - currentLevel) > 3 && (
+
+                {/* Fantasy / dyed colors section */}
+                <div>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+                    {lang === "es" ? "Color fantasía / teñido especial" : "Fantasy / special dyed color"}
+                  </p>
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {FANTASY_COLORS.map((fc) => (
+                      <button
+                        key={fc.value}
+                        onClick={() => { setCurrentFantasy(fc.value); setCurrentLevel(null); }}
+                        className={`p-2 rounded-lg border-2 transition-all flex flex-col items-center gap-1 ${
+                          currentFantasy === fc.value
+                            ? "border-secondary bg-accent/60"
+                            : "border-border hover:border-secondary/50 bg-card"
+                        }`}
+                      >
+                        <div className="w-8 h-8 rounded-full border border-border" style={{ backgroundColor: fc.hex }} />
+                        <span className="text-[10px] text-muted-foreground text-center leading-tight">{l(fc.label)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Warnings */}
+                {currentFantasy && (
+                  <div className="flex items-start gap-2 text-xs text-destructive bg-destructive/10 rounded-lg p-3 border border-destructive/20">
+                    <FlaskConical className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>
+                      {lang === "es"
+                        ? "Los colores fantasía requieren un proceso de decoloración/decapado profesional antes de aplicar un nuevo tinte. El resultado final dependerá del estado de tu fibra capilar."
+                        : "Fantasy colors require a professional bleaching/stripping process before applying a new dye. The final result will depend on your hair fiber condition."}
+                    </span>
+                  </div>
+                )}
+                {!currentFantasy && naturalLevel && currentLevel && Math.abs(naturalLevel - currentLevel) > 3 && (
                   <div className="flex items-start gap-2 text-xs text-destructive bg-destructive/10 rounded-lg p-3 border border-destructive/20">
                     <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                     <span>
