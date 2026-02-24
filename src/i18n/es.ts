@@ -155,6 +155,9 @@ export const es = {
     homeTitle: "Guía del Salón | Equipamiento profesional para peluquerías y barberías",
     homeDescription: "La guía definitiva de equipamiento para profesionales del salón. Compara clippers, secadores, planchas y más. Seleccionado por expertos.",
   },
+  colorMatch: {
+    navLabel: "Asesor Color",
+  },
   about: {
     breadcrumb: "Quiénes Somos",
     metaTitle: "Quiénes Somos | GuiaDelSalon.com",
