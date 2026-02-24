@@ -22,6 +22,7 @@ import CategoryProductsPage from "./pages/CategoryProductsPage";
 import CompararPage from "./pages/CompararPage";
 import GenderRedirect from "./pages/GenderRedirect";
 import NotFound from "./pages/NotFound";
+import Courses from "./pages/Courses";
 
 // Lazy load non-critical pages
 const PoliticaPrivacidad = lazy(() => import("./pages/PoliticaPrivacidad"));
@@ -57,6 +58,8 @@ function AnimatedRoutes() {
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/asesor-color" element={<ColorMatchPage />} />
           <Route path="/color-match" element={<ColorMatchPage />} />
+          <Route path="/cursos-peluqueria" element={<Courses />} />
+          <Route path="/hairdressing-courses" element={<Courses />} />
           <Route path="/:gender/:slug" element={<GenderRedirect />} />
           <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
           <Route path="/politica-cookies" element={<PoliticaCookies />} />

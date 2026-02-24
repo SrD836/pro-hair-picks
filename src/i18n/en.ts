@@ -6,6 +6,7 @@ export const en = {
     blog: "Blog",
     priceCalculator: "Price Calculator",
     manageMyShop: "Manage my shop",
+    courses: "Courses",
   },
   hero: {
     badge: "Selected by professionals",
@@ -157,6 +158,22 @@ export const en = {
   },
   colorMatch: {
     navLabel: "Color Advisor",
+  },
+  courses: {
+    badge: "Professional Training",
+    title: "The Best",
+    titleHighlight: "Hairdressing Courses",
+    subtitle: "A curated selection of the 15 best online and in-person hairdressing courses across Spain (Madrid, Barcelona, Seville) and the US (New York, Los Angeles, Miami).",
+    filterAll: "All",
+    filterOnline: "Online",
+    filterInPerson: "In-Person",
+    filterAllLangs: "All languages",
+    found: "courses found",
+    curriculum: "Curriculum",
+    careerPaths: "Career paths",
+    viewCourse: "View official course",
+    noResults: "No courses found with the selected filters.",
+    back: "← Back",
   },
   about: {
     breadcrumb: "About Us",
