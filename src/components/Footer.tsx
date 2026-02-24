@@ -57,6 +57,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/sobre-nosotros" className="hover:text-foreground transition-colors">{t("footer.aboutUs")}</Link></li>
               <li><Link to="/contacto" className="hover:text-foreground transition-colors">{t("footer.contact")}</Link></li>
+              <li><Link to="/asesor-color" className="hover:text-secondary transition-colors font-medium">🎨 {t("colorMatch.navLabel")}</Link></li>
               <li className="hidden"><Link to="/gestionar-mi-local" className="hover:text-foreground transition-colors">{t("nav.manageMyShop")}</Link></li>
               <li><Link to="/politica-privacidad" className="hover:text-foreground transition-colors">{t("footer.privacy")}</Link></li>
               <li><Link to="/politica-cookies" className="hover:text-foreground transition-colors">{t("footer.cookies")}</Link></li>

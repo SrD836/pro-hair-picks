@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { Sparkles } from "lucide-react";
 import HeroParticles from "./HeroParticles";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -35,7 +37,7 @@ function useCountUp(target: number, duration = 2000) {
 const Hero = () => {
   const c1 = useCountUp(431);
   const c2 = useCountUp(47);
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const titleWords = t("hero.titleWords").split(",");
 
@@ -132,6 +134,29 @@ const Hero = () => {
               <span className="font-display text-2xl font-bold text-secondary">✓</span>
               <span className="text-muted-foreground">{t("hero.pricesUpdated")}</span>
             </div>
+          </motion.div>
+
+          {/* Color Matcher CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.8, duration: 0.5 }}
+            className="mt-10"
+          >
+            <Link
+              to="/asesor-color"
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-lg bg-secondary/15 border border-secondary/30 backdrop-blur-sm hover:bg-secondary/25 transition-all group"
+            >
+              <Sparkles className="w-5 h-5 text-secondary group-hover:scale-110 transition-transform" />
+              <div className="text-left">
+                <p className="text-foreground font-display text-sm font-bold">
+                  {lang === "es" ? "Descubre tu tinte ideal en 1 minuto" : "Find your ideal hair color in 1 minute"}
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  {lang === "es" ? "Prueba nuestro Expert Color Matcher →" : "Try our Expert Color Matcher →"}
+                </p>
+              </div>
+            </Link>
           </motion.div>
         </motion.div>
       </div>

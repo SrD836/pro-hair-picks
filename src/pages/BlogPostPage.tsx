@@ -196,6 +196,22 @@ const BlogPostPage = () => {
             <AuthorBox />
             <DisclaimerAI />
 
+            {/* Color Matcher CTA */}
+            <div className="mt-8 p-5 rounded-xl border border-secondary/30 bg-accent/40 flex items-center gap-4">
+              <span className="text-3xl shrink-0">🎨</span>
+              <div className="flex-1 min-w-0">
+                <p className="font-display font-bold text-foreground text-sm">
+                  {isEN ? "Discover your ideal shade" : "Descubre tu tinte ideal"}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {isEN ? "Take our Expert Color Matcher quiz — personalized results in 1 minute." : "Haz nuestro test Expert Color Matcher — resultados personalizados en 1 minuto."}
+                </p>
+              </div>
+              <Link to="/asesor-color" className="shrink-0 px-4 py-2 text-xs font-bold rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors">
+                {isEN ? "Try it" : "Probar"}
+              </Link>
+            </div>
+
             {/* Share buttons */}
             <div className="flex items-center gap-3 mt-10 pt-6 border-t border-border">
               <span className="text-sm text-muted-foreground mr-2">Compartir:</span>

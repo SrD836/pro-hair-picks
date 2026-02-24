@@ -46,6 +46,9 @@ const Navbar = () => {
             <Link to="/calculadora-precio" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
               {t("nav.priceCalculator")}
             </Link>
+            <Link to="/asesor-color" className="px-3 py-1.5 text-sm font-bold text-secondary-foreground bg-secondary hover:bg-secondary/90 rounded-md transition-colors">
+              🎨 {t("colorMatch.navLabel")}
+            </Link>
             <Link to="/gestionar-mi-local" className="hidden px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               {t("nav.manageMyShop")}
             </Link>
@@ -78,6 +81,9 @@ const Navbar = () => {
               </Link>
               <Link to="/calculadora-precio" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
                 {t("nav.priceCalculator")}
+              </Link>
+              <Link to="/asesor-color" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-secondary hover:text-secondary/80 transition-colors">
+                🎨 {t("colorMatch.navLabel")}
               </Link>
               <Link to="/gestionar-mi-local" onClick={() => setMobileOpen(false)} className="hidden px-2 py-2 font-display font-semibold text-foreground">
                 {t("nav.manageMyShop")}
