@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useLanguage } from "@/i18n/LanguageContext";
 import {
   type SkinTone,
@@ -313,6 +314,9 @@ export default function ColorMatchPage() {
               <RotateCcw className="w-4 h-4" />
               {lang === "es" ? "Empezar de nuevo" : "Start over"}
             </Button>
+
+            {/* FAQ Section */}
+            <ColorMatchFAQ lang={lang} onReset={reset} />
           </motion.div>
         </section>
       </>
@@ -549,7 +553,63 @@ export default function ColorMatchPage() {
             {step === totalSteps - 1 ? <Sparkles className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
           </Button>
         </div>
+        {/* FAQ on stepper page too */}
+        <ColorMatchFAQ lang={lang} onReset={reset} showResetButton={false} />
       </section>
     </>
+  );
+}
+
+/* ── FAQ Component ─────────────────────────────── */
+const FAQ_DATA = [
+  {
+    q: { es: "Busco un peinado que se adapte a mi estilo atrevido. ¿Qué color de pelo me favorece?", en: "I'm looking for a hairstyle that suits my bold style. What hair color flatters me?" },
+    a: { es: "Para ti, el pelo no es sólo un color, es una declaración. Los colores más atrevidos muestran tu estilo personal y revelan una hermosa confianza interior. Pero no olvides que un color de pelo equivocado puede apagar tu tez.", en: "For you, hair isn't just a color — it's a statement. The boldest shades showcase your personal style and reveal a beautiful inner confidence. But don't forget that the wrong hair color can wash out your complexion." },
+  },
+  {
+    q: { es: "¿Qué aspecto tendría con el pelo castaño?", en: "What would I look like with brown hair?" },
+    a: { es: "Depende de tu tono de piel. Por ejemplo, los marrones oscuros y los dorados son preciosos si tienes la piel oscura con matices fríos y neutros. Pero algunos marrones pueden hacer que las pieles claras con matices fríos parezcan apagadas.", en: "It depends on your skin tone. For instance, dark browns and golden tones look gorgeous on dark skin with cool and neutral undertones. However, some browns can make light skin with cool undertones look dull." },
+  },
+  {
+    q: { es: "¿Qué aspecto tendría con el pelo rubio?", en: "What would I look like with blonde hair?" },
+    a: { es: "La tez no es lo único que hay que tener en cuenta. El color del pelo también puede acentuar la belleza del color de tus ojos. Elige un color que contraste, como el rubio caramelo para los ojos azules o el rojo suave para los ojos verde esmeralda.", en: "Complexion isn't the only thing to consider. Hair color can also accentuate the beauty of your eye color. Choose a contrasting shade — like caramel blonde for blue eyes or soft red for emerald green eyes." },
+  },
+];
+
+function ColorMatchFAQ({ lang, onReset, showResetButton = true }: { lang: "es" | "en"; onReset: () => void; showResetButton?: boolean }) {
+  const l = (obj: { es: string; en: string }) => obj[lang] || obj.es;
+
+  return (
+    <section className="mt-12 space-y-6">
+      <div className="flex items-center gap-2">
+        <HelpCircle className="w-5 h-5 text-secondary" />
+        <h3 className="font-display text-xl text-foreground">
+          {lang === "es" ? "¿Qué color de pelo me favorece?" : "What hair color flatters me?"}
+        </h3>
+      </div>
+      <p className="text-xs text-muted-foreground uppercase tracking-wider">
+        {lang === "es" ? "Preguntas y Respuestas" : "Questions & Answers"}
+      </p>
+
+      <Accordion type="single" collapsible className="w-full">
+        {FAQ_DATA.map((item, i) => (
+          <AccordionItem key={i} value={`faq-${i}`} className="border-border">
+            <AccordionTrigger className="text-left text-sm font-medium text-foreground hover:text-secondary transition-colors">
+              {l(item.q)}
+            </AccordionTrigger>
+            <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+              {l(item.a)}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+
+      {showResetButton && (
+        <Button onClick={onReset} variant="ghost" size="sm" className="gap-2 text-secondary hover:text-secondary/80">
+          <RotateCcw className="w-3.5 h-3.5" />
+          {lang === "es" ? "Volver a realizar el test" : "Take the test again"}
+        </Button>
+      )}
+    </section>
   );
 }
