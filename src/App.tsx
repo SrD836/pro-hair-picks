@@ -36,6 +36,7 @@ const CalculadoraPrecio = lazy(() => import("./pages/CalculadoraPrecio"));
 const QuizPage = lazy(() => import("./pages/QuizPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
 const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
+const ColorMatchPage = lazy(() => import("./pages/ColorMatchPage"));
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,8 @@ function AnimatedRoutes() {
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/asesor-color" element={<ColorMatchPage />} />
+          <Route path="/color-match" element={<ColorMatchPage />} />
           <Route path="/:gender/:slug" element={<GenderRedirect />} />
           <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
           <Route path="/politica-cookies" element={<PoliticaCookies />} />

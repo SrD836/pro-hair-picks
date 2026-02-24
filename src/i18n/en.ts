@@ -155,6 +155,9 @@ export const en = {
     homeTitle: "Salon Guide | Professional equipment for hair salons and barbershops",
     homeDescription: "The ultimate equipment guide for salon professionals. Compare clippers, dryers, flat irons and more. Selected by experts.",
   },
+  colorMatch: {
+    navLabel: "Color Advisor",
+  },
   about: {
     breadcrumb: "About Us",
     metaTitle: "About Us | GuiaDelSalon.com",
