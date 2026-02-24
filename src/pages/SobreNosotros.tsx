@@ -47,7 +47,7 @@ const SobreNosotros = () => (
         <h2 className="font-display text-xl font-bold text-foreground mb-3 flex items-center gap-2">
           <Star className="w-5 h-5 text-secondary" /> Quién está detrás
         </h2>
-        <p>GuiaDelSalon.com está gestionado por <strong>David [Apellido]</strong>, apasionado del sector de la peluquería profesional y el marketing digital. Nuestro objetivo es convertirnos en la referencia en España para comparativas de productos de peluquería y barbería.</p>
+        <p>GuiaDelSalon.com está gestionado por <strong>David González</strong>, apasionado del sector de la peluquería profesional y el marketing digital. Nuestro objetivo es convertirnos en la referencia en España para comparativas de productos de peluquería y barbería.</p>
       </section>
 
       <section>

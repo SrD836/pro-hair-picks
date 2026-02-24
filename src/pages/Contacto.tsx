@@ -83,7 +83,7 @@ const Contacto = () => {
                 </div>
                 <div>
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" maxLength={MAX_EMAIL} required className="mt-1" />
+                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" maxLength={MAX_EMAIL} required className="mt-1 w-full min-w-0" />
                 </div>
                 <div>
                   <Label htmlFor="message">Mensaje</Label>
