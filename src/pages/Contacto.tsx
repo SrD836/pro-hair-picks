@@ -63,8 +63,8 @@ const Contacto = () => {
       <h1 className="font-display text-3xl font-bold text-foreground mb-2">Contacto</h1>
       <p className="text-muted-foreground mb-8">¿Tienes alguna pregunta o sugerencia? Escríbenos y te responderemos en 24-48 horas.</p>
 
-      <div className="grid md:grid-cols-3 gap-8">
-        <div className="md:col-span-2">
+      <div className="grid md:grid-cols-[3fr_2fr] gap-8">
+        <div>
           {sent ? (
             <Card className="p-8 text-center border-border">
               <CheckCircle className="w-12 h-12 text-secondary mx-auto mb-4" />
