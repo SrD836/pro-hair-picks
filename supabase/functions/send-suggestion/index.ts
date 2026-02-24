@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { SmtpClient } from "https://deno.land/x/smtp@v0.7.0/mod.ts";
+import nodemailer from "npm:nodemailer@6.9.10";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,26 +22,22 @@ serve(async (req) => {
       });
     }
 
-    const client = new SmtpClient();
-
-    // Port 587 uses STARTTLS, not direct TLS
-    await client.connect({
-      hostname: Deno.env.get("SMTP_HOST")!,
-      port: Number(Deno.env.get("SMTP_PORT")!),
-      username: Deno.env.get("SMTP_USER")!,
-      password: Deno.env.get("SMTP_PASS")!,
+    const transport = nodemailer.createTransport({
+      host: Deno.env.get("SMTP_HOST"),
+      port: Number(Deno.env.get("SMTP_PORT")),
+      secure: false,
+      auth: {
+        user: Deno.env.get("SMTP_USER"),
+        pass: Deno.env.get("SMTP_PASS"),
+      },
     });
 
-    const fromEmail = Deno.env.get("SMTP_FROM")!;
-
-    await client.send({
-      from: fromEmail,
+    await transport.sendMail({
+      from: Deno.env.get("SMTP_FROM"),
       to: "contacto@guiadelsalon.com",
       subject: "💡 Nueva sugerencia desde Guía del Salón",
-      content: `Se ha recibido una nueva sugerencia:\n\n${message.trim()}\n\n---\nEnviado automáticamente desde guiadelsalon.com`,
+      text: `Se ha recibido una nueva sugerencia:\n\n${message.trim()}\n\n---\nEnviado automáticamente desde guiadelsalon.com`,
     });
-
-    await client.close();
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
