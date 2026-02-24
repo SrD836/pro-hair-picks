@@ -6,6 +6,7 @@ export const es = {
     blog: "Blog",
     priceCalculator: "Calculadora Precios",
     manageMyShop: "Gestionar mi local",
+    courses: "Cursos",
   },
   hero: {
     badge: "Seleccionado por profesionales",
@@ -157,6 +158,22 @@ export const es = {
   },
   colorMatch: {
     navLabel: "Asesor Color",
+  },
+  courses: {
+    badge: "Formación Profesional",
+    title: "Los Mejores",
+    titleHighlight: "Cursos de Peluquería",
+    subtitle: "Selección de los 15 mejores cursos online y presenciales en España (Madrid, Barcelona, Sevilla) y EEUU (Nueva York, Los Ángeles, Miami).",
+    filterAll: "Todos",
+    filterOnline: "Online",
+    filterInPerson: "Presencial",
+    filterAllLangs: "Todos los idiomas",
+    found: "cursos encontrados",
+    curriculum: "Temario",
+    careerPaths: "Salidas profesionales",
+    viewCourse: "Ver curso oficial",
+    noResults: "No se encontraron cursos con los filtros seleccionados.",
+    back: "← Volver",
   },
   about: {
     breadcrumb: "Quiénes Somos",

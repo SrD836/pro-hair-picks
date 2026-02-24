@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, Search, Menu, X } from "lucide-react";
+import { ChevronDown, Search, Menu, X, Scissors } from "lucide-react";
 import { menGroups, womenGroups, mixedCategories, type CategoryGroup, type CategoryItem } from "@/data/categories";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -10,7 +10,7 @@ const Navbar = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -49,6 +49,10 @@ const Navbar = () => {
             <Link to="/asesor-color" className="px-3 py-1.5 text-sm font-bold text-secondary-foreground bg-secondary hover:bg-secondary/90 rounded-md transition-colors">
               🎨 {t("colorMatch.navLabel")}
             </Link>
+            <Link to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"} className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
+              <Scissors className="w-3.5 h-3.5" />
+              {t("nav.courses")}
+            </Link>
             <Link to="/gestionar-mi-local" className="hidden px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               {t("nav.manageMyShop")}
             </Link>
@@ -83,6 +87,10 @@ const Navbar = () => {
               </Link>
               <Link to="/asesor-color" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-secondary hover:text-secondary/80 transition-colors">
                 🎨 {t("colorMatch.navLabel")}
+              </Link>
+              <Link to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"} onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
+                <Scissors className="w-4 h-4" />
+                {t("nav.courses")}
               </Link>
               <Link to="/gestionar-mi-local" onClick={() => setMobileOpen(false)} className="hidden px-2 py-2 font-display font-semibold text-foreground">
                 {t("nav.manageMyShop")}
