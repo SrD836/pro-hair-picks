@@ -12,7 +12,11 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-const LanguageContext = createContext<LanguageContextType | null>(null);
+const LanguageContext = createContext<LanguageContextType>({
+  lang: "en",
+  setLang: () => {},
+  t: (key: string) => key,
+});
 
 function getNestedValue(obj: Record<string, any>, path: string): string {
   const val = path.split(".").reduce((acc, part) => acc?.[part], obj);
@@ -48,7 +52,5 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 }
 
 export function useLanguage() {
-  const ctx = useContext(LanguageContext);
-  if (!ctx) throw new Error("useLanguage must be used within LanguageProvider");
-  return ctx;
+  return useContext(LanguageContext);
 }
