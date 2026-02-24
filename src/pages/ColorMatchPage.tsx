@@ -91,6 +91,75 @@ const LOADING_MSGS = [
 
 const AFFILIATE_TAG = "guiadelsalon-21";
 
+/* ── Static affiliate links by skin group + undertone ── */
+type AffiliateKey = "veryFair" | "fair" | "medium" | "olive" | "dark" | "veryDark" | "redhead";
+type UndertoneKey = "cool" | "neutral" | "warm";
+
+const DYE_LINKS: Record<AffiliateKey, Record<UndertoneKey, { code: string; url: string }>> = {
+  veryFair: {
+    cool:    { code: "10.1", url: "https://amzn.to/4kSYMER" },
+    neutral: { code: "10.0", url: "https://amzn.to/47aMfqy" },
+    warm:    { code: "10.3", url: "https://amzn.to/46lQpM3" },
+  },
+  fair: {
+    cool:    { code: "8.1", url: "https://amzn.to/4aAXScI" },
+    neutral: { code: "8.0", url: "https://amzn.to/4aB0A1S" },
+    warm:    { code: "8.4", url: "https://amzn.to/4b5iRo2" },
+  },
+  medium: {
+    cool:    { code: "5.1", url: "https://amzn.to/3ZUOxGo" },
+    neutral: { code: "5.0", url: "https://amzn.to/40upsCk" },
+    warm:    { code: "5.3", url: "https://amzn.to/4aQHbZJ" },
+  },
+  olive: {
+    cool:    { code: "4.1", url: "https://amzn.to/40qlwT9" },
+    neutral: { code: "4.0", url: "https://amzn.to/4s6TMif" },
+    warm:    { code: "4.5", url: "https://amzn.to/3ZRgjnl" },
+  },
+  dark: {
+    cool:    { code: "3.1", url: "https://amzn.to/3MObhF8" },
+    neutral: { code: "3.0", url: "https://amzn.to/46ojO8i" },
+    warm:    { code: "3.4", url: "https://amzn.to/3OBga4U" },
+  },
+  veryDark: {
+    cool:    { code: "1.1", url: "https://amzn.to/3MHD36g" },
+    neutral: { code: "1.0", url: "https://amzn.to/3Oqhckl" },
+    warm:    { code: "1.5", url: "https://amzn.to/4kTY5v2" },
+  },
+  redhead: {
+    cool:    { code: "6.6", url: "https://amzn.to/3OZavWo" },
+    neutral: { code: "7.46", url: "https://amzn.to/4bcXwIr" },
+    warm:    { code: "8.43", url: "https://amzn.to/4c8jvlK" },
+  },
+};
+
+function getAffiliateKey(skinTone: SkinTone, level: number): AffiliateKey {
+  if (level >= 9) return "veryFair";
+  if (level >= 7) return "fair";
+  if (level >= 5) return "medium";
+  if (level >= 4) return "olive";
+  if (level >= 2) return "dark";
+  if (level >= 1) return "veryDark";
+  // fallback by skin
+  if (skinTone === "light") return "fair";
+  if (skinTone === "medium") return "medium";
+  if (skinTone === "tan") return "olive";
+  return "dark";
+}
+
+function isRedheadResult(code: string): boolean {
+  const redCodes = ["6.6", "7.46", "8.43", "6.64", "7.64", "5.64", "6.46", "7.44", "5.6"];
+  return redCodes.includes(code);
+}
+
+function getDyeLink(skinTone: SkinTone, undertone: UndertoneKey, resultCode: string, level: number): string | null {
+  if (isRedheadResult(resultCode)) {
+    return DYE_LINKS.redhead[undertone]?.url ?? null;
+  }
+  const key = getAffiliateKey(skinTone, level);
+  return DYE_LINKS[key]?.[undertone]?.url ?? null;
+}
+
 const SEASON_ICON_MAP: Record<Season, typeof Snowflake> = {
   winter: Snowflake,
   summer: Umbrella,
@@ -188,19 +257,18 @@ export default function ColorMatchPage() {
     setLoading(false);
   };
 
+  // Computed undertone for display
+  const computedUndertone = veinColor && jewelryPref && colorReaction
+    ? computeUndertone(veinColor, jewelryPref, colorReaction) : null;
+
+  const effectiveUndertone: UndertoneKey = computedUndertone ?? "neutral";
+
   const metaTitle = lang === "es"
     ? "Expert Color Matcher | Asesor de Color Capilar Profesional"
     : "Expert Color Matcher | Professional Hair Color Advisor";
   const metaDesc = lang === "es"
     ? "Descubre tu color de cabello ideal con nuestro algoritmo de visagismo profesional. Análisis de subtono, estación cromática y recomendaciones personalizadas."
     : "Discover your ideal hair color with our professional visagism algorithm. Undertone analysis, seasonal color matching, and personalized recommendations.";
-
-  const buildAmazonUrl = (searchTerm: string) =>
-    `https://www.amazon.es/s?k=${searchTerm}&tag=${AFFILIATE_TAG}`;
-
-  // Computed undertone for display
-  const computedUndertone = veinColor && jewelryPref && colorReaction
-    ? computeUndertone(veinColor, jewelryPref, colorReaction) : null;
 
   // ── Loading screen ──
   if (loading) {
@@ -368,15 +436,30 @@ export default function ColorMatchPage() {
                 </div>
               )}
 
-              {/* CTA */}
-              <Button
-                onClick={() => window.open(buildAmazonUrl(result.amazonSearchTerm), "_blank")}
-                className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2"
-                size="lg"
-              >
-                {lang === "es" ? "Ver productos recomendados en Amazon" : "See recommended products on Amazon"}
-                <ExternalLink className="w-4 h-4" />
-              </Button>
+              {/* CTA - only show when no decolorization/fantasy needed */}
+              {!result.requiresDecolor && !result.requiresSalon ? (() => {
+                const dyeUrl = skinTone ? getDyeLink(skinTone, effectiveUndertone, result.code, result.complementary.length > 0 ? (naturalLevel ?? 5) : 5) : null;
+                return dyeUrl ? (
+                  <Button
+                    asChild
+                    className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2"
+                    size="lg"
+                  >
+                    <a href={dyeUrl} target="_blank" rel="noopener noreferrer">
+                      {lang === "es" ? "Ver productos recomendados en Amazon" : "See recommended products on Amazon"}
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  </Button>
+                ) : null;
+              })() : (
+                <div className="bg-muted/60 rounded-lg p-4 text-center border border-border">
+                  <p className="text-sm text-muted-foreground">
+                    {lang === "es"
+                      ? "⚠️ Para este cambio de color, te recomendamos acudir a un colorista profesional. No se recomienda aplicar tinte en casa."
+                      : "⚠️ For this color change, we recommend visiting a professional colorist. Home application is not recommended."}
+                  </p>
+                </div>
+              )}
             </Card>
 
             <Button onClick={reset} variant="outline" className="w-full gap-2">
