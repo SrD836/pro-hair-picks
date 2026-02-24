@@ -27,7 +27,15 @@ const SuggestionButton = () => {
   const handleSubmit = async () => {
     if (!message.trim()) return;
     setLoading(true);
+
+    // Save to DB
     const { error } = await supabase.from("suggestions").insert({ message: message.trim() });
+
+    // Send email via edge function
+    supabase.functions.invoke("send-suggestion", {
+      body: { message: message.trim() },
+    }).catch((err) => console.error("Email send error:", err));
+
     setLoading(false);
 
     if (error) {
