@@ -136,39 +136,39 @@ const DYE_LINKS_ES: Record<AffiliateKey, Record<UndertoneKey, { code: string; ur
 
 const DYE_LINKS_US: Record<AffiliateKey, Record<UndertoneKey, { code: string; url: string }>> = {
   veryFair: {
-    cool:    { code: "10.1", url: "https://amzn.to/4kSYMER" },
-    neutral: { code: "10.0", url: "https://amzn.to/47aMfqy" },
-    warm:    { code: "10.3", url: "https://amzn.to/46lQpM3" },
+    cool:    { code: "10.1", url: "https://amzn.to/46tk1XY" },
+    neutral: { code: "10.0", url: "https://amzn.to/4b8o7ar" },
+    warm:    { code: "10.3", url: "https://amzn.to/4ruzX4B" },
   },
   fair: {
-    cool:    { code: "8.1", url: "https://amzn.to/4aAXScI" },
-    neutral: { code: "8.0", url: "https://amzn.to/4aB0A1S" },
-    warm:    { code: "8.4", url: "https://amzn.to/4b5iRo2" },
+    cool:    { code: "8.1", url: "https://amzn.to/3P1g6eM" },
+    neutral: { code: "8.0", url: "https://amzn.to/4b6SyxI" },
+    warm:    { code: "8.4", url: "https://amzn.to/4ubMBHF" },
   },
   medium: {
-    cool:    { code: "5.1", url: "https://amzn.to/3ZUOxGo" },
-    neutral: { code: "5.0", url: "https://amzn.to/40upsCk" },
-    warm:    { code: "5.3", url: "https://amzn.to/4aQHbZJ" },
+    cool:    { code: "5.1", url: "https://amzn.to/4s27P8K" },
+    neutral: { code: "5.0", url: "https://amzn.to/4ciumtz" },
+    warm:    { code: "5.3", url: "https://amzn.to/4b4fMoh" },
   },
   olive: {
-    cool:    { code: "4.1", url: "https://amzn.to/40qlwT9" },
-    neutral: { code: "4.0", url: "https://amzn.to/4s6TMif" },
-    warm:    { code: "4.5", url: "https://amzn.to/3ZRgjnl" },
+    cool:    { code: "4.1", url: "https://amzn.to/46KDFin" },
+    neutral: { code: "4.0", url: "https://amzn.to/4b8N2L6" },
+    warm:    { code: "4.5", url: "https://amzn.to/4ciuzNn" },
   },
   dark: {
-    cool:    { code: "3.1", url: "https://amzn.to/3MObhF8" },
-    neutral: { code: "3.0", url: "https://amzn.to/46ojO8i" },
-    warm:    { code: "3.4", url: "https://amzn.to/3OBga4U" },
+    cool:    { code: "3.1", url: "https://amzn.to/4aQMS9O" },
+    neutral: { code: "3.0", url: "https://amzn.to/4az00Sb" },
+    warm:    { code: "3.4", url: "https://amzn.to/4s6XN6j" },
   },
   veryDark: {
-    cool:    { code: "1.1", url: "https://amzn.to/3MHD36g" },
-    neutral: { code: "1.0", url: "https://amzn.to/3Oqhckl" },
-    warm:    { code: "1.5", url: "https://amzn.to/4kTY5v2" },
+    cool:    { code: "1.1", url: "https://amzn.to/4tQFT9C" },
+    neutral: { code: "1.0", url: "https://amzn.to/4aAGOnc" },
+    warm:    { code: "1.5", url: "https://amzn.to/4cNcXsV" },
   },
   redhead: {
-    cool:    { code: "6.6", url: "https://amzn.to/3OZavWo" },
-    neutral: { code: "7.46", url: "https://amzn.to/4bcXwIr" },
-    warm:    { code: "8.43", url: "https://amzn.to/4c8jvlK" },
+    cool:    { code: "6.6", url: "https://amzn.to/4tR7TtE" },
+    neutral: { code: "7.46", url: "https://amzn.to/4b7FPuJ" },
+    warm:    { code: "8.43", url: "https://amzn.to/4aCw088" },
   },
 };
 
@@ -482,18 +482,28 @@ export default function ColorMatchPage() {
 
               {/* CTA - only show when no decolorization/fantasy needed */}
               {!result.requiresDecolor && !result.requiresSalon ? (() => {
-                const dyeUrl = skinTone ? getDyeLink(activeDyeLinks, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
-                return dyeUrl ? (
-                  <Button
-                    asChild
-                    className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2"
-                    size="lg"
-                  >
-                    <a href={dyeUrl} target="_blank" rel="noopener noreferrer">
-                      {lang === "es" ? "Ver productos recomendados en Amazon" : "See recommended products on Amazon"}
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </Button>
+                const dyeUrlES = skinTone ? getDyeLink(DYE_LINKS_ES, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
+                const dyeUrlUS = skinTone ? getDyeLink(DYE_LINKS_US, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
+                const hasAny = dyeUrlES || dyeUrlUS;
+                return hasAny ? (
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {dyeUrlES && (
+                      <Button asChild className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2" size="lg">
+                        <a href={dyeUrlES} target="_blank" rel="noopener noreferrer">
+                          🇪🇸 Amazon España
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </Button>
+                    )}
+                    {dyeUrlUS && (
+                      <Button asChild className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2" size="lg">
+                        <a href={dyeUrlUS} target="_blank" rel="noopener noreferrer">
+                          🇺🇸 Amazon USA
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 ) : null;
               })() : (
                 <div className="bg-muted/60 rounded-lg p-4 text-center border border-border">
