@@ -41,6 +41,7 @@ const ColorMatchPage = lazy(() => import("./pages/ColorMatchPage"));
 
 const queryClient = new QueryClient();
 
+
 function AnimatedRoutes() {
   const location = useLocation();
   return (
