@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella, BookOpen, Gem, Palette, ShirtIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -95,7 +96,45 @@ const AFFILIATE_TAG = "guiadelsalon-21";
 type AffiliateKey = "veryFair" | "fair" | "medium" | "olive" | "dark" | "veryDark" | "redhead";
 type UndertoneKey = "cool" | "neutral" | "warm";
 
-const DYE_LINKS: Record<AffiliateKey, Record<UndertoneKey, { code: string; url: string }>> = {
+const DYE_LINKS_ES: Record<AffiliateKey, Record<UndertoneKey, { code: string; url: string }>> = {
+  veryFair: {
+    cool:    { code: "10.1", url: "https://amzn.to/4kSYMER" },
+    neutral: { code: "10.0", url: "https://amzn.to/47aMfqy" },
+    warm:    { code: "10.3", url: "https://amzn.to/46lQpM3" },
+  },
+  fair: {
+    cool:    { code: "8.1", url: "https://amzn.to/4aAXScI" },
+    neutral: { code: "8.0", url: "https://amzn.to/4aB0A1S" },
+    warm:    { code: "8.4", url: "https://amzn.to/4b5iRo2" },
+  },
+  medium: {
+    cool:    { code: "5.1", url: "https://amzn.to/3ZUOxGo" },
+    neutral: { code: "5.0", url: "https://amzn.to/40upsCk" },
+    warm:    { code: "5.3", url: "https://amzn.to/4aQHbZJ" },
+  },
+  olive: {
+    cool:    { code: "4.1", url: "https://amzn.to/40qlwT9" },
+    neutral: { code: "4.0", url: "https://amzn.to/4s6TMif" },
+    warm:    { code: "4.5", url: "https://amzn.to/3ZRgjnl" },
+  },
+  dark: {
+    cool:    { code: "3.1", url: "https://amzn.to/3MObhF8" },
+    neutral: { code: "3.0", url: "https://amzn.to/46ojO8i" },
+    warm:    { code: "3.4", url: "https://amzn.to/3OBga4U" },
+  },
+  veryDark: {
+    cool:    { code: "1.1", url: "https://amzn.to/3MHD36g" },
+    neutral: { code: "1.0", url: "https://amzn.to/3Oqhckl" },
+    warm:    { code: "1.5", url: "https://amzn.to/4kTY5v2" },
+  },
+  redhead: {
+    cool:    { code: "6.6", url: "https://amzn.to/3OZavWo" },
+    neutral: { code: "7.46", url: "https://amzn.to/4bcXwIr" },
+    warm:    { code: "8.43", url: "https://amzn.to/4c8jvlK" },
+  },
+};
+
+const DYE_LINKS_US: Record<AffiliateKey, Record<UndertoneKey, { code: string; url: string }>> = {
   veryFair: {
     cool:    { code: "10.1", url: "https://amzn.to/4kSYMER" },
     neutral: { code: "10.0", url: "https://amzn.to/47aMfqy" },
@@ -152,12 +191,14 @@ function isRedheadResult(code: string): boolean {
   return redCodes.includes(code);
 }
 
-function getDyeLink(skinTone: SkinTone, undertone: UndertoneKey, resultCode: string, level: number): string | null {
+function getDyeLink(linksMap: Record<AffiliateKey, Record<UndertoneKey, { code: string; url: string }>>, skinTone: SkinTone, undertone: UndertoneKey, resultCode: string, level: number): string | null {
   if (isRedheadResult(resultCode)) {
-    return DYE_LINKS.redhead[undertone]?.url ?? null;
+    const url = linksMap.redhead[undertone]?.url;
+    return url || null;
   }
   const key = getAffiliateKey(skinTone, level);
-  return DYE_LINKS[key]?.[undertone]?.url ?? null;
+  const url = linksMap[key]?.[undertone]?.url;
+  return url || null;
 }
 
 const SEASON_ICON_MAP: Record<Season, typeof Snowflake> = {
@@ -177,6 +218,9 @@ const SEASON_NAMES: Record<Season, { es: string; en: string }> = {
 /* ── Component ─────────────────────────────────── */
 export default function ColorMatchPage() {
   const { lang } = useLanguage();
+  const location = useLocation();
+  const isUS = location.pathname === "/color-match";
+  const activeDyeLinks = isUS ? DYE_LINKS_US : DYE_LINKS_ES;
   const l = (obj: { es: string; en: string }) => obj[lang] || obj.es;
 
   const [step, setStep] = useState(0);
@@ -438,7 +482,7 @@ export default function ColorMatchPage() {
 
               {/* CTA - only show when no decolorization/fantasy needed */}
               {!result.requiresDecolor && !result.requiresSalon ? (() => {
-                const dyeUrl = skinTone ? getDyeLink(skinTone, effectiveUndertone, result.code, result.complementary.length > 0 ? (naturalLevel ?? 5) : 5) : null;
+                const dyeUrl = skinTone ? getDyeLink(activeDyeLinks, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
                 return dyeUrl ? (
                   <Button
                     asChild
