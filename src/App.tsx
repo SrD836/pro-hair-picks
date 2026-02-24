@@ -28,6 +28,7 @@ const PoliticaPrivacidad = lazy(() => import("./pages/PoliticaPrivacidad"));
 const PoliticaCookies = lazy(() => import("./pages/PoliticaCookies"));
 const Terminos = lazy(() => import("./pages/Terminos"));
 const SobreNosotros = lazy(() => import("./pages/SobreNosotros"));
+const QuienesSomos = lazy(() => import("./pages/QuienesSomos"));
 const Contacto = lazy(() => import("./pages/Contacto"));
 const GestionarMiLocal = lazy(() => import("./pages/GestionarMiLocal"));
 const CalculadoraROI = lazy(() => import("./pages/CalculadoraROI"));
@@ -58,6 +59,8 @@ function AnimatedRoutes() {
           <Route path="/politica-cookies" element={<PoliticaCookies />} />
           <Route path="/terminos" element={<Terminos />} />
           <Route path="/sobre-nosotros" element={<SobreNosotros />} />
+          <Route path="/quienes-somos" element={<QuienesSomos />} />
+          <Route path="/about-us" element={<QuienesSomos />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
