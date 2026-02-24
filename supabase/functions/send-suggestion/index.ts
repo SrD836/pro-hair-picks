@@ -24,7 +24,8 @@ serve(async (req) => {
 
     const client = new SmtpClient();
 
-    await client.connectTLS({
+    // Port 587 uses STARTTLS, not direct TLS
+    await client.connect({
       hostname: Deno.env.get("SMTP_HOST")!,
       port: Number(Deno.env.get("SMTP_PORT")!),
       username: Deno.env.get("SMTP_USER")!,
