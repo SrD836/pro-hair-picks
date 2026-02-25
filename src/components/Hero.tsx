@@ -44,15 +44,25 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden min-h-[70vh] flex items-center">
       <picture>
-        <source srcSet="/images/hero-barbershop.webp" type="image/webp" />
+        {/* Móvil (≤768px): 768×432, ~24 KB — reduce el LCP en 4G lenta */}
+        <source
+          media="(max-width: 768px)"
+          srcSet="/images/hero-barbershop-mobile.webp"
+          type="image/webp"
+        />
+        {/* Desktop (>768px): 1920×1080 de alta calidad */}
+        <source
+          srcSet="/images/hero-barbershop.webp"
+          type="image/webp"
+        />
         <img
-          src="/images/hero-barbershop.jpg"
+          src="/images/hero-barbershop.webp"
           alt=""
           fetchPriority="high"
           loading="eager"
           decoding="sync"
-          width={1440}
-          height={960}
+          width={1920}
+          height={1080}
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
       </picture>
