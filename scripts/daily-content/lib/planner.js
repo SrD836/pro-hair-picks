@@ -1,69 +1,63 @@
 /**
  * planner.js — FASE 0: Clasifica los 5 posts del día
  * Distribución: 3 core · 1 bridge · 1 negocio
+ * Usa `claude -p` (autenticación de Claude Code, sin API key separada)
  */
-const Anthropic = require('@anthropic-ai/sdk');
+const { callClaude, extractJSON } = require('./claude-cli');
 
 const TOPICS_POOL = {
   core: [
-    // Técnica / química
     'coloración vegetal sin amoniaco: guía técnica 2026',
     'técnica balayage vs highlights: diferencias y cuándo usar cada una',
     'cuidado del cabello rizado: rutina CGM para salón',
     'tratamiento de keratina brasileña: pasos, tiempos y contraindicaciones',
     'cortes con maquinilla: guía de números y técnicas de fundido',
-    'trenzas box braids: proceso completo y cuidado posterior',
-    'alisado japonés vs keratina: comparativa técnica definitiva',
-    'colorimetría avanzada: corrección de color en cabello dañado',
-    'extensiones de cabello: tipos, técnicas de aplicación y mantenimiento',
-    'permanente moderna: técnicas actuales y productos de nueva generación',
-    // Equipamiento
     'mejores clippers profesionales para barbería 2026: análisis y ranking',
-    'secadores de iones vs secadores convencionales: qué recomienda la ciencia',
-    'tijeras de barbero: acero japonés vs acero alemán, todo lo que necesitas saber',
-    'planchas de pelo profesionales: comparativa de las 8 mejores del mercado',
-    'sillones de barbero hidráulicos: guía de compra para equipar tu local',
-    'trimmers sin cable para barbería: análisis de los modelos más vendidos',
-    // Productos
-    'mejores tintes sin amoniaco del mercado: ranking para profesionales',
+    'secadores de iones vs convencionales: qué recomienda la ciencia',
+    'tijeras de barbero: acero japonés vs alemán, todo lo que debes saber',
+    'planchas profesionales: comparativa de los 8 mejores modelos del mercado',
+    'sillones de barbero hidráulicos: guía de compra completa',
+    'trimmers sin cable para barbería: análisis de los más vendidos',
+    'mejores tintes sin amoniaco: ranking para profesionales 2026',
     'mascarillas de reparación capilar: ingredientes que realmente funcionan',
-    'aceites capilares profesionales: argan vs keratina vs argán+CBD',
+    'aceites capilares profesionales: argán vs keratina vs CBD comparativa',
     'productos para barba: aceites, bálsamos y ceras en comparativa',
+    'alisado japonés vs keratina: comparativa técnica definitiva',
+    'extensiones de cabello: tipos, técnicas de aplicación y mantenimiento',
+    'colorimetría avanzada: corrección de color en cabello dañado',
+    'permanente moderna: técnicas actuales y productos de nueva generación',
+    'trenzas box braids: proceso completo y cuidado posterior',
   ],
   bridge: [
-    // IA / tecnología
-    'IA de reconocimiento facial aplicada al diagnóstico capilar en salones',
-    'apps de prueba virtual de color: cómo la realidad aumentada está cambiando el salón',
-    'automatización de agenda: comparativa de software con IA para peluquerías',
-    'análisis de cuero cabelludo por cámara: tecnología trichoscopia al alcance del barbero',
-    // Sostenibilidad
-    'nuevas normativas de tintes sin amoníaco en la UE 2026: impacto en proveedores',
+    'cómo la IA de reconocimiento facial está cambiando el diagnóstico capilar',
+    'apps de prueba virtual de color: realidad aumentada en el salón 2026',
+    'automatización de agenda con IA: qué pueden hacer las apps modernas',
+    'análisis de cuero cabelludo por cámara: tecnología trichoscopia accesible',
+    'normativa EU tintes sin amoníaco 2026: impacto en proveedores y salones',
     'peluquería eco-friendly: cómo reducir residuos químicos en el salón',
-    // Economía / mercado
-    'inflación en el sector de la peluquería España 2026: análisis de precios',
-    'cómo calcular el precio de tus servicios de peluquería según costes reales',
-    // Salud / ergonomía
-    'lesiones laborales en peluqueros: síndrome del túnel carpiano y cómo prevenirlo',
-    'productos químicos del salón y salud respiratoria: lo que la ciencia dice',
+    'inflación en el sector peluquería España 2026: análisis de precios',
+    'cómo calcular el precio de tus servicios según costes reales',
+    'lesiones laborales en peluqueros: síndrome túnel carpiano y prevención',
+    'productos químicos en el salón y salud respiratoria: lo que dice la ciencia',
   ],
   negocio: [
     'cómo digitalizar la gestión de tu salón de peluquería en 2026',
-    'marketing en redes sociales para peluquerías: estrategia con resultados reales',
+    'marketing en redes sociales para peluquerías: estrategia con resultados',
     'fidelización de clientes en peluquería: sistemas que funcionan',
     'análisis de rentabilidad de un salón: métricas clave que debes medir',
-    'normativa fiscal para autónomos peluqueros España 2026: VeriFactu y más',
+    'normativa fiscal autónomos peluqueros España 2026: VeriFactu y más',
     'cómo contratar personal para tu peluquería sin errores legales',
     'ticket medio en peluquería: cómo aumentarlo sin perder clientes',
-    'gestión de citas online para peluquerías: comparativa de las mejores apps',
+    'gestión de citas online: comparativa de las mejores apps para salones',
     'costes fijos y variables de una peluquería: guía de control financiero',
     'cómo abrir una peluquería en España 2026: pasos y requisitos legales',
   ],
 };
 
-async function planDay(client, date) {
-  // Seleccionar temas evitando repeticiones — usar fecha como seed
+async function planDay(date) {
   const dayNum = new Date(date).getDate();
-  const pick = (arr, offset) => arr[(dayNum + offset) % arr.length];
+  const monthNum = new Date(date).getMonth();
+  const pick = (arr, offset) => arr[(dayNum + monthNum * 3 + offset) % arr.length];
 
   const slots = [
     { slot: 1, type: 'core',    topic: pick(TOPICS_POOL.core, 0) },
@@ -73,40 +67,33 @@ async function planDay(client, date) {
     { slot: 5, type: 'negocio', topic: pick(TOPICS_POOL.negocio, 0) },
   ];
 
-  // Usar Claude para generar keywords objetivo por slot
-  const prompt = `Eres un experto SEO especializado en el sector de peluquería y barbería en España.
+  console.log('  Generando keywords y slugs SEO...');
+  const prompt = `Eres un experto SEO del sector peluquería/barbería en España.
 
-Para cada uno de estos temas de blog, genera:
-1. target_keyword: keyword principal (volumen medio-alto, competencia media)
-2. secondary_keywords: array de 2-3 keywords secundarias
-3. user_question: pregunta real del usuario que el post debe responder
-4. slug: slug kebab-case max 5 palabras sin stop words
-
-Temas:
+Para estos temas de blog, genera keywords y slugs SEO optimizados:
 ${slots.map((s, i) => `${i + 1}. [${s.type.toUpperCase()}] ${s.topic}`).join('\n')}
 
-Responde SOLO con un array JSON válido con exactamente ${slots.length} objetos:
-[{"target_keyword":"...","secondary_keywords":["..."],"user_question":"...","slug":"..."}]`;
+Responde SOLO con un array JSON (sin texto adicional):
+[
+  {
+    "target_keyword": "keyword principal con 200-2000 búsquedas/mes en ES",
+    "secondary_keywords": ["keyword2", "keyword3"],
+    "user_question": "pregunta real del profesional que el post responde",
+    "slug": "slug-kebab-case-max-5-palabras"
+  }
+]`;
 
-  const msg = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1024,
-    temperature: 0.3,
-    messages: [{ role: 'user', content: prompt }],
-  });
-
-  let keywords;
+  let keywordsData;
   try {
-    const text = msg.content[0].text.trim();
-    const jsonStart = text.indexOf('[');
-    const jsonEnd = text.lastIndexOf(']') + 1;
-    keywords = JSON.parse(text.slice(jsonStart, jsonEnd));
-  } catch {
-    keywords = slots.map(() => ({
-      target_keyword: 'peluquería profesional',
-      secondary_keywords: ['barbería', 'salón de belleza'],
-      user_question: '¿Cómo hacerlo correctamente?',
-      slug: 'guia-profesional',
+    const response = callClaude(prompt, { timeout: 60_000 });
+    keywordsData = extractJSON(response, true);
+  } catch (err) {
+    console.warn(`  ⚠️  Error generando keywords: ${err.message} — usando fallbacks`);
+    keywordsData = slots.map(s => ({
+      target_keyword: s.topic.slice(0, 40),
+      secondary_keywords: ['peluquería profesional', 'barbería'],
+      user_question: `¿Cómo dominar ${s.topic}?`,
+      slug: s.topic.toLowerCase().replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n').replace(/[^a-z0-9]+/g, '-').slice(0, 50).replace(/-+$/, ''),
     }));
   }
 
@@ -114,10 +101,10 @@ Responde SOLO con un array JSON válido con exactamente ${slots.length} objetos:
     date,
     posts: slots.map((s, i) => ({
       ...s,
-      target_keyword: keywords[i]?.target_keyword || s.topic.slice(0, 40),
-      secondary_keywords: keywords[i]?.secondary_keywords || [],
-      user_question: keywords[i]?.user_question || '',
-      slug: keywords[i]?.slug || s.topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 50),
+      target_keyword:    keywordsData[i]?.target_keyword    || s.topic.slice(0, 40),
+      secondary_keywords: keywordsData[i]?.secondary_keywords || [],
+      user_question:     keywordsData[i]?.user_question     || '',
+      slug:              keywordsData[i]?.slug               || `post-${s.slot}-${date}`,
       bridge_test: s.type === 'bridge' ? 'pending' : null,
     })),
   };

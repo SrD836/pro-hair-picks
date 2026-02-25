@@ -1,156 +1,106 @@
 /**
  * researcher.js — FASE 1: Investigación de contenido
- * 1A: keywords + datos para posts core/negocio
- * 1B: detección de tendencia + test del puente para post bridge
+ * Usa `claude -p` con el conocimiento del modelo (sin web_search en modo CLI)
  */
-const Anthropic = require('@anthropic-ai/sdk');
+const { callClaude, extractJSON } = require('./claude-cli');
 
-/**
- * FASE 1A — Investiga un post core o negocio
- * Devuelve: contexto enriquecido con datos, estadísticas y ángulo
- */
-async function researchCorePost(client, post) {
-  const searchQuery = `${post.target_keyword} peluquería profesional España 2025 2026`;
+async function researchCorePost(post) {
+  const prompt = `Eres un experto en peluquería y barbería con 15 años de experiencia en España.
 
-  let searchContext = '';
+Genera contexto de investigación para un artículo de blog sobre:
+TEMA: ${post.topic}
+KEYWORD: ${post.target_keyword}
+PREGUNTA A RESPONDER: ${post.user_question}
+
+Proporciona:
+1. 3 estadísticas o datos concretos del sector (con fuente si la conoces)
+2. 2-3 tendencias actuales relevantes (2024-2026)
+3. Los 3 errores más comunes de los profesionales en este tema
+4. 1 estudio o investigación relevante citando fuente
+5. Contexto del mercado español (precios, marcas, distribuidores principales)
+
+Responde como si fueran notas de investigación para el redactor. Directo, sin introducción.`;
+
   try {
-    // Usar web_search si está disponible
-    const searchMsg = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
-      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-      messages: [{
-        role: 'user',
-        content: `Busca información actual sobre: "${searchQuery}".
-                  Encuentra: estadísticas recientes, tendencias 2025-2026, datos de mercado España,
-                  estudios científicos relevantes, preguntas frecuentes de profesionales.
-                  Responde con los datos más útiles para escribir un artículo de blog profesional.`,
-      }],
-    });
-    searchContext = searchMsg.content
-      .filter(b => b.type === 'text')
-      .map(b => b.text)
-      .join('\n');
-  } catch {
-    // Fallback sin web_search: generar contexto desde conocimiento del modelo
-    const fallbackMsg = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1024,
-      temperature: 0.4,
-      messages: [{
-        role: 'user',
-        content: `Genera contexto para un artículo sobre "${post.topic}" dirigido a profesionales de peluquería en España.
-                  Incluye: estadísticas del sector, datos técnicos relevantes, tendencias actuales, preguntas comunes.
-                  Responde en formato de notas de investigación, no como artículo.`,
-      }],
-    });
-    searchContext = fallbackMsg.content[0].text;
+    const response = callClaude(prompt, { timeout: 90_000 });
+    return { ...post, research_context: response };
+  } catch (err) {
+    console.warn(`  ⚠️  Error en research core: ${err.message}`);
+    return { ...post, research_context: '' };
   }
-
-  return { ...post, research_context: searchContext };
 }
 
-/**
- * FASE 1B — Investiga tendencia externa + aplica bridge test
- * Devuelve el post con bridge_test: 'passed' | 'failed' y el ángulo validado
- */
-async function researchBridgePost(client, post) {
-  // PASO 1: Detectar tendencia actual relevante al sector
-  let trendData = '';
-  try {
-    const trendMsg = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1024,
-      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-      messages: [{
-        role: 'user',
-        content: `Busca las tendencias tecnológicas, económicas o regulatorias más importantes
-                  en España esta semana que puedan impactar al sector de peluquería y barbería.
-                  Categorías: IA aplicada, apps de belleza, normativa UE cosmética, economía del sector,
-                  salud laboral, sostenibilidad.
-                  Dame el dato o noticia más relevante y reciente.`,
-      }],
-    });
-    trendData = trendMsg.content
-      .filter(b => b.type === 'text')
-      .map(b => b.text)
-      .join('\n');
-  } catch {
-    trendData = `Contexto general: avances en IA aplicada al análisis capilar,
-                 nueva regulación EU sobre aditivos en tintes,
-                 crecimiento del mercado de peluquería eco-friendly en España`;
-  }
+async function researchBridgePost(post) {
+  // PASO 1: Evaluar la tendencia y aplicar bridge test
+  const bridgePrompt = `Eres editor de contenido especializado en peluquería y barbería.
 
-  // PASO 2: Bridge test
-  const bridgeTestPrompt = `Eres un editor de contenido especializado en peluquería y barbería.
+TEMA DEL POST BRIDGE: ${post.topic}
 
-TENDENCIA DETECTADA: ${trendData}
+PASO 1 — Identifica la tendencia tecnológica/económica/regulatoria más relevante y actual que se conecta con este tema.
 
-TEMA DEL POST: ${post.topic}
-
-Aplica el TEST DEL PUENTE. El puente es válido si cumple AL MENOS 2 de estas 3 condiciones:
-a) Existe una aplicación o herramienta del sector que usa esta tecnología (con URL real verificable)
-b) El profesional del salón puede tomar una decisión de negocio o técnica basándose en el artículo
+PASO 2 — Aplica el TEST DEL PUENTE. El puente es válido si cumple AL MENOS 2 de estas 3 condiciones:
+a) Existe una app o herramienta del sector que ya usa esta tecnología
+b) El profesional del salón puede tomar una decisión de negocio basada en el artículo
 c) La tendencia tiene impacto económico o regulatorio directo en el sector
 
-Responde con JSON:
+Responde SOLO con JSON (sin texto adicional):
 {
-  "bridge_test": "passed" | "failed",
-  "conditions_met": ["a","b","c"] (solo los que se cumplen),
-  "reason": "explicación en 2 frases",
-  "trend_angle": "titular exacto del post bridge (sector primero, tecnología después)",
-  "actionable": "qué puede HACER el profesional con esta información",
-  "bridge_trend_topic": "IA | sostenibilidad | economia | salud | regulacion",
-  "tech_limitation": "qué NO puede hacer todavía esta tecnología (para posts IA)"
-}`;
-
-  const bridgeMsg = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 512,
-    temperature: 0.2,
-    messages: [{ role: 'user', content: bridgeTestPrompt }],
-  });
-
-  let bridgeResult = { bridge_test: 'failed', reason: 'no se pudo evaluar' };
-  try {
-    const text = bridgeMsg.content[0].text;
-    const jsonStart = text.indexOf('{');
-    const jsonEnd = text.lastIndexOf('}') + 1;
-    bridgeResult = JSON.parse(text.slice(jsonStart, jsonEnd));
-  } catch { /* keep default */ }
-
-  // Si falla, actualizar el topic al ángulo validado
-  const updatedPost = {
-    ...post,
-    bridge_test: bridgeResult.bridge_test,
-    bridge_reason: bridgeResult.reason,
-    bridge_trend_topic: bridgeResult.bridge_trend_topic || null,
-    research_context: trendData,
-    bridge_angle: bridgeResult.trend_angle || post.topic,
-    actionable: bridgeResult.actionable || '',
-    tech_limitation: bridgeResult.tech_limitation || '',
-  };
-
-  if (bridgeResult.bridge_test === 'passed') {
-    updatedPost.topic = bridgeResult.trend_angle || post.topic;
-  }
-
-  return updatedPost;
+  "bridge_test": "passed",
+  "conditions_met": ["b", "c"],
+  "reason": "explicación en 1 frase",
+  "trend_angle": "Cómo [tecnología/tendencia] está cambiando [aspecto concreto] en los salones",
+  "actionable": "Qué puede HACER el profesional con esta información (1 frase)",
+  "bridge_trend_topic": "IA",
+  "tech_limitation": "Qué NO puede hacer todavía esta tecnología",
+  "research_context": "4-5 frases de contexto factual sobre la tendencia"
 }
 
-/**
- * Punto de entrada: enriquece todos los posts con contexto de investigación
- */
-async function researchAllPosts(client, dailyPlan) {
+Valores válidos para bridge_trend_topic: IA, sostenibilidad, economia, salud, regulacion`;
+
+  let bridgeResult = {
+    bridge_test: 'failed',
+    reason: 'No se pudo evaluar',
+    research_context: '',
+  };
+
+  try {
+    const response = callClaude(bridgePrompt, { timeout: 90_000 });
+    bridgeResult = extractJSON(response, false);
+  } catch (err) {
+    console.warn(`  ⚠️  Error en bridge test: ${err.message} — usando fallback`);
+  }
+
+  return {
+    ...post,
+    bridge_test:        bridgeResult.bridge_test || 'failed',
+    bridge_reason:      bridgeResult.reason || '',
+    bridge_trend_topic: bridgeResult.bridge_trend_topic || null,
+    bridge_angle:       bridgeResult.trend_angle || post.topic,
+    actionable:         bridgeResult.actionable || '',
+    tech_limitation:    bridgeResult.tech_limitation || '',
+    research_context:   bridgeResult.research_context || '',
+    topic: bridgeResult.bridge_test === 'passed'
+      ? (bridgeResult.trend_angle || post.topic)
+      : post.topic,
+  };
+}
+
+async function researchAllPosts(dailyPlan) {
   const enriched = [];
   for (const post of dailyPlan.posts) {
-    console.log(`  📡 Investigando [${post.type}] slot ${post.slot}: ${post.topic.slice(0, 60)}...`);
+    console.log(`  📡 Investigando [${post.type}] slot ${post.slot}...`);
     if (post.type === 'bridge') {
-      enriched.push(await researchBridgePost(client, post));
+      enriched.push(await researchBridgePost(post));
     } else {
-      enriched.push(await researchCorePost(client, post));
+      enriched.push(await researchCorePost(post));
     }
   }
+
+  const bridgePost = enriched.find(p => p.type === 'bridge');
+  if (bridgePost) {
+    console.log(`  Bridge test: ${bridgePost.bridge_test} — ${bridgePost.bridge_reason}`);
+  }
+
   return { ...dailyPlan, posts: enriched };
 }
 
