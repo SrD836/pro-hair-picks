@@ -9,11 +9,18 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="flex justify-center mb-8 pt-10">
           <Link to="/">
-            <img
-              src="/logo-full.png"
-              alt="Guía del Salón"
-              className="h-20 w-auto brightness-0 invert opacity-90"
-            />
+            <picture>
+              <source srcSet="/logo-compact-80.webp 1x, /logo-compact-160.webp 2x" type="image/webp" />
+              <img
+                src="/logo-compact-80.webp"
+                alt="Guía del Salón"
+                width={80}
+                height={80}
+                loading="lazy"
+                decoding="async"
+                className="h-20 w-auto brightness-0 invert opacity-90"
+              />
+            </picture>
           </Link>
         </div>
 
