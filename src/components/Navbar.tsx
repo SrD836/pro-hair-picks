@@ -28,11 +28,16 @@ const Navbar = () => {
         <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "py-2" : "py-4"}`}>
           {/* Logo */}
           <Link to="/" className="flex items-center group">
-            <img
-              src="/logo-compact.png"
-              alt="Guía del Salón"
-              className={`w-auto brightness-0 invert transition-all duration-300 group-hover:rotate-[5deg] ${scrolled ? "h-7" : "h-10"}`}
-            />
+            <picture>
+              <source srcSet="/logo-compact.webp" type="image/webp" />
+              <img
+                src="/logo-compact.png"
+                alt="Guía del Salón"
+                width={160}
+                height={40}
+                className={`w-auto brightness-0 invert transition-all duration-300 group-hover:rotate-[5deg] ${scrolled ? "h-7" : "h-10"}`}
+              />
+            </picture>
           </Link>
 
           {/* Desktop Nav */}

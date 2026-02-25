@@ -43,10 +43,18 @@ const Hero = () => {
 
   return (
     <section className="relative overflow-hidden min-h-[70vh] flex items-center">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/hero-barbershop.jpg')" }}
-      />
+      <picture>
+        <source srcSet="/images/hero-barbershop.webp" type="image/webp" />
+        <img
+          src="/images/hero-barbershop.jpg"
+          alt=""
+          fetchPriority="high"
+          decoding="sync"
+          width={1920}
+          height={1080}
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+      </picture>
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(24,29%,9%)]/85 via-[hsl(24,29%,9%)]/70 to-transparent" />
       <HeroParticles />
 
@@ -58,11 +66,16 @@ const Hero = () => {
           className="max-w-3xl mx-auto text-center"
         >
           <div className="flex justify-center mb-6">
-            <img
-              src="/logo-full.png"
-              alt="Guía del Salón"
-              className="h-40 w-auto md:h-52 brightness-0 invert drop-shadow-lg"
-            />
+            <picture>
+              <source srcSet="/logo-full.webp" type="image/webp" />
+              <img
+                src="/logo-full.png"
+                alt="Guía del Salón"
+                width={400}
+                height={140}
+                className="h-40 w-auto md:h-52 brightness-0 invert drop-shadow-lg"
+              />
+            </picture>
           </div>
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-secondary/20 bg-card/30 mb-8 backdrop-blur-sm">

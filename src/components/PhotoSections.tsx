@@ -58,6 +58,7 @@ const PhotoSections = () => {
       title: t("sections.barber.title"),
       subtitle: t("sections.barber.subtitle"),
       image: "/images/section-barber.jpg",
+      imageWebp: "/images/section-barber.webp",
       link: "/categorias/clippers",
       linkText: t("sections.barber.cta"),
       icon: Scissors,
@@ -67,6 +68,7 @@ const PhotoSections = () => {
       title: t("sections.salon.title"),
       subtitle: t("sections.salon.subtitle"),
       image: "/images/section-salon.jpg",
+      imageWebp: "/images/section-salon.webp",
       link: "/categorias/secadores-profesionales",
       linkText: t("sections.salon.cta"),
       icon: Sparkles,
@@ -76,6 +78,7 @@ const PhotoSections = () => {
       title: t("sections.mixed.title"),
       subtitle: t("sections.mixed.subtitle"),
       image: "/images/section-mixto.jpg",
+      imageWebp: "/images/section-mixto.webp",
       link: "/categorias/capas-y-delantales",
       linkText: t("sections.mixed.cta"),
       icon: Users,
@@ -92,7 +95,7 @@ const PhotoSections = () => {
   );
 };
 
-function PhotoCard({ section, index, categoriesLabel }: { section: { title: string; subtitle: string; image: string; link: string; linkText: string; icon: any; categoryCount: number }; index: number; categoriesLabel: string }) {
+function PhotoCard({ section, index, categoriesLabel }: { section: { title: string; subtitle: string; image: string; imageWebp: string; link: string; linkText: string; icon: any; categoryCount: number }; index: number; categoriesLabel: string }) {
   const fade = useFadeIn();
   const counter = useCountUp(section.categoryCount);
   const Icon = section.icon;
@@ -102,10 +105,18 @@ function PhotoCard({ section, index, categoriesLabel }: { section: { title: stri
       ref={fade.ref}
       className="relative overflow-hidden min-h-[50vh] md:min-h-[60vh] flex items-center"
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url('${section.image}')` }}
-      />
+      <picture>
+        <source srcSet={section.imageWebp} type="image/webp" />
+        <img
+          src={section.image}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          width={1920}
+          height={1080}
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+      </picture>
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
 
       <div className="container mx-auto px-4 relative z-10">

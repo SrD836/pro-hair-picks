@@ -18,13 +18,13 @@ import { CompareProvider } from "@/hooks/useCompare";
 import CompareBar from "@/components/CompareBar";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import Index from "./pages/Index";
-import CategoryProductsPage from "./pages/CategoryProductsPage";
-import CompararPage from "./pages/CompararPage";
 import GenderRedirect from "./pages/GenderRedirect";
 import NotFound from "./pages/NotFound";
-import Courses from "./pages/Courses";
 
 // Lazy load non-critical pages
+const CategoryProductsPage = lazy(() => import("./pages/CategoryProductsPage"));
+const CompararPage = lazy(() => import("./pages/CompararPage"));
+const Courses = lazy(() => import("./pages/Courses"));
 const PoliticaPrivacidad = lazy(() => import("./pages/PoliticaPrivacidad"));
 const PoliticaCookies = lazy(() => import("./pages/PoliticaCookies"));
 const Terminos = lazy(() => import("./pages/Terminos"));
