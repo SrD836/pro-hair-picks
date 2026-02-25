@@ -25,14 +25,10 @@
     <!-- Theme color -->
     <meta name="theme-color" content="#1a0a00" />
 
-    <!-- CSS crítico inline: reserva espacio del hero y navbar antes de que cargue el bundle JS -->
+    <!-- CSS crítico inline: color de fondo del body antes de que cargue el bundle JS -->
     <style>
       :root { --color-espresso: #1a0a00; }
       body { background-color: var(--color-espresso); margin: 0; }
-      /* Reserva altura del navbar para evitar reflow en el LCP */
-      nav:first-of-type { height: 64px; }
-      /* Fallback de color del hero mientras carga la imagen */
-      section:first-of-type { background-color: var(--color-espresso); min-height: 70vh; }
     </style>
 
     <!-- Preconnect a orígenes críticos -->
