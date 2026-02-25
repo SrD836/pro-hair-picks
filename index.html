@@ -25,19 +25,19 @@
     <!-- Theme color -->
     <meta name="theme-color" content="#1a0a00" />
 
-    <!-- CSS crítico inline: color de fondo del body antes de que cargue el bundle JS -->
+    <!-- CSS crítico inline: fondo y tipografía base antes de que cargue el bundle JS -->
     <style>
-      :root { --color-espresso: #1a0a00; }
-      body { background-color: var(--color-espresso); margin: 0; }
+      *,*::before,*::after{box-sizing:border-box}
+      body{background:#1a0a00;color:#f5f0e8;font-family:Inter,system-ui,sans-serif;margin:0;-webkit-font-smoothing:antialiased}
     </style>
 
     <!-- Preconnect a orígenes críticos -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://hscarzgjltsdronamltt.supabase.co" crossorigin />
+    <link rel="preconnect" href="https://hscarzgjltsdronamltt.supabase.co" crossorigin="anonymous" />
     <link rel="dns-prefetch" href="https://hscarzgjltsdronamltt.supabase.co" />
 
-    <!-- Preload LCP image: la imagen hero se pide en el primer parse del HTML -->
+    <!-- Preload LCP image: descargada en el primer parse del HTML, no espera a React -->
     <link rel="preload" as="image" href="/images/hero-barbershop.webp" type="image/webp" fetchpriority="high" />
 
     <!-- Fuentes: carga no bloqueante con media swap -->
@@ -51,44 +51,61 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-
-    <!-- Google Analytics: carga diferida tras window.load + 2s para no bloquear LCP -->
-    <script>
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          var s = document.createElement('script');
-          s.async = true;
-          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-M2NB7DFCT1';
-          document.head.appendChild(s);
-          s.onload = function() {
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-M2NB7DFCT1');
-          };
-        }, 2000);
-      });
-    </script>
-
-    <!-- Google AdSense: carga diferida con requestIdleCallback o timeout 3s -->
-    <script>
-      function loadAdsense() {
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5744390861435224';
-        s.crossOrigin = 'anonymous';
-        document.head.appendChild(s);
-      }
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadAdsense, { timeout: 3000 });
-      } else {
-        setTimeout(loadAdsense, 3000);
-      }
-    </script>
   </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Scripts de terceros: carga diferida por interacción del usuario o 4s de timeout.
+         Esto libera ~874ms del hilo principal durante la carga inicial (LCP/TBT).
+         GTM/AdSense se cargan igualmente antes del scroll en la mayoría de visitas.
+    -->
+    <script>
+    (function() {
+      'use strict';
+      var loaded = false;
+
+      function loadThirdParty() {
+        if (loaded) return;
+        loaded = true;
+
+        // Google Analytics (GA4)
+        var ga = document.createElement('script');
+        ga.async = true;
+        ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-M2NB7DFCT1';
+        document.head.appendChild(ga);
+        ga.onload = function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-M2NB7DFCT1');
+        };
+
+        // AdSense: 500ms después de GA para no saturar la red en el mismo tick
+        setTimeout(function() {
+          var ads = document.createElement('script');
+          ads.async = true;
+          ads.crossOrigin = 'anonymous';
+          ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5744390861435224';
+          document.head.appendChild(ads);
+        }, 500);
+      }
+
+      // Cargar en la primera interacción del usuario (mousedown, scroll, teclado, touch)
+      var events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+      events.forEach(function(e) {
+        document.addEventListener(e, loadThirdParty, { once: true, passive: true });
+      });
+
+      // Fallback: cargar igualmente a los 4s aunque no haya interacción
+      setTimeout(loadThirdParty, 4000);
+
+      // Cargar cuando el tab vuelve a ser visible
+      document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') loadThirdParty();
+      });
+    })();
+    </script>
   </body>
 </html>

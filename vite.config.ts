@@ -12,7 +12,18 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    react(),
+    mode === "development" && componentTagger(),
+    // Inyecta CSS crítico inline en cada build (el hash del CSS cambia con cada build de Lovable)
+    {
+      name: "inject-critical-css",
+      transformIndexHtml(html: string) {
+        const critical = `<style>*,*::before,*::after{box-sizing:border-box}body{background:#1a0a00;color:#f5f0e8;font-family:Inter,system-ui,sans-serif;margin:0;-webkit-font-smoothing:antialiased}</style>`;
+        return html.replace("<head>", "<head>" + critical);
+      },
+    },
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -21,15 +32,15 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        // Nombres con hash de contenido para cache busting seguro
+        // Hash de contenido para cache busting seguro con max-age=31536000
         assetFileNames: "assets/[name]-[hash][extname]",
         chunkFileNames: "assets/[name]-[hash].js",
         entryFileNames: "assets/[name]-[hash].js",
-        // Chunks manuales para evitar que todo el vendor caiga en un solo bundle
         manualChunks: {
           "vendor-react": ["react", "react-dom", "react-router-dom"],
           "vendor-supabase": ["@supabase/supabase-js"],
-          "vendor-ui": ["framer-motion"],
+          "vendor-motion": ["framer-motion"],   // separado para reducir reflows en main bundle
+          "vendor-charts": ["recharts"],         // solo se carga en páginas de analytics
           "vendor-query": ["@tanstack/react-query"],
         },
       },

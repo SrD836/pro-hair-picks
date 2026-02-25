@@ -68,12 +68,23 @@ const Hero = () => {
         >
           <div className="flex justify-center mb-6">
             <picture>
-              <source srcSet="/logo-80.webp 80w, /logo-160.webp 160w" type="image/webp" sizes="160px" />
+              {/* Desktop (≥768px): logo grande con soporte retina */}
+              <source
+                media="(min-width: 768px)"
+                srcSet="/logo-240.webp 1x, /logo-320.webp 2x"
+                type="image/webp"
+              />
+              {/* Mobile: logo estándar con soporte retina */}
+              <source
+                srcSet="/logo-160.webp 1x, /logo-240.webp 2x"
+                type="image/webp"
+              />
               <img
                 src="/logo-160.webp"
                 alt="Guía del Salón"
                 width={160}
                 height={160}
+                fetchPriority="high"
                 className="h-40 w-auto md:h-52 brightness-0 invert drop-shadow-lg"
               />
             </picture>

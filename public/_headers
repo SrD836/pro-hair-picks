@@ -1,25 +1,28 @@
-# Netlify / Lovable cache headers
-# Hashed assets (JS, CSS) — inmutables 1 año
+# Netlify / Lovable — Cache headers
+# Los assets con hash son inmutables (Vite los renombra en cada build)
+
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
 
-# Imágenes estáticas — inmutables 1 año
 /images/*
   Cache-Control: public, max-age=31536000, immutable
 
-/logo-*.webp
+/logo*.webp
   Cache-Control: public, max-age=31536000, immutable
 
-/*.webp
+/logo*.png
+  Cache-Control: public, max-age=604800
+
+/~flock.js
   Cache-Control: public, max-age=31536000, immutable
 
-/*.png
-  Cache-Control: public, max-age=31536000, immutable
+# Seguridad global
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
 
-/*.ico
-  Cache-Control: public, max-age=31536000, immutable
-
-# HTML y rutas SPA — siempre revalidar
+# HTML y rutas SPA — siempre revalidar (nunca cachear el shell)
 /
   Cache-Control: public, max-age=0, must-revalidate
 

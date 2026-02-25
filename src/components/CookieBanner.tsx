@@ -66,7 +66,13 @@ export function CookieBanner() {
                 <h3 className="font-display font-bold text-foreground text-sm">{t("cookies.title")}</h3>
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                   {t("cookies.description")}{" "}
-                  <Link to="/politica-cookies" className="text-primary hover:underline">{t("cookies.moreInfo")}</Link>.
+                  <Link
+                    to="/politica-cookies"
+                    className="text-primary hover:underline"
+                    aria-label="Más información sobre nuestra política de cookies"
+                  >
+                    {t("cookies.moreInfo")}
+                  </Link>.
                 </p>
               </div>
             </div>
