@@ -3,6 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- PRELOADS CRÍTICOS: primeras líneas del <head> para máximo impacto en LCP -->
+    <!-- Hero image (LCP element): descargada antes de parsear cualquier JS/CSS -->
+    <link rel="preload" as="image" href="/images/hero-barbershop.webp" type="image/webp" fetchpriority="high" />
+    <!-- Logo hero: visible above the fold, cargado antes de React -->
+    <link rel="preload" as="image" href="/logo-160.webp" type="image/webp" />
+
+    <!-- Preconnect a orígenes críticos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://hscarzgjltsdronamltt.supabase.co" crossorigin="anonymous" />
+    <link rel="dns-prefetch" href="https://hscarzgjltsdronamltt.supabase.co" />
+
     <title>Guía del Salón — Equipamiento Profesional de Peluquería</title>
     <meta name="description" content="Rankings y comparativas de los mejores productos profesionales para peluquería y barbería en España. Seleccionado por profesionales." />
     <meta name="author" content="GuiaDelSalon.com" />
@@ -25,24 +38,6 @@
     <!-- Theme color -->
     <meta name="theme-color" content="#1a0a00" />
 
-    <!-- CSS crítico inline: fondo y tipografía base antes de que cargue el bundle JS -->
-    <style>
-      *,*::before,*::after{box-sizing:border-box}
-      body{background:#1a0a00;color:#f5f0e8;font-family:Inter,system-ui,sans-serif;margin:0;-webkit-font-smoothing:antialiased}
-    </style>
-
-    <!-- Preconnect a orígenes críticos -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://hscarzgjltsdronamltt.supabase.co" crossorigin="anonymous" />
-    <link rel="dns-prefetch" href="https://hscarzgjltsdronamltt.supabase.co" />
-
-    <!-- Preload logo hero: evita que el LCP espere a React para descargarlo -->
-    <link rel="preload" as="image" href="/logo-160.webp" type="image/webp" />
-
-    <!-- Preload LCP image: descargada en el primer parse del HTML, no espera a React -->
-    <link rel="preload" as="image" href="/images/hero-barbershop.webp" type="image/webp" fetchpriority="high" />
-
     <!-- Fuentes: carga no bloqueante con media swap -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" media="print" onload="this.media='all'" />
@@ -54,16 +49,28 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+
+    <!--
+      CLOUDFLARE SETTINGS (configurar manualmente en el dashboard):
+      - Rocket Loader: OFF  ← CRÍTICO: rompe React SPAs → causa NO_LCP en desktop
+      - Auto Minify JS:  OFF (Vite ya lo hace; doble minificación puede romper el bundle)
+      - Auto Minify CSS: OFF (mismo motivo)
+      - Auto Minify HTML: ON (seguro)
+      - Brotli: ON  |  HTTP/2: ON  |  HTTP/3: ON
+      - Cache Level: Standard
+      - Browser Cache TTL: Respect Existing Headers
+      - Polish: Lossless (comprime imágenes automáticamente)
+      - Mirage: ON (lazy loading adaptativo por velocidad de red)
+    -->
   </head>
 
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <!-- data-cfasync="false" → Rocket Loader de Cloudflare omite este script -->
+    <script type="module" src="/src/main.tsx" data-cfasync="false"></script>
 
-    <!-- Scripts de terceros: carga diferida por interacción del usuario o 4s de timeout.
-         Esto libera ~874ms del hilo principal durante la carga inicial (LCP/TBT).
-         GTM/AdSense se cargan igualmente antes del scroll en la mayoría de visitas.
-    -->
+    <!-- Scripts de terceros: carga diferida por scroll/interacción, fallback 5s.
+         Libera el hilo principal durante FCP/LCP. -->
     <script>
     (function() {
       'use strict';
@@ -85,26 +92,28 @@
           gtag('config', 'G-M2NB7DFCT1');
         };
 
-        // AdSense: 500ms después de GA para no saturar la red en el mismo tick
+        // AdSense: 1s después de GA para no saturar la red en el mismo tick
         setTimeout(function() {
           var ads = document.createElement('script');
           ads.async = true;
           ads.crossOrigin = 'anonymous';
           ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5744390861435224';
           document.head.appendChild(ads);
-        }, 500);
+        }, 1000);
       }
 
-      // Cargar en la primera interacción del usuario (mousedown, scroll, teclado, touch)
-      var events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-      events.forEach(function(e) {
+      // Trigger 1: primer scroll (señal de usuario activo)
+      window.addEventListener('scroll', loadThirdParty, { once: true, passive: true });
+
+      // Trigger 2: primera interacción táctil/click/teclado
+      ['click', 'keydown', 'touchstart'].forEach(function(e) {
         document.addEventListener(e, loadThirdParty, { once: true, passive: true });
       });
 
-      // Fallback: cargar igualmente a los 4s aunque no haya interacción
-      setTimeout(loadThirdParty, 4000);
+      // Fallback: 5s sin interacción (captura bots de Google para indexación)
+      setTimeout(loadThirdParty, 5000);
 
-      // Cargar cuando el tab vuelve a ser visible
+      // Tab visible de nuevo tras perder el foco
       document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible') loadThirdParty();
       });

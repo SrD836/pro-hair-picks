@@ -111,7 +111,7 @@ export const es = {
   cookies: {
     title: "🍪 Utilizamos cookies",
     description: "Este sitio utiliza cookies propias y de terceros (Google AdSense, Google Analytics) para mejorar tu experiencia y mostrar anuncios personalizados.",
-    moreInfo: "Más información",
+    moreInfo: "Política de cookies",
     acceptAll: "Aceptar todas",
     reject: "Rechazar",
     configure: "Configurar",

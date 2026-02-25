@@ -111,7 +111,7 @@ export const en = {
   cookies: {
     title: "🍪 We use cookies",
     description: "This site uses first-party and third-party cookies (Google AdSense, Google Analytics) to improve your experience and show personalized ads.",
-    moreInfo: "More info",
+    moreInfo: "Cookie policy",
     acceptAll: "Accept all",
     reject: "Reject",
     configure: "Configure",

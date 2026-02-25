@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => ({
     {
       name: "inject-critical-css",
       transformIndexHtml(html: string) {
-        const critical = `<style>*,*::before,*::after{box-sizing:border-box}body{background:#1a0a00;color:#f5f0e8;font-family:Inter,system-ui,sans-serif;margin:0;-webkit-font-smoothing:antialiased}body>div#root{min-height:100vh}nav,header{position:sticky;top:0;z-index:50;min-height:64px}img{display:block;max-width:100%}</style>`;
+        const critical = `<style>*,*::before,*::after{box-sizing:border-box}body{background:#1a0a00;color:#f5f0e8;font-family:Inter,system-ui,sans-serif;margin:0;-webkit-font-smoothing:antialiased;overflow-x:hidden}body>div#root{display:block!important;visibility:visible!important;min-height:100vh}img{display:block;max-width:100%}nav{position:sticky;top:0;z-index:50;background:rgba(26,10,0,0.95);min-height:64px;display:flex;align-items:center;padding:0 1rem}</style>`;
         return html.replace("<head>", "<head>" + critical);
       },
     },
