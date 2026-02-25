@@ -19,6 +19,7 @@ const HomeBlogPreview = () => {
         .limit(3);
       return data ?? [];
     },
+    staleTime: 5 * 60 * 1000, // 5 minutos — evita refetch en navegación
   });
 
   if (!posts || posts.length === 0) return null;
@@ -74,9 +75,13 @@ const HomeBlogPreview = () => {
               {post.cover_image_url && (
                 <div className="aspect-[16/9] overflow-hidden">
                   <img
-                    src={post.cover_image_url}
+                    src={`${post.cover_image_url}?width=378&height=252&resize=cover`}
+                    srcSet={`${post.cover_image_url}?width=378&height=252&resize=cover 1x, ${post.cover_image_url}?width=756&height=504&resize=cover 2x`}
                     alt={post.title}
+                    width={378}
+                    height={252}
                     loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>

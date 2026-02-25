@@ -49,9 +49,10 @@ const Hero = () => {
           src="/images/hero-barbershop.jpg"
           alt=""
           fetchPriority="high"
+          loading="eager"
           decoding="sync"
-          width={1920}
-          height={1080}
+          width={1440}
+          height={960}
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
       </picture>
@@ -67,12 +68,12 @@ const Hero = () => {
         >
           <div className="flex justify-center mb-6">
             <picture>
-              <source srcSet="/logo-full.webp" type="image/webp" />
+              <source srcSet="/logo-80.webp 80w, /logo-160.webp 160w" type="image/webp" sizes="160px" />
               <img
-                src="/logo-full.png"
+                src="/logo-160.webp"
                 alt="Guía del Salón"
-                width={400}
-                height={140}
+                width={160}
+                height={160}
                 className="h-40 w-auto md:h-52 brightness-0 invert drop-shadow-lg"
               />
             </picture>

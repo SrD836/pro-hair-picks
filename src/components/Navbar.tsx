@@ -29,11 +29,11 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center group">
             <picture>
-              <source srcSet="/logo-compact.webp" type="image/webp" />
+              <source srcSet="/logo-compact-40.webp 40w, /logo-compact-80.webp 80w" type="image/webp" sizes="40px" />
               <img
-                src="/logo-compact.png"
+                src="/logo-compact-40.webp"
                 alt="Guía del Salón"
-                width={160}
+                width={40}
                 height={40}
                 className={`w-auto brightness-0 invert transition-all duration-300 group-hover:rotate-[5deg] ${scrolled ? "h-7" : "h-10"}`}
               />
@@ -66,10 +66,15 @@ const Navbar = () => {
           {/* Search + Mobile toggle */}
           <div className="flex items-center gap-2">
             <LanguageSelector />
-            <Link to="/" className="p-2 rounded-lg hover:bg-muted transition-colors md:block">
+            <Link to="/" aria-label="Ir a la página de inicio" className="p-2 rounded-lg hover:bg-muted transition-colors md:block">
               <Search className="w-5 h-5 text-muted-foreground" />
             </Link>
-            <button className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors" onClick={() => setMobileOpen(!mobileOpen)}>
+            <button
+              className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+              aria-label={mobileOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
