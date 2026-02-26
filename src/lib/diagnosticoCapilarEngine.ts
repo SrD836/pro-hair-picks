@@ -30,7 +30,7 @@ export interface Product {
   asin: string;
   name: string;
   description: string;
-  affiliateTag: string;
+  tag: string;
 }
 
 export type CizuraBridge = Record<RiskLevel, string>;
@@ -228,19 +228,19 @@ const PRODUCTS: Record<RiskLevel, Product[]> = {
       asin: 'B07YM8DWRZ',
       name: 'Olaplex No.7 Bonding Oil',
       description: 'Aceite reparador ultraligero que sella la cutícula y aporta brillo espejo. Ideal para mantener la salud del cabello sano.',
-      affiliateTag: AFFILIATE_TAG,
+      tag: AFFILIATE_TAG,
     },
     {
       asin: 'B00ILBE2W8',
       name: 'Moroccanoil Treatment',
       description: 'Tratamiento de acabado con aceite de argán. Aporta nutrición y brillo sin sobrecargar el cabello sano.',
-      affiliateTag: AFFILIATE_TAG,
+      tag: AFFILIATE_TAG,
     },
     {
       asin: 'B01LXLMLOH',
       name: 'Kérastase Nutritive Masquintense',
       description: 'Mascarilla nutritiva de alta concentración para cabello sano que quiere mantenerse en su estado óptimo.',
-      affiliateTag: AFFILIATE_TAG,
+      tag: AFFILIATE_TAG,
     },
   ],
   caution: [
@@ -248,19 +248,19 @@ const PRODUCTS: Record<RiskLevel, Product[]> = {
       asin: 'B07SVCNFMD',
       name: 'Olaplex No.3 Hair Perfector',
       description: 'Tratamiento en casa que repara los enlaces de disulfuro dañados. Reduce la porosidad y mejora la elasticidad en 4-6 semanas.',
-      affiliateTag: AFFILIATE_TAG,
+      tag: AFFILIATE_TAG,
     },
     {
       asin: 'B09VQDTK4S',
       name: 'Redken Acidic Bonding Concentrate',
       description: 'Sistema acidificante que sella la cutícula y restaura la resistencia en cabello teñido con daño moderado.',
-      affiliateTag: AFFILIATE_TAG,
+      tag: AFFILIATE_TAG,
     },
     {
       asin: 'B09F1NS9GW',
       name: 'Schwarzkopf Fibreplex No.2',
       description: 'Tratamiento de uso domiciliario que refuerza la fibra capilar y protege frente a roturas mecánicas.',
-      affiliateTag: AFFILIATE_TAG,
+      tag: AFFILIATE_TAG,
     },
   ],
   critical: [
@@ -268,19 +268,19 @@ const PRODUCTS: Record<RiskLevel, Product[]> = {
       asin: 'B09J7Y3ZFH',
       name: 'K18 Leave-In Molecular Repair Hair Mask',
       description: 'Mascarilla sin aclarado con tecnología de péptidos bioactivos que repara el daño en la cadena de queratina desde el interior.',
-      affiliateTag: AFFILIATE_TAG,
+      tag: AFFILIATE_TAG,
     },
     {
       asin: 'B08FKXLRJ1',
       name: 'Olaplex No.0 + No.3 System',
       description: 'Sistema intensivo de dos pasos que restablece los enlaces del cabello en situaciones de daño severo antes de cualquier servicio químico.',
-      affiliateTag: AFFILIATE_TAG,
+      tag: AFFILIATE_TAG,
     },
     {
       asin: 'B092CXLZ5P',
       name: 'Philip Kingsley Bond Builder',
       description: 'Tratamiento de reconstrucción profunda formulado para cabello en estado crítico con alta porosidad y elasticidad comprometida.',
-      affiliateTag: AFFILIATE_TAG,
+      tag: AFFILIATE_TAG,
     },
   ],
 };
