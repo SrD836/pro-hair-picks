@@ -601,6 +601,61 @@ function ResultsScreen({
         </Button>
       </motion.div>
 
+      {/* Bibliography */}
+      <details className="group rounded-xl border border-border bg-card overflow-hidden">
+        <summary className="flex items-center justify-between cursor-pointer px-5 py-4 text-sm font-semibold text-foreground select-none list-none hover:bg-secondary/5 transition-colors">
+          <span>📚 Bibliografía científica</span>
+          <span className="text-muted-foreground text-xs font-normal group-open:hidden">Ver fuentes</span>
+          <span className="text-muted-foreground text-xs font-normal hidden group-open:inline">Ocultar</span>
+        </summary>
+        <ol className="px-5 pb-5 pt-2 space-y-3 text-xs text-muted-foreground leading-relaxed list-decimal list-inside marker:font-semibold marker:text-foreground">
+          <li>
+            Gavazzoni Dias, M.F.R. et al. (2014). The Shampoo pH can Affect the Hair Fiber.{" "}
+            <em>International Journal of Trichology</em>, 6(3), 95–99.{" "}
+            <a
+              href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4171909/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-secondary underline underline-offset-2 hover:opacity-80"
+            >
+              PMC4171909
+            </a>
+          </li>
+          <li>
+            Bolduc, C. & Shapiro, J. (2022). Hair care products: Waving, straightening, conditioning,
+            and coloring. <em>Surgical &amp; Cosmetic Dermatology</em>, 14(1), 4–14.
+          </li>
+          <li>
+            Robbins, C.R. (2023). Chemical and Physical Behavior of Human Hair.{" "}
+            <em>Polymers</em> (MDPI/Springer, 6th ed.). PMC open-access chapter on cuticle porosity.{" "}
+            <a
+              href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10054080/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-secondary underline underline-offset-2 hover:opacity-80"
+            >
+              PMC10054080
+            </a>
+          </li>
+          <li>
+            Pinheiro, M.V. et al. (2025). Assessment of Hair Fiber Integrity After Chemical Treatments.{" "}
+            <em>Cosmetics</em> (MDPI), 12(3), 93.{" "}
+            <a
+              href="https://www.mdpi.com/2079-9284/12/3/93"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-secondary underline underline-offset-2 hover:opacity-80"
+            >
+              mdpi.com/2079-9284/12/3/93
+            </a>
+          </li>
+          <li>
+            Society of Cosmetic Chemists (NYSCC). (2024). Hair Porosity and Elasticity: Measurement
+            Methods and Clinical Relevance. Annual Symposium Proceedings.
+          </li>
+        </ol>
+      </details>
+
       {/* Repeat */}
       <div className="flex justify-center pt-2">
         <Button variant="outline" onClick={onReset} className="gap-2">
