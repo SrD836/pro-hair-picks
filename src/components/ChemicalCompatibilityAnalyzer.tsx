@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/i18n/LanguageContext";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -30,91 +31,16 @@ interface CompatibilityRecord {
   source: string | null;
 }
 
-// ─── Treatment options ────────────────────────────────────────────────────────
-
-const TREATMENTS = [
-  {
-    id: "decoloracion",
-    label: "Decoloración / Tinte Oxidativo",
-    agent: "H₂O₂ (6–12%)",
-    icon: "🔆",
-  },
-  {
-    id: "alisado_keratina",
-    label: "Alisado de Keratina / Orgánico",
-    agent: "Ácido Glioxílico, Carbocisteína",
-    icon: "🌿",
-  },
-  {
-    id: "alisado_naoh",
-    label: "Alisado Permanente (Hidróxido)",
-    agent: "NaOH — pH 12–14",
-    icon: "⚗️",
-  },
-  {
-    id: "alisado_tioglicolato",
-    label: "Relajante Capilar",
-    agent: "Tioglicolato de Amonio",
-    icon: "🧪",
-  },
-  {
-    id: "henna_natural",
-    label: "Henna Natural (Lawsona)",
-    agent: "Lawsonia inermis",
-    icon: "🌺",
-  },
-  {
-    id: "henna_metalica",
-    label: "Henna Compuesta / Tinte Metálico",
-    agent: "Sales de Pb, Ag, Cu",
-    icon: "⚠️",
-  },
+const TREATMENT_IDS = [
+  "decoloracion",
+  "alisado_keratina",
+  "alisado_naoh",
+  "alisado_tioglicolato",
+  "henna_natural",
+  "henna_metalica",
 ] as const;
 
-type TreatmentId = (typeof TREATMENTS)[number]["id"];
-
-// ─── Compatibility theme config ───────────────────────────────────────────────
-
-const COMPAT_CONFIG: Record<
-  Compatibility,
-  {
-    label: string;
-    emoji: string;
-    border: string;
-    bg: string;
-    badgeBg: string;
-    badgeText: string;
-    icon: React.ReactNode;
-  }
-> = {
-  green: {
-    label: "SEGURO",
-    emoji: "🟢",
-    border: "border-[#2D5016]",
-    bg: "bg-[rgba(45,80,22,0.05)]",
-    badgeBg: "bg-[#2D5016]",
-    badgeText: "text-[#F5F0E8]",
-    icon: <CheckCircle2 className="w-5 h-5 text-[#2D5016]" />,
-  },
-  yellow: {
-    label: "PRECAUCIÓN",
-    emoji: "🟡",
-    border: "border-[#C4A97D]",
-    bg: "bg-[rgba(196,169,125,0.08)]",
-    badgeBg: "bg-[#C4A97D]",
-    badgeText: "text-[#2D2218]",
-    icon: <AlertTriangle className="w-5 h-5 text-[#C4A97D]" />,
-  },
-  red: {
-    label: "INCOMPATIBLE",
-    emoji: "🔴",
-    border: "border-[#8B0000]",
-    bg: "bg-[rgba(139,0,0,0.05)]",
-    badgeBg: "bg-[#8B0000]",
-    badgeText: "text-[#F5F0E8]",
-    icon: <AlertTriangle className="w-5 h-5 text-[#8B0000]" />,
-  },
-};
+type TreatmentId = (typeof TREATMENT_IDS)[number];
 
 // ─── Supabase fetch ───────────────────────────────────────────────────────────
 
@@ -139,13 +65,16 @@ function TreatmentSelect({
   label,
   value,
   onChange,
-  exclude,
+  placeholder,
+  treatments,
 }: {
   label: string;
   value: TreatmentId | "";
   onChange: (v: TreatmentId) => void;
-  exclude?: TreatmentId;
+  placeholder: string;
+  treatments: { id: TreatmentId; icon: string; label: string; agent: string }[];
 }) {
+  const selected = treatments.find((t) => t.id === value);
   return (
     <div className="flex flex-col gap-2">
       <label className="text-xs font-bold uppercase tracking-widest text-[#C4A97D]">
@@ -163,10 +92,8 @@ function TreatmentSelect({
             transition-colors cursor-pointer
           "
         >
-          <option value="" disabled>
-            Selecciona un tratamiento…
-          </option>
-          {TREATMENTS.filter((t) => t.id !== exclude).map((t) => (
+          <option value="" disabled>{placeholder}</option>
+          {treatments.map((t) => (
             <option key={t.id} value={t.id}>
               {t.icon} {t.label}
             </option>
@@ -174,39 +101,36 @@ function TreatmentSelect({
         </select>
         <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C4A97D]" />
       </div>
-      {value && (
-        <p className="text-xs text-[#F5F0E8]/50">
-          {TREATMENTS.find((t) => t.id === value)?.agent}
-        </p>
+      {selected && (
+        <p className="text-xs text-[#F5F0E8]/50">{selected.agent}</p>
       )}
     </div>
   );
 }
 
-function ResultCard({ data }: { data: CompatibilityRecord }) {
+function ResultCard({
+  data,
+  compatConfig,
+}: {
+  data: CompatibilityRecord;
+  compatConfig: ReturnType<typeof buildCompatConfig>;
+}) {
+  const { t } = useLanguage();
   const [techOpen, setTechOpen] = useState(false);
-  const theme = COMPAT_CONFIG[data.compatibility];
+  const theme = compatConfig[data.compatibility];
 
   return (
     <motion.div
-      key={`${data.treatment_done}-${data.treatment_desired}`}
       initial={{ opacity: 0, y: 24, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -16, scale: 0.97 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className={`
-        rounded-2xl border-2 p-6 space-y-5
-        ${theme.border} ${theme.bg}
-      `}
+      className={`rounded-2xl border-2 p-6 space-y-5 ${theme.border} ${theme.bg}`}
     >
       {/* Badge row */}
       <div className="flex flex-wrap items-center gap-3">
         <span
-          className={`
-            inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-            text-sm font-bold tracking-wider
-            ${theme.badgeBg} ${theme.badgeText}
-          `}
+          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold tracking-wider ${theme.badgeBg} ${theme.badgeText}`}
         >
           {theme.icon}
           {theme.label}
@@ -215,15 +139,15 @@ function ResultCard({ data }: { data: CompatibilityRecord }) {
         {data.wait_weeks != null && data.wait_weeks > 0 && (
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#2D2218] border border-[#C4A97D]/30 text-[#C4A97D] text-xs font-semibold">
             <Clock className="w-3.5 h-3.5" />
-            Espera mínima: {data.wait_weeks}{" "}
-            {data.wait_weeks === 1 ? "semana" : "semanas"}
+            {t("quimica.waitLabel")} {data.wait_weeks}{" "}
+            {data.wait_weeks === 1 ? t("quimica.waitWeek") : t("quimica.waitWeeks")}
           </span>
         )}
 
         {data.strand_test && (
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#2D2218] border border-[#C4A97D]/30 text-[#C4A97D] text-xs font-semibold">
             <FlaskConical className="w-3.5 h-3.5" />
-            Prueba de mechón obligatoria
+            {t("quimica.strandTest")}
           </span>
         )}
       </div>
@@ -236,7 +160,7 @@ function ResultCard({ data }: { data: CompatibilityRecord }) {
       {/* Simple explanation */}
       <div className="rounded-xl bg-[#2D2218]/60 border border-[#C4A97D]/15 p-4">
         <p className="text-xs font-bold uppercase tracking-widest text-[#C4A97D] mb-2">
-          ¿Qué significa para ti?
+          {t("quimica.forClientLabel")}
         </p>
         <p className="text-sm text-[#F5F0E8]/80 leading-relaxed italic">
           &ldquo;{data.simple_explanation}&rdquo;
@@ -247,18 +171,11 @@ function ResultCard({ data }: { data: CompatibilityRecord }) {
       <div>
         <button
           onClick={() => setTechOpen((o) => !o)}
-          className="
-            flex items-center gap-2 text-xs font-bold uppercase tracking-widest
-            text-[#C4A97D]/70 hover:text-[#C4A97D] transition-colors
-          "
+          className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#C4A97D]/70 hover:text-[#C4A97D] transition-colors"
         >
           <BookOpen className="w-3.5 h-3.5" />
-          Explicación técnica (profesionales)
-          {techOpen ? (
-            <ChevronUp className="w-3.5 h-3.5" />
-          ) : (
-            <ChevronDown className="w-3.5 h-3.5" />
-          )}
+          {t("quimica.techLabel")}
+          {techOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
 
         <AnimatePresence>
@@ -281,7 +198,7 @@ function ResultCard({ data }: { data: CompatibilityRecord }) {
       {/* Source footnote */}
       {data.source && (
         <p className="text-[10px] text-[#F5F0E8]/35 border-t border-[#C4A97D]/10 pt-3 leading-relaxed">
-          <span className="font-bold text-[#C4A97D]/50">Fuente: </span>
+          <span className="font-bold text-[#C4A97D]/50">{t("quimica.sourceLabel")} </span>
           {data.source}
         </p>
       )}
@@ -290,43 +207,79 @@ function ResultCard({ data }: { data: CompatibilityRecord }) {
       <div className="rounded-xl bg-[#C4A97D]/10 border border-[#C4A97D]/20 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <MessageCircle className="w-5 h-5 text-[#C4A97D] shrink-0 mt-0.5 sm:mt-0" />
         <p className="text-sm text-[#F5F0E8]/70">
-          ¿Tienes dudas sobre tu caso específico?{" "}
-          <strong className="text-[#C4A97D]">
-            Consulta con tu estilista profesional
-          </strong>{" "}
-          — solo un experto puede evaluar el estado real de tu cabello.
+          {t("quimica.ctaText")}{" "}
+          <strong className="text-[#C4A97D]">{t("quimica.ctaHighlight")}</strong>{" "}
+          {t("quimica.ctaSuffix")}
         </p>
       </div>
     </motion.div>
   );
 }
 
+// ─── Config builder (needs t() so must be inside component) ──────────────────
+
+function buildCompatConfig(t: (k: string) => string) {
+  return {
+    green: {
+      label: t("quimica.legendSafe"),
+      emoji: "🟢",
+      border: "border-[#2D5016]",
+      bg: "bg-[rgba(45,80,22,0.05)]",
+      badgeBg: "bg-[#2D5016]",
+      badgeText: "text-[#F5F0E8]",
+      icon: <CheckCircle2 className="w-5 h-5 text-[#2D5016]" />,
+    },
+    yellow: {
+      label: t("quimica.legendCaution"),
+      emoji: "🟡",
+      border: "border-[#C4A97D]",
+      bg: "bg-[rgba(196,169,125,0.08)]",
+      badgeBg: "bg-[#C4A97D]",
+      badgeText: "text-[#2D2218]",
+      icon: <AlertTriangle className="w-5 h-5 text-[#C4A97D]" />,
+    },
+    red: {
+      label: t("quimica.legendIncompatible"),
+      emoji: "🔴",
+      border: "border-[#8B0000]",
+      bg: "bg-[rgba(139,0,0,0.05)]",
+      badgeBg: "bg-[#8B0000]",
+      badgeText: "text-[#F5F0E8]",
+      icon: <AlertTriangle className="w-5 h-5 text-[#8B0000]" />,
+    },
+  } as const;
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function ChemicalCompatibilityAnalyzer() {
+  const { t } = useLanguage();
   const [treatmentDone, setTreatmentDone] = useState<TreatmentId | "">("");
-  const [treatmentDesired, setTreatmentDesired] = useState<TreatmentId | "">(
-    ""
-  );
+  const [treatmentDesired, setTreatmentDesired] = useState<TreatmentId | "">("");
 
   const bothSelected = treatmentDone !== "" && treatmentDesired !== "";
+  const compatConfig = buildCompatConfig(t);
+
+  // Build treatment list from i18n keys
+  const treatments: { id: TreatmentId; icon: string; label: string; agent: string }[] = [
+    { id: "decoloracion",       icon: "🔆", label: t("quimica.treatmentDecoloracion"),   agent: t("quimica.treatmentDecoloracionAgent") },
+    { id: "alisado_keratina",   icon: "🌿", label: t("quimica.treatmentKeratina"),        agent: t("quimica.treatmentKeratinaAgent") },
+    { id: "alisado_naoh",       icon: "⚗️", label: t("quimica.treatmentNaoh"),            agent: t("quimica.treatmentNaohAgent") },
+    { id: "alisado_tioglicolato", icon: "🧪", label: t("quimica.treatmentTio"),           agent: t("quimica.treatmentTioAgent") },
+    { id: "henna_natural",      icon: "🌺", label: t("quimica.treatmentHennaNatural"),    agent: t("quimica.treatmentHennaNaturalAgent") },
+    { id: "henna_metalica",     icon: "⚠️", label: t("quimica.treatmentHennaMetalica"),  agent: t("quimica.treatmentHennaMetalicaAgent") },
+  ];
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["chemical-compatibility", treatmentDone, treatmentDesired],
     queryFn: () =>
-      fetchCompatibility(
-        treatmentDone as TreatmentId,
-        treatmentDesired as TreatmentId
-      ),
+      fetchCompatibility(treatmentDone as TreatmentId, treatmentDesired as TreatmentId),
     enabled: bothSelected,
-    staleTime: 1000 * 60 * 60, // 1 hour — this data changes rarely
+    staleTime: 1000 * 60 * 60,
   });
 
   return (
-    <section
-      className="w-full"
-      aria-label="Analizador de Compatibilidad Química Capilar"
-    >
+    <section className="w-full" aria-label={t("quimica.analyzerTitle")}>
       {/* ── Header ─────────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -337,15 +290,13 @@ export default function ChemicalCompatibilityAnalyzer() {
       >
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C4A97D]/10 border border-[#C4A97D]/30 text-[#C4A97D] text-xs font-bold uppercase tracking-widest mb-5">
           <FlaskConical className="w-3.5 h-3.5" />
-          Herramienta profesional
+          {t("quimica.toolBadge")}
         </div>
         <h2 className="font-display text-3xl md:text-4xl font-bold text-[#F5F0E8] mb-4 leading-tight">
-          Analizador de Compatibilidad Química
+          {t("quimica.analyzerTitle")}
         </h2>
         <p className="text-[#F5F0E8]/60 text-base max-w-2xl mx-auto leading-relaxed">
-          Selecciona el tratamiento realizado en los últimos 6 meses y el
-          tratamiento deseado hoy. La herramienta consulta nuestra base de datos
-          basada en literatura científica con revisión por pares (2018–2026).
+          {t("quimica.analyzerSubtitle")}
         </p>
       </motion.div>
 
@@ -355,44 +306,37 @@ export default function ChemicalCompatibilityAnalyzer() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="
-          rounded-2xl border border-[#C4A97D]/20
-          bg-gradient-to-b from-[#2D2218] to-[#1a1410]
-          p-6 md:p-8 mb-6 shadow-card
-        "
+        className="rounded-2xl border border-[#C4A97D]/20 bg-gradient-to-b from-[#2D2218] to-[#1a1410] p-6 md:p-8 mb-6 shadow-card"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <TreatmentSelect
-            label="Tratamiento realizado (últimos 6 meses)"
+            label={t("quimica.labelDone")}
             value={treatmentDone}
             onChange={(v) => {
               setTreatmentDone(v);
               if (v === treatmentDesired) setTreatmentDesired("");
             }}
+            placeholder={t("quimica.placeholder")}
+            treatments={treatments}
           />
           <TreatmentSelect
-            label="Tratamiento deseado hoy"
+            label={t("quimica.labelDesired")}
             value={treatmentDesired}
             onChange={setTreatmentDesired}
-            exclude={undefined}
+            placeholder={t("quimica.placeholder")}
+            treatments={treatments}
           />
         </div>
 
-        {/* Quick guide */}
+        {/* Legend */}
         <div className="grid grid-cols-3 gap-3 text-center">
           {(["green", "yellow", "red"] as Compatibility[]).map((c) => {
-            const t = COMPAT_CONFIG[c];
+            const cfg = compatConfig[c];
             return (
-              <div
-                key={c}
-                className={`
-                  rounded-xl border p-3
-                  ${t.border} ${t.bg}
-                `}
-              >
-                <p className="text-lg mb-1">{t.emoji}</p>
-                <p className={`text-xs font-bold ${t.badgeText === "text-[#F5F0E8]" ? "text-[#F5F0E8]" : "text-[#2D2218]"}`}>
-                  {t.label}
+              <div key={c} className={`rounded-xl border p-3 ${cfg.border} ${cfg.bg}`}>
+                <p className="text-lg mb-1">{cfg.emoji}</p>
+                <p className={`text-xs font-bold ${cfg.badgeText === "text-[#F5F0E8]" ? "text-[#F5F0E8]" : "text-[#2D2218]"}`}>
+                  {cfg.label}
                 </p>
               </div>
             );
@@ -411,7 +355,7 @@ export default function ChemicalCompatibilityAnalyzer() {
             className="flex items-center justify-center py-12 gap-3 text-[#C4A97D]/70"
           >
             <div className="w-5 h-5 rounded-full border-2 border-[#C4A97D]/30 border-t-[#C4A97D] animate-spin" />
-            <span className="text-sm">Consultando base de datos científica…</span>
+            <span className="text-sm">{t("quimica.loadingText")}</span>
           </motion.div>
         )}
 
@@ -424,14 +368,18 @@ export default function ChemicalCompatibilityAnalyzer() {
             className="rounded-xl border border-[#8B0000]/40 bg-[rgba(139,0,0,0.05)] p-5 text-center"
           >
             <p className="text-sm text-[#F5F0E8]/70">
-              Error al consultar los datos:{" "}
-              {error instanceof Error ? error.message : "Error desconocido"}
+              {t("quimica.errorText")}{" "}
+              {error instanceof Error ? error.message : "—"}
             </p>
           </motion.div>
         )}
 
         {data && !isLoading && (
-          <ResultCard key={`${treatmentDone}-${treatmentDesired}`} data={data} />
+          <ResultCard
+            key={`${treatmentDone}-${treatmentDesired}`}
+            data={data}
+            compatConfig={compatConfig}
+          />
         )}
 
         {!bothSelected && !data && (
@@ -440,21 +388,15 @@ export default function ChemicalCompatibilityAnalyzer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="
-              rounded-2xl border border-dashed border-[#C4A97D]/20
-              bg-[#2D2218]/30 p-10 text-center
-            "
+            className="rounded-2xl border border-dashed border-[#C4A97D]/20 bg-[#2D2218]/30 p-10 text-center"
           >
             <FlaskConical className="w-10 h-10 text-[#C4A97D]/30 mx-auto mb-4" />
-            <p className="text-sm text-[#F5F0E8]/40">
-              Selecciona ambos tratamientos para ver el análisis de
-              compatibilidad
-            </p>
+            <p className="text-sm text-[#F5F0E8]/40">{t("quimica.emptyText")}</p>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── Expert Verdict section ─────────────────────────────── */}
+      {/* ── Expert Verdict ─────────────────────────────────────── */}
       <div className="mt-16">
         <ExpertVerdict />
       </div>

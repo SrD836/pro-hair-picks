@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, Search, Menu, X, Scissors } from "lucide-react";
+import { ChevronDown, Search, Menu, X, Scissors, Sparkles } from "lucide-react";
 import { menGroups, womenGroups, mixedCategories, type CategoryGroup, type CategoryItem } from "@/data/categories";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -51,15 +51,11 @@ const Navbar = () => {
             <Link to="/calculadora-precio" className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
               {t("nav.priceCalculator")}
             </Link>
-            <Link to="/asesor-color" className="px-3 py-1.5 text-sm font-bold text-secondary-foreground bg-secondary hover:bg-secondary/90 rounded-md transition-colors">
-              🎨 {t("colorMatch.navLabel")}
-            </Link>
-            <Link
-              to="/diagnostico-capilar"
-              className="px-3 py-1.5 text-sm font-bold text-foreground bg-muted hover:bg-muted/80 border border-border rounded-md transition-colors"
-            >
-              🔬 Diagnóstico Capilar
-            </Link>
+            <HairToolsDropdown
+              isOpen={openDropdown === "mipelo"}
+              onToggle={() => setOpenDropdown(openDropdown === "mipelo" ? null : "mipelo")}
+              onClose={() => setOpenDropdown(null)}
+            />
             <Link to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"} className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
               <Scissors className="w-3.5 h-3.5" />
               {t("nav.courses")}
@@ -101,16 +97,7 @@ const Navbar = () => {
               <Link to="/calculadora-precio" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
                 {t("nav.priceCalculator")}
               </Link>
-              <Link to="/asesor-color" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-secondary hover:text-secondary/80 transition-colors">
-                🎨 {t("colorMatch.navLabel")}
-              </Link>
-              <Link
-                to="/diagnostico-capilar"
-                onClick={() => setMobileOpen(false)}
-                className="block px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors"
-              >
-                🔬 Diagnóstico Capilar
-              </Link>
+              <MobileHairToolsSection onClose={() => setMobileOpen(false)} />
               <Link to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"} onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
                 <Scissors className="w-4 h-4" />
                 {t("nav.courses")}
@@ -125,6 +112,87 @@ const Navbar = () => {
     </nav>
   );
 };
+
+/* ── Desktop: Mi Pelo dropdown ─── */
+function HairToolsDropdown({ isOpen, onToggle, onClose }: { isOpen: boolean; onToggle: () => void; onClose: () => void }) {
+  const { t } = useLanguage();
+  const tools = [
+    { emoji: "🎨", to: "/asesor-color",          label: t("nav.colorAdvisorLabel"),   desc: t("nav.colorAdvisorDesc") },
+    { emoji: "🔬", to: "/diagnostico-capilar",   label: t("nav.diagnosticLabel"),     desc: t("nav.diagnosticDesc") },
+    { emoji: "⚗️", to: "/compatibilidad-quimica", label: t("nav.compatibilityLabel"), desc: t("nav.compatibilityDesc") },
+  ];
+  return (
+    <div className="relative" onMouseEnter={onToggle} onMouseLeave={onClose}>
+      <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-bold text-secondary-foreground bg-secondary hover:bg-secondary/90 rounded-md transition-colors">
+        <Sparkles className="w-3.5 h-3.5" />
+        {t("nav.myHair")}
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.15 }}
+            className="absolute top-full right-0 w-72 bg-card rounded-xl shadow-card-hover border border-border p-2 mt-1"
+          >
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-3 pt-1 pb-2">
+              {t("nav.myHairSub")}
+            </p>
+            {tools.map((tool) => (
+              <Link
+                key={tool.to}
+                to={tool.to}
+                onClick={onClose}
+                className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-accent transition-colors group"
+              >
+                <span className="text-xl mt-0.5">{tool.emoji}</span>
+                <div>
+                  <p className="text-sm font-semibold text-foreground group-hover:text-secondary transition-colors">
+                    {tool.label}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{tool.desc}</p>
+                </div>
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/* ── Mobile: Mi Pelo section ─── */
+function MobileHairToolsSection({ onClose }: { onClose: () => void }) {
+  const { t } = useLanguage();
+  const tools = [
+    { emoji: "🎨", to: "/asesor-color",          label: t("nav.colorAdvisorLabel") },
+    { emoji: "🔬", to: "/diagnostico-capilar",   label: t("nav.diagnosticLabel") },
+    { emoji: "⚗️", to: "/compatibilidad-quimica", label: t("nav.compatibilityLabel") },
+  ];
+  return (
+    <div>
+      <h3 className="font-display font-semibold text-secondary flex items-center gap-1.5 mb-2">
+        <Sparkles className="w-4 h-4" />
+        {t("nav.myHair")}
+      </h3>
+      <div className="space-y-1 pl-1">
+        {tools.map((tool) => (
+          <Link
+            key={tool.to}
+            to={tool.to}
+            onClick={onClose}
+            className="flex items-center gap-2 px-2 py-2 rounded text-sm font-medium text-foreground hover:bg-accent hover:text-secondary transition-colors"
+          >
+            <span>{tool.emoji}</span>
+            {tool.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /* ── Desktop: Grouped dropdown (Hombre / Mujer) ─── */
 function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: { label: string; groups: CategoryGroup[]; isOpen: boolean; onToggle: () => void; onClose: () => void }) {
