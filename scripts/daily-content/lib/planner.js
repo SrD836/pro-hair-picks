@@ -28,6 +28,28 @@ const TOPICS_POOL = {
     'permanente moderna: técnicas actuales y productos de nueva generación',
     'trenzas box braids: proceso completo y cuidado posterior',
   ],
+  core_us: [
+    'best professional clippers 2026: barber rankings and US market guide',
+    'balayage vs highlights: techniques and costs for American salons',
+    'keratin treatment guide for US salon professionals 2026',
+    'best professional hair dryers 2026: ionic vs ceramic US market review',
+    'barber scissors guide: Japanese vs German steel for US professionals',
+    'best professional hair color on Amazon.com: US stylist ranking 2026',
+    'fade haircut mastery: full technique guide for American barbershops',
+    'best cordless trimmers for barbering 2026: Andis vs Wahl vs Oster',
+    'curly hair CGM method: professional salon guide for US stylists',
+    'hair extension types and application: US salon professional guide 2026',
+    'ammonia-free hair color: professional ranking for US salons 2026',
+    'hair repair masks: science-backed ingredients for US salon professionals',
+    'hydraulic barber chairs: complete US buying guide 2026',
+    'beard grooming products: oils, balms and waxes US market comparison',
+    'Japanese straightening vs keratin: technical comparison for US stylists',
+    'advanced color correction on damaged hair: US colorimetry guide',
+    'modern perm techniques: US salon professional guide 2026',
+    'box braids professional application and aftercare: US salon guide',
+    'scalp health and hair loss prevention: US professional recommendations',
+    'best professional flat irons 2026: US salon market comparison',
+  ],
   bridge: [
     'cómo la IA de reconocimiento facial está cambiando el diagnóstico capilar',
     'apps de prueba virtual de color: realidad aumentada en el salón 2026',
@@ -60,26 +82,30 @@ async function planDay(date) {
   const pick = (arr, offset) => arr[(dayNum + monthNum * 3 + offset) % arr.length];
 
   const slots = [
-    { slot: 1, type: 'core',    topic: pick(TOPICS_POOL.core, 0) },
-    { slot: 2, type: 'core',    topic: pick(TOPICS_POOL.core, 7) },
-    { slot: 3, type: 'core',    topic: pick(TOPICS_POOL.core, 14) },
-    { slot: 4, type: 'bridge',  topic: pick(TOPICS_POOL.bridge, 0) },
-    { slot: 5, type: 'negocio', topic: pick(TOPICS_POOL.negocio, 0) },
+    { slot: 1, type: 'core',    lang: 'es', market: 'es', topic: pick(TOPICS_POOL.core, 0) },
+    { slot: 2, type: 'core',    lang: 'es', market: 'es', topic: pick(TOPICS_POOL.core, 7) },
+    { slot: 3, type: 'core_us', lang: 'en', market: 'us', topic: pick(TOPICS_POOL.core_us, 0) },
+    { slot: 4, type: 'bridge',  lang: 'es', market: 'es', topic: pick(TOPICS_POOL.bridge, 0) },
+    { slot: 5, type: 'negocio', lang: 'es', market: 'es', topic: pick(TOPICS_POOL.negocio, 0) },
   ];
 
   console.log('  Generando keywords y slugs SEO...');
-  const prompt = `Eres un experto SEO del sector peluquería/barbería en España.
+  const prompt = `Eres un experto SEO del sector peluquería/barbería.
 
 Para estos temas de blog, genera keywords y slugs SEO optimizados:
-${slots.map((s, i) => `${i + 1}. [${s.type.toUpperCase()}] ${s.topic}`).join('\n')}
+${slots.map((s, i) => `${i + 1}. [${s.type.toUpperCase()}] ${s.topic}${s.market === 'us' ? ' ← MERCADO US: keywords en inglés americano' : ' ← MERCADO ES/LATAM: keywords en español'}`).join('\n')}
+
+CRITERIOS POR MERCADO:
+- Posts ES/LATAM (CORE, BRIDGE, NEGOCIO): keywords en español, 200-2000 búsquedas/mes en España
+- Posts US (CORE_US): keywords en inglés americano (ej: "best professional clippers 2026"), 500-5000 búsquedas/mes en EEUU
 
 Responde SOLO con un array JSON (sin texto adicional):
 [
   {
-    "target_keyword": "keyword principal con 200-2000 búsquedas/mes en ES",
+    "target_keyword": "keyword principal según mercado del post",
     "secondary_keywords": ["keyword2", "keyword3"],
-    "user_question": "pregunta real del profesional que el post responde",
-    "slug": "slug-kebab-case-max-5-palabras"
+    "user_question": "pregunta real del profesional (en el idioma del mercado)",
+    "slug": "slug-kebab-case-max-5-palabras (en el idioma del mercado)"
   }
 ]`;
 

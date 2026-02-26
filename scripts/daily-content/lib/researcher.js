@@ -30,6 +30,32 @@ Responde como si fueran notas de investigación para el redactor. Directo, sin i
   }
 }
 
+async function researchCorePostUS(post) {
+  const prompt = `You are a professional hairdressing and barbering expert with 15 years of experience in the US market.
+
+Generate research context for a blog article about:
+TOPIC: ${post.topic}
+KEYWORD: ${post.target_keyword}
+QUESTION TO ANSWER: ${post.user_question}
+
+Provide:
+1. 3 statistics or concrete data points about the US professional hair industry (with source if known)
+2. 2-3 current trends (2024-2026) relevant to US salons and barbershops
+3. The 3 most common mistakes US professionals make regarding this topic
+4. 1 relevant study or research with source citation
+5. US market context: price ranges, leading brands (Andis, Wahl Professional, Oster, StyleCraft, BaByliss Pro), main distributors (Amazon.com, Sally Beauty, CosmoProf)
+
+Respond as research notes for the writer. Direct, no introduction.`;
+
+  try {
+    const response = callClaude(prompt, { timeout: 90_000 });
+    return { ...post, research_context: response };
+  } catch (err) {
+    console.warn(`  ⚠️  Error en research US: ${err.message}`);
+    return { ...post, research_context: '' };
+  }
+}
+
 async function researchBridgePost(post) {
   // PASO 1: Evaluar la tendencia y aplicar bridge test
   const bridgePrompt = `Eres editor de contenido especializado en peluquería y barbería.
@@ -91,6 +117,8 @@ async function researchAllPosts(dailyPlan) {
     console.log(`  📡 Investigando [${post.type}] slot ${post.slot}...`);
     if (post.type === 'bridge') {
       enriched.push(await researchBridgePost(post));
+    } else if (post.type === 'core_us') {
+      enriched.push(await researchCorePostUS(post));
     } else {
       enriched.push(await researchCorePost(post));
     }

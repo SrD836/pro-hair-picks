@@ -83,7 +83,7 @@ INSERT INTO blog_posts (
   has_expert_verdict, has_data_viz,
   bridge_trend_topic, meta_description,
   internal_links, external_links,
-  schema_markup
+  schema_markup, market, lang
 ) VALUES (
   ${sqlEscape(post.slug)},
   ${sqlEscape(post.title)},
@@ -108,7 +108,9 @@ INSERT INTO blog_posts (
   ${sqlEscape(post.meta_description)},
   ${sqlArray(post.internal_links)},
   ${sqlArray(post.external_links)},
-  ${sqlJsonb(post.schema_markup)}
+  ${sqlJsonb(post.schema_markup)},
+  ${sqlEscape(post.market || 'es')},
+  ${sqlEscape(post.lang || 'es')}
 )
 RETURNING id, slug`;
 
@@ -128,19 +130,31 @@ function updateSitemap(posts, date) {
 
   let sitemap = fs.readFileSync(sitemapPath, 'utf8');
 
-  const priorities = { negocio: '0.9', core: '0.8', bridge: '0.7' };
+  // Añadir namespace xhtml si no está (necesario para hreflang)
+  if (!sitemap.includes('xmlns:xhtml')) {
+    sitemap = sitemap.replace('<urlset ', '<urlset xmlns:xhtml="http://www.w3.org/1999/xhtml" ');
+  }
+
+  const priorities = { negocio: '0.9', core: '0.8', core_us: '0.8', bridge: '0.7' };
 
   for (const post of posts) {
-    const url = `https://guiadelsalon.com/blog/${post.slug}`;
+    const isUS = post.market === 'us' || post.type === 'core_us';
+    const url = isUS
+      ? `https://guiadelsalon.com/en/blog/${post.slug}`
+      : `https://guiadelsalon.com/blog/${post.slug}`;
     if (sitemap.includes(url)) continue; // Ya existe
 
     const priority = priorities[post.type] || '0.8';
+    const hreflang = isUS
+      ? `\n    <xhtml:link rel="alternate" hreflang="en-us" href="${url}"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://guiadelsalon.com/blog"/>`
+      : '';
     const newEntry = `
   <url>
     <loc>${url}</loc>
     <lastmod>${date}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${priority}</priority>
+    <priority>${priority}</priority>${hreflang}
   </url>`;
 
     sitemap = sitemap.replace('</urlset>', newEntry + '\n</urlset>');

@@ -57,7 +57,7 @@ function generateSchema(post, date) {
     image: `https://guiadelsalon.com/images/blog/${post.slug}-hero.webp`,
     description: post.meta_description || post.excerpt || '',
     keywords: (post.keywords || []).join(', '),
-    inLanguage: 'es-ES',
+    inLanguage: post.lang === 'en' ? 'en-US' : 'es-ES',
   };
 }
 
@@ -142,12 +142,99 @@ ${post.type === 'negocio' ? `\nCIZURA: Menciona "software de gestión como Cizur
 RESPONDE SOLO con el HTML del artículo. Sin explicaciones previas ni posteriores.`;
 }
 
+function buildContentPromptUS(post, internalLinks) {
+  return `You are an expert hairdressing and barbering writer with 15 years of professional experience in the US market. You write for GuiaDelSalon.com targeting professional hairdressers and barbers in the United States.
+
+TONE: Professional peer-to-peer, technical but accessible. NEVER condescending or promotional.
+
+ASSIGNMENT:
+- Type: CORE US
+- Topic: ${post.topic}
+- Primary keyword: ${post.target_keyword}
+- Secondary keywords: ${(post.secondary_keywords || []).join(', ')}
+- Question to answer: ${post.user_question || post.topic}
+
+US MARKET CRITERIA:
+- Prioritize brands available on Amazon.com: Andis, Oster, Wahl Professional, StyleCraft, BaByliss Pro
+- Reference US salon chains where relevant: Sport Clips, Great Clips, Regis
+- Use American English terminology and measurements
+
+RESEARCH CONTEXT:
+${post.research_context || 'Use your knowledge of the US professional hair industry.'}
+
+WRITE THE COMPLETE ARTICLE in semantic HTML. RULES:
+- Length: minimum 900 words, target 1,100
+- No <html>, <head>, <body> tags
+- Tags: <h2>, <h3>, <p>, <strong>, <ul>, <li>, <table>
+- Paragraphs max 4 lines (mobile readability)
+- Bold ONLY on key technical concepts
+- NEVER start with "In this article...", "Today we bring you..."
+- Primary keyword in first paragraph and in 2+ H2/H3
+- Keyword density: 1-1.5% (no more)
+
+MANDATORY STRUCTURE:
+
+<p>[Hook: impactful stat or paradox, professional identifies with the problem in ≤30 words]</p>
+
+<h2>[Block 1 — 150-200 words]</h2>
+<p>[Concrete technical content]</p>
+
+<h2>[Block 2]</h2>
+<p>[Content...]</p>
+
+<h2>[Block 3]</h2>
+<p>[Content...]</p>
+
+<h2>[Block 4]</h2>
+<p>[Content...]</p>
+
+<!-- Comparison table MANDATORY (at least one) -->
+<table class="data-table">
+  <thead><tr><th>Feature</th><th>Option A</th><th>Option B</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+  </tbody>
+</table>
+
+<!-- EXPERT VERDICT — mandatory final section -->
+<div class="expert-verdict">
+  <p class="verdict-title">⚡ Expert Verdict</p>
+  <p>[Authoritative summary 80-120 words. Close with concrete professional recommendation.]</p>
+</div>
+
+<!-- BIBLIOGRAPHY -->
+<section class="bibliography">
+  <h3>Sources</h3>
+  <ul>
+    <li>[External source 1 — <a href="URL_REAL" target="_blank" rel="noopener noreferrer">Organization name</a>]</li>
+    <li>[External source 2]</li>
+    <li>GuiaDelSalon.com — <a href="${internalLinks[0]}">See related products</a></li>
+  </ul>
+</section>
+
+INTERNAL LINKS (min 2, integrated naturally in text):
+- <a href="${internalLinks[0]}">descriptive text</a>
+- <a href="${internalLinks[1] || internalLinks[0]}">descriptive text</a>
+
+AMAZON (max 3, only if applicable to topic):
+- Tag: ${AMAZON_TAG}
+- Anchor text: "Check price on Amazon" (NEVER "Buy")
+- Format: <a href="https://amazon.com/dp/ASIN?tag=${AMAZON_TAG}" rel="nofollow" target="_blank">Check price on Amazon</a>
+
+RESPOND ONLY with the article HTML. No explanations before or after.`;
+}
+
 async function writePost(post, date) {
+  const isUS = post.type === 'core_us';
   console.log(`  ✍️  Escribiendo [${post.type}] slot ${post.slot}: ${(post.topic || '').slice(0, 55)}...`);
   const internalLinks = getInternalLinks(post);
 
   // 1. Generar título y metadatos
-  const titlePrompt = `Para el artículo sobre "${post.topic}" (keyword: "${post.target_keyword}"):
+  const titlePrompt = isUS
+    ? `For the article about "${post.topic}" (keyword: "${post.target_keyword}"):
+Generate ONLY this JSON (no additional text):
+{"title":"[SEO title max 65 chars, keyword at start, American English]","title_en":"[same as title]","meta_description":"[max 155 chars, includes keyword and implicit CTA, American English]","category":"[1-2 words English]","category_en":"[1-2 words English]"}`
+    : `Para el artículo sobre "${post.topic}" (keyword: "${post.target_keyword}"):
 Genera SOLO este JSON (sin texto adicional):
 {"title":"[título SEO español max 65 chars, keyword al inicio]","title_en":"[English SEO title max 65 chars]","meta_description":"[max 155 chars, incluye keyword y CTA implícito]","category":"[1-2 palabras español]","category_en":"[1-2 words English]"}`;
 
@@ -156,7 +243,13 @@ Genera SOLO este JSON (sin texto adicional):
     const titleResp = callClaude(titlePrompt, { timeout: 45_000 });
     titleData = extractJSON(titleResp, false);
   } catch {
-    titleData = {
+    titleData = isUS ? {
+      title: post.topic.slice(0, 65),
+      title_en: post.topic.slice(0, 65),
+      meta_description: `Professional guide on ${post.target_keyword}. Everything US salon professionals need to know.`,
+      category: 'Technique',
+      category_en: 'Technique',
+    } : {
       title: post.topic.slice(0, 65),
       title_en: post.topic.slice(0, 65),
       meta_description: `Guía profesional sobre ${post.target_keyword}. Todo lo que necesitas saber para el salón.`,
@@ -167,44 +260,58 @@ Genera SOLO este JSON (sin texto adicional):
 
   // 2. Generar contenido principal (la llamada más larga — hasta 5 min)
   console.log(`     Generando contenido (puede tardar 2-4 min)...`);
-  const contentES = callClaude(buildContentPrompt({ ...post, ...titleData }, internalLinks), { timeout: 300_000 });
+  const mainContent = callClaude(
+    isUS
+      ? buildContentPromptUS({ ...post, ...titleData }, internalLinks)
+      : buildContentPrompt({ ...post, ...titleData }, internalLinks),
+    { timeout: 300_000 }
+  );
 
-  // 3. Traducir al inglés
-  console.log(`     Traduciendo al inglés...`);
-  const translationPrompt = `Translate this hairdressing article from Spanish to professional English.
+  // 3. Para posts ES: traducir al inglés. Para posts US: ya está en inglés.
+  let contentES, contentEN;
+  if (isUS) {
+    contentES = mainContent;
+    contentEN = mainContent;
+  } else {
+    contentES = mainContent;
+    console.log(`     Traduciendo al inglés...`);
+    const translationPrompt = `Translate this hairdressing article from Spanish to professional English.
 Keep all HTML tags intact. Adapt for UK/US professionals.
 Keep internal links (<a href="...">) unchanged.
 RESPOND ONLY with the translated HTML, no explanations.
 
 ${contentES}`;
-  let contentEN = '';
-  try {
-    contentEN = callClaude(translationPrompt, { timeout: 300_000 });
-  } catch {
-    contentEN = contentES; // fallback: mismo contenido
+    try {
+      contentEN = callClaude(translationPrompt, { timeout: 300_000 });
+    } catch {
+      contentEN = contentES;
+    }
   }
 
-  const excerpt = titleData.meta_description || extractExcerpt(contentES);
+  const primaryContent = isUS ? contentEN : contentES;
+  const excerpt = titleData.meta_description || extractExcerpt(primaryContent);
 
   return {
     ...post,
-    title:           titleData.title || post.topic,
-    title_en:        titleData.title_en || post.topic,
+    title:            titleData.title || post.topic,
+    title_en:         titleData.title_en || post.topic,
     meta_description: titleData.meta_description || excerpt,
-    category:        titleData.category || 'Peluquería',
-    category_en:     titleData.category_en || 'Hairdressing',
+    category:         titleData.category || (isUS ? 'Technique' : 'Peluquería'),
+    category_en:      titleData.category_en || 'Hairdressing',
     excerpt,
-    excerpt_en:      extractExcerpt(contentEN),
-    content:         contentES,
-    content_en:      contentEN,
-    read_time_minutes: estimateReadTime(contentES),
-    has_expert_verdict: contentES.includes('expert-verdict'),
-    has_data_viz:    contentES.includes('<table') || contentES.includes('data-table'),
-    keywords:        [post.target_keyword, ...(post.secondary_keywords || [])],
-    internal_links:  internalLinks,
-    external_links:  [],
-    author:          'Equipo GuiaDelSalon',
-    schema_markup:   generateSchema({ ...post, ...titleData, excerpt }, date),
+    excerpt_en:       isUS ? excerpt : extractExcerpt(contentEN),
+    content:          contentES,
+    content_en:       contentEN,
+    read_time_minutes: estimateReadTime(primaryContent),
+    has_expert_verdict: primaryContent.includes('expert-verdict'),
+    has_data_viz:     primaryContent.includes('<table') || primaryContent.includes('data-table'),
+    keywords:         [post.target_keyword, ...(post.secondary_keywords || [])],
+    internal_links:   internalLinks,
+    external_links:   [],
+    author:           isUS ? 'GuiaDelSalon Team' : 'Equipo GuiaDelSalon',
+    lang:             post.lang || (isUS ? 'en' : 'es'),
+    market:           post.market || (isUS ? 'us' : 'es'),
+    schema_markup:    generateSchema({ ...post, ...titleData, excerpt }, date),
   };
 }
 
@@ -212,8 +319,10 @@ async function writeAllPosts(dailyPlan) {
   const posts = [];
   for (const post of dailyPlan.posts) {
     if (post.type === 'bridge' && post.bridge_test === 'failed') {
-      console.log(`  ⚠️  Bridge test fallido → convirtiendo slot ${post.slot} a post CORE`);
+      console.log(`  ⚠️  Bridge test fallido → convirtiendo slot ${post.slot} a post CORE ES`);
       post.type = 'core';
+      post.lang = 'es';
+      post.market = 'es';
       post.topic = 'técnicas de coloración sin amoniaco: guía profesional definitiva';
     }
     posts.push(await writePost(post, dailyPlan.date));
