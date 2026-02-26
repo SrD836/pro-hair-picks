@@ -65,7 +65,7 @@
     "objective_technical": "Fase hidratante extendida a 3 semanas por el nivel de daño cortical severo. Combinar humectantes penetrantes con oclusivos pesados (manteca de karité, aceite de coco) para compensar la pérdida de 18-MEA. Aplicar enjuague ácido tras cada lavado para normalizar pH cuticlar.",
     "objective_simple": "Con este nivel de daño, el pelo necesita tres semanas completas bebiendo agua antes de aceptar proteína. Piensa en él como madera reseca — primero la mojas, luego la lijás.",
     "key_ingredients": ["manteca de karité", "ceramidas", "aceite de coco", "glicerina", "ácido láctico", "pantenol"],
-    "avoid": ["cualquier proteína esta fase", "calor", "decoloración", "coloración"],
+    "avoid": ["cualquier proteína esta fase", "calor directo >120°C", "decoloración", "coloración"],
     "checkpoint": "Al final de la semana 3, el pelo húmedo tiene elasticidad mínima: se estira ligeramente antes de romperse. Si aún cruje seco, extender esta fase 1 semana más.",
     "pending_review": false,
     "sources": [
@@ -148,7 +148,7 @@
     "porosity_filter": null,
     "objective_technical": "Tres semanas de reconstrucción progresiva. Semana 4: proteína de bajo PM para penetración cortical profunda. Semana 5: proteína de medio PM + bond-builder. Semana 6: tratamiento combinado bond-builder + sellado enzimático (si disponible). Espaciar mínimo 7 días entre sesiones para evitar sobrecarga.",
     "objective_simple": "Tres semanas reconstruyendo desde dentro hacia fuera. Cada sesión añade una capa de estructura, como restaurar hueso por hueso una escultura dañada.",
-    "key_ingredients": ["queratina hidrolizada (bajo PM, semana 4)", "queratina hidrolizada (medio PM, semana 5)", "bis-aminopropyl diglycol dimaleate", "cistina", "péptidos de colágeno", "niacinamida"],
+    "key_ingredients": ["queratina hidrolizada (bajo PM, semana 4)", "queratina hidrolizada (medio PM, semana 5)", "bis-aminopropyl diglycol dimaleate", "cistina"],
     "avoid": ["cualquier proceso químico (color, decoloración, alisado)", "calor > 150°C", "cepillado agresivo", "mascarillas de proteína fuera de intervalo"],
     "checkpoint": "Semana 6: el pelo seco no tiene puntas abiertas en el 80% de los mechones. El test de goma muestra recuperación elástica completa en pelo húmedo.",
     "pending_review": false,
