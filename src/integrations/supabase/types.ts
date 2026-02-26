@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      chemical_compatibility: {
+        Row: {
+          id: string
+          treatment_done: string
+          treatment_desired: string
+          compatibility: string
+          wait_weeks: number | null
+          strand_test: boolean
+          risk_summary: string
+          technical_explanation: string
+          simple_explanation: string
+          source: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          treatment_done: string
+          treatment_desired: string
+          compatibility: string
+          wait_weeks?: number | null
+          strand_test?: boolean
+          risk_summary: string
+          technical_explanation: string
+          simple_explanation: string
+          source?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          treatment_done?: string
+          treatment_desired?: string
+          compatibility?: string
+          wait_weeks?: number | null
+          strand_test?: boolean
+          risk_summary?: string
+          technical_explanation?: string
+          simple_explanation?: string
+          source?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       actual_expenses: {
         Row: {
           actual_amount: number | null
