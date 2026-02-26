@@ -89,7 +89,8 @@ export const TREATMENT_WAIT_WEEKS: Record<LastTreatment, number> = {
 
 export function generateRecoveryCalendar(
   input: RecoveryInput,
-  phases: RecoveryPhaseRow[]
+  phases: RecoveryPhaseRow[],
+  today: Date = new Date()
 ): RecoveryCalendar {
   if (input.damage_level === 10) {
     return {
@@ -160,7 +161,7 @@ export function generateRecoveryCalendar(
   const waitWeeks = Math.ceil(
     TREATMENT_WAIT_WEEKS[input.last_treatment] * input.damage_level
   );
-  const safeDate = addWeeks(new Date(), total_weeks + waitWeeks);
+  const safeDate = addWeeks(today, total_weeks + waitWeeks);
   const next_safe_treatment_date = format(safeDate, 'dd/MM/yyyy');
 
   // Collect unique sources from all applicable phases
