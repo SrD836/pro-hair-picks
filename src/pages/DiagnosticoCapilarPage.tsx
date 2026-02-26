@@ -418,7 +418,7 @@ function ResultsScreen({
   products: Product[];
   onReset: () => void;
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const colors = RISK_COLORS[riskLevel];
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -508,7 +508,7 @@ function ResultsScreen({
           {products.map((product, i) => (
             <motion.a
               key={product.asin}
-              href={product.url}
+              href={lang === 'en' ? product.urlEN : product.urlES}
               target="_blank"
               rel="nofollow noopener noreferrer"
               initial={{ opacity: 0, x: -16 }}

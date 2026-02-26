@@ -30,7 +30,8 @@ export interface Product {
   asin: string;
   name: string;
   description: string;
-  url: string;
+  urlES: string;
+  urlEN: string;
 }
 
 // ── Questions ─────────────────────────────────────────
@@ -225,19 +226,22 @@ const PRODUCTS: Record<RiskLevel, Product[]> = {
       asin: 'B07YM8DWRZ',
       name: 'Olaplex No.7 Bonding Oil',
       description: 'Aceite reparador ultraligero que sella la cutícula y aporta brillo espejo. Ideal para mantener la salud del cabello sano.',
-      url: '#',
+      urlES: 'https://amzn.to/4kZv3Kv',
+      urlEN: 'https://amzn.to/46qGuEY',
     },
     {
       asin: 'B00ILBE2W8',
       name: 'Moroccanoil Treatment',
       description: 'Tratamiento de acabado con aceite de argán. Aporta nutrición y brillo sin sobrecargar el cabello sano.',
-      url: '#',
+      urlES: 'https://amzn.to/4qZWDZA',
+      urlEN: 'https://amzn.to/4s4ztlw',
     },
     {
       asin: 'B01LXLMLOH',
       name: 'Kérastase Nutritive Masquintense',
       description: 'Mascarilla nutritiva de alta concentración para cabello sano que quiere mantenerse en su estado óptimo.',
-      url: '#',
+      urlES: 'https://amzn.to/4r7LOoo',
+      urlEN: 'https://amzn.to/46qIAoi',
     },
   ],
   caution: [
@@ -245,19 +249,22 @@ const PRODUCTS: Record<RiskLevel, Product[]> = {
       asin: 'B07SVCNFMD',
       name: 'Olaplex No.3 Hair Perfector',
       description: 'Tratamiento en casa que repara los enlaces de disulfuro dañados. Reduce la porosidad y mejora la elasticidad en 4-6 semanas.',
-      url: '#',
+      urlES: 'https://amzn.to/4aWh6Z7',
+      urlEN: 'https://amzn.to/4tW7PsL',
     },
     {
       asin: 'B09VQDTK4S',
       name: 'Redken Acidic Bonding Concentrate',
       description: 'Sistema acidificante que sella la cutícula y restaura la resistencia en cabello teñido con daño moderado.',
-      url: '#',
+      urlES: 'https://amzn.to/40zJFGQ',
+      urlEN: 'https://amzn.to/4tQ2zGZ',
     },
     {
       asin: 'B09F1NS9GW',
       name: 'Schwarzkopf Fibreplex No.2',
       description: 'Tratamiento de uso domiciliario que refuerza la fibra capilar y protege frente a roturas mecánicas.',
-      url: '#',
+      urlES: 'https://amzn.to/40wTchW',
+      urlEN: 'https://amzn.to/4rEteFn',
     },
   ],
   critical: [
@@ -265,19 +272,22 @@ const PRODUCTS: Record<RiskLevel, Product[]> = {
       asin: 'B09J7Y3ZFH',
       name: 'K18 Leave-In Molecular Repair Hair Mask',
       description: 'Mascarilla sin aclarado con tecnología de péptidos bioactivos que repara el daño en la cadena de queratina desde el interior.',
-      url: '#',
+      urlES: 'https://amzn.to/40tWsuq',
+      urlEN: 'https://amzn.to/4bfr20b',
     },
     {
       asin: 'B08FKXLRJ1',
       name: 'Olaplex No.0 + No.3 System',
       description: 'Sistema intensivo de dos pasos que restablece los enlaces del cabello en situaciones de daño severo antes de cualquier servicio químico.',
-      url: '#',
+      urlES: 'https://amzn.to/40wTm92',
+      urlEN: 'https://amzn.to/4rgA5UB',
     },
     {
       asin: 'B092CXLZ5P',
       name: 'Philip Kingsley Bond Builder',
       description: 'Tratamiento de reconstrucción profunda formulado para cabello en estado crítico con alta porosidad y elasticidad comprometida.',
-      url: '#',
+      urlES: 'https://amzn.to/4s9rxPZ',
+      urlEN: 'https://amzn.to/3ZSZk3Y',
     },
   ],
 };
