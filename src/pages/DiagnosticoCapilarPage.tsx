@@ -604,13 +604,13 @@ function ResultsScreen({
       {/* Bibliography */}
       <details className="group rounded-xl border border-border bg-card overflow-hidden">
         <summary className="flex items-center justify-between cursor-pointer px-5 py-4 text-sm font-semibold text-foreground select-none list-none hover:bg-secondary/5 transition-colors">
-          <span>📚 Bibliografía científica</span>
+          <span><span aria-hidden="true">📚</span> Bibliografía científica</span>
           <span className="text-muted-foreground text-xs font-normal group-open:hidden">Ver fuentes</span>
           <span className="text-muted-foreground text-xs font-normal hidden group-open:inline">Ocultar</span>
         </summary>
         <ol className="px-5 pb-5 pt-2 space-y-3 text-xs text-muted-foreground leading-relaxed list-decimal list-inside marker:font-semibold marker:text-foreground">
           <li>
-            Gavazzoni Dias, M.F.R. et al. (2014). The Shampoo pH can Affect the Hair Fiber.{" "}
+            Gavazzoni Dias, M.F.R. et al. (2014). The Shampoo pH can Affect the Hair Fiber: Myth or Reality?{" "}
             <em>International Journal of Trichology</em>, 6(3), 95–99.{" "}
             <a
               href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4171909/"
@@ -623,7 +623,7 @@ function ResultsScreen({
           </li>
           <li>
             Bolduc, C. & Shapiro, J. (2022). Hair care products: Waving, straightening, conditioning,
-            and coloring. <em>Surgical &amp; Cosmetic Dermatology</em>, 14(1), 4–14.
+            and coloring. <em>Surgical & Cosmetic Dermatology</em>, 14(1), 4–14.
           </li>
           <li>
             Robbins, C.R. (2023). Chemical and Physical Behavior of Human Hair.{" "}
