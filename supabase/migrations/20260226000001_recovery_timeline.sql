@@ -51,7 +51,7 @@ ALTER TABLE public.recovery_calendars ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "recovery_calendars_insert_anon"
   ON public.recovery_calendars FOR INSERT
-  WITH CHECK (true);
+  WITH CHECK (user_session <> '' AND user_session IS NOT NULL);
 
 CREATE POLICY "recovery_calendars_select_own"
   ON public.recovery_calendars FOR SELECT
