@@ -62,7 +62,6 @@ export default function DiagnosticoCapilarPage() {
   const [scores, setScores] = useState<ScoreBreakdown | null>(null);
   const [riskLevel, setRiskLevel] = useState<RiskLevel | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
-  const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
 
   const q = QUESTIONS[currentQ];
   const selectedOption = answers[q?.id];
@@ -93,41 +92,23 @@ export default function DiagnosticoCapilarPage() {
       const sessionId = getSessionId();
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data } = await (supabase.from as any)("hair_diagnostic_sessions")
-          .insert({
-            user_session_id: sessionId,
-            cuticle_score: finalScores.cuticle,
-            porosity_score: finalScores.porosity,
-            elasticity_score: finalScores.elasticity,
-            scalp_score: finalScores.scalp,
-            total_score: finalScores.total,
-            risk_level: finalRiskLevel,
-            answers: finalAnswers,
-            cizura_cta_shown: true,
-            product_recommendations: finalProducts.map((p) => p.asin),
-          })
-          .select("id")
-          .single();
-        if (data?.id) setSavedSessionId(data.id);
+        await (supabase.from as any)("hair_diagnostic_sessions").insert({
+          user_session_id: sessionId,
+          cuticle_score: finalScores.cuticle,
+          porosity_score: finalScores.porosity,
+          elasticity_score: finalScores.elasticity,
+          scalp_score: finalScores.scalp,
+          total_score: finalScores.total,
+          risk_level: finalRiskLevel,
+          answers: finalAnswers,
+          product_recommendations: finalProducts.map((p) => p.asin),
+        });
       } catch {
         // best-effort
       }
     },
     [],
   );
-
-  // ── Track Cizura click ────────────────────────────────
-  const handleCizuraClick = useCallback(async () => {
-    if (!savedSessionId) return;
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase.from as any)("hair_diagnostic_sessions")
-        .update({ cizura_cta_clicked: true })
-        .eq("id", savedSessionId);
-    } catch {
-      // best-effort
-    }
-  }, [savedSessionId]);
 
   // ── Navigation ────────────────────────────────────────
   const goNext = useCallback(async () => {
@@ -305,7 +286,6 @@ export default function DiagnosticoCapilarPage() {
                   riskLevel={riskLevel}
                   products={products}
                   onReset={reset}
-                  onCizuraClick={handleCizuraClick}
                 />
               </motion.div>
             )}
@@ -432,13 +412,11 @@ function ResultsScreen({
   riskLevel,
   products,
   onReset,
-  onCizuraClick,
 }: {
   scores: ScoreBreakdown;
   riskLevel: RiskLevel;
   products: Product[];
   onReset: () => void;
-  onCizuraClick: () => void;
 }) {
   const { t } = useLanguage();
   const colors = RISK_COLORS[riskLevel];
@@ -530,7 +508,7 @@ function ResultsScreen({
           {products.map((product, i) => (
             <motion.a
               key={product.asin}
-              href={`https://amazon.es/dp/${product.asin}?tag=${product.tag}`}
+              href={product.url}
               target="_blank"
               rel="nofollow noopener noreferrer"
               initial={{ opacity: 0, x: -16 }}
@@ -557,29 +535,6 @@ function ResultsScreen({
           ))}
         </div>
       </div>
-
-      {/* Cizura CTA banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.35 }}
-        className="rounded-2xl border border-border bg-gradient-to-br from-secondary/10 to-secondary/5 p-6 text-center"
-      >
-        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          {t(`diagnostico.cizura${capitalize(riskLevel)}`)}
-        </p>
-        <Button asChild size="lg" className="w-full sm:w-auto gap-2">
-          <a
-            href="https://cizura.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={onCizuraClick}
-          >
-            {t("diagnostico.cizuraBtn")}
-            <ExternalLink className="w-4 h-4" />
-          </a>
-        </Button>
-      </motion.div>
 
       {/* Bibliography */}
       <details className="group rounded-xl border border-border bg-card overflow-hidden">

@@ -30,10 +30,8 @@ export interface Product {
   asin: string;
   name: string;
   description: string;
-  tag: string;
+  url: string;
 }
-
-export type CizuraBridge = Record<RiskLevel, string>;
 
 // ── Questions ─────────────────────────────────────────
 
@@ -219,8 +217,7 @@ export function getRiskLevel(total: number): RiskLevel {
 }
 
 // ── Product recommendations ───────────────────────────
-
-const AFFILIATE_TAG = 'guiadelsalo09-21';
+// URLs: provide real Amazon affiliate links for each product
 
 const PRODUCTS: Record<RiskLevel, Product[]> = {
   optimal: [
@@ -228,19 +225,19 @@ const PRODUCTS: Record<RiskLevel, Product[]> = {
       asin: 'B07YM8DWRZ',
       name: 'Olaplex No.7 Bonding Oil',
       description: 'Aceite reparador ultraligero que sella la cutícula y aporta brillo espejo. Ideal para mantener la salud del cabello sano.',
-      tag: AFFILIATE_TAG,
+      url: '#',
     },
     {
       asin: 'B00ILBE2W8',
       name: 'Moroccanoil Treatment',
       description: 'Tratamiento de acabado con aceite de argán. Aporta nutrición y brillo sin sobrecargar el cabello sano.',
-      tag: AFFILIATE_TAG,
+      url: '#',
     },
     {
       asin: 'B01LXLMLOH',
       name: 'Kérastase Nutritive Masquintense',
       description: 'Mascarilla nutritiva de alta concentración para cabello sano que quiere mantenerse en su estado óptimo.',
-      tag: AFFILIATE_TAG,
+      url: '#',
     },
   ],
   caution: [
@@ -248,19 +245,19 @@ const PRODUCTS: Record<RiskLevel, Product[]> = {
       asin: 'B07SVCNFMD',
       name: 'Olaplex No.3 Hair Perfector',
       description: 'Tratamiento en casa que repara los enlaces de disulfuro dañados. Reduce la porosidad y mejora la elasticidad en 4-6 semanas.',
-      tag: AFFILIATE_TAG,
+      url: '#',
     },
     {
       asin: 'B09VQDTK4S',
       name: 'Redken Acidic Bonding Concentrate',
       description: 'Sistema acidificante que sella la cutícula y restaura la resistencia en cabello teñido con daño moderado.',
-      tag: AFFILIATE_TAG,
+      url: '#',
     },
     {
       asin: 'B09F1NS9GW',
       name: 'Schwarzkopf Fibreplex No.2',
       description: 'Tratamiento de uso domiciliario que refuerza la fibra capilar y protege frente a roturas mecánicas.',
-      tag: AFFILIATE_TAG,
+      url: '#',
     },
   ],
   critical: [
@@ -268,19 +265,19 @@ const PRODUCTS: Record<RiskLevel, Product[]> = {
       asin: 'B09J7Y3ZFH',
       name: 'K18 Leave-In Molecular Repair Hair Mask',
       description: 'Mascarilla sin aclarado con tecnología de péptidos bioactivos que repara el daño en la cadena de queratina desde el interior.',
-      tag: AFFILIATE_TAG,
+      url: '#',
     },
     {
       asin: 'B08FKXLRJ1',
       name: 'Olaplex No.0 + No.3 System',
       description: 'Sistema intensivo de dos pasos que restablece los enlaces del cabello en situaciones de daño severo antes de cualquier servicio químico.',
-      tag: AFFILIATE_TAG,
+      url: '#',
     },
     {
       asin: 'B092CXLZ5P',
       name: 'Philip Kingsley Bond Builder',
       description: 'Tratamiento de reconstrucción profunda formulado para cabello en estado crítico con alta porosidad y elasticidad comprometida.',
-      tag: AFFILIATE_TAG,
+      url: '#',
     },
   ],
 };
@@ -289,13 +286,3 @@ export function getProductRecommendations(level: RiskLevel): Product[] {
   return PRODUCTS[level];
 }
 
-// ── Cizura Bridge ─────────────────────────────────────
-
-export const CIZURA_BRIDGE: CizuraBridge = {
-  optimal:
-    'Tu cabello está en perfecto estado. ¿Tu agenda también lo está? Los clientes con cabello sano son los que más repiten tratamientos premium.',
-  caution:
-    'Necesitas 4-6 semanas de tratamiento antes de decolorar. Con Cizura puedes programar el seguimiento automático para ese cliente —sin perder la cita ni el servicio.',
-  critical:
-    'Este diagnóstico acaba de salvarte de una rotura en silla. Documenta este análisis en la ficha del cliente con Cizura: protección legal + historial de tratamientos en tiempo real.',
-};
