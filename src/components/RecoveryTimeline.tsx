@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 import { Slider } from "@/components/ui/slider";
 import {
   Select,
@@ -401,8 +402,7 @@ export default function RecoveryTimeline() {
         last_treatment: lastTreatment as string,
         hair_porosity: porosity as string,
         scalp_condition: scalp as string,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        calendar_json: cal as any,
+        calendar_json: cal as unknown as Json,
         next_safe_treatment_date: toISODate(cal.next_safe_treatment_date),
       });
       if (error) throw error;
@@ -706,6 +706,9 @@ export default function RecoveryTimeline() {
           nav, footer, .no-print { display: none !important; }
           .print-content { display: block !important; }
           body { background: white !important; color: black !important; }
+          [data-radix-dialog-overlay],
+          [data-radix-dialog-content],
+          [data-radix-popper-content-wrapper] { display: none !important; }
         }
       `}</style>
 

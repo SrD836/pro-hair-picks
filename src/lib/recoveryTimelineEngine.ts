@@ -3,6 +3,7 @@
 // Receives preloaded Supabase phases as parameter.
 
 import { addWeeks, format } from 'date-fns';
+import type { Json } from '@/integrations/supabase/types';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -41,7 +42,7 @@ export interface RecoveryPhaseRow {
   avoid: string[];
   checkpoint: string;
   pending_review: boolean;
-  sources: unknown;
+  sources: Json;
   created_at: string;
 }
 
@@ -62,7 +63,7 @@ export interface RecoveryCalendarSuccess {
   total_weeks: number;
   next_safe_treatment_date: string;  // 'dd/MM/yyyy'
   maintenance: WeekEntry | null;     // ongoing maintenance guidance (separate from calendar)
-  sources: unknown[];
+  sources: Json[];
 }
 
 export interface RecoveryCalendarBlocked {
@@ -165,7 +166,9 @@ export function generateRecoveryCalendar(
   const next_safe_treatment_date = format(safeDate, 'dd/MM/yyyy');
 
   // Collect unique sources from all applicable phases
-  const sources = applicable.flatMap(p => (Array.isArray(p.sources) ? p.sources : []));
+  const sources: Json[] = applicable.flatMap(p =>
+    Array.isArray(p.sources) ? (p.sources as Json[]) : []
+  );
 
   return {
     blocked: false,
