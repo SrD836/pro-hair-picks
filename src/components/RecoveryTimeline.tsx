@@ -183,8 +183,7 @@ function WeekDetailDialog({ week, open, onClose }: WeekDetailDialogProps) {
         {week.avoid.length > 0 && (
           <div className="rounded-xl border border-red-800/40 bg-red-900/10 p-4 space-y-2">
             <p className="text-xs font-bold uppercase tracking-widest text-red-400 flex items-center gap-2">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              Evitar esta semana
+              🚫 Evitar esta semana
             </p>
             <ul className="space-y-1">
               {week.avoid.map((item) => (
