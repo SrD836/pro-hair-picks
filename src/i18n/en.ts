@@ -70,6 +70,9 @@ export const en = {
     roiCalc: "ROI Calculator",
     roiDesc: "Calculate how long it will take to recoup your next equipment investment.",
     useNow: "Use now",
+    diagnosticoCta: 'Start diagnosis',
+    diagnosticoTitle: 'Hair Diagnosis',
+    diagnosticoDesc: 'Science-based 12-question test. Assess cuticle, porosity, elasticity and scalp health.',
   },
   category: {
     best: "10 Best {name} in the Market",

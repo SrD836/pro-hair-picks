@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, GitCompare, HelpCircle, Calculator } from "lucide-react";
+import { ArrowRight, GitCompare, HelpCircle, Calculator, Microscope } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 /* ── Category data ─────────────────────────────── */
@@ -140,7 +140,26 @@ const FloatingROI = () => (
   </div>
 );
 
-const floatingWidgets = [FloatingCompare, FloatingQuiz, FloatingROI];
+const FloatingDiagnostico = () => (
+  <div className="absolute -top-5 right-4 hidden md:flex flex-col gap-1.5 bg-accent border border-secondary/30 rounded-lg p-3 shadow-[0_8px_24px_rgba(0,0,0,0.4)]">
+    {[75, 55, 85, 40].map((pct, i) => (
+      <div key={i} className="flex items-center gap-2">
+        <div className="text-[9px] text-muted-foreground font-mono w-10 text-right">{["Cutícula", "Porosidad", "Elasticidad", "Cuero"][i]}</div>
+        <div className="w-16 h-1.5 rounded-full bg-secondary/15 overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            whileInView={{ width: `${pct}%` }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: i * 0.12, ease: "easeOut" }}
+            className="h-full rounded-full bg-secondary"
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const floatingWidgets = [FloatingCompare, FloatingQuiz, FloatingROI, FloatingDiagnostico];
 
 /* ── Tool card ─────────────────────────────────── */
 function ToolCard({ tool, index }: { tool: { icon: any; title: string; description: string; cta: string; href: string }; index: number }) {
@@ -203,6 +222,13 @@ const HomeBentoGrid = () => {
       cta: t("bento.useNow"),
       href: "/calculadora-roi",
     },
+    {
+      icon: Microscope,
+      title: t("bento.diagnosticoTitle"),
+      description: t("bento.diagnosticoDesc"),
+      cta: t("bento.diagnosticoCta"),
+      href: "/diagnostico-capilar",
+    },
   ];
 
   return (
@@ -249,7 +275,7 @@ const HomeBentoGrid = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 max-w-6xl mx-auto">
         {tools.map((tool, i) => (
           <ToolCard key={tool.title} tool={tool} index={i} />
         ))}

@@ -70,6 +70,9 @@ export const es = {
     roiCalc: "Calculadora ROI",
     roiDesc: "Calcula cuánto tardarás en amortizar tu próxima inversión en equipo.",
     useNow: "Usar ahora",
+    diagnosticoCta: 'Iniciar diagnóstico',
+    diagnosticoTitle: 'Diagnóstico Capilar',
+    diagnosticoDesc: 'Test científico de 12 preguntas. Evalúa cutícula, porosidad, elasticidad y cuero cabelludo.',
   },
   category: {
     best: "10 Mejores {name} en España",
