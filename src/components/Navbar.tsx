@@ -54,6 +54,12 @@ const Navbar = () => {
             <Link to="/asesor-color" className="px-3 py-1.5 text-sm font-bold text-secondary-foreground bg-secondary hover:bg-secondary/90 rounded-md transition-colors">
               🎨 {t("colorMatch.navLabel")}
             </Link>
+            <Link
+              to="/diagnostico-capilar"
+              className="px-3 py-1.5 text-sm font-bold text-foreground bg-muted hover:bg-muted/80 border border-border rounded-md transition-colors"
+            >
+              🔬 Diagnóstico Capilar
+            </Link>
             <Link to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"} className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-secondary transition-colors">
               <Scissors className="w-3.5 h-3.5" />
               {t("nav.courses")}
@@ -97,6 +103,13 @@ const Navbar = () => {
               </Link>
               <Link to="/asesor-color" onClick={() => setMobileOpen(false)} className="block px-2 py-2 font-display font-semibold text-secondary hover:text-secondary/80 transition-colors">
                 🎨 {t("colorMatch.navLabel")}
+              </Link>
+              <Link
+                to="/diagnostico-capilar"
+                onClick={() => setMobileOpen(false)}
+                className="block px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors"
+              >
+                🔬 Diagnóstico Capilar
               </Link>
               <Link to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"} onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-2 py-2 font-display font-semibold text-foreground hover:text-secondary transition-colors">
                 <Scissors className="w-4 h-4" />
