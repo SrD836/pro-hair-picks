@@ -1,0 +1,312 @@
+[
+  {
+    "id": "hidratacion_1_3",
+    "phase_type": "hidratacion",
+    "damage_level_min": 1,
+    "damage_level_max": 3,
+    "week_start": 1,
+    "week_end": 2,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Restablecer el contenido hídrico de la corteza mediante humectantes de bajo peso molecular (glicerina, ácido hialurónico, aloe vera) que penetran el córtex y normalizan la difusión de agua. pH objetivo: 4.5–5.0.",
+    "objective_simple": "Tu cabello está bebiendo agua — no lo interrumpas con proteína todavía. Déjalo absorber la hidratación que perdió.",
+    "key_ingredients": ["glicerina", "ácido hialurónico", "aloe vera", "pantenol", "manteca de karité"],
+    "avoid": ["proteínas de alto peso molecular", "calor directo >150°C", "sulfatos"],
+    "checkpoint": "El pelo seco no cruje ni se siente pajoso. Al estirarlo recupera su forma sin romperse.",
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Malinauskyte et al.",
+        "year": 2020,
+        "title": "Effect of equilibrium pH on the structure and properties of bleach-damaged human hair fibers",
+        "doi": "10.1002/bip.23401"
+      }
+    ]
+  },
+  {
+    "id": "hidratacion_4_6",
+    "phase_type": "hidratacion",
+    "damage_level_min": 4,
+    "damage_level_max": 6,
+    "week_start": 1,
+    "week_end": 2,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Reponer agua y comenzar reposición lipídica superficial con ceramidas de bajo peso molecular. La alta porosidad de este nivel de daño requiere oclusivos que retarden la evaporación. pH objetivo: 4.5–5.0 mediante enjuagues ácidos.",
+    "objective_simple": "Las escamas de tu pelo están abiertas y pierden agua demasiado rápido. Esta semana las enseñamos a cerrar con hidratación y lípidos, no con proteína.",
+    "key_ingredients": ["ceramidas", "glicerina", "aceite de argán", "pantenol", "ácido cítrico (enjuague pH)"],
+    "avoid": ["proteínas de alto peso molecular", "calor directo >120°C", "alcohol desnaturalizado", "peinados de tracción"],
+    "checkpoint": "El pelo mojado no pierde forma de inmediato. Se siente menos poroso al tacto (menos rugoso en sentido raíz→puntas).",
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Bernard et al.",
+        "year": 2002,
+        "title": "Ceramide binding to African-American hair fibre correlates with resistance to hair breakage",
+        "doi": "10.1046/j.0412-5463.2001.00106.x"
+      },
+      {
+        "author": "Malinauskyte et al.",
+        "year": 2020,
+        "title": "Effect of equilibrium pH on the structure and properties of bleach-damaged human hair fibers",
+        "doi": "10.1002/bip.23401"
+      }
+    ]
+  },
+  {
+    "id": "hidratacion_7_9",
+    "phase_type": "hidratacion",
+    "damage_level_min": 7,
+    "damage_level_max": 9,
+    "week_start": 1,
+    "week_end": 3,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Fase hidratante extendida a 3 semanas por el nivel de daño cortical severo. Combinar humectantes penetrantes con oclusivos pesados (manteca de karité, aceite de coco) para compensar la pérdida de 18-MEA. Aplicar enjuague ácido tras cada lavado para normalizar pH cuticlar.",
+    "objective_simple": "Con este nivel de daño, el pelo necesita tres semanas completas bebiendo agua antes de aceptar proteína. Piensa en él como madera reseca — primero la mojas, luego la lijás.",
+    "key_ingredients": ["manteca de karité", "ceramidas", "aceite de coco", "glicerina", "ácido láctico", "pantenol"],
+    "avoid": ["cualquier proteína esta fase", "calor", "decoloración", "coloración"],
+    "checkpoint": "Al final de la semana 3, el pelo húmedo tiene elasticidad mínima: se estira ligeramente antes de romperse. Si aún cruje seco, extender esta fase 1 semana más.",
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Barba et al.",
+        "year": 2023,
+        "title": "Alterations promoted by acid straightening and/or bleaching in hair microstructures",
+        "doi": "10.1107/S1600576723005599"
+      },
+      {
+        "author": "Werneck et al.",
+        "year": 2023,
+        "title": "On Hair Care Physicochemistry: From Structure and Degradation to Novel Biobased Conditioning Agents",
+        "doi": "10.3390/polym15030608"
+      }
+    ]
+  },
+  {
+    "id": "reconstruccion_1_3",
+    "phase_type": "reconstruccion",
+    "damage_level_min": 1,
+    "damage_level_max": 3,
+    "week_start": 3,
+    "week_end": 3,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Aplicar péptidos de queratina de bajo-medio peso molecular (221–2577 Da) para reforzar la corteza sin sobrecargar. Una sola sesión de proteína es suficiente para daño leve. Verificar elasticidad antes de aplicar.",
+    "objective_simple": "Reponemos el cemento natural entre las capas de tu pelo para que no se rompa. Una sesión controlada — no más.",
+    "key_ingredients": ["queratina hidrolizada (bajo PM)", "proteína de seda", "aminoácidos libres (cistina, arginina)"],
+    "avoid": ["proteínas de muy alto peso molecular en exceso", "calor > 180°C durante esta semana"],
+    "checkpoint": "El pelo seco tiene más cuerpo y menos frizz. No se siente rígido ni quebradizo (señal de sobrecarga proteica).",
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Malinauskyte et al.",
+        "year": 2021,
+        "title": "Penetration of different molecular weight hydrolysed keratins into hair fibres and their effects on the physical properties of textured hair",
+        "doi": "10.1111/ics.12663"
+      }
+    ]
+  },
+  {
+    "id": "reconstruccion_4_6",
+    "phase_type": "reconstruccion",
+    "damage_level_min": 4,
+    "damage_level_max": 6,
+    "week_start": 3,
+    "week_end": 4,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Dos sesiones de reconstrucción proteica en semanas 3 y 4. Combinar péptidos de queratina de medio PM con tecnología bond-builder (bis-aminopropyl diglycol dimaleate) si el historial incluye decoloración. Evaluar módulo de Young subjetivo (test de la goma) entre sesiones.",
+    "objective_simple": "Dos semanas reconstruyendo el armazón interno de cada fibra. El pelo recupera tensión — ya no se ve tan esponjoso ni sin vida.",
+    "key_ingredients": ["queratina hidrolizada (medio PM ~2500 Da)", "bis-aminopropyl diglycol dimaleate", "cistina", "proteína de trigo hidrolizada"],
+    "avoid": ["acondicionadores muy pesados entre sesiones de proteína", "calor > 180°C", "decoloración"],
+    "checkpoint": "Test de elasticidad: un pelo húmedo se estira al 30% de su longitud y vuelve sin romperse. Si no vuelve, continuar hidratación 1 semana más antes de siguiente proteína.",
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Malinauskyte et al.",
+        "year": 2021,
+        "title": "Penetration of different molecular weight hydrolysed keratins into hair fibres and their effects on the physical properties of textured hair",
+        "doi": "10.1111/ics.12663"
+      },
+      {
+        "author": "Ferraz et al.",
+        "year": 2025,
+        "title": "Novel Compounds for Hair Repair: Chemical Characterization and In Vitro Analysis of Thiol Cross-Linking Agents",
+        "doi": "10.3390/ph18050632"
+      }
+    ]
+  },
+  {
+    "id": "reconstruccion_7_9",
+    "phase_type": "reconstruccion",
+    "damage_level_min": 7,
+    "damage_level_max": 9,
+    "week_start": 4,
+    "week_end": 6,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Tres semanas de reconstrucción progresiva. Semana 4: proteína de bajo PM para penetración cortical profunda. Semana 5: proteína de medio PM + bond-builder. Semana 6: tratamiento combinado bond-builder + sellado enzimático (si disponible). Espaciar mínimo 7 días entre sesiones para evitar sobrecarga.",
+    "objective_simple": "Tres semanas reconstruyendo desde dentro hacia fuera. Cada sesión añade una capa de estructura, como restaurar hueso por hueso una escultura dañada.",
+    "key_ingredients": ["queratina hidrolizada (bajo PM, semana 4)", "queratina hidrolizada (medio PM, semana 5)", "bis-aminopropyl diglycol dimaleate", "cistina", "péptidos de colágeno", "niacinamida"],
+    "avoid": ["cualquier proceso químico (color, decoloración, alisado)", "calor > 150°C", "cepillado agresivo", "mascarillas de proteína fuera de intervalo"],
+    "checkpoint": "Semana 6: el pelo seco no tiene puntas abiertas en el 80% de los mechones. El test de goma muestra recuperación elástica completa en pelo húmedo.",
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Malinauskyte et al.",
+        "year": 2021,
+        "title": "Penetration of different molecular weight hydrolysed keratins into hair fibres and their effects on the physical properties of textured hair",
+        "doi": "10.1111/ics.12663"
+      },
+      {
+        "author": "Ferraz et al.",
+        "year": 2025,
+        "title": "Novel Compounds for Hair Repair: Chemical Characterization and In Vitro Analysis of Thiol Cross-Linking Agents",
+        "doi": "10.3390/ph18050632"
+      }
+    ]
+  },
+  {
+    "id": "sellado_1_3",
+    "phase_type": "sellado",
+    "damage_level_min": 1,
+    "damage_level_max": 3,
+    "week_start": 4,
+    "week_end": 4,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Sellado final de la cutícula con aceites de peso molecular bajo-medio (argán, jojoba) y/o silicona no acumulativa. Aplicación de enjuague ácido (pH 3.5–4.5) para cierre de escamas. Duración total del protocolo: 4 semanas.",
+    "objective_simple": "Esta semana sellamos todo lo que reconstruimos, como barnizar madera restaurada. El pelo queda protegido y listo.",
+    "key_ingredients": ["aceite de argán", "aceite de jojoba", "dimeticona ligera", "ácido cítrico (enjuague)"],
+    "avoid": ["proteínas adicionales esta semana", "calor sin protector térmico"],
+    "checkpoint": "Pelo seco con brillo visible. Escamas al tacto: suaves de raíz a punta. Sin frizz en condiciones normales de humedad.",
+    "pending_review": true,
+    "sources": []
+  },
+  {
+    "id": "sellado_4_6",
+    "phase_type": "sellado",
+    "damage_level_min": 4,
+    "damage_level_max": 6,
+    "week_start": 5,
+    "week_end": 6,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Sellado en dos sesiones (semanas 5 y 6). Semana 5: aceite de coco o manteca aplicados en pelo húmedo para oclusión cortical. Semana 6: sellado cuticlar con silicona ligera + enjuague ácido. Recomendable gloss semipermanente pH-ácido si el color requiere refresco.",
+    "objective_simple": "Dos semanas cerrando lo que abrimos para reparar. Tu pelo está listo para volver a brillar — este es el paso que lo sella todo.",
+    "key_ingredients": ["aceite de coco (aplicación en húmedo)", "silicona aminofuncional", "glicerina", "ácido cítrico"],
+    "avoid": ["decoloración", "proteínas adicionales", "calor > 180°C sin protector"],
+    "checkpoint": "El pelo pasa el test de flotación: un mechón suelto en agua tarda >1 min en comenzar a hundirse (indica buena hidrofobicidad superficial).",
+    "pending_review": true,
+    "sources": [
+      {
+        "author": "Bernard et al.",
+        "year": 2002,
+        "title": "Ceramide binding to African-American hair fibre correlates with resistance to hair breakage",
+        "doi": "10.1046/j.0412-5463.2001.00106.x"
+      }
+    ]
+  },
+  {
+    "id": "sellado_7_9",
+    "phase_type": "sellado",
+    "damage_level_min": 7,
+    "damage_level_max": 9,
+    "week_start": 7,
+    "week_end": 8,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Sellado extendido de 2 semanas para daño severo. Prioridad: reconstrucción lipídica con ceramidas + cierre cuticlar. Si el historial incluye decoloración múltiple, valorar gloss ácido semipermanente para sellar simultáneamente color y cutícula. Evitar cualquier proceso alcalino 12 semanas más.",
+    "objective_simple": "Estas dos últimas semanas son el barniz final sobre 8 semanas de trabajo. No las acortes — el pelo necesita consolidar cada capa que pusimos.",
+    "key_ingredients": ["ceramidas (C18-dhCer)", "aceite de argán", "silicona aminofuncional", "gloss semipermanente ácido (opcional)", "manteca de karité"],
+    "avoid": ["decoloración (mínimo 12 semanas más)", "alisado químico", "permanente", "proteína adicional"],
+    "checkpoint": "Semana 8: el pelo seco no tiene puntas abiertas visibles. Elasticidad completa en húmedo. Brillo sin serum. Si se cortan las puntas dañadas, el resultado es transformador.",
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Bernard et al.",
+        "year": 2002,
+        "title": "Ceramide binding to African-American hair fibre correlates with resistance to hair breakage",
+        "doi": "10.1046/j.0412-5463.2001.00106.x"
+      },
+      {
+        "author": "Barba et al.",
+        "year": 2023,
+        "title": "Alterations promoted by acid straightening and/or bleaching in hair microstructures",
+        "doi": "10.1107/S1600576723005599"
+      }
+    ]
+  },
+  {
+    "id": "mantenimiento_1_3",
+    "phase_type": "mantenimiento",
+    "damage_level_min": 1,
+    "damage_level_max": 3,
+    "week_start": 5,
+    "week_end": null,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Protocolo de mantenimiento continuo post-recuperación para daño leve. Máscara hidratante 1×/semana. Proteína cada 4–6 semanas. Sin límite en el número de ciclos de color, siempre que el intervalo entre servicios alcalinos sea ≥4 semanas.",
+    "objective_simple": "Protocolo semanal simple para mantener lo que lograste. Una mascarilla hidratante a la semana es suficiente — no necesitas nada más complicado que eso.",
+    "key_ingredients": ["mascarilla hidratante (glicerina, pantenol)", "acondicionador sin aclarado", "protector térmico"],
+    "avoid": ["acumulación de proteínas sin necesidad", "intervalos <4 semanas entre coloraciones"],
+    "checkpoint": "Test mensual de elasticidad. Si el pelo mojado vuelve tras estirarlo: protocolo funcionando. Si pierde elasticidad: revisar balance hidratación-proteína.",
+    "pending_review": true,
+    "sources": []
+  },
+  {
+    "id": "mantenimiento_4_6",
+    "phase_type": "mantenimiento",
+    "damage_level_min": 4,
+    "damage_level_max": 6,
+    "week_start": 7,
+    "week_end": null,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Mantenimiento continuo post-protocolo de 6 semanas. Ciclar hidratación y proteína en ratio 3:1 (3 semanas hidratación : 1 semana proteína). Bond-builder preventivo en cada coloración. Sellado lipídico mensual con ceramidas.",
+    "objective_simple": "Tu pelo ya recuperó su base. Ahora es cuestión de no volver a perderla: alternar mascarillas de agua y proteína, en ese orden. La proteína sola sin agua lo vuelve a romper.",
+    "key_ingredients": ["mascarilla hidratante (ciclo A)", "queratina hidrolizada baja PM (ciclo B, 1×/mes)", "ceramidas (sellado mensual)", "bond-builder en coloraciones"],
+    "avoid": ["saltarse el sellado mensual", "decoloración sin bond-builder", "intervalos <6 semanas entre decoloraciones"],
+    "checkpoint": "Cada mes: test de flotación y test de elasticidad. Si alguno falla, reiniciar la fase correspondiente del protocolo (hidratación o reconstrucción).",
+    "pending_review": true,
+    "sources": [
+      {
+        "author": "Malinauskyte et al.",
+        "year": 2021,
+        "title": "Penetration of different molecular weight hydrolysed keratins into hair fibres and their effects on the physical properties of textured hair",
+        "doi": "10.1111/ics.12663"
+      }
+    ]
+  },
+  {
+    "id": "mantenimiento_7_9",
+    "phase_type": "mantenimiento",
+    "damage_level_min": 7,
+    "damage_level_max": 9,
+    "week_start": 9,
+    "week_end": null,
+    "last_treatment_filter": null,
+    "porosity_filter": null,
+    "objective_technical": "Mantenimiento continuo de alta intensidad post-protocolo de 8 semanas. Ciclo mensual: semana 1-3 hidratación intensa, semana 4 proteína + bond-builder. Sellado lipídico con ceramidas cada 3 semanas. Intervalo mínimo antes de re-decoloración: 12 semanas absolutas. Corte de puntas obligatorio cada 6–8 semanas para eliminar daño acumulado.",
+    "objective_simple": "El daño severo deja memoria en la fibra — no se borra, se administra. Este protocolo mensual evita que el daño avance. Córtate las puntas cada dos meses: es la única forma real de eliminar lo que no se puede reparar.",
+    "key_ingredients": ["ceramidas C18-dhCer (cada 3 semanas)", "queratina hidrolizada baja PM (mensual)", "bond-builder (en cada servicio químico)", "aceite de argán (diario, puntas)"],
+    "avoid": ["re-decoloración antes de 12 semanas", "alisado o permanente en el año siguiente", "calor >180°C sin protector de alta temperatura", "omitir corte de puntas"],
+    "checkpoint": "Cada 6 semanas: test completo (flotación, elasticidad, brillo, tacto). Si el pelo supera los 4 indicadores: protocolo exitoso. Si falla 2 o más: consultar con estilista antes de continuar.",
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Barba et al.",
+        "year": 2023,
+        "title": "Alterations promoted by acid straightening and/or bleaching in hair microstructures",
+        "doi": "10.1107/S1600576723005599"
+      },
+      {
+        "author": "Ferraz et al.",
+        "year": 2025,
+        "title": "Novel Compounds for Hair Repair: Chemical Characterization and In Vitro Analysis of Thiol Cross-Linking Agents",
+        "doi": "10.3390/ph18050632"
+      }
+    ]
+  }
+]
