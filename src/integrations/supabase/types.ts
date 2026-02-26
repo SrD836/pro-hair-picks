@@ -512,6 +512,99 @@ export type Database = {
         }
         Relationships: []
       }
+      recovery_phases: {
+        Row: {
+          id: string
+          phase_type: string
+          damage_level_min: number
+          damage_level_max: number
+          week_start: number
+          week_end: number
+          last_treatment_filter: string[] | null
+          porosity_filter: string[] | null
+          objective_technical: string
+          objective_simple: string
+          key_ingredients: string[]
+          avoid: string[]
+          checkpoint: string
+          pending_review: boolean
+          sources: Json
+          created_at: string
+        }
+        Insert: {
+          id: string
+          phase_type: string
+          damage_level_min: number
+          damage_level_max: number
+          week_start: number
+          week_end: number
+          last_treatment_filter?: string[] | null
+          porosity_filter?: string[] | null
+          objective_technical: string
+          objective_simple: string
+          key_ingredients?: string[]
+          avoid?: string[]
+          checkpoint: string
+          pending_review?: boolean
+          sources?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          phase_type?: string
+          damage_level_min?: number
+          damage_level_max?: number
+          week_start?: number
+          week_end?: number
+          last_treatment_filter?: string[] | null
+          porosity_filter?: string[] | null
+          objective_technical?: string
+          objective_simple?: string
+          key_ingredients?: string[]
+          avoid?: string[]
+          checkpoint?: string
+          pending_review?: boolean
+          sources?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
+      recovery_calendars: {
+        Row: {
+          id: string
+          user_session: string
+          damage_level: number
+          last_treatment: string
+          hair_porosity: string
+          scalp_condition: string
+          calendar_json: Json
+          next_safe_treatment_date: string
+          generated_at: string
+        }
+        Insert: {
+          id?: string
+          user_session: string
+          damage_level: number
+          last_treatment: string
+          hair_porosity: string
+          scalp_condition: string
+          calendar_json: Json
+          next_safe_treatment_date: string
+          generated_at?: string
+        }
+        Update: {
+          id?: string
+          user_session?: string
+          damage_level?: number
+          last_treatment?: string
+          hair_porosity?: string
+          scalp_condition?: string
+          calendar_json?: Json
+          next_safe_treatment_date?: string
+          generated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
