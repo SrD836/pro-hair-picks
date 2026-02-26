@@ -588,7 +588,6 @@ function ResultsScreen({
           asChild
           size="lg"
           className="w-full sm:w-auto gap-2"
-          onClick={onCizuraClick}
         >
           <a
             href="https://cizura.app"
