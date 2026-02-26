@@ -5,12 +5,12 @@ import { ArrowLeft, ArrowRight, ExternalLink, RotateCcw, FlaskConical } from "lu
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/i18n/LanguageContext";
 import {
   QUESTIONS,
   calculateScores,
   getRiskLevel,
   getProductRecommendations,
-  CIZURA_BRIDGE,
   type RiskLevel,
   type ScoreBreakdown,
   type Product,
@@ -27,54 +27,12 @@ function getSessionId(): string {
   return id;
 }
 
-// ── Risk config ────────────────────────────────────────
-const RISK_CONFIG: Record<RiskLevel, {
-  emoji: string;
-  label: string;
-  range: string;
-  color: string;
-  bgColor: string;
-  borderColor: string;
-  protocol: string;
-}> = {
-  optimal: {
-    emoji: "🟢",
-    label: "ÓPTIMO",
-    range: "0–15 pts",
-    color: "text-green-400",
-    bgColor: "bg-green-950/40",
-    borderColor: "border-green-700",
-    protocol:
-      "Tu cabello está en excelente estado. Mantén tu rutina actual con productos de mantenimiento y protección. Realiza un diagnóstico de seguimiento en 3 meses.",
-  },
-  caution: {
-    emoji: "🟡",
-    label: "PRECAUCIÓN",
-    range: "16–35 pts",
-    color: "text-yellow-400",
-    bgColor: "bg-yellow-950/40",
-    borderColor: "border-yellow-700",
-    protocol:
-      "Tu cabello muestra señales tempranas de daño. Introduce tratamientos reparadores 1–2 veces por semana y reduce el uso de herramientas térmicas. Realiza un seguimiento en 4–6 semanas.",
-  },
-  critical: {
-    emoji: "🔴",
-    label: "CRÍTICO",
-    range: "36+ pts",
-    color: "text-red-400",
-    bgColor: "bg-red-950/40",
-    borderColor: "border-red-700",
-    protocol:
-      "Tu cabello presenta daño severo que requiere intervención inmediata. Sigue el protocolo de tratamiento intensivo, evita procesos químicos adicionales y consulta con un profesional capilar.",
-  },
-};
-
-// Module names
-const MODULE_NAMES: Record<1 | 2 | 3 | 4, string> = {
-  1: "Cutícula",
-  2: "Porosidad",
-  3: "Elasticidad",
-  4: "Cuero Cabelludo",
+// ── Module key map ─────────────────────────────────────
+const MODULE_KEY: Record<1 | 2 | 3 | 4, string> = {
+  1: "cuticleModule",
+  2: "porosityModule",
+  3: "elasticityModule",
+  4: "scalpModule",
 };
 
 const MODULE_MAX: Record<1 | 2 | 3 | 4, number> = {
@@ -84,15 +42,23 @@ const MODULE_MAX: Record<1 | 2 | 3 | 4, number> = {
   4: 12,
 };
 
+// Risk visual config (colors only — text comes from i18n)
+const RISK_COLORS: Record<RiskLevel, { emoji: string; color: string; bgColor: string; borderColor: string }> = {
+  optimal: { emoji: "🟢", color: "text-green-400", bgColor: "bg-green-950/40", borderColor: "border-green-700" },
+  caution: { emoji: "🟡", color: "text-yellow-400", bgColor: "bg-yellow-950/40", borderColor: "border-yellow-700" },
+  critical: { emoji: "🔴", color: "text-red-400", bgColor: "bg-red-950/40", borderColor: "border-red-700" },
+};
+
 // ── Screen types ───────────────────────────────────────
 type Screen = "intro" | "quiz" | "results";
 
 // ── Main component ─────────────────────────────────────
 export default function DiagnosticoCapilarPage() {
+  const { t } = useLanguage();
   const [screen, setScreen] = useState<Screen>("intro");
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [direction, setDirection] = useState<1 | -1>(1); // 1 = forward, -1 = back
+  const [direction, setDirection] = useState<1 | -1>(1);
   const [scores, setScores] = useState<ScoreBreakdown | null>(null);
   const [riskLevel, setRiskLevel] = useState<RiskLevel | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -103,33 +69,52 @@ export default function DiagnosticoCapilarPage() {
   const hasAnswer = selectedOption !== undefined;
   const isLastQ = currentQ === QUESTIONS.length - 1;
 
+  // Localize question text & options from i18n
+  const localizedQ = q
+    ? {
+        ...q,
+        text: t(`diagnostico.${q.id}Text`),
+        protocol: q.protocol ? t(`diagnostico.${q.id}Protocol`) : undefined,
+        options: q.options.map((opt) => ({
+          ...opt,
+          label: t(`diagnostico.${q.id}${opt.value}`),
+        })),
+      }
+    : q;
+
   // ── Save to Supabase ──────────────────────────────────
-  const saveSession = useCallback(async (
-    finalAnswers: Record<string, string>,
-    finalScores: ScoreBreakdown,
-    finalRiskLevel: RiskLevel,
-    finalProducts: Product[],
-  ) => {
-    const sessionId = getSessionId();
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data } = await (supabase.from as any)("hair_diagnostic_sessions").insert({
-        user_session_id: sessionId,
-        cuticle_score: finalScores.cuticle,
-        porosity_score: finalScores.porosity,
-        elasticity_score: finalScores.elasticity,
-        scalp_score: finalScores.scalp,
-        total_score: finalScores.total,
-        risk_level: finalRiskLevel,
-        answers: finalAnswers,
-        cizura_cta_shown: true,
-        product_recommendations: finalProducts.map((p) => p.asin),
-      }).select("id").single();
-      if (data?.id) setSavedSessionId(data.id);
-    } catch {
-      // best-effort — don't block UI
-    }
-  }, []);
+  const saveSession = useCallback(
+    async (
+      finalAnswers: Record<string, string>,
+      finalScores: ScoreBreakdown,
+      finalRiskLevel: RiskLevel,
+      finalProducts: Product[],
+    ) => {
+      const sessionId = getSessionId();
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await (supabase.from as any)("hair_diagnostic_sessions")
+          .insert({
+            user_session_id: sessionId,
+            cuticle_score: finalScores.cuticle,
+            porosity_score: finalScores.porosity,
+            elasticity_score: finalScores.elasticity,
+            scalp_score: finalScores.scalp,
+            total_score: finalScores.total,
+            risk_level: finalRiskLevel,
+            answers: finalAnswers,
+            cizura_cta_shown: true,
+            product_recommendations: finalProducts.map((p) => p.asin),
+          })
+          .select("id")
+          .single();
+        if (data?.id) setSavedSessionId(data.id);
+      } catch {
+        // best-effort
+      }
+    },
+    [],
+  );
 
   // ── Track Cizura click ────────────────────────────────
   const handleCizuraClick = useCallback(async () => {
@@ -172,9 +157,12 @@ export default function DiagnosticoCapilarPage() {
     }
   }, [currentQ]);
 
-  const handleOptionSelect = useCallback((value: string) => {
-    setAnswers((prev) => ({ ...prev, [q.id]: value }));
-  }, [q?.id]);
+  const handleOptionSelect = useCallback(
+    (value: string) => {
+      setAnswers((prev) => ({ ...prev, [q.id]: value }));
+    },
+    [q?.id],
+  );
 
   const reset = useCallback(() => {
     setCurrentQ(0);
@@ -205,11 +193,8 @@ export default function DiagnosticoCapilarPage() {
   return (
     <>
       <Helmet>
-        <title>Diagnóstico Capilar Profesional | GuiaDelSalon.com</title>
-        <meta
-          name="description"
-          content="Test científico de 12 preguntas que evalúa cutícula, porosidad, elasticidad y cuero cabelludo. Obtén tu protocolo de tratamiento personalizado en 4 minutos."
-        />
+        <title>{t("diagnostico.metaTitle")}</title>
+        <meta name="description" content={t("diagnostico.metaDesc")} />
       </Helmet>
 
       <div className="min-h-screen bg-background text-foreground">
@@ -243,7 +228,8 @@ export default function DiagnosticoCapilarPage() {
                 <div className="mb-8">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-muted-foreground">
-                      Módulo {moduleOfQ}: {MODULE_NAMES[moduleOfQ as 1 | 2 | 3 | 4]}
+                      {t("diagnostico.moduleLabel")} {moduleOfQ}:{" "}
+                      {t(`diagnostico.${MODULE_KEY[moduleOfQ as 1 | 2 | 3 | 4]}`)}
                     </span>
                     <span className="text-sm font-semibold text-foreground">
                       {currentQ + 1} / {QUESTIONS.length}
@@ -271,7 +257,7 @@ export default function DiagnosticoCapilarPage() {
                     transition={{ duration: 0.25, ease: "easeInOut" }}
                   >
                     <QuizQuestion
-                      q={q}
+                      q={localizedQ as (typeof QUESTIONS)[number]}
                       selectedOption={selectedOption}
                       onSelect={handleOptionSelect}
                     />
@@ -285,7 +271,7 @@ export default function DiagnosticoCapilarPage() {
                     className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <ArrowLeft className="w-4 h-4" />
-                    Volver
+                    {t("diagnostico.backBtn")}
                   </button>
 
                   {hasAnswer && (
@@ -295,7 +281,7 @@ export default function DiagnosticoCapilarPage() {
                       transition={{ duration: 0.2 }}
                     >
                       <Button onClick={goNext} className="gap-2">
-                        {isLastQ ? "Ver resultado" : "Siguiente"}
+                        {isLastQ ? t("diagnostico.finishBtn") : t("diagnostico.nextBtn")}
                         <ArrowRight className="w-4 h-4" />
                       </Button>
                     </motion.div>
@@ -332,11 +318,13 @@ export default function DiagnosticoCapilarPage() {
 
 // ── INTRO SCREEN ───────────────────────────────────────
 function IntroScreen({ onStart }: { onStart: () => void }) {
+  const { t } = useLanguage();
+
   const modules = [
-    { label: "Cutícula", sub: "Integridad estructural" },
-    { label: "Porosidad", sub: "Absorción y retención" },
-    { label: "Elasticidad", sub: "Resistencia y rotura" },
-    { label: "Cuero Cabelludo", sub: "Barrera y microbioma" },
+    { labelKey: "cuticleModule", subKey: "cuticleModuleSub" },
+    { labelKey: "porosityModule", subKey: "porosityModuleSub" },
+    { labelKey: "elasticityModule", subKey: "elasticityModuleSub" },
+    { labelKey: "scalpModule", subKey: "scalpModuleSub" },
   ];
 
   return (
@@ -344,44 +332,40 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
       <div className="text-6xl mb-6">🔬</div>
       <div className="flex justify-center mb-4">
         <Badge variant="secondary" className="text-sm px-4 py-1.5">
-          Diagnóstico Científico
+          {t("diagnostico.badge")}
         </Badge>
       </div>
       <h1 className="font-bold text-3xl md:text-4xl text-foreground mb-4 leading-tight">
-        Diagnóstico Capilar{" "}
-        <span className="text-secondary">Profesional</span>
+        {t("diagnostico.title")}{" "}
+        <span className="text-secondary">{t("diagnostico.titleHighlight")}</span>
       </h1>
       <p className="text-muted-foreground text-base md:text-lg max-w-lg mx-auto mb-10">
-        Test científico de 12 preguntas que evalúa el estado real de tu cabello
-        en cuatro dimensiones clínicas para darte un protocolo de tratamiento
-        personalizado.
+        {t("diagnostico.subtitle")}
       </p>
 
       {/* Module cards */}
       <div className="grid grid-cols-2 gap-3 mb-10">
         {modules.map((m) => (
           <div
-            key={m.label}
+            key={m.labelKey}
             className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card text-left"
           >
             <div className="p-2 rounded-lg bg-secondary/10 text-secondary shrink-0">
               <FlaskConical className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">{m.label}</p>
-              <p className="text-xs text-muted-foreground">{m.sub}</p>
+              <p className="text-sm font-semibold text-foreground">{t(`diagnostico.${m.labelKey}`)}</p>
+              <p className="text-xs text-muted-foreground">{t(`diagnostico.${m.subKey}`)}</p>
             </div>
           </div>
         ))}
       </div>
 
       <Button size="lg" onClick={onStart} className="w-full sm:w-auto px-10 text-base">
-        Comenzar diagnóstico
+        {t("diagnostico.startBtn")}
       </Button>
 
-      <p className="mt-4 text-xs text-muted-foreground">
-        ~4 minutos · Sin registro · Protocolo clínico aplicado
-      </p>
+      <p className="mt-4 text-xs text-muted-foreground">{t("diagnostico.timeNote")}</p>
     </div>
   );
 }
@@ -398,9 +382,7 @@ function QuizQuestion({
 }) {
   return (
     <div>
-      <h2 className="text-xl md:text-2xl font-bold text-foreground mb-5">
-        {q.text}
-      </h2>
+      <h2 className="text-xl md:text-2xl font-bold text-foreground mb-5">{q.text}</h2>
 
       {/* Protocol box */}
       {q.protocol && (
@@ -458,24 +440,24 @@ function ResultsScreen({
   onReset: () => void;
   onCizuraClick: () => void;
 }) {
-  const cfg = RISK_CONFIG[riskLevel];
+  const { t } = useLanguage();
+  const colors = RISK_COLORS[riskLevel];
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-  const modules: { label: string; score: number; max: number; module: 1 | 2 | 3 | 4 }[] = [
-    { label: "Cutícula", score: scores.cuticle, max: MODULE_MAX[1], module: 1 },
-    { label: "Porosidad", score: scores.porosity, max: MODULE_MAX[2], module: 2 },
-    { label: "Elasticidad", score: scores.elasticity, max: MODULE_MAX[3], module: 3 },
-    { label: "Cuero Cabelludo", score: scores.scalp, max: MODULE_MAX[4], module: 4 },
+  const modules: { labelKey: string; score: number; max: number; module: 1 | 2 | 3 | 4 }[] = [
+    { labelKey: "cuticleModule", score: scores.cuticle, max: MODULE_MAX[1], module: 1 },
+    { labelKey: "porosityModule", score: scores.porosity, max: MODULE_MAX[2], module: 2 },
+    { labelKey: "elasticityModule", score: scores.elasticity, max: MODULE_MAX[3], module: 3 },
+    { labelKey: "scalpModule", score: scores.scalp, max: MODULE_MAX[4], module: 4 },
   ];
 
   return (
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
-          Tu resultado capilar
+          {t("diagnostico.resultsTitle")}
         </h2>
-        <p className="text-muted-foreground text-sm">
-          Basado en protocolo clínico de 4 módulos
-        </p>
+        <p className="text-muted-foreground text-sm">{t("diagnostico.resultsSubtitle")}</p>
       </div>
 
       {/* Semaphore card */}
@@ -483,16 +465,18 @@ function ResultsScreen({
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className={`rounded-2xl border-2 p-8 text-center ${cfg.bgColor} ${cfg.borderColor}`}
+        className={`rounded-2xl border-2 p-8 text-center ${colors.bgColor} ${colors.borderColor}`}
       >
-        <div className="text-5xl mb-3">{cfg.emoji}</div>
-        <div className={`text-3xl font-extrabold mb-1 ${cfg.color}`}>
-          {cfg.label}
+        <div className="text-5xl mb-3">{colors.emoji}</div>
+        <div className={`text-3xl font-extrabold mb-1 ${colors.color}`}>
+          {t(`diagnostico.risk${capitalize(riskLevel)}Label`)}
         </div>
-        <div className="text-muted-foreground text-sm mb-4">{cfg.range}</div>
+        <div className="text-muted-foreground text-sm mb-4">
+          {t(`diagnostico.risk${capitalize(riskLevel)}Range`)}
+        </div>
         <div className="text-5xl font-black text-foreground">
           {scores.total}
-          <span className="text-2xl font-normal text-muted-foreground"> pts</span>
+          <span className="text-2xl font-normal text-muted-foreground"> {t("diagnostico.pts")}</span>
         </div>
       </motion.div>
 
@@ -511,7 +495,7 @@ function ResultsScreen({
               <div className="flex items-center gap-2 mb-2">
                 <FlaskConical className="w-4 h-4 text-secondary shrink-0" />
                 <p className="text-xs font-semibold text-foreground leading-tight">
-                  {m.label}
+                  {t(`diagnostico.${m.labelKey}`)}
                 </p>
               </div>
               <div className="flex items-baseline gap-1 mb-2">
@@ -533,15 +517,15 @@ function ResultsScreen({
 
       {/* Action protocol */}
       <div className="rounded-xl border border-border bg-card p-5">
-        <p className="text-sm font-semibold text-foreground mb-1">Protocolo de acción</p>
-        <p className="text-sm text-muted-foreground leading-relaxed">{cfg.protocol}</p>
+        <p className="text-sm font-semibold text-foreground mb-1">{t("diagnostico.actionProtocol")}</p>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {t(`diagnostico.risk${capitalize(riskLevel)}Protocol`)}
+        </p>
       </div>
 
       {/* Product recommendations */}
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-4">
-          Productos recomendados para tu diagnóstico
-        </h3>
+        <h3 className="text-lg font-bold text-foreground mb-4">{t("diagnostico.productsTitle")}</h3>
         <div className="space-y-3">
           {products.map((product, i) => (
             <motion.a
@@ -565,7 +549,7 @@ function ResultsScreen({
                   {product.description}
                 </p>
                 <span className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-secondary">
-                  Ver precio en Amazon
+                  {t("diagnostico.amazonCta")}
                   <ExternalLink className="w-3 h-3" />
                 </span>
               </div>
@@ -582,20 +566,16 @@ function ResultsScreen({
         className="rounded-2xl border border-border bg-gradient-to-br from-secondary/10 to-secondary/5 p-6 text-center"
       >
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          {CIZURA_BRIDGE[riskLevel]}
+          {t(`diagnostico.cizura${capitalize(riskLevel)}`)}
         </p>
-        <Button
-          asChild
-          size="lg"
-          className="w-full sm:w-auto gap-2"
-        >
+        <Button asChild size="lg" className="w-full sm:w-auto gap-2">
           <a
             href="https://cizura.app"
             target="_blank"
             rel="noopener noreferrer"
             onClick={onCizuraClick}
           >
-            Probar Cizura gratis
+            {t("diagnostico.cizuraBtn")}
             <ExternalLink className="w-4 h-4" />
           </a>
         </Button>
@@ -604,9 +584,9 @@ function ResultsScreen({
       {/* Bibliography */}
       <details className="group rounded-xl border border-border bg-card overflow-hidden">
         <summary className="flex items-center justify-between cursor-pointer px-5 py-4 text-sm font-semibold text-foreground select-none list-none hover:bg-secondary/5 transition-colors">
-          <span><span aria-hidden="true">📚</span> Bibliografía científica</span>
-          <span className="text-muted-foreground text-xs font-normal group-open:hidden">Ver fuentes</span>
-          <span className="text-muted-foreground text-xs font-normal hidden group-open:inline">Ocultar</span>
+          <span><span aria-hidden="true">📚</span> {t("diagnostico.bibliographyTitle")}</span>
+          <span className="text-muted-foreground text-xs font-normal group-open:hidden">{t("diagnostico.bibliographySee")}</span>
+          <span className="text-muted-foreground text-xs font-normal hidden group-open:inline">{t("diagnostico.bibliographyHide")}</span>
         </summary>
         <ol className="px-5 pb-5 pt-2 space-y-3 text-xs text-muted-foreground leading-relaxed list-decimal list-inside marker:font-semibold marker:text-foreground">
           <li>
@@ -660,7 +640,7 @@ function ResultsScreen({
       <div className="flex justify-center pt-2">
         <Button variant="outline" onClick={onReset} className="gap-2">
           <RotateCcw className="w-4 h-4" />
-          Repetir diagnóstico
+          {t("diagnostico.resetBtn")}
         </Button>
       </div>
     </div>
