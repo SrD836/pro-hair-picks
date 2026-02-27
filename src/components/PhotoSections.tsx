@@ -119,7 +119,7 @@ const PhotoSections = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 container mx-auto px-4">
+    <section className="container mx-auto px-4 py-16 md:py-20">
       {/* Section heading */}
       <motion.h2
         initial={{ opacity: 0, y: 16 }}
