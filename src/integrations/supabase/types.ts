@@ -14,48 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      chemical_compatibility: {
-        Row: {
-          id: string
-          treatment_done: string
-          treatment_desired: string
-          compatibility: string
-          wait_weeks: number | null
-          strand_test: boolean
-          risk_summary: string
-          technical_explanation: string
-          simple_explanation: string
-          source: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          treatment_done: string
-          treatment_desired: string
-          compatibility: string
-          wait_weeks?: number | null
-          strand_test?: boolean
-          risk_summary: string
-          technical_explanation: string
-          simple_explanation: string
-          source?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          treatment_done?: string
-          treatment_desired?: string
-          compatibility?: string
-          wait_weeks?: number | null
-          strand_test?: boolean
-          risk_summary?: string
-          technical_explanation?: string
-          simple_explanation?: string
-          source?: string | null
-          created_at?: string
-        }
-        Relationships: []
-      }
       actual_expenses: {
         Row: {
           actual_amount: number | null
@@ -131,7 +89,9 @@ export type Database = {
       }
       blog_posts: {
         Row: {
+          affiliate_products: string[] | null
           author: string | null
+          bridge_trend_topic: string | null
           category: string | null
           category_en: string | null
           content: string | null
@@ -140,18 +100,30 @@ export type Database = {
           dislikes: number | null
           excerpt: string | null
           excerpt_en: string | null
+          external_links: string[] | null
+          has_data_viz: boolean | null
+          has_expert_verdict: boolean | null
           id: string
+          internal_links: string[] | null
           is_published: boolean | null
+          keywords: string[] | null
+          lang: string | null
           likes: number | null
+          market: string | null
+          meta_description: string | null
+          post_type: string | null
           published_at: string | null
           read_time_minutes: number | null
+          schema_markup: Json | null
           slug: string
           slug_en: string | null
           title: string
           title_en: string | null
         }
         Insert: {
+          affiliate_products?: string[] | null
           author?: string | null
+          bridge_trend_topic?: string | null
           category?: string | null
           category_en?: string | null
           content?: string | null
@@ -160,18 +132,30 @@ export type Database = {
           dislikes?: number | null
           excerpt?: string | null
           excerpt_en?: string | null
+          external_links?: string[] | null
+          has_data_viz?: boolean | null
+          has_expert_verdict?: boolean | null
           id?: string
+          internal_links?: string[] | null
           is_published?: boolean | null
+          keywords?: string[] | null
+          lang?: string | null
           likes?: number | null
+          market?: string | null
+          meta_description?: string | null
+          post_type?: string | null
           published_at?: string | null
           read_time_minutes?: number | null
+          schema_markup?: Json | null
           slug: string
           slug_en?: string | null
           title: string
           title_en?: string | null
         }
         Update: {
+          affiliate_products?: string[] | null
           author?: string | null
+          bridge_trend_topic?: string | null
           category?: string | null
           category_en?: string | null
           content?: string | null
@@ -180,11 +164,21 @@ export type Database = {
           dislikes?: number | null
           excerpt?: string | null
           excerpt_en?: string | null
+          external_links?: string[] | null
+          has_data_viz?: boolean | null
+          has_expert_verdict?: boolean | null
           id?: string
+          internal_links?: string[] | null
           is_published?: boolean | null
+          keywords?: string[] | null
+          lang?: string | null
           likes?: number | null
+          market?: string | null
+          meta_description?: string | null
+          post_type?: string | null
           published_at?: string | null
           read_time_minutes?: number | null
+          schema_markup?: Json | null
           slug?: string
           slug_en?: string | null
           title?: string
@@ -313,6 +307,48 @@ export type Database = {
         }
         Relationships: []
       }
+      chemical_compatibility: {
+        Row: {
+          compatibility: string
+          created_at: string
+          id: string
+          risk_summary: string
+          simple_explanation: string
+          source: string | null
+          strand_test: boolean
+          technical_explanation: string
+          treatment_desired: string
+          treatment_done: string
+          wait_weeks: number | null
+        }
+        Insert: {
+          compatibility: string
+          created_at?: string
+          id?: string
+          risk_summary: string
+          simple_explanation: string
+          source?: string | null
+          strand_test?: boolean
+          technical_explanation: string
+          treatment_desired: string
+          treatment_done: string
+          wait_weeks?: number | null
+        }
+        Update: {
+          compatibility?: string
+          created_at?: string
+          id?: string
+          risk_summary?: string
+          simple_explanation?: string
+          source?: string | null
+          strand_test?: boolean
+          technical_explanation?: string
+          treatment_desired?: string
+          treatment_done?: string
+          wait_weeks?: number | null
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string
@@ -334,6 +370,54 @@ export type Database = {
           id?: string
           message?: string
           name?: string
+        }
+        Relationships: []
+      }
+      hair_diagnostic_sessions: {
+        Row: {
+          answers: Json
+          cizura_cta_clicked: boolean | null
+          cizura_cta_shown: boolean | null
+          created_at: string | null
+          cuticle_score: number
+          elasticity_score: number
+          id: string
+          porosity_score: number
+          product_recommendations: string[] | null
+          risk_level: string
+          scalp_score: number
+          total_score: number
+          user_session_id: string
+        }
+        Insert: {
+          answers?: Json
+          cizura_cta_clicked?: boolean | null
+          cizura_cta_shown?: boolean | null
+          created_at?: string | null
+          cuticle_score?: number
+          elasticity_score?: number
+          id?: string
+          porosity_score?: number
+          product_recommendations?: string[] | null
+          risk_level: string
+          scalp_score?: number
+          total_score?: number
+          user_session_id: string
+        }
+        Update: {
+          answers?: Json
+          cizura_cta_clicked?: boolean | null
+          cizura_cta_shown?: boolean | null
+          created_at?: string | null
+          cuticle_score?: number
+          elasticity_score?: number
+          id?: string
+          porosity_score?: number
+          product_recommendations?: string[] | null
+          risk_level?: string
+          scalp_score?: number
+          total_score?: number
+          user_session_id?: string
         }
         Relationships: []
       }
@@ -494,6 +578,99 @@ export type Database = {
         }
         Relationships: []
       }
+      recovery_calendars: {
+        Row: {
+          calendar_json: Json
+          damage_level: number
+          generated_at: string
+          hair_porosity: string
+          id: string
+          last_treatment: string
+          next_safe_treatment_date: string
+          scalp_condition: string
+          user_session: string
+        }
+        Insert: {
+          calendar_json: Json
+          damage_level: number
+          generated_at?: string
+          hair_porosity: string
+          id?: string
+          last_treatment: string
+          next_safe_treatment_date: string
+          scalp_condition: string
+          user_session: string
+        }
+        Update: {
+          calendar_json?: Json
+          damage_level?: number
+          generated_at?: string
+          hair_porosity?: string
+          id?: string
+          last_treatment?: string
+          next_safe_treatment_date?: string
+          scalp_condition?: string
+          user_session?: string
+        }
+        Relationships: []
+      }
+      recovery_phases: {
+        Row: {
+          avoid: string[]
+          checkpoint: string
+          created_at: string
+          damage_level_max: number
+          damage_level_min: number
+          id: string
+          key_ingredients: string[]
+          last_treatment_filter: string[] | null
+          objective_simple: string
+          objective_technical: string
+          pending_review: boolean
+          phase_type: string
+          porosity_filter: string[] | null
+          sources: Json
+          week_end: number
+          week_start: number
+        }
+        Insert: {
+          avoid?: string[]
+          checkpoint: string
+          created_at?: string
+          damage_level_max: number
+          damage_level_min: number
+          id: string
+          key_ingredients?: string[]
+          last_treatment_filter?: string[] | null
+          objective_simple: string
+          objective_technical: string
+          pending_review?: boolean
+          phase_type: string
+          porosity_filter?: string[] | null
+          sources?: Json
+          week_end: number
+          week_start: number
+        }
+        Update: {
+          avoid?: string[]
+          checkpoint?: string
+          created_at?: string
+          damage_level_max?: number
+          damage_level_min?: number
+          id?: string
+          key_ingredients?: string[]
+          last_treatment_filter?: string[] | null
+          objective_simple?: string
+          objective_technical?: string
+          pending_review?: boolean
+          phase_type?: string
+          porosity_filter?: string[] | null
+          sources?: Json
+          week_end?: number
+          week_start?: number
+        }
+        Relationships: []
+      }
       suggestions: {
         Row: {
           created_at: string | null
@@ -509,99 +686,6 @@ export type Database = {
           created_at?: string | null
           id?: string
           message?: string
-        }
-        Relationships: []
-      }
-      recovery_phases: {
-        Row: {
-          id: string
-          phase_type: string
-          damage_level_min: number
-          damage_level_max: number
-          week_start: number
-          week_end: number
-          last_treatment_filter: string[] | null
-          porosity_filter: string[] | null
-          objective_technical: string
-          objective_simple: string
-          key_ingredients: string[]
-          avoid: string[]
-          checkpoint: string
-          pending_review: boolean
-          sources: Json
-          created_at: string
-        }
-        Insert: {
-          id: string
-          phase_type: string
-          damage_level_min: number
-          damage_level_max: number
-          week_start: number
-          week_end: number
-          last_treatment_filter?: string[] | null
-          porosity_filter?: string[] | null
-          objective_technical: string
-          objective_simple: string
-          key_ingredients?: string[]
-          avoid?: string[]
-          checkpoint: string
-          pending_review?: boolean
-          sources?: Json
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          phase_type?: string
-          damage_level_min?: number
-          damage_level_max?: number
-          week_start?: number
-          week_end?: number
-          last_treatment_filter?: string[] | null
-          porosity_filter?: string[] | null
-          objective_technical?: string
-          objective_simple?: string
-          key_ingredients?: string[]
-          avoid?: string[]
-          checkpoint?: string
-          pending_review?: boolean
-          sources?: Json
-          created_at?: string
-        }
-        Relationships: []
-      }
-      recovery_calendars: {
-        Row: {
-          id: string
-          user_session: string
-          damage_level: number
-          last_treatment: string
-          hair_porosity: string
-          scalp_condition: string
-          calendar_json: Json
-          next_safe_treatment_date: string
-          generated_at: string
-        }
-        Insert: {
-          id?: string
-          user_session: string
-          damage_level: number
-          last_treatment: string
-          hair_porosity: string
-          scalp_condition: string
-          calendar_json: Json
-          next_safe_treatment_date: string
-          generated_at?: string
-        }
-        Update: {
-          id?: string
-          user_session?: string
-          damage_level?: number
-          last_treatment?: string
-          hair_porosity?: string
-          scalp_condition?: string
-          calendar_json?: Json
-          next_safe_treatment_date?: string
-          generated_at?: string
         }
         Relationships: []
       }
