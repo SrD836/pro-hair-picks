@@ -7,7 +7,7 @@ const Hero = () => {
   const { t, lang } = useLanguage();
 
   return (
-    <section className="relative overflow-hidden min-h-[70vh] flex items-center">
+    <section className="relative overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center">
       {/* Background image — responsive picture */}
       <picture>
         <source
@@ -43,13 +43,13 @@ const Hero = () => {
         >
           {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-secondary/30 bg-secondary/10 mb-8"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-secondary/30 bg-secondary/10 mb-8 backdrop-blur-sm"
           >
             <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-            <span className="text-secondary text-sm font-medium">{t("hero.badge")}</span>
+            <span className="text-secondary text-xs font-semibold uppercase tracking-widest">{t("hero.badge")}</span>
           </motion.div>
 
           {/* Headline */}
@@ -57,7 +57,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
-            className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight"
+            className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-[1.05]"
           >
             {t("hero.titleWords").split(",").join(" ")}{" "}
             <span className="shimmer-gold">{t("hero.titleHighlight")}</span>{" "}
@@ -69,7 +69,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.55 }}
-            className="text-muted-foreground text-lg md:text-xl mb-10 max-w-lg"
+            className="text-muted-foreground text-lg md:text-xl mb-10 max-w-lg leading-relaxed"
           >
             {t("hero.subtitle")}
           </motion.p>
@@ -82,7 +82,7 @@ const Hero = () => {
           >
             <Link
               to="/categorias/clippers"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-secondary text-secondary-foreground font-medium hover:bg-secondary/90 transition-colors group"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-secondary text-secondary-foreground font-bold hover:bg-secondary/90 transition-colors group"
             >
               {lang === "es" ? "Explorar catálogo" : "Explore Catalog"}
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
