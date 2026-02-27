@@ -41,30 +41,31 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full left-0 mt-2 w-72 bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden z-50"
-            onMouseLeave={onClose}
+            className="absolute top-full left-0 pt-2 w-72 z-50"
           >
-            <div className="p-3 space-y-3">
-              {groups.map((group) => (
-                <div key={group.section}>
-                  <p className="text-[10px] font-bold text-[#C4A97D]/60 uppercase tracking-[0.15em] px-2 mb-1.5">
-                    {group.section}
-                  </p>
-                  <div className="grid grid-cols-2 gap-1">
-                    {group.items.map((item) => (
-                      <Link
-                        key={item.slug}
-                        to={`/categorias/${item.slug}`}
-                        onClick={onClose}
-                        className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
-                      >
-                        <span className="text-base">{item.icon}</span>
-                        <span className="truncate text-xs">{item.name}</span>
-                      </Link>
-                    ))}
+            <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
+              <div className="p-3 space-y-3">
+                {groups.map((group) => (
+                  <div key={group.section}>
+                    <p className="text-[10px] font-bold text-[#C4A97D]/60 uppercase tracking-[0.15em] px-2 mb-1.5">
+                      {group.section}
+                    </p>
+                    <div className="grid grid-cols-2 gap-1">
+                      {group.items.map((item) => (
+                        <Link
+                          key={item.slug}
+                          to={`/categorias/${item.slug}`}
+                          onClick={onClose}
+                          className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
+                        >
+                          <span className="text-base">{item.icon}</span>
+                          <span className="truncate text-xs">{item.name}</span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </motion.div>
         )}
@@ -103,21 +104,22 @@ function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full left-0 mt-2 w-64 bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden z-50"
-            onMouseLeave={onClose}
+            className="absolute top-full left-0 pt-2 w-64 z-50"
           >
-            <div className="p-3 grid grid-cols-2 gap-1">
-              {items.map((item) => (
-                <Link
-                  key={item.slug}
-                  to={`/categorias/${item.slug}`}
-                  onClick={onClose}
-                  className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
-                >
-                  <span className="text-base">{item.icon}</span>
-                  <span className="truncate text-xs">{item.name}</span>
-                </Link>
-              ))}
+            <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
+              <div className="p-3 grid grid-cols-2 gap-1">
+                {items.map((item) => (
+                  <Link
+                    key={item.slug}
+                    to={`/categorias/${item.slug}`}
+                    onClick={onClose}
+                    className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
+                  >
+                    <span className="text-base">{item.icon}</span>
+                    <span className="truncate text-xs">{item.name}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}
@@ -132,14 +134,11 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
   onToggle: () => void;
   onClose: () => void;
 }) {
-  const { t, lang } = useLanguage();
-
   const tools = [
-    { label: "🎨 Asesor de Color", to: lang === "es" ? "/asesor-color" : "/color-advisor" },
+    { label: "🎨 Asesor de Color", href: "https://guiadelsalon.com/asesor-color" },
     { label: "🔬 Diagnóstico Capilar", to: "/diagnostico-capilar" },
     { label: "🧪 Compatibilidad Química", to: "/inci-check" },
     { label: "📊 Calculadora ROI", to: "/calculadora-precio" },
-    { label: "⚖️ Comparador", to: "/comparar" },
   ];
 
   return (
@@ -153,7 +152,7 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
             : "text-foreground/80 hover:text-foreground hover:bg-white/5"
         }`}
       >
-        {t("nav.tools") || "Herramientas"}
+        Mi pelo
         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
@@ -164,20 +163,32 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full left-0 mt-2 w-56 bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden z-50"
-            onMouseLeave={onClose}
+            className="absolute top-full left-0 pt-2 w-56 z-50"
           >
-            <div className="p-2">
-              {tools.map((tool) => (
-                <Link
-                  key={tool.to}
-                  to={tool.to}
-                  onClick={onClose}
-                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
-                >
-                  {tool.label}
-                </Link>
-              ))}
+            <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
+              <div className="p-2">
+                {tools.map((tool) =>
+                  tool.href ? (
+                    <a
+                      key={tool.href}
+                      href={tool.href}
+                      onClick={onClose}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
+                    >
+                      {tool.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={tool.to}
+                      to={tool.to!}
+                      onClick={onClose}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
+                    >
+                      {tool.label}
+                    </Link>
+                  )
+                )}
+              </div>
             </div>
           </motion.div>
         )}
