@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Clock, BookOpen } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const HomeBlogPreview = () => {
@@ -26,32 +26,21 @@ const HomeBlogPreview = () => {
 
   return (
     <section className="container mx-auto px-4 py-16 md:py-20">
-      <div className="flex items-end justify-between mb-10">
-        <div>
-          <motion.div
-            initial={{ opacity: 0, x: -12 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center gap-2 mb-3"
-          >
-            <BookOpen className="w-5 h-5 text-secondary" />
-            <span className="text-sm font-semibold text-secondary uppercase tracking-wider">
-              {t("blog.sectionLabel")}
-            </span>
-          </motion.div>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-            {t("blog.latestArticles")}
-          </h2>
-          <p className="text-muted-foreground mt-2 max-w-md">
-            {t("blog.subtitle")}
-          </p>
-        </div>
+      <div className="flex items-center justify-between mb-10">
+        <motion.h2
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="font-display text-3xl md:text-4xl font-bold text-foreground"
+        >
+          {t("blog.latestArticles")}
+        </motion.h2>
         <Link
           to="/blog"
-          className="hidden md:inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold hover:bg-secondary/90 transition-colors"
+          className="hidden md:inline-flex items-center gap-1.5 text-secondary text-sm font-semibold hover:text-secondary/80 transition-colors group"
         >
           {t("blog.viewAll")}
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
@@ -65,7 +54,7 @@ const HomeBlogPreview = () => {
             transition={{ delay: i * 0.1, duration: 0.4 }}
             whileHover={{
               y: -6,
-              boxShadow: "0 20px 40px rgba(196,169,125,0.2)",
+              boxShadow: "0 20px 40px rgba(196,169,125,0.15)",
               borderColor: "rgba(196,169,125,0.5)",
               transition: { duration: 0.25 },
             }}
@@ -89,7 +78,7 @@ const HomeBlogPreview = () => {
               <div className="p-5">
                 <div className="flex items-center gap-3 mb-3">
                   {post.category && (
-                    <span className="text-xs font-semibold text-secondary uppercase tracking-wider">
+                    <span className="text-xs font-bold text-secondary uppercase tracking-widest">
                       {post.category}
                     </span>
                   )}
