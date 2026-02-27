@@ -1,3 +1,4 @@
+import { type ElementType } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, GitCompare, HelpCircle, Calculator, Microscope } from "lucide-react";
@@ -7,7 +8,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 function ToolCard({
   icon: Icon, title, description, cta, href, index,
 }: {
-  icon: React.ElementType; title: string; description: string;
+  icon: ElementType; title: string; description: string;
   cta: string; href: string; index: number;
 }) {
   return (
