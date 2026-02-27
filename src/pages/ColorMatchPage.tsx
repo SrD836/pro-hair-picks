@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella, BookOpen, Gem, Palette, ShirtIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useLanguage } from "@/i18n/LanguageContext";
 import {
@@ -523,14 +524,18 @@ export default function ColorMatchPage() {
             {/* 2 CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
-                disabled
                 size="lg"
-                className="flex-1 bg-secondary text-secondary-foreground gap-2 opacity-60 cursor-not-allowed"
+                className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2"
+                onClick={() =>
+                  toast({
+                    title: lang === "es" ? "Próximamente" : "Coming soon",
+                    description: lang === "es" ? "La guía PDF estará disponible próximamente." : "The PDF guide will be available soon.",
+                  })
+                }
               >
                 {lang === "es" ? "Descargar Guía PDF" : "Download PDF Guide"}
-                <span className="text-xs opacity-70">{lang === "es" ? "(Próximamente)" : "(Coming soon)"}</span>
               </Button>
-              <Button asChild size="lg" className="flex-1 border border-secondary/30 bg-card text-foreground hover:bg-secondary/10 gap-2">
+              <Button asChild size="lg" className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2">
                 <Link to="/categorias/tintes">
                   {lang === "es" ? "Ver Productos" : "View Products"}
                   <ArrowRight className="w-4 h-4" />
