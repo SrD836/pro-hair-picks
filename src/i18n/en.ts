@@ -45,6 +45,12 @@ export const en = {
       cta: "Explore unisex products",
     },
     categoriesLabel: "categories",
+    exploreTitle: "Explore Categories",
+    iconCards: {
+      clippers: "Clippers",
+      trimmers: "Trimmers",
+      furniture: "Furniture",
+    },
   },
   blog: {
     sectionLabel: "Blog",

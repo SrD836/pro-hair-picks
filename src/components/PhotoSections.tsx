@@ -113,9 +113,9 @@ const PhotoSections = () => {
   ];
 
   const iconCards = [
-    { title: "Clippers",   href: "/categorias/clippers",                       icon: Scissors },
-    { title: "Trimmers",   href: "/categorias/trimmers",                        icon: Zap },
-    { title: "Furniture",  href: "/categorias/sillones-de-barbero-hidraulico",  icon: Armchair },
+    { title: t("sections.iconCards.clippers"), href: "/categorias/clippers",                      icon: Scissors },
+    { title: t("sections.iconCards.trimmers"), href: "/categorias/trimmers",                       icon: Zap },
+    { title: t("sections.iconCards.furniture"), href: "/categorias/sillones-de-barbero-hidraulico", icon: Armchair },
   ];
 
   return (
@@ -127,7 +127,7 @@ const PhotoSections = () => {
         viewport={{ once: true }}
         className="font-display text-3xl md:text-4xl font-bold text-foreground mb-10"
       >
-        Explore Categories
+        {t("sections.exploreTitle") ?? "Explore Categories"}
       </motion.h2>
 
       {/* Row 1 — photo cards */}
@@ -138,7 +138,7 @@ const PhotoSections = () => {
       </div>
 
       {/* Row 2 — icon cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {iconCards.map((card, i) => (
           <IconCard key={card.href} {...card} index={i} />
         ))}

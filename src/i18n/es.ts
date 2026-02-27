@@ -45,6 +45,12 @@ export const es = {
       cta: "Explorar productos mixtos",
     },
     categoriesLabel: "categorías",
+    exploreTitle: "Explorar Categorías",
+    iconCards: {
+      clippers: "Cortadoras",
+      trimmers: "Perfiladoras",
+      furniture: "Muebles",
+    },
   },
   blog: {
     sectionLabel: "Blog",
