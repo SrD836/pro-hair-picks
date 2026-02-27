@@ -65,6 +65,7 @@ function AnimatedRoutes() {
           <Route path="/color-match" element={<ColorMatchPage />} />
           <Route path="/diagnostico-capilar" element={<DiagnosticoCapilarPage />} />
           <Route path="/compatibilidad-quimica" element={<CompatibilidadQuimicaPage />} />
+          <Route path="/inci-check" element={<CompatibilidadQuimicaPage />} />
           <Route path="/recuperacion-capilar" element={<RecoveryTimelinePage />} />
           <Route path="/pasaporte-capilar" element={
             <Suspense fallback={<ScissorsSpinner />}>
