@@ -41,6 +41,7 @@ const ColorMatchPage = lazy(() => import("./pages/ColorMatchPage"));
 const DiagnosticoCapilarPage = lazy(() => import('./pages/DiagnosticoCapilarPage'));
 const CompatibilidadQuimicaPage = lazy(() => import('./pages/CompatibilidadQuimicaPage'));
 const RecoveryTimelinePage = lazy(() => import('./pages/RecoveryTimelinePage'));
+const PasaporteCapilarPage = lazy(() => import("./pages/PasaporteCapilarPage"));
 
 const queryClient = new QueryClient();
 
@@ -64,7 +65,13 @@ function AnimatedRoutes() {
           <Route path="/color-match" element={<ColorMatchPage />} />
           <Route path="/diagnostico-capilar" element={<DiagnosticoCapilarPage />} />
           <Route path="/compatibilidad-quimica" element={<CompatibilidadQuimicaPage />} />
+          <Route path="/inci-check" element={<CompatibilidadQuimicaPage />} />
           <Route path="/recuperacion-capilar" element={<RecoveryTimelinePage />} />
+          <Route path="/pasaporte-capilar" element={
+            <Suspense fallback={<ScissorsSpinner />}>
+              <PasaporteCapilarPage />
+            </Suspense>
+          } />
           <Route path="/cursos-peluqueria" element={<Courses />} />
           <Route path="/hairdressing-courses" element={<Courses />} />
           <Route path="/:gender/:slug" element={<GenderRedirect />} />
