@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 export default {
   darkMode: ["class"],
@@ -73,16 +74,27 @@ export default {
           comienzo: "hsl(var(--badge-comienzo))",
           "comienzo-foreground": "hsl(var(--badge-comienzo-foreground))",
         },
+        // Bento 2026 palette
+        cream: "#F5F0E8",
+        espresso: "#2D2218",
+        gold: "#C4A97D",
+        "gold-light": "#D4C0A1",
       },
       borderRadius: {
         lg: "6px",
         md: "4px",
         sm: "2px",
+        "3xl": "1.5rem",
+        "4xl": "2rem",
       },
       boxShadow: {
         card: "var(--shadow-card)",
         "card-hover": "var(--shadow-card-hover)",
         hero: "var(--shadow-hero)",
+        // Bento 2026 shadows
+        bento: "0 4px 20px -2px rgba(45, 34, 24, 0.05)",
+        "bento-hover": "0 8px 30px -4px rgba(45, 34, 24, 0.10)",
+        gold: "0 4px 20px rgba(196, 169, 125, 0.25)",
       },
       keyframes: {
         "accordion-down": {
@@ -105,5 +117,16 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        ".scrollbar-hide": {
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+          "&::-webkit-scrollbar": { display: "none" },
+        },
+      });
+    }),
+  ],
 } satisfies Config;
