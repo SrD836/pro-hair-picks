@@ -120,6 +120,7 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: { isOpen: boolean; onT
     { emoji: "🎨", to: "/asesor-color",          label: t("nav.colorAdvisorLabel"),   desc: t("nav.colorAdvisorDesc") },
     { emoji: "🔬", to: "/diagnostico-capilar",   label: t("nav.diagnosticLabel"),     desc: t("nav.diagnosticDesc") },
     { emoji: "⚗️", to: "/compatibilidad-quimica", label: t("nav.compatibilityLabel"), desc: t("nav.compatibilityDesc") },
+    { emoji: "📅", to: "/recuperacion-capilar",  label: t("nav.recoveryLabel"),       desc: t("nav.recoveryDesc") },
   ];
   return (
     <div className="relative" onMouseEnter={onToggle} onMouseLeave={onClose}>
@@ -170,6 +171,7 @@ function MobileHairToolsSection({ onClose }: { onClose: () => void }) {
     { emoji: "🎨", to: "/asesor-color",          label: t("nav.colorAdvisorLabel") },
     { emoji: "🔬", to: "/diagnostico-capilar",   label: t("nav.diagnosticLabel") },
     { emoji: "⚗️", to: "/compatibilidad-quimica", label: t("nav.compatibilityLabel") },
+    { emoji: "📅", to: "/recuperacion-capilar",  label: t("nav.recoveryLabel") },
   ];
   return (
     <div>

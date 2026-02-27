@@ -15,6 +15,8 @@ export const es = {
     diagnosticDesc: "Test científico de 12 preguntas",
     compatibilityLabel: "Compatibilidad Química",
     compatibilityDesc: "¿Son compatibles tus tratamientos?",
+    recoveryLabel: "Ciclo de Recuperación",
+    recoveryDesc: "Calendario personalizado semana a semana",
   },
   hero: {
     badge: "Seleccionado por profesionales",

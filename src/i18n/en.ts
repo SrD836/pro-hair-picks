@@ -15,6 +15,8 @@ export const en = {
     diagnosticDesc: "12-question scientific hair test",
     compatibilityLabel: "Chemical Compatibility",
     compatibilityDesc: "Are your treatments compatible?",
+    recoveryLabel: "Recovery Cycle",
+    recoveryDesc: "Personalized week-by-week calendar",
   },
   hero: {
     badge: "Selected by professionals",
