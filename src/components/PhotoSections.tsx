@@ -1,160 +1,150 @@
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import { Scissors, Sparkles, Users } from "lucide-react";
+import { ArrowRight, Scissors, Zap, Armchair } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-function useFadeIn() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+// ---------------------------------------------------------------------------
+// PhotoCard — row 1
+// ---------------------------------------------------------------------------
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return { ref, visible };
+interface PhotoCardProps {
+  title: string;
+  subtitle: string;
+  href: string;
+  imageSrc: string;
+  imageWebp: string;
+  index: number;
 }
 
-function useCountUp(target: number, duration = 1500) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          const start = performance.now();
-          const step = (now: number) => {
-            const progress = Math.min((now - start) / duration, 1);
-            setCount(Math.floor(progress * target));
-            if (progress < 1) requestAnimationFrame(step);
-          };
-          requestAnimationFrame(step);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [target, duration]);
-
-  return { count, ref };
+function PhotoCard({ title, subtitle, href, imageSrc, imageWebp, index }: PhotoCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.45, ease: "easeOut" }}
+      className="relative overflow-hidden rounded-2xl aspect-[4/3] group cursor-pointer"
+    >
+      <Link to={href} className="block w-full h-full">
+        <picture>
+          <source srcSet={imageWebp} type="image/webp" />
+          <img
+            src={imageSrc}
+            alt={title}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        </picture>
+        {/* overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
+        <div className="absolute inset-0 flex flex-col justify-end p-6">
+          <h3 className="font-display text-2xl font-bold text-foreground mb-1">{title}</h3>
+          <span className="inline-flex items-center gap-1 text-secondary text-sm font-semibold">
+            {subtitle}
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </span>
+        </div>
+      </Link>
+    </motion.div>
+  );
 }
+
+// ---------------------------------------------------------------------------
+// IconCard — row 2
+// ---------------------------------------------------------------------------
+
+interface IconCardProps {
+  title: string;
+  href: string;
+  icon: React.ElementType;
+  index: number;
+}
+
+function IconCard({ title, href, icon: Icon, index }: IconCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.3 + index * 0.1, duration: 0.4 }}
+      whileHover={{ y: -4, borderColor: "rgba(196,169,125,0.5)", transition: { duration: 0.2 } }}
+      className="rounded-2xl border border-secondary/15 bg-card p-6 flex flex-col items-center gap-3 cursor-pointer"
+    >
+      <Link to={href} className="flex flex-col items-center gap-3 w-full">
+        <div className="p-3 rounded-xl bg-secondary/10">
+          <Icon className="w-7 h-7 text-secondary" />
+        </div>
+        <span className="font-display text-base font-semibold text-foreground">{title}</span>
+      </Link>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// PhotoSections — main export
+// ---------------------------------------------------------------------------
 
 const PhotoSections = () => {
   const { t } = useLanguage();
 
-  const sections = [
+  const photoCards = [
     {
       title: t("sections.barber.title"),
-      subtitle: t("sections.barber.subtitle"),
-      image: "/images/section-barber.jpg",
+      subtitle: t("sections.barber.cta"),
+      href: "/categorias/clippers",
+      imageSrc: "/images/section-barber.jpg",
       imageWebp: "/images/section-barber.webp",
-      link: "/categorias/clippers",
-      linkText: t("sections.barber.cta"),
-      icon: Scissors,
-      categoryCount: 22,
     },
     {
       title: t("sections.salon.title"),
-      subtitle: t("sections.salon.subtitle"),
-      image: "/images/section-salon.jpg",
+      subtitle: t("sections.salon.cta"),
+      href: "/categorias/secadores-profesionales",
+      imageSrc: "/images/section-salon.jpg",
       imageWebp: "/images/section-salon.webp",
-      link: "/categorias/secadores-profesionales",
-      linkText: t("sections.salon.cta"),
-      icon: Sparkles,
-      categoryCount: 16,
     },
     {
       title: t("sections.mixed.title"),
-      subtitle: t("sections.mixed.subtitle"),
-      image: "/images/section-mixto.jpg",
+      subtitle: t("sections.mixed.cta"),
+      href: "/categorias/capas-y-delantales",
+      imageSrc: "/images/section-mixto.jpg",
       imageWebp: "/images/section-mixto.webp",
-      link: "/categorias/capas-y-delantales",
-      linkText: t("sections.mixed.cta"),
-      icon: Users,
-      categoryCount: 6,
     },
   ];
 
+  const iconCards = [
+    { title: "Clippers",   href: "/categorias/clippers",                       icon: Scissors },
+    { title: "Trimmers",   href: "/categorias/trimmers",                        icon: Zap },
+    { title: "Furniture",  href: "/categorias/sillones-de-barbero-hidraulico",  icon: Armchair },
+  ];
+
   return (
-    <section className="py-16 md:py-24 space-y-0">
-      {sections.map((s, i) => (
-        <PhotoCard key={i} section={s} index={i} categoriesLabel={t("sections.categoriesLabel")} />
-      ))}
+    <section className="py-16 md:py-24 container mx-auto px-4">
+      {/* Section heading */}
+      <motion.h2
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="font-display text-3xl md:text-4xl font-bold text-foreground mb-10"
+      >
+        Explore Categories
+      </motion.h2>
+
+      {/* Row 1 — photo cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        {photoCards.map((card, i) => (
+          <PhotoCard key={card.href} {...card} index={i} />
+        ))}
+      </div>
+
+      {/* Row 2 — icon cards */}
+      <div className="grid grid-cols-3 gap-4">
+        {iconCards.map((card, i) => (
+          <IconCard key={card.href} {...card} index={i} />
+        ))}
+      </div>
     </section>
   );
 };
-
-function PhotoCard({ section, index, categoriesLabel }: { section: { title: string; subtitle: string; image: string; imageWebp: string; link: string; linkText: string; icon: any; categoryCount: number }; index: number; categoriesLabel: string }) {
-  const fade = useFadeIn();
-  const counter = useCountUp(section.categoryCount);
-  const Icon = section.icon;
-
-  return (
-    <div
-      ref={fade.ref}
-      className="relative overflow-hidden min-h-[50vh] md:min-h-[60vh] flex items-center"
-    >
-      <picture>
-        <source srcSet={section.imageWebp} type="image/webp" />
-        <img
-          src={section.image}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          width={1920}
-          height={1080}
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-      </picture>
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div
-          className={`max-w-lg transition-all duration-700 ease-out ${fade.visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}
-          style={{ transitionDelay: "0.1s" }}
-        >
-          <div className="inline-flex items-center gap-2 mb-4">
-            <Icon className="w-5 h-5 text-secondary" />
-            <span className="text-secondary text-sm font-medium uppercase tracking-wider">
-              {section.title}
-            </span>
-          </div>
-
-          <div className="mb-4">
-            <span
-              ref={counter.ref}
-              className="font-display text-6xl md:text-7xl font-bold text-white/90"
-            >
-              {counter.count}
-            </span>
-            <span className="text-white/50 text-lg ml-2">{categoriesLabel}</span>
-          </div>
-
-          <p className="text-white/70 text-lg md:text-xl mb-8 leading-relaxed italic">
-            {section.subtitle}
-          </p>
-
-          <Link
-            to={section.link}
-            className="cta-underline text-secondary font-semibold text-base hover:text-secondary/80 transition-colors"
-          >
-            {section.linkText} →
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default PhotoSections;
