@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella, BookOpen, Gem, Palette, ShirtIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -343,79 +343,149 @@ export default function ColorMatchPage() {
         ? { es: "Cálido", en: "Warm" }
         : { es: "Neutro", en: "Neutral" };
 
+    const paletteSwatches = [
+      result.hexPreview,
+      ...result.complementary.slice(0, 5).map((c) => c.hex),
+    ];
+
     return (
       <>
         <Helmet><title>{metaTitle}</title><meta name="description" content={metaDesc} /></Helmet>
-        <section className="container mx-auto px-4 py-12 max-w-2xl">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-            {/* Header with season icon */}
-            <div className="text-center space-y-3">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/10 border-2 border-secondary/30 mx-auto">
-                <SeasonIcon className="w-8 h-8 text-secondary" />
-              </div>
-              <h1 className="font-display text-3xl md:text-4xl text-foreground">
-                {lang === "es" ? "Tu Master Color Card" : "Your Master Color Card"}
-              </h1>
-              <p className="text-secondary font-display text-lg">
-                {SEASON_STYLES[result.season].icon} {l(SEASON_NAMES[result.season])}
-              </p>
-              <p className="text-xs text-muted-foreground">{l(seasonStyle.contrast)}</p>
-            </div>
 
-            {/* Main card */}
-            <Card className="p-6 md:p-8 border-secondary/30 space-y-6 relative overflow-hidden">
-              {/* Color preview */}
-              <div className="flex items-center gap-5">
-                <div className="w-24 h-24 rounded-full border-4 border-secondary/40 shadow-lg shrink-0" style={{ backgroundColor: result.hexPreview }} />
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                    {lang === "es" ? "Tu Tinte Ideal" : "Your Ideal Shade"}
+        {/* ── Hero ── */}
+        <div
+          className="min-h-[40vh] flex items-end relative overflow-hidden"
+          style={{ backgroundColor: `${result.hexPreview}26` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 to-background/95" />
+          <div className="container mx-auto px-4 py-16 relative z-10 text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-secondary mb-4">
+              {lang === "es" ? "Tu Análisis Cromático" : "Your Color Analysis"}
+            </p>
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-3">
+              {lang === "es" ? "Tu Master Color Card" : "Your Master Color Card"}
+            </h1>
+            <p className="text-secondary font-display text-xl">
+              {SEASON_STYLES[result.season].icon}{" "}
+              {l(SEASON_NAMES[result.season])}
+            </p>
+          </div>
+        </div>
+
+        <section className="container mx-auto px-4 py-12 max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            {/* ── Bento grid ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+              {/* Left: Expert analysis card */}
+              <div className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-secondary/20 border-2 border-secondary/40 flex items-center justify-center shrink-0">
+                    <SeasonIcon className="w-6 h-6 text-secondary" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider">
+                      {lang === "es" ? "Análisis Experto" : "Expert Analysis"}
+                    </p>
+                    <p className="font-display text-sm text-foreground font-bold">
+                      {lang === "es" ? "Colorista Senior" : "Senior Colorist"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/30 w-fit">
+                  <span className="text-sm">{SEASON_STYLES[result.season].icon}</span>
+                  <span className="text-xs font-bold text-secondary uppercase tracking-wider">
+                    {l(SEASON_NAMES[result.season])}
+                  </span>
+                </div>
+
+                <blockquote className="italic text-sm text-muted-foreground leading-relaxed border-l-2 border-secondary/40 pl-4 flex-1">
+                  {l(result.verdict)}
+                </blockquote>
+
+                <div className="pt-4 border-t border-border">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                    {lang === "es" ? "Subtono" : "Undertone"}
                   </p>
-                  <h2 className="font-display text-2xl text-foreground">{result.code} {l(result.name)}</h2>
-                  <p className="text-sm text-muted-foreground mt-1">{l(result.description)}</p>
+                  <p className="text-sm font-bold text-foreground">{l(undertoneLabel)}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{l(seasonStyle.contrast)}</p>
                 </div>
               </div>
 
-              {/* Verdict */}
-              <div className="bg-accent/50 rounded-lg p-4 border border-border">
-                <h3 className="font-display text-sm text-secondary mb-2 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  {lang === "es" ? "Veredicto del Colorista" : "Colorist's Verdict"}
-                </h3>
-                <p className="text-foreground text-sm leading-relaxed">{l(result.verdict)}</p>
+              {/* Center: Color circle + match badge */}
+              <div className="bg-card border border-border rounded-2xl p-6 flex flex-col items-center justify-center gap-4">
+                <svg width="160" height="160" viewBox="0 0 160 160">
+                  <circle cx="80" cy="80" r="72" fill={result.hexPreview} />
+                  <circle cx="80" cy="80" r="72" fill="none" stroke="rgba(196,169,125,0.5)" strokeWidth="3" />
+                </svg>
+
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/15 border border-secondary/40">
+                  <Sparkles className="w-4 h-4 text-secondary" />
+                  <span className="text-sm font-bold text-secondary">98% MATCH</span>
+                </div>
+
+                <div className="text-center">
+                  <p className="font-display text-2xl font-bold text-foreground">{result.code}</p>
+                  <p className="text-sm text-muted-foreground">{l(result.name)}</p>
+                </div>
+
+                <div className="w-full bg-accent/50 rounded-xl p-4 border border-border text-xs text-muted-foreground leading-relaxed text-center">
+                  {l(result.description)}
+                </div>
               </div>
 
-              {/* Undertone explanation */}
-              <div className="bg-muted/50 rounded-lg p-4 border border-border">
-                <h3 className="font-display text-sm text-foreground mb-2 flex items-center gap-2">
-                  <Gem className="w-4 h-4 text-secondary" />
-                  {lang === "es" ? `Tu subtono: ${l(undertoneLabel)}` : `Your undertone: ${l(undertoneLabel)}`}
-                </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {lang === "es"
-                    ? "Tu subtono es constante y no cambia con el bronceado ni la edad. Es la base de tu análisis cromático y determina qué colores armonizan con tu piel de forma natural. Todas las recomendaciones de tinte, ropa y maquillaje parten de este dato."
-                    : "Your undertone is constant — it doesn't change with tanning or age. It's the foundation of your color analysis and determines which colors naturally harmonize with your skin. All dye, clothing, and makeup recommendations are based on this."}
+              {/* Right: Palette grid */}
+              <div className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  {lang === "es" ? "Tu Paleta Cromática" : "Your Color Palette"}
                 </p>
-              </div>
 
-              {/* Complementary hair palette */}
-              <div>
-                <h3 className="font-display text-sm text-muted-foreground mb-3 flex items-center gap-2">
-                  <Palette className="w-4 h-4" />
-                  {lang === "es" ? "Paleta Complementaria de Tintes" : "Complementary Dye Palette"}
-                </h3>
-                <div className="flex gap-4">
-                  {result.complementary.map((c, i) => (
-                    <div key={i} className="flex flex-col items-center gap-1">
-                      <div className="w-12 h-12 rounded-full border-2 border-border" style={{ backgroundColor: c.hex }} />
-                      <span className="text-xs text-muted-foreground text-center">{l(c.name)}</span>
+                <div className="grid grid-cols-3 gap-3">
+                  {paletteSwatches.slice(0, 6).map((hex, i) => (
+                    <div key={i} className="flex flex-col items-center gap-1.5">
+                      <div
+                        className="w-14 h-14 rounded-xl border border-border shadow-sm"
+                        style={{ backgroundColor: hex }}
+                      />
+                      {i === 0 && (
+                        <span className="text-[10px] text-secondary font-bold">
+                          {lang === "es" ? "Principal" : "Main"}
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>
-              </div>
 
-              {/* Clothing colors */}
-              <div>
+                {result.requiresDecolor && (
+                  <div className="flex items-start gap-2 bg-destructive/10 border border-destructive/30 rounded-lg p-3 text-xs">
+                    <FlaskConical className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+                    <p className="text-muted-foreground">
+                      {lang === "es" ? "Requiere decoloración profesional" : "Requires professional bleaching"}
+                    </p>
+                  </div>
+                )}
+
+                {result.requiresSalon && !result.requiresDecolor && (
+                  <div className="flex items-start gap-2 bg-destructive/10 border border-destructive/30 rounded-lg p-3 text-xs">
+                    <AlertTriangle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+                    <p className="text-muted-foreground">
+                      {lang === "es"
+                        ? `Salto de ${result.levelJump} niveles — visita un salón`
+                        : `${result.levelJump}-level jump — visit a salon`}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Clothing + avoid colors */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-card border border-border rounded-2xl p-6">
                 <h3 className="font-display text-sm text-muted-foreground mb-3 flex items-center gap-2">
                   <ShirtIcon className="w-4 h-4" />
                   {lang === "es" ? "Tus colores ideales para vestir" : "Your ideal clothing colors"}
@@ -430,15 +500,17 @@ export default function ColorMatchPage() {
                 </div>
               </div>
 
-              {/* Colors to avoid */}
-              <div>
+              <div className="bg-card border border-border rounded-2xl p-6">
                 <h3 className="font-display text-sm text-destructive/80 mb-3">
                   {lang === "es" ? "🚫 Colores a evitar" : "🚫 Colors to avoid"}
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {seasonStyle.avoidColors.map((c, i) => (
                     <div key={i} className="flex flex-col items-center gap-1 opacity-70">
-                      <div className="w-10 h-10 rounded-lg border-2 border-destructive/30 shadow-sm relative" style={{ backgroundColor: c.hex }}>
+                      <div
+                        className="w-10 h-10 rounded-lg border-2 border-destructive/30 shadow-sm relative"
+                        style={{ backgroundColor: c.hex }}
+                      >
                         <div className="absolute inset-0 flex items-center justify-center text-white text-lg font-bold">✕</div>
                       </div>
                       <span className="text-[10px] text-muted-foreground text-center max-w-[60px]">{l(c.name)}</span>
@@ -446,85 +518,57 @@ export default function ColorMatchPage() {
                   ))}
                 </div>
               </div>
+            </div>
 
-              {/* Decolorization warning */}
-              {result.requiresDecolor && (
-                <div className="flex items-start gap-3 bg-destructive/10 border border-destructive/30 rounded-lg p-4">
-                  <FlaskConical className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-bold text-foreground">
-                      {lang === "es" ? "Decoloración previa necesaria" : "Prior bleaching required"}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {lang === "es"
-                        ? "Tu color actual requiere un proceso de decoloración profesional antes de aplicar el tinte recomendado. No lo hagas en casa: visita un salón para proteger tu cabello."
-                        : "Your current color requires a professional bleaching process before applying the recommended dye. Don't attempt this at home — visit a salon to protect your hair."}
-                    </p>
-                  </div>
-                </div>
-              )}
+            {/* 2 CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button
+                disabled
+                size="lg"
+                className="flex-1 bg-secondary text-secondary-foreground gap-2 opacity-60 cursor-not-allowed"
+              >
+                {lang === "es" ? "Descargar Guía PDF" : "Download PDF Guide"}
+                <span className="text-xs opacity-70">{lang === "es" ? "(Próximamente)" : "(Coming soon)"}</span>
+              </Button>
+              <Button asChild size="lg" className="flex-1 border border-secondary/30 bg-card text-foreground hover:bg-secondary/10 gap-2">
+                <Link to="/categorias/tintes">
+                  {lang === "es" ? "Ver Productos" : "View Products"}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
 
-              {result.requiresSalon && !result.requiresDecolor && (
-                <div className="flex items-start gap-3 bg-destructive/10 border border-destructive/30 rounded-lg p-4">
-                  <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-bold text-foreground">
-                      {lang === "es" ? "Cambio de nivel drástico" : "Drastic level change"}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {lang === "es"
-                        ? `El salto de ${result.levelJump} niveles requiere un proceso técnico. Te recomendamos acudir a un salón profesional para evitar daños en el cabello.`
-                        : `A jump of ${result.levelJump} levels requires a technical process. We recommend visiting a professional salon to avoid hair damage.`}
-                    </p>
-                  </div>
+            {/* Amazon CTAs (conditional) */}
+            {!result.requiresDecolor && !result.requiresSalon && (() => {
+              const dyeUrlES = skinTone ? getDyeLink(DYE_LINKS_ES, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
+              const dyeUrlUS = skinTone ? getDyeLink(DYE_LINKS_US, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
+              const hasAny = dyeUrlES || dyeUrlUS;
+              return hasAny ? (
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {dyeUrlES && (
+                    <Button asChild className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2" size="lg">
+                      <a href={dyeUrlES} target="_blank" rel="noopener noreferrer">
+                        🇪🇸 Amazon España <ExternalLink className="w-4 h-4" />
+                      </a>
+                    </Button>
+                  )}
+                  {dyeUrlUS && (
+                    <Button asChild className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2" size="lg">
+                      <a href={dyeUrlUS} target="_blank" rel="noopener noreferrer">
+                        🇺🇸 Amazon USA <ExternalLink className="w-4 h-4" />
+                      </a>
+                    </Button>
+                  )}
                 </div>
-              )}
-
-              {/* CTA - only show when no decolorization/fantasy needed */}
-              {!result.requiresDecolor && !result.requiresSalon ? (() => {
-                const dyeUrlES = skinTone ? getDyeLink(DYE_LINKS_ES, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
-                const dyeUrlUS = skinTone ? getDyeLink(DYE_LINKS_US, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
-                const hasAny = dyeUrlES || dyeUrlUS;
-                return hasAny ? (
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    {dyeUrlES && (
-                      <Button asChild className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2" size="lg">
-                        <a href={dyeUrlES} target="_blank" rel="noopener noreferrer">
-                          🇪🇸 Amazon España
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      </Button>
-                    )}
-                    {dyeUrlUS && (
-                      <Button asChild className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 gap-2" size="lg">
-                        <a href={dyeUrlUS} target="_blank" rel="noopener noreferrer">
-                          🇺🇸 Amazon USA
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      </Button>
-                    )}
-                  </div>
-                ) : null;
-              })() : (
-                <div className="bg-muted/60 rounded-lg p-4 text-center border border-border">
-                  <p className="text-sm text-muted-foreground">
-                    {lang === "es"
-                      ? "⚠️ Para este cambio de color, te recomendamos acudir a un colorista profesional. No se recomienda aplicar tinte en casa."
-                      : "⚠️ For this color change, we recommend visiting a professional colorist. Home application is not recommended."}
-                  </p>
-                </div>
-              )}
-            </Card>
+              ) : null;
+            })()}
 
             <Button onClick={reset} variant="outline" className="w-full gap-2">
               <RotateCcw className="w-4 h-4" />
               {lang === "es" ? "Empezar de nuevo" : "Start over"}
             </Button>
 
-            {/* Colorimetry 101 */}
             <Colorimetry101 lang={lang} />
-
-            {/* FAQ Section */}
             <ColorMatchFAQ lang={lang} onReset={reset} />
           </motion.div>
         </section>
