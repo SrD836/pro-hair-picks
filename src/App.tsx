@@ -13,6 +13,7 @@ import SuggestionButton from "@/components/SuggestionButton";
 import ScissorsCursor from "@/components/ScissorsCursor";
 import PageTransition from "@/components/PageTransition";
 import ScissorsSpinner from "@/components/ScissorsSpinner";
+import ScrollToTop from "@/components/ScrollToTop";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { CompareProvider } from "@/hooks/useCompare";
 import CompareBar from "@/components/CompareBar";
@@ -22,6 +23,8 @@ import GenderRedirect from "./pages/GenderRedirect";
 import NotFound from "./pages/NotFound";
 
 // Lazy load non-critical pages
+const CategoriesPage = lazy(() => import("./pages/CategoriesPage"));
+const GenderPage = lazy(() => import("./pages/GenderPage"));
 const CategoryProductsPage = lazy(() => import("./pages/CategoryProductsPage"));
 const CompararPage = lazy(() => import("./pages/CompararPage"));
 const Courses = lazy(() => import("./pages/Courses"));
@@ -49,11 +52,17 @@ const queryClient = new QueryClient();
 function AnimatedRoutes() {
   const location = useLocation();
   return (
-    <AnimatePresence mode="wait">
+    <>
+      <ScrollToTop />
+      <AnimatePresence mode="wait">
       <PageTransition key={location.pathname}>
         <Routes location={location}>
           <Route path="/" element={<Index />} />
+          <Route path="/categorias" element={<CategoriesPage />} />
           <Route path="/categorias/:categoria" element={<CategoryProductsPage />} />
+          <Route path="/hombre" element={<GenderPage />} />
+          <Route path="/mujer" element={<GenderPage />} />
+          <Route path="/mixto" element={<GenderPage />} />
           <Route path="/comparar" element={<CompararPage />} />
           <Route path="/gestionar-mi-local" element={<GestionarMiLocal />} />
           <Route path="/calculadora-roi" element={<CalculadoraROI />} />
@@ -86,6 +95,7 @@ function AnimatedRoutes() {
         </Routes>
       </PageTransition>
     </AnimatePresence>
+    </>
   );
 }
 

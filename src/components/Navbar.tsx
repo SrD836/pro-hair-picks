@@ -298,24 +298,9 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className={`
-          grid grid-cols-[1fr_auto_1fr] md:flex md:items-center md:justify-between
-          transition-all duration-300 ${scrolled ? "py-2" : "py-3"}
-        `}>
-          {/* Left col mobile: hamburger */}
-          <div className="flex items-center md:hidden">
-            <button
-              className="p-2 rounded-full hover:bg-white/8 transition-colors"
-              aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-
-          {/* Center col mobile / Left in desktop: Logo */}
-          <Link to="/" className="flex items-center justify-center md:justify-start group shrink-0">
+        <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "py-2" : "py-3"}`}>
+          {/* Logo — LEFT */}
+          <Link to="/" className="flex items-center group shrink-0">
             <picture>
               <source srcSet="/logo-compact-40.webp 40w, /logo-compact-80.webp 80w" type="image/webp" sizes="40px" />
               <img
@@ -323,7 +308,7 @@ const Navbar = () => {
                 alt="Guía del Salón"
                 width={40}
                 height={40}
-                className={`w-auto brightness-0 invert transition-all duration-500 group-hover:brightness-110 group-hover:drop-shadow-[0_0_8px_rgba(196,169,125,0.4)] ${scrolled ? "h-8 md:h-7" : "h-11 md:h-9"}`}
+                className={`w-auto brightness-0 invert transition-all duration-500 group-hover:brightness-110 group-hover:drop-shadow-[0_0_8px_rgba(196,169,125,0.4)] ${scrolled ? "h-7" : "h-9"}`}
               />
             </picture>
           </Link>
@@ -371,8 +356,8 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Right col: lang + search (no hamburger here) */}
-          <div className="flex items-center justify-end gap-1.5">
+          {/* Right: Lang + Search + Hamburger */}
+          <div className="flex items-center gap-1.5">
             <LanguageSelector />
             <Link
               to="/"
@@ -381,6 +366,14 @@ const Navbar = () => {
             >
               <Search className="w-4.5 h-4.5 text-foreground/70" />
             </Link>
+            <button
+              className="md:hidden p-2 rounded-full hover:bg-white/8 transition-colors"
+              aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
       </div>
@@ -412,14 +405,26 @@ const Navbar = () => {
               {/* Tools section */}
               <div className="border-t border-border/40 pt-3">
                 <p className="text-[10px] font-bold text-[#C4A97D]/60 uppercase tracking-[0.15em] px-2 mb-2">
-                  Herramientas
+                  {lang === "es" ? "Herramientas" : "Tools"}
                 </p>
                 <div className="space-y-0.5">
                   {[
-                    { label: "🎨 Asesor de Color", to: lang === "es" ? "/asesor-color" : "/color-advisor" },
-                    { label: "🔬 Diagnóstico Capilar", to: "/diagnostico-capilar" },
-                    { label: "🧪 Compatibilidad Química", to: "/inci-check" },
-                    { label: "📊 Calculadora ROI", to: "/calculadora-precio" },
+                    {
+                      label: lang === "es" ? "🎨 Asesor de Color" : "🎨 Color Advisor",
+                      to: lang === "es" ? "/asesor-color" : "/color-match",
+                    },
+                    {
+                      label: lang === "es" ? "🔬 Diagnóstico Capilar" : "🔬 Hair Diagnostic",
+                      to: "/diagnostico-capilar",
+                    },
+                    {
+                      label: lang === "es" ? "🧪 Compatibilidad Química" : "🧪 Chemical Compatibility",
+                      to: "/inci-check",
+                    },
+                    {
+                      label: lang === "es" ? "📊 Calculadora ROI" : "📊 ROI Calculator",
+                      to: "/calculadora-precio",
+                    },
                   ].map((tool) => (
                     <Link
                       key={tool.to}

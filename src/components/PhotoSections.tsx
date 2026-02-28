@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Scissors, Zap, Armchair } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const categories = [
@@ -9,7 +9,7 @@ const categories = [
     defaultTitle: "Barbería & Hombre",
     subtitleKey: "sections.barber.subtitle",
     defaultSubtitle: "Clippers, trimmers, tijeras y más",
-    href: "/categorias/clippers",
+    href: "/hombre",
     image: "/images/section-barber.webp",
     fallback: "/images/section-barber.jpg",
     accent: "#C4A97D",
@@ -19,7 +19,7 @@ const categories = [
     defaultTitle: "Peluquería & Mujer",
     subtitleKey: "sections.salon.subtitle",
     defaultSubtitle: "Secadores, planchas y tratamientos",
-    href: "/categorias/secadores-profesionales",
+    href: "/mujer",
     image: "/images/section-salon.webp",
     fallback: "/images/section-salon.jpg",
     accent: "#D4956A",
@@ -29,55 +29,50 @@ const categories = [
     defaultTitle: "Salón Mixto",
     subtitleKey: "sections.mixed.subtitle",
     defaultSubtitle: "Mobiliario y equipamiento",
-    href: "/categorias/capas-y-delantales",
+    href: "/mixto",
     image: "/images/section-mixto.webp",
     fallback: "/images/section-mixto.jpg",
     accent: "#8BAF7C",
   },
 ];
 
-const shortcuts = [
-  {
-    icon: Scissors,
-    labelKey: "sections.iconCards.clippers",
-    defaultLabel: "Cortadoras",
-    countKey: "sections.iconCards.clippersCount",
-    defaultCount: "82+ modelos",
-    descKey: "sections.iconCards.clippersDesc",
-    defaultDesc: "Para cortes precisos",
-    href: "/categorias/clippers",
-    accent: "#C4A97D",
-  },
-  {
-    icon: Zap,
-    labelKey: "sections.iconCards.trimmers",
-    defaultLabel: "Perfiladoras",
-    countKey: "sections.iconCards.trimmersCount",
-    defaultCount: "63+ modelos",
-    descKey: "sections.iconCards.trimmersDesc",
-    defaultDesc: "Perfilado perfecto",
-    href: "/categorias/trimmers",
-    accent: "#D4956A",
-  },
-  {
-    icon: Armchair,
-    labelKey: "sections.iconCards.furniture",
-    defaultLabel: "Mobiliario",
-    countKey: "sections.iconCards.furnitureCount",
-    defaultCount: "40+ opciones",
-    descKey: "sections.iconCards.furnitureDesc",
-    defaultDesc: "Diseña tu espacio",
-    href: "/categorias/sillones-de-barbero-hidraulico",
-    accent: "#8BAF7C",
-  },
-];
 
 const PhotoSections = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+
+  const trendingItems = [
+    {
+      name: "Wahl Magic Clip",
+      category: lang === "es" ? "Clippers" : "Clippers",
+      price: "89€",
+      badge: lang === "es" ? "🔥 Más vendido" : "🔥 Best seller",
+      image: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&q=80",
+      href: "/categorias/clippers",
+      accent: "#C4A97D",
+    },
+    {
+      name: "BaByliss Pro FX",
+      category: lang === "es" ? "Trimmers" : "Trimmers",
+      price: "149€",
+      badge: lang === "es" ? "⭐ Top rated" : "⭐ Top rated",
+      image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80",
+      href: "/categorias/trimmers",
+      accent: "#D4956A",
+    },
+    {
+      name: "Dyson Supersonic",
+      category: lang === "es" ? "Secadores" : "Dryers",
+      price: "429€",
+      badge: lang === "es" ? "💎 Premium" : "💎 Premium",
+      image: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=400&q=80",
+      href: "/categorias/secadores-profesionales",
+      accent: "#8BAF7C",
+    },
+  ];
 
   return (
     <section
-      className="py-12 md:py-16 px-4 md:px-8 relative overflow-hidden"
+      className="relative overflow-hidden"
       style={{ background: "linear-gradient(180deg, #1a1008 0%, #2D2218 100%)" }}
     >
       {/* Gold accent line top */}
@@ -86,6 +81,7 @@ const PhotoSections = () => {
         style={{ background: "linear-gradient(90deg, transparent, #C4A97D, transparent)" }}
       />
 
+      <div className="py-12 md:py-16 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -225,70 +221,92 @@ const PhotoSections = () => {
           </div>
         </div>
 
-        {/* Shortcuts row */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="grid grid-cols-3 gap-3"
-        >
-          {shortcuts.map((sc) => {
-            const Icon = sc.icon;
-            return (
-              <motion.div
-                key={sc.href}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                whileTap={{ scale: 0.97 }}
+      </div>
+      </div>
+
+      {/* Trending Products */}
+      <div
+        className="py-10 md:py-14 px-5 md:px-8"
+        style={{ background: "linear-gradient(180deg, #1E1208 0%, #221508 100%)" }}
+      >
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C4A97D]/70 block mb-1">
+              {lang === "es" ? "Ahora mismo" : "Right now"}
+            </span>
+            <h3 className="font-display font-bold text-[#F5F0E8] text-xl">
+              {lang === "es" ? "Tendencias del Mes" : "This Month's Trends"}
+            </h3>
+          </div>
+          <Link
+            to="/categorias"
+            className="text-xs text-[#C4A97D] hover:text-[#F5F0E8] transition-colors flex items-center gap-1"
+          >
+            {lang === "es" ? "Ver todo" : "See all"} <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          {trendingItems.map((item, i) => (
+            <motion.div
+              key={item.name}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+            >
+              <Link
+                to={item.href}
+                className="block rounded-2xl overflow-hidden group"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: `1px solid ${item.accent}20`,
+                }}
               >
-                <Link
-                  to={sc.href}
-                  className="flex flex-col gap-3 py-5 px-4 rounded-xl transition-all group relative overflow-hidden"
-                  style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: `1px solid ${sc.accent}20`,
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = `${sc.accent}08`;
-                    (e.currentTarget as HTMLElement).style.borderColor = `${sc.accent}35`;
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.03)";
-                    (e.currentTarget as HTMLElement).style.borderColor = `${sc.accent}20`;
-                  }}
-                >
-                  {/* Hover glow */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-xl"
-                    style={{ background: `radial-gradient(circle at 50% 0%, ${sc.accent}12 0%, transparent 70%)` }}
+                {/* Image */}
+                <div className="relative h-28 overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="flex items-center justify-between">
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
-                      style={{ background: `${sc.accent}15`, border: `1px solid ${sc.accent}25` }}
-                    >
-                      <Icon className="w-4 h-4" style={{ color: sc.accent }} strokeWidth={1.5} />
-                    </div>
-                    <span
-                      className="text-[10px] font-bold tabular-nums px-2 py-0.5 rounded-full"
-                      style={{ color: sc.accent, background: `${sc.accent}15` }}
-                    >
-                      {t(sc.countKey) || sc.defaultCount}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold" style={{ color: "#F5F0E8" }}>
-                      {t(sc.labelKey) || sc.defaultLabel}
-                    </p>
-                    <p className="text-[11px] mt-0.5" style={{ color: "#F5F0E8", opacity: 0.45 }}>
-                      {t(sc.descKey) || sc.defaultDesc}
-                    </p>
-                  </div>
-                </Link>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(to bottom, transparent 40%, rgba(26,16,8,0.7))",
+                    }}
+                  />
+                  <span
+                    className="absolute top-2 left-2 text-[9px] font-bold px-2 py-0.5 rounded-full"
+                    style={{
+                      background: `${item.accent}25`,
+                      color: item.accent,
+                      border: `1px solid ${item.accent}40`,
+                    }}
+                  >
+                    {item.badge}
+                  </span>
+                </div>
+                {/* Info */}
+                <div className="p-3">
+                  <p
+                    className="text-[9px] uppercase tracking-wider mb-0.5"
+                    style={{ color: `${item.accent}80` }}
+                  >
+                    {item.category}
+                  </p>
+                  <p className="text-[#F5F0E8] text-xs font-semibold leading-tight mb-1.5 truncate">
+                    {item.name}
+                  </p>
+                  <p className="font-display font-bold text-sm" style={{ color: item.accent }}>
+                    {item.price}
+                  </p>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
