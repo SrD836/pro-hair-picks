@@ -1,117 +1,153 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Scissors, Zap, Armchair } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const categories = [
-  {
-    titleKey: "sections.barber.title",
-    defaultTitle: "Barbershop & Men",
-    href: "/hombre",
-    image: "/images/section-barber.webp",
-    fallback: "/images/section-barber.jpg",
-  },
-  {
-    titleKey: "sections.salon.title",
-    defaultTitle: "Hair Salon & Women",
-    href: "/mujer",
-    image: "/images/section-salon.webp",
-    fallback: "/images/section-salon.jpg",
-  },
-  {
-    titleKey: "sections.mixed.title",
-    defaultTitle: "Mixto & Unisex",
-    href: "/categorias",
-    image: "/images/section-mixto.webp",
-    fallback: "/images/section-mixto.jpg",
-  },
-];
+// ---------------------------------------------------------------------------
+// PhotoCard — row 1
+// ---------------------------------------------------------------------------
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
-};
+interface PhotoCardProps {
+  title: string;
+  subtitle: string;
+  href: string;
+  imageSrc: string;
+  imageWebp: string;
+  index: number;
+}
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
-  visible: {
-    opacity: 1, y: 0, scale: 1,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
-  },
-};
+function PhotoCard({ title, subtitle, href, imageSrc, imageWebp, index }: PhotoCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.45, ease: "easeOut" }}
+      className="relative overflow-hidden rounded-2xl aspect-[4/3] group cursor-pointer"
+    >
+      <Link to={href} className="block w-full h-full">
+        <picture>
+          <source srcSet={imageWebp} type="image/webp" />
+          <img
+            src={imageSrc}
+            alt={title}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        </picture>
+        {/* overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
+        <div className="absolute inset-0 flex flex-col justify-end p-6">
+          <h3 className="font-display text-2xl font-bold text-foreground mb-1">{title}</h3>
+          <span className="inline-flex items-center gap-1 text-secondary text-sm font-semibold">
+            {subtitle}
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </span>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// IconCard — row 2
+// ---------------------------------------------------------------------------
+
+interface IconCardProps {
+  title: string;
+  href: string;
+  icon: React.ElementType;
+  index: number;
+}
+
+function IconCard({ title, href, icon: Icon, index }: IconCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.3 + index * 0.1, duration: 0.4 }}
+      whileHover={{ y: -4, borderColor: "rgba(196,169,125,0.5)", transition: { duration: 0.2 } }}
+      className="rounded-2xl border border-secondary/15 bg-card p-6 flex flex-col items-center gap-3 cursor-pointer"
+    >
+      <Link to={href} className="flex flex-col items-center gap-3 w-full">
+        <div className="p-3 rounded-xl bg-secondary/10">
+          <Icon className="w-7 h-7 text-secondary" />
+        </div>
+        <span className="font-display text-base font-semibold text-foreground">{title}</span>
+      </Link>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// PhotoSections — main export
+// ---------------------------------------------------------------------------
 
 const PhotoSections = () => {
   const { t } = useLanguage();
-  const exploreLabel = t("bento.explore") || "Explorar";
+
+  const photoCards = [
+    {
+      title: t("sections.barber.title"),
+      subtitle: t("sections.barber.cta"),
+      href: "/categorias/clippers",
+      imageSrc: "/images/section-barber.jpg",
+      imageWebp: "/images/section-barber.webp",
+    },
+    {
+      title: t("sections.salon.title"),
+      subtitle: t("sections.salon.cta"),
+      href: "/categorias/secadores-profesionales",
+      imageSrc: "/images/section-salon.jpg",
+      imageWebp: "/images/section-salon.webp",
+    },
+    {
+      title: t("sections.mixed.title"),
+      subtitle: t("sections.mixed.cta"),
+      href: "/categorias/capas-y-delantales",
+      imageSrc: "/images/section-mixto.jpg",
+      imageWebp: "/images/section-mixto.webp",
+    },
+  ];
+
+  const iconCards = [
+    { title: t("sections.iconCards.clippers"), href: "/categorias/clippers",                      icon: Scissors },
+    { title: t("sections.iconCards.trimmers"), href: "/categorias/trimmers",                       icon: Zap },
+    { title: t("sections.iconCards.furniture"), href: "/categorias/sillones-de-barbero-hidraulico", icon: Armchair },
+  ];
 
   return (
-    <section className="py-16 md:py-24 px-4 md:px-8" style={{ background: "linear-gradient(180deg, #2D2218 0%, #3E2D1F 100%)" }}>
-      {/* Title */}
+    <section className="container mx-auto px-4 py-16 md:py-20">
+      {/* Section heading */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-center mb-10"
+        className="mb-10"
       >
-        <h2
-          className="font-display font-bold mb-3"
-          style={{ fontSize: "clamp(1.8rem, 5vw, 2.6rem)", color: "#F5F0E8" }}
-        >
-          {t("sections.exploreTitle") || "Explora Categorías"}
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
+          {t("sections.exploreTitle") ?? "Explore Categories"}
         </h2>
-        <p className="text-sm max-w-md mx-auto" style={{ color: "#C4A97D", opacity: 0.7 }}>
-          {t("sections.subtitle") || "Todo lo que tu salón necesita, organizado para ti."}
+        <p className="text-sm text-muted-foreground">
+          {t("sections.subtitle")}
         </p>
       </motion.div>
 
-      {/* 3-column grid */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-60px" }}
-        className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 max-w-5xl mx-auto"
-      >
-        {categories.map((cat) => (
-          <motion.div
-            key={cat.href}
-            variants={cardVariants}
-            className="group relative rounded-3xl overflow-hidden aspect-[3/4] sm:aspect-[3/4]"
-          >
-            <Link to={cat.href} className="block w-full h-full">
-              {/* Image */}
-              <picture>
-                <source srcSet={cat.image} type="image/webp" />
-                <img
-                  src={cat.fallback}
-                  alt={t(cat.titleKey) || cat.defaultTitle}
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
-                />
-              </picture>
-
-              {/* Glassmorphism overlay at bottom */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#2D2218]/80 via-[#2D2218]/20 to-transparent" />
-
-              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-                <div className="backdrop-blur-md bg-white/10 rounded-2xl p-4 border border-white/10">
-                  <h3
-                    className="font-display font-bold text-lg md:text-xl mb-2 leading-tight text-[#F5F0E8]"
-                  >
-                    {t(cat.titleKey) || cat.defaultTitle}
-                  </h3>
-                  <span
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-[#C4A97D] group-hover:gap-3 transition-all duration-300"
-                  >
-                    {exploreLabel} <ArrowRight className="w-4 h-4" />
-                  </span>
-                </div>
-              </div>
-            </Link>
-          </motion.div>
+      {/* Row 1 — photo cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        {photoCards.map((card, i) => (
+          <PhotoCard key={card.href} {...card} index={i} />
         ))}
-      </motion.div>
+      </div>
+
+      {/* Row 2 — icon cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {iconCards.map((card, i) => (
+          <IconCard key={card.href} {...card} index={i} />
+        ))}
+      </div>
     </section>
   );
 };
