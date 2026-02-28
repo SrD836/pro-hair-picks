@@ -428,9 +428,10 @@ export default function RecoveryTimeline() {
       return;
     }
 
-    setCalendar(result);
+    const successResult = result as RecoveryCalendarSuccess;
+    setCalendar(successResult);
     setView("calendar");
-    persistCalendar(result);
+    persistCalendar(successResult);
   }, [damageLevel, lastTreatment, porosity, scalp, phases, persistCalendar]);
 
   // ── Reset

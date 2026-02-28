@@ -56,7 +56,7 @@ async function fetchCompatibility(
     .maybeSingle();
 
   if (error) throw new Error(error.message);
-  return data;
+  return data as unknown as CompatibilityRecord | null;
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
