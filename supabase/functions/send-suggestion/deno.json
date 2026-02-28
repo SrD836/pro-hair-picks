@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "npm:nodemailer@6.9.10": "npm:nodemailer@6.9.10"
+  }
+}

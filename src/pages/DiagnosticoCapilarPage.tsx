@@ -151,7 +151,7 @@ export default function DiagnosticoCapilarPage() {
     setScores(null);
     setRiskLevel(null);
     setProducts([]);
-    setSavedSessionId(null);
+    // savedSessionId removed
     setDirection(1);
     setScreen("intro");
   }, []);

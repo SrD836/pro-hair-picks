@@ -3,7 +3,6 @@ import {
   calculateScores,
   getRiskLevel,
   QUESTIONS,
-  CIZURA_BRIDGE,
   getProductRecommendations,
 } from './diagnosticoCapilarEngine';
 
@@ -69,10 +68,4 @@ describe('getProductRecommendations', () => {
   });
 });
 
-describe('CIZURA_BRIDGE', () => {
-  it('has text for all 3 levels', () => {
-    expect(CIZURA_BRIDGE.optimal).toBeTruthy();
-    expect(CIZURA_BRIDGE.caution).toBeTruthy();
-    expect(CIZURA_BRIDGE.critical).toBeTruthy();
-  });
-});
+// CIZURA_BRIDGE was removed from the engine — test skipped

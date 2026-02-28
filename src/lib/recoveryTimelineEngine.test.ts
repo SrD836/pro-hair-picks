@@ -4,6 +4,7 @@ import {
   TREATMENT_WAIT_WEEKS,
   type RecoveryInput,
   type RecoveryPhaseRow,
+  type RecoveryCalendarSuccess,
 } from './recoveryTimelineEngine';
 
 // ── Minimal mock phase data ──────────────────────────────────────────────────
@@ -125,8 +126,9 @@ describe('generateRecoveryCalendar', () => {
     };
     const result = generateRecoveryCalendar(input, MOCK_PHASES);
     if (result.blocked) throw new Error('should not be blocked');
-    expect(result.total_weeks).toBe(4);
-    expect(result.weeks).toHaveLength(4);
+    const r = result as import('./recoveryTimelineEngine').RecoveryCalendarSuccess;
+    expect(r.total_weeks).toBe(4);
+    expect(r.weeks).toHaveLength(4);
   });
 
   it('returns 8 weeks for damage_level 8 (range 7-9)', () => {
@@ -138,8 +140,9 @@ describe('generateRecoveryCalendar', () => {
     };
     const result = generateRecoveryCalendar(input, MOCK_PHASES);
     if (result.blocked) throw new Error('should not be blocked');
-    expect(result.total_weeks).toBe(8);
-    expect(result.weeks).toHaveLength(8);
+    const r = result as RecoveryCalendarSuccess;
+    expect(r.total_weeks).toBe(8);
+    expect(r.weeks).toHaveLength(8);
   });
 
   it('each week entry has all required fields', () => {
@@ -151,7 +154,7 @@ describe('generateRecoveryCalendar', () => {
     };
     const result = generateRecoveryCalendar(input, MOCK_PHASES);
     if (result.blocked) throw new Error('should not be blocked');
-    result.weeks.forEach(week => {
+    (result as RecoveryCalendarSuccess).weeks.forEach(week => {
       expect(week.week).toBeTypeOf('number');
       expect(week.phase).toMatch(/^(hidratacion|reconstruccion|sellado|mantenimiento)$/);
       expect(week.focus).toBeTypeOf('string');
@@ -178,8 +181,10 @@ describe('generateRecoveryCalendar', () => {
     const rDecoloracion = generateRecoveryCalendar({ ...base, last_treatment: 'decoloracion' }, phases46);
     const rTinte = generateRecoveryCalendar({ ...base, last_treatment: 'tinte' }, phases46);
     if (rDecoloracion.blocked || rTinte.blocked) throw new Error('should not be blocked');
+    const d = rDecoloracion as RecoveryCalendarSuccess;
+    const ti = rTinte as RecoveryCalendarSuccess;
     // decoloracion multiplier (3) > tinte multiplier (1), so safe date should be later
-    expect(rDecoloracion.next_safe_treatment_date > rTinte.next_safe_treatment_date).toBe(true);
+    expect(d.next_safe_treatment_date > ti.next_safe_treatment_date).toBe(true);
   });
 
   it('TREATMENT_WAIT_WEEKS.decoloracion is larger than TREATMENT_WAIT_WEEKS.tinte', () => {
@@ -206,9 +211,11 @@ describe('generateRecoveryCalendar', () => {
       allPhases
     );
     if (resultAlta.blocked || resultBaja.blocked) throw new Error('should not be blocked');
+    const rAlta = resultAlta as RecoveryCalendarSuccess;
+    const rBaja = resultBaja as RecoveryCalendarSuccess;
     // alta porosity result should include the alta-only phase (week 1-2)
-    const altaWeek1 = resultAlta.weeks.find(w => w.week === 1);
-    const bajaWeek1 = resultBaja.weeks.find(w => w.week === 1);
+    const altaWeek1 = rAlta.weeks.find(w => w.week === 1);
+    const bajaWeek1 = rBaja.weeks.find(w => w.week === 1);
     // The alta-only phase should appear for alta but not for baja
     // (baja falls back to the general hidratacion_1_3 phase)
     expect(altaWeek1?.focus_simple).toBe('Texto único para alta porosidad');
