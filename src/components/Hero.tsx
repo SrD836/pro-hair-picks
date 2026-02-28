@@ -9,20 +9,18 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden flex items-center" style={{ minHeight: "92svh" }}>
       {/* Background image */}
-      <picture>
-        <source media="(max-width: 768px)" srcSet="/images/hero-barbershop-mobile.webp" type="image/webp" />
-        <source srcSet="/images/hero-barbershop.webp" type="image/webp" />
-        <img
-          src="/images/hero-barbershop.webp"
-          alt=""
-          fetchPriority="high"
-          loading="eager"
-          decoding="sync"
-          width={1920}
-          height={1080}
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-      </picture>
+      <img
+        src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1920&q=80&auto=format&fit=crop"
+        srcSet="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=75&auto=format&fit=crop 800w, https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1920&q=80&auto=format&fit=crop 1920w"
+        sizes="100vw"
+        alt=""
+        fetchPriority="high"
+        loading="eager"
+        decoding="sync"
+        width={1920}
+        height={1080}
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      />
 
       {/* Multi-layer gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#110b05]/95 via-[#110b05]/70 to-transparent" />
@@ -39,6 +37,24 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 px-6 md:px-16 max-w-2xl">
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className="mb-8"
+        >
+          <img
+            src="/logo-full.png"
+            alt="Guía del Salón"
+            width={180}
+            height={90}
+            className="h-20 w-auto brightness-0 invert opacity-90"
+            loading="eager"
+            decoding="sync"
+          />
+        </motion.div>
+
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}

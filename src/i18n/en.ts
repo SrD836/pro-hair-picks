@@ -31,22 +31,23 @@ export const en = {
   sections: {
     barber: {
       title: "Barbershop & Men",
-      subtitle: "From the perfect fade to the classic shave",
+      subtitle: "Clippers, trimmers, scissors and more",
       cta: "Explore men's products",
     },
     salon: {
       title: "Hair Salon & Women",
-      subtitle: "Tools that professionals choose every day",
+      subtitle: "Dryers, straighteners and treatments",
       cta: "Explore women's products",
     },
     mixed: {
       title: "Unisex Salon",
-      subtitle: "Equipment for salons that want it all",
+      subtitle: "Furniture and equipment",
       cta: "Explore unisex products",
     },
     categoriesLabel: "categories",
     exploreTitle: "Explore Categories",
     subtitle: "Everything your salon needs, organized for you.",
+    featured: "Featured",
     iconCards: {
       clippers: "Clippers",
       trimmers: "Trimmers",
@@ -94,7 +95,7 @@ export const en = {
     labTitle: "Laboratory",
     labSubtitle: "Diagnostics, analysis and calculators for salon professionals.",
     colorDesc: "Find the exact shade for each client based on their skin tone and base hair color.",
-    chemCompat: "INCI Check",
+    chemCompat: "Chemical Compatibility",
     chemCompatDesc: "Verify chemical compatibility between treatments. Prevent damage and reactions.",
     analysisTools: "Tool Analysis",
   },

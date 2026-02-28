@@ -104,7 +104,7 @@ const Footer = () => {
               <ul className="space-y-2.5 text-sm text-[#F5F0E8]/40">
                 <li><Link to="/diagnostico-capilar" className="hover:text-[#F5F0E8] transition-colors">Diagnóstico Capilar</Link></li>
                 <li><a href="https://guiadelsalon.com/asesor-color" className="hover:text-[#F5F0E8] transition-colors">Asesor de Color</a></li>
-                <li><Link to="/inci-check" className="hover:text-[#F5F0E8] transition-colors">INCI Check</Link></li>
+                <li><Link to="/inci-check" className="hover:text-[#F5F0E8] transition-colors">Compatibilidad Química</Link></li>
                 <li><Link to="/calculadora-roi" className="hover:text-[#F5F0E8] transition-colors">Calculadora ROI</Link></li>
               </ul>
             </div>

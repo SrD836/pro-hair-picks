@@ -31,22 +31,23 @@ export const es = {
   sections: {
     barber: {
       title: "Barbería & Hombre",
-      subtitle: "Desde el fade perfecto hasta el afeitado clásico",
+      subtitle: "Clippers, trimmers, tijeras y más",
       cta: "Explorar productos de hombre",
     },
     salon: {
       title: "Peluquería & Mujer",
-      subtitle: "Herramientas que los profesionales eligen cada día",
+      subtitle: "Secadores, planchas y tratamientos",
       cta: "Explorar productos de mujer",
     },
     mixed: {
       title: "Salón Mixto",
-      subtitle: "Equipamiento para salones que lo quieren todo",
+      subtitle: "Mobiliario y equipamiento",
       cta: "Explorar productos mixtos",
     },
     categoriesLabel: "categorías",
     exploreTitle: "Explorar Categorías",
     subtitle: "Todo lo que tu salón necesita, organizado para ti.",
+    featured: "Destacado",
     iconCards: {
       clippers: "Cortadoras",
       trimmers: "Perfiladoras",
@@ -94,7 +95,7 @@ export const es = {
     labTitle: "Laboratorio",
     labSubtitle: "Diagnósticos, análisis y calculadoras para profesionales del sector.",
     colorDesc: "Encuentra el tono exacto para cada cliente según su tono de piel y cabello base.",
-    chemCompat: "INCI Check",
+    chemCompat: "Compatibilidad Química",
     chemCompatDesc: "Verifica la compatibilidad química entre tratamientos. Evita daños y reacciones.",
     analysisTools: "Análisis de Herramientas",
   },

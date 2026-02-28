@@ -43,7 +43,7 @@ const tools = [
   {
     icon: FlaskConical,
     labelKey: "bento.chemCompat",
-    defaultLabel: "INCI Check",
+    defaultLabel: "Compatibilidad Química",
     descKey: "bento.chemCompatDesc",
     defaultDesc: "Verifica la compatibilidad química entre tratamientos. Evita daños y reacciones.",
     href: "/inci-check",
@@ -60,7 +60,7 @@ const HomeBentoGrid = () => {
   return (
     <section
       className="py-20 md:py-28 px-4 md:px-8 relative overflow-hidden"
-      style={{ background: "linear-gradient(160deg, #1E1610 0%, #2D2218 50%, #1A1008 100%)" }}
+      style={{ background: "linear-gradient(160deg, #0f0a06 0%, #1a1008 40%, #221508 100%)" }}
     >
       {/* Background decorative elements */}
       <div
@@ -119,23 +119,24 @@ const HomeBentoGrid = () => {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.55, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                whileHover={{ y: -6, boxShadow: "0 12px 40px rgba(0,0,0,0.5), 0 0 30px rgba(196,169,125,0.08)", transition: { duration: 0.2 } }}
               >
                 <Link to={tool.href} className="block h-full">
                   <div
                     className="relative rounded-2xl overflow-hidden p-6 md:p-8 flex flex-col justify-between min-h-[220px] cursor-pointer group h-full"
                     style={{
-                      background: `${tool.bgPattern}, linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)`,
-                      border: "1px solid rgba(255,255,255,0.07)",
+                      background: `${tool.bgPattern}, linear-gradient(145deg, #3a2a1a 0%, #2d2015 60%, #241a0e 100%)`,
+                      border: "1px solid rgba(196,169,125,0.15)",
                       backdropFilter: "blur(12px)",
+                      boxShadow: "0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(196,169,125,0.06)",
                     }}
                   >
                     {/* Hover glow */}
                     <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
                       style={{
-                        boxShadow: `inset 0 0 60px rgba(196,169,125,0.06)`,
-                        border: `1px solid rgba(196,169,125,0.2)`,
+                        border: "1px solid rgba(196,169,125,0.25)",
+                        boxShadow: "inset 0 0 60px rgba(196,169,125,0.08)",
                       }}
                     />
 
