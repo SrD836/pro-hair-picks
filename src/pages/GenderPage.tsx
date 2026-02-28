@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -38,7 +38,8 @@ const genderConfig = {
 };
 
 const GenderPage = () => {
-  const { gender } = useParams<{ gender: string }>();
+  const location = useLocation();
+  const gender = location.pathname.replace("/", "");
   const { lang } = useLanguage();
 
   const config = genderConfig[gender as keyof typeof genderConfig];

@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useTrendingProducts } from "@/hooks/useTrendingProducts";
 
 const categories = [
   {
@@ -40,34 +41,19 @@ const categories = [
 const PhotoSections = () => {
   const { t, lang } = useLanguage();
 
-  const trendingItems = [
-    {
-      name: "Wahl Magic Clip",
-      category: lang === "es" ? "Clippers" : "Clippers",
-      price: "89€",
-      badge: lang === "es" ? "🔥 Más vendido" : "🔥 Best seller",
-      image: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&q=80",
-      href: "/categorias/clippers",
-      accent: "#C4A97D",
-    },
-    {
-      name: "BaByliss Pro FX",
-      category: lang === "es" ? "Trimmers" : "Trimmers",
-      price: "149€",
-      badge: lang === "es" ? "⭐ Top rated" : "⭐ Top rated",
-      image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80",
-      href: "/categorias/trimmers",
-      accent: "#D4956A",
-    },
-    {
-      name: "Dyson Supersonic",
-      category: lang === "es" ? "Secadores" : "Dryers",
-      price: "429€",
-      badge: lang === "es" ? "💎 Premium" : "💎 Premium",
-      image: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=400&q=80",
-      href: "/categorias/secadores-profesionales",
-      accent: "#8BAF7C",
-    },
+  const { data: trendingProducts = [], isLoading: trendingLoading } = useTrendingProducts();
+
+  const accentColors = ["#C4A97D", "#D4956A", "#8BAF7C"];
+  const badges = [
+    lang === "es" ? "🔥 Más vendido" : "🔥 Best seller",
+    lang === "es" ? "⭐ Top rated" : "⭐ Top rated",
+    lang === "es" ? "💎 Premium" : "💎 Premium",
+  ];
+  const hrefs = ["/categorias/clippers", "/categorias/trimmers", "/categorias/secadores-profesionales"];
+  const fallbackImages = [
+    "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&q=80",
+    "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80",
+    "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=400&q=80",
   ];
 
   return (
@@ -246,67 +232,85 @@ const PhotoSections = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
-          {trendingItems.map((item, i) => (
-            <motion.div
-              key={item.name}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-            >
-              <Link
-                to={item.href}
-                className="block rounded-2xl overflow-hidden group"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: `1px solid ${item.accent}20`,
-                }}
+        {trendingLoading ? (
+          <div className="grid grid-cols-3 gap-3">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="rounded-2xl overflow-hidden animate-pulse"
+                style={{ background: "rgba(255,255,255,0.06)" }}
               >
-                {/* Image */}
-                <div className="relative h-28 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "linear-gradient(to bottom, transparent 40%, rgba(26,16,8,0.7))",
-                    }}
-                  />
-                  <span
-                    className="absolute top-2 left-2 text-[9px] font-bold px-2 py-0.5 rounded-full"
-                    style={{
-                      background: `${item.accent}25`,
-                      color: item.accent,
-                      border: `1px solid ${item.accent}40`,
-                    }}
-                  >
-                    {item.badge}
-                  </span>
+                <div className="h-28 bg-[#3a2a1a]" />
+                <div className="p-3 space-y-2">
+                  <div className="h-2 bg-[#3a2a1a] rounded w-1/2" />
+                  <div className="h-3 bg-[#3a2a1a] rounded w-3/4" />
+                  <div className="h-3 bg-[#3a2a1a] rounded w-1/3" />
                 </div>
-                {/* Info */}
-                <div className="p-3">
-                  <p
-                    className="text-[9px] uppercase tracking-wider mb-0.5"
-                    style={{ color: `${item.accent}80` }}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-3">
+            {trendingProducts.map((product, i) => {
+              const accent = accentColors[i] || "#C4A97D";
+              const badge = badges[i];
+              const href = hrefs[i] || "/categorias";
+              const imageSrc = product.image_url || fallbackImages[i];
+
+              return (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                >
+                  <Link
+                    to={href}
+                    className="block rounded-2xl overflow-hidden group"
+                    style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${accent}20` }}
                   >
-                    {item.category}
-                  </p>
-                  <p className="text-[#F5F0E8] text-xs font-semibold leading-tight mb-1.5 truncate">
-                    {item.name}
-                  </p>
-                  <p className="font-display font-bold text-sm" style={{ color: item.accent }}>
-                    {item.price}
-                  </p>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+                    {/* Image */}
+                    <div className="relative h-28 overflow-hidden bg-[#2d1f10]">
+                      <img
+                        src={imageSrc}
+                        alt={product.name}
+                        className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = fallbackImages[i];
+                        }}
+                      />
+                      <div
+                        className="absolute inset-0"
+                        style={{ background: "linear-gradient(to bottom, transparent 50%, rgba(26,16,8,0.5))" }}
+                      />
+                      <span
+                        className="absolute top-2 left-2 text-[9px] font-bold px-2 py-0.5 rounded-full"
+                        style={{ background: `${accent}25`, color: accent, border: `1px solid ${accent}40` }}
+                      >
+                        {badge}
+                      </span>
+                    </div>
+                    {/* Info */}
+                    <div className="p-3">
+                      <p className="text-[9px] uppercase tracking-wider mb-0.5" style={{ color: `${accent}80` }}>
+                        {product.category}
+                      </p>
+                      <p className="text-[#F5F0E8] text-xs font-semibold leading-tight mb-1.5 truncate">
+                        {product.name}
+                      </p>
+                      {product.current_price > 0 && (
+                        <p className="font-display font-bold text-sm" style={{ color: accent }}>
+                          {product.current_price.toFixed(2)}€
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
