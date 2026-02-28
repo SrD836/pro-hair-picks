@@ -7,18 +7,15 @@ const Hero = () => {
   const { t, lang } = useLanguage();
 
   return (
-    <section className="relative overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center">
-      {/* Background image — responsive picture */}
+    <section className="relative overflow-hidden flex items-end" style={{ minHeight: "92svh" }}>
+      {/* Background image — full bleed */}
       <picture>
         <source
           media="(max-width: 768px)"
           srcSet="/images/hero-barbershop-mobile.webp"
           type="image/webp"
         />
-        <source
-          srcSet="/images/hero-barbershop.webp"
-          type="image/webp"
-        />
+        <source srcSet="/images/hero-barbershop.webp" type="image/webp" />
         <img
           src="/images/hero-barbershop.webp"
           alt=""
@@ -31,56 +28,59 @@ const Hero = () => {
         />
       </picture>
 
-      {/* Uniform dark overlay — centre-weighted vignette */}
-      <div className="absolute inset-0 bg-background/70" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(45,34,24,0.55)_100%)]" />
+      {/* Gradient: dark from bottom, transparent top */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#110b05]/95 via-[#110b05]/55 to-transparent" />
 
-      <div className="container mx-auto px-4 py-24 md:py-36 relative z-10 flex flex-col items-center text-center">
+      {/* Content — bottom-left aligned */}
+      <div className="relative z-10 w-full px-5 pb-12 pt-32 md:pb-20 md:px-14 max-w-2xl">
         {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, y: -8 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-secondary/40 bg-secondary/10 mb-8 backdrop-blur-sm"
+          transition={{ duration: 0.45 }}
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#C4A97D]/35 bg-[#C4A97D]/10 mb-5 backdrop-blur-sm"
         >
-          <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-          <span className="text-secondary text-xs font-semibold uppercase tracking-widest">{t("hero.badge")}</span>
+          <span className="text-[#C4A97D] text-xs">🏆</span>
+          <span className="text-[#F5F0E8]/90 text-xs font-medium tracking-wide">
+            {t("hero.badge")}
+          </span>
         </motion.div>
 
-        {/* Headline */}
+        {/* Title */}
         <motion.h1
-          initial={{ opacity: 0, y: 28 }}
+          initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.3 }}
-          className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-[1.05] max-w-3xl"
+          transition={{ duration: 0.55, delay: 0.1 }}
+          className="font-display font-bold text-[#F5F0E8] leading-[1.06] mb-5"
+          style={{ fontSize: "clamp(2.4rem, 8vw, 4rem)" }}
         >
-          {t("hero.titleWords").split(",").join(" ")}{" "}
-          <span className="shimmer-gold">{t("hero.titleHighlight")}</span>{" "}
-          {t("hero.titleEnd")}
+          {lang === "es"
+            ? "El catálogo profesional que tu salón necesita"
+            : "The professional catalog your salon needs"}
         </motion.h1>
 
         {/* Subtitle */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-muted-foreground text-lg md:text-xl mb-10 max-w-xl leading-relaxed"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-[#F5F0E8]/65 text-sm md:text-base mb-8 leading-relaxed max-w-sm"
         >
           {t("hero.subtitle")}
         </motion.p>
 
-        {/* CTA Button */}
+        {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.65 }}
+          transition={{ duration: 0.45, delay: 0.3 }}
         >
           <Link
-            to="/categorias/clippers"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-secondary text-secondary-foreground font-bold hover:bg-secondary/90 transition-colors group"
+            to="/categorias"
+            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#C4A97D] text-[#2D2218] font-bold text-sm hover:bg-[#d4b98d] active:scale-95 transition-all"
           >
-            {lang === "es" ? "Explorar catálogo" : "Explore Catalog"}
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            {lang === "es" ? "Explorar Catálogo" : "Explore Catalog"}
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </motion.div>
       </div>
