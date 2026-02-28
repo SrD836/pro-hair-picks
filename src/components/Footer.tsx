@@ -13,7 +13,7 @@ const Footer = () => {
 
       {/* ── Mega Footer ── */}
       <div style={{ background: "linear-gradient(180deg, #1a1410 0%, #0f0c08 100%)" }}>
-        <div className="container mx-auto px-4 py-14">
+        <div className="max-w-4xl mx-auto px-6 md:px-8 py-14">
           {/* Logo */}
           <div className="flex justify-center mb-10">
             <Link to="/">
@@ -33,7 +33,7 @@ const Footer = () => {
           </div>
 
           {/* Links grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto md:justify-items-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 justify-items-center mb-10 text-center">
             <div>
               <h4 className="font-display font-semibold text-[#C4A97D] text-sm mb-4">{t("footer.men")}</h4>
               <ul className="space-y-2.5 text-sm text-[#F5F0E8]/40">
@@ -74,8 +74,8 @@ const Footer = () => {
           </div>
 
           {/* Bottom bar */}
-          <div className="border-t border-white/8 mt-12 pt-6 text-center text-xs text-[#F5F0E8]/25">
-            <p>{t("footer.copyright").replace("{year}", new Date().getFullYear().toString())}</p>
+          <div className="border-t border-white/8 pt-6">
+            <p className="text-[#F5F0E8]/30 text-xs text-center">{t("footer.copyright").replace("{year}", new Date().getFullYear().toString())}</p>
           </div>
         </div>
       </div>

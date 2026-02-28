@@ -197,50 +197,76 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
   );
 }
 
-/* ── Mobile: Grouped section ─────────────────────────────────────────────── */
+/* ── Mobile: Grouped section (collapsed by default) ─────────────────────── */
 function MobileGroupedSection({ label, groups, onClose }: {
   label: string;
   groups: CategoryGroup[];
   onClose: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const preview = groups.flatMap((g) => g.items).slice(0, 6);
-  const allItems = groups.flatMap((g) => g.items);
 
   return (
-    <div className="border-b border-border/40 pb-3">
-      <h3 className="font-display font-semibold text-foreground mb-2 text-sm uppercase tracking-wider text-[#C4A97D]">
-        {label}
-      </h3>
-      {expanded ? (
-        groups.map((group) => (
-          <div key={group.section} className="mb-2">
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-2 mb-1">
-              {group.section}
-            </p>
-            <div className="grid grid-cols-2 gap-1">
-              {group.items.map((item) => (
-                <Link
-                  key={item.slug}
-                  to={`/categorias/${item.slug}`}
-                  onClick={onClose}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
-                >
-                  <span>{item.icon}</span>
-                  <span className="truncate text-xs">{item.name}</span>
-                </Link>
-              ))}
+    <div className="border-b border-border/40">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center justify-between px-2 py-3 text-sm font-semibold text-[#C4A97D] uppercase tracking-wider"
+      >
+        <span>{label}</span>
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
+      </button>
+      {expanded && (
+        <div className="pb-3">
+          {groups.map((group) => (
+            <div key={group.section} className="mb-2">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-2 mb-1">
+                {group.section}
+              </p>
+              <div className="grid grid-cols-2 gap-1">
+                {group.items.map((item) => (
+                  <Link
+                    key={item.slug}
+                    to={`/categorias/${item.slug}`}
+                    onClick={onClose}
+                    className="flex items-center gap-2 px-2 py-2 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
+                  >
+                    <span>{item.icon}</span>
+                    <span className="truncate text-xs">{item.name}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        ))
-      ) : (
-        <div className="grid grid-cols-2 gap-1">
-          {preview.map((item) => (
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Mobile: Flat section (Mixto, collapsed by default) ──────────────────── */
+function MobileFlatSection({ label, items, onClose }: {
+  label: string;
+  items: CategoryItem[];
+  onClose: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="border-b border-border/40">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center justify-between px-2 py-3 text-sm font-semibold text-[#C4A97D] uppercase tracking-wider"
+      >
+        <span>{label}</span>
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
+      </button>
+      {expanded && (
+        <div className="pb-3 grid grid-cols-2 gap-1">
+          {items.map((item) => (
             <Link
               key={item.slug}
               to={`/categorias/${item.slug}`}
               onClick={onClose}
-              className="flex items-center gap-2 px-2 py-1.5 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
+              className="flex items-center gap-2 px-2 py-2 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
             >
               <span>{item.icon}</span>
               <span className="truncate text-xs">{item.name}</span>
@@ -248,42 +274,6 @@ function MobileGroupedSection({ label, groups, onClose }: {
           ))}
         </div>
       )}
-      {allItems.length > 6 && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="mt-1.5 text-xs text-[#C4A97D] font-medium px-2"
-        >
-          {expanded ? "Ver menos" : `Ver las ${allItems.length} categorías`}
-        </button>
-      )}
-    </div>
-  );
-}
-
-/* ── Mobile: Flat section (Mixto) ────────────────────────────────────────── */
-function MobileFlatSection({ label, items, onClose }: {
-  label: string;
-  items: CategoryItem[];
-  onClose: () => void;
-}) {
-  return (
-    <div className="border-b border-border/40 pb-3">
-      <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-[#C4A97D] mb-2">
-        {label}
-      </h3>
-      <div className="grid grid-cols-2 gap-1">
-        {items.map((item) => (
-          <Link
-            key={item.slug}
-            to={`/categorias/${item.slug}`}
-            onClick={onClose}
-            className="flex items-center gap-2 px-2 py-1.5 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
-          >
-            <span>{item.icon}</span>
-            <span className="truncate text-xs">{item.name}</span>
-          </Link>
-        ))}
-      </div>
     </div>
   );
 }
@@ -308,10 +298,24 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "py-2" : "py-3"}`}>
+        <div className={`
+          grid grid-cols-[1fr_auto_1fr] md:flex md:items-center md:justify-between
+          transition-all duration-300 ${scrolled ? "py-2" : "py-3"}
+        `}>
+          {/* Left col mobile: hamburger */}
+          <div className="flex items-center md:hidden">
+            <button
+              className="p-2 rounded-full hover:bg-white/8 transition-colors"
+              aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
 
-          {/* ── Logo (compact GS) ── */}
-          <Link to="/" className="flex items-center group shrink-0">
+          {/* Center col mobile / Left in desktop: Logo */}
+          <Link to="/" className="flex items-center justify-center md:justify-start group shrink-0">
             <picture>
               <source srcSet="/logo-compact-40.webp 40w, /logo-compact-80.webp 80w" type="image/webp" sizes="40px" />
               <img
@@ -319,12 +323,12 @@ const Navbar = () => {
                 alt="Guía del Salón"
                 width={40}
                 height={40}
-                className={`w-auto brightness-0 invert transition-all duration-500 group-hover:rotate-[8deg] group-hover:brightness-110 group-hover:drop-shadow-[0_0_8px_rgba(196,169,125,0.4)] ${scrolled ? "h-7" : "h-9"}`}
+                className={`w-auto brightness-0 invert transition-all duration-500 group-hover:brightness-110 group-hover:drop-shadow-[0_0_8px_rgba(196,169,125,0.4)] ${scrolled ? "h-8 md:h-7" : "h-11 md:h-9"}`}
               />
             </picture>
           </Link>
 
-          {/* ── Desktop Nav ── */}
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-0.5">
             <GroupedDropdown
               label={t("nav.men")}
@@ -367,10 +371,9 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* ── Right: Search + Language + Mobile toggle ── */}
-          <div className="flex items-center gap-1.5">
+          {/* Right col: lang + search (no hamburger here) */}
+          <div className="flex items-center justify-end gap-1.5">
             <LanguageSelector />
-            {/* Search — rounded pill icon button */}
             <Link
               to="/"
               aria-label="Buscar"
@@ -378,16 +381,6 @@ const Navbar = () => {
             >
               <Search className="w-4.5 h-4.5 text-foreground/70" />
             </Link>
-
-            {/* Mobile hamburger */}
-            <button
-              className="md:hidden p-2 rounded-full hover:bg-white/8 transition-colors"
-              aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
         </div>
       </div>
