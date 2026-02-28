@@ -54,15 +54,16 @@ const HomeBlogPreview = () => {
             transition={{ delay: i * 0.1, duration: 0.4 }}
             whileHover={{
               y: -6,
-              boxShadow: "0 20px 40px rgba(196,169,125,0.15)",
-              borderColor: "rgba(196,169,125,0.5)",
-              transition: { duration: 0.25 },
+              boxShadow: "0 20px 40px rgba(196,169,125,0.18)",
+              borderColor: "rgba(196,169,125,0.45)",
+              transition: { duration: 0.22 },
             }}
             className="rounded-2xl border border-secondary/15 bg-card overflow-hidden group"
           >
             <Link to={`/blog/${post.slug}`} className="block">
-              {post.cover_image_url && (
-                <div className="aspect-[16/9] overflow-hidden">
+              {/* Image */}
+              <div className="aspect-[16/9] overflow-hidden bg-secondary/5">
+                {post.cover_image_url ? (
                   <img
                     src={`${post.cover_image_url}?width=378&height=252&resize=cover`}
                     srcSet={`${post.cover_image_url}?width=378&height=252&resize=cover 1x, ${post.cover_image_url}?width=756&height=504&resize=cover 2x`}
@@ -73,30 +74,34 @@ const HomeBlogPreview = () => {
                     decoding="async"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                </div>
-              )}
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-secondary/20 text-4xl font-display font-bold">GS</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
               <div className="p-5">
-                <div className="flex items-center gap-3 mb-3">
+                {/* Meta row */}
+                <div className="flex items-center gap-2 mb-3">
                   {post.category && (
-                    <span className="text-xs font-bold text-secondary uppercase tracking-widest">
+                    <span className="text-[10px] font-bold text-secondary uppercase tracking-[0.12em] bg-secondary/10 px-2 py-0.5 rounded-full">
                       {post.category}
                     </span>
                   )}
                   {post.read_time_minutes && (
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground ml-auto">
                       <Clock className="w-3 h-3" />
                       {post.read_time_minutes} {t("blog.min")}
                     </span>
                   )}
                 </div>
-                <h3 className="font-display text-lg font-bold text-foreground mb-2 line-clamp-2 group-hover:text-secondary transition-colors">
+
+                {/* Title */}
+                <h3 className="font-display text-lg font-bold text-foreground line-clamp-2 group-hover:text-secondary transition-colors duration-200">
                   {(isEN && post.title_en) || post.title}
                 </h3>
-                {(post.excerpt || post.excerpt_en) && (
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {(isEN && post.excerpt_en) || post.excerpt}
-                  </p>
-                )}
               </div>
             </Link>
           </motion.article>
