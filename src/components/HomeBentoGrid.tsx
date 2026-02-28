@@ -60,7 +60,7 @@ const HomeBentoGrid = () => {
   return (
     <section
       className="py-20 md:py-28 px-4 md:px-8 relative overflow-hidden"
-      style={{ background: "linear-gradient(160deg, #0f0a06 0%, #1a1008 40%, #221508 100%)" }}
+      style={{ background: "linear-gradient(180deg, #1a1008 0%, #0f0a06 30%, #221508 100%)" }}
     >
       {/* Background decorative elements */}
       <div

@@ -25,6 +25,11 @@ const Hero = () => {
       {/* Multi-layer gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#110b05]/95 via-[#110b05]/70 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#110b05]/60 via-transparent to-[#110b05]/20" />
+      {/* Bottom gradient bridge into PhotoSections */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none"
+        style={{ background: "linear-gradient(to bottom, transparent, #1a1008)" }}
+      />
 
       {/* Animated gold accent line */}
       <motion.div
@@ -42,14 +47,14 @@ const Hero = () => {
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className="mb-8"
+          className="mb-8 flex justify-center"
         >
           <img
             src="/logo-full.png"
             alt="Guía del Salón"
-            width={180}
-            height={90}
-            className="h-20 w-auto brightness-0 invert opacity-90"
+            width={220}
+            height={110}
+            className="h-24 w-auto brightness-0 invert opacity-90 drop-shadow-[0_4px_24px_rgba(196,169,125,0.25)]"
             loading="eager"
             decoding="sync"
           />
@@ -101,7 +106,7 @@ const Hero = () => {
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <Link
-            to="/categorias/clippers"
+            to="/categorias"
             className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-bold text-sm transition-all active:scale-95 hover:shadow-[0_0_30px_rgba(196,169,125,0.4)] group"
             style={{ background: "#C4A97D", color: "#2D2218" }}
           >

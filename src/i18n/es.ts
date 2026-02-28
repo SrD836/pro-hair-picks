@@ -50,8 +50,14 @@ export const es = {
     featured: "Destacado",
     iconCards: {
       clippers: "Cortadoras",
+      clippersCount: "82+ modelos",
+      clippersDesc: "Para cortes precisos",
       trimmers: "Perfiladoras",
+      trimmersCount: "63+ modelos",
+      trimmersDesc: "Perfilado perfecto",
       furniture: "Muebles",
+      furnitureCount: "40+ opciones",
+      furnitureDesc: "Diseña tu espacio",
     },
   },
   blog: {

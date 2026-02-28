@@ -50,8 +50,14 @@ export const en = {
     featured: "Featured",
     iconCards: {
       clippers: "Clippers",
+      clippersCount: "82+ models",
+      clippersDesc: "For precise cuts",
       trimmers: "Trimmers",
+      trimmersCount: "63+ models",
+      trimmersDesc: "Perfect lining",
       furniture: "Furniture",
+      furnitureCount: "40+ options",
+      furnitureDesc: "Design your space",
     },
   },
   blog: {

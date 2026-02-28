@@ -37,9 +37,39 @@ const categories = [
 ];
 
 const shortcuts = [
-  { icon: Scissors, labelKey: "sections.iconCards.clippers", defaultLabel: "Cortadoras", href: "/categorias/clippers" },
-  { icon: Zap, labelKey: "sections.iconCards.trimmers", defaultLabel: "Perfiladoras", href: "/categorias/trimmers" },
-  { icon: Armchair, labelKey: "sections.iconCards.furniture", defaultLabel: "Mobiliario", href: "/categorias/sillones-de-barbero-hidraulico" },
+  {
+    icon: Scissors,
+    labelKey: "sections.iconCards.clippers",
+    defaultLabel: "Cortadoras",
+    countKey: "sections.iconCards.clippersCount",
+    defaultCount: "82+ modelos",
+    descKey: "sections.iconCards.clippersDesc",
+    defaultDesc: "Para cortes precisos",
+    href: "/categorias/clippers",
+    accent: "#C4A97D",
+  },
+  {
+    icon: Zap,
+    labelKey: "sections.iconCards.trimmers",
+    defaultLabel: "Perfiladoras",
+    countKey: "sections.iconCards.trimmersCount",
+    defaultCount: "63+ modelos",
+    descKey: "sections.iconCards.trimmersDesc",
+    defaultDesc: "Perfilado perfecto",
+    href: "/categorias/trimmers",
+    accent: "#D4956A",
+  },
+  {
+    icon: Armchair,
+    labelKey: "sections.iconCards.furniture",
+    defaultLabel: "Mobiliario",
+    countKey: "sections.iconCards.furnitureCount",
+    defaultCount: "40+ opciones",
+    descKey: "sections.iconCards.furnitureDesc",
+    defaultDesc: "Diseña tu espacio",
+    href: "/categorias/sillones-de-barbero-hidraulico",
+    accent: "#8BAF7C",
+  },
 ];
 
 const PhotoSections = () => {
@@ -47,7 +77,7 @@ const PhotoSections = () => {
 
   return (
     <section
-      className="py-16 md:py-24 px-4 md:px-8 relative overflow-hidden"
+      className="py-12 md:py-16 px-4 md:px-8 relative overflow-hidden"
       style={{ background: "linear-gradient(180deg, #1a1008 0%, #2D2218 100%)" }}
     >
       {/* Gold accent line top */}
@@ -208,34 +238,52 @@ const PhotoSections = () => {
             return (
               <motion.div
                 key={sc.href}
-                whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.97 }}
               >
                 <Link
                   to={sc.href}
-                  className="flex flex-col items-center justify-center gap-3 py-5 px-3 rounded-xl transition-all group"
+                  className="flex flex-col gap-3 py-5 px-4 rounded-xl transition-all group relative overflow-hidden"
                   style={{
                     background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(196,169,125,0.12)",
+                    border: `1px solid ${sc.accent}20`,
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = "rgba(196,169,125,0.07)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(196,169,125,0.25)";
+                    (e.currentTarget as HTMLElement).style.background = `${sc.accent}08`;
+                    (e.currentTarget as HTMLElement).style.borderColor = `${sc.accent}35`;
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.03)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(196,169,125,0.12)";
+                    (e.currentTarget as HTMLElement).style.borderColor = `${sc.accent}20`;
                   }}
                 >
+                  {/* Hover glow */}
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
-                    style={{ background: "rgba(196,169,125,0.1)", border: "1px solid rgba(196,169,125,0.18)" }}
-                  >
-                    <Icon className="w-4 h-4" style={{ color: "#C4A97D" }} strokeWidth={1.5} />
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-xl"
+                    style={{ background: `radial-gradient(circle at 50% 0%, ${sc.accent}12 0%, transparent 70%)` }}
+                  />
+                  <div className="flex items-center justify-between">
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                      style={{ background: `${sc.accent}15`, border: `1px solid ${sc.accent}25` }}
+                    >
+                      <Icon className="w-4 h-4" style={{ color: sc.accent }} strokeWidth={1.5} />
+                    </div>
+                    <span
+                      className="text-[10px] font-bold tabular-nums px-2 py-0.5 rounded-full"
+                      style={{ color: sc.accent, background: `${sc.accent}15` }}
+                    >
+                      {t(sc.countKey) || sc.defaultCount}
+                    </span>
                   </div>
-                  <span className="text-xs font-semibold text-center" style={{ color: "#F5F0E8", opacity: 0.75 }}>
-                    {t(sc.labelKey) || sc.defaultLabel}
-                  </span>
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: "#F5F0E8" }}>
+                      {t(sc.labelKey) || sc.defaultLabel}
+                    </p>
+                    <p className="text-[11px] mt-0.5" style={{ color: "#F5F0E8", opacity: 0.45 }}>
+                      {t(sc.descKey) || sc.defaultDesc}
+                    </p>
+                  </div>
                 </Link>
               </motion.div>
             );

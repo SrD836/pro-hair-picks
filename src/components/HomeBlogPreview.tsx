@@ -46,7 +46,7 @@ const HomeBlogPreview = () => {
   return (
     <section
       className="py-20 md:py-28 px-4 md:px-8"
-      style={{ background: "linear-gradient(180deg, #2D2218 0%, #1E1610 100%)" }}
+      style={{ background: "linear-gradient(180deg, #2D2218 0%, #1a1008 100%)" }}
     >
       <div className="max-w-5xl mx-auto">
         {/* Header */}

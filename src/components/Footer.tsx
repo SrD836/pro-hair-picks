@@ -2,61 +2,14 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { CoursesPreviewSection } from "@/components/CoursesPreview";
 
 const Footer = () => {
   const { t } = useLanguage();
 
   return (
     <footer className="relative overflow-hidden">
-      {/* ── Pre-footer CTA zone ── */}
-      <section className="relative py-20 md:py-28 px-4">
-        {/* Background image */}
-        <div className="absolute inset-0">
-          <picture>
-            <source srcSet="/images/hero-barbershop.webp" type="image/webp" />
-            <img
-              src="/images/hero-barbershop.jpg"
-              alt=""
-              className="w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-          </picture>
-          <div className="absolute inset-0 bg-[#2D2218]/90 backdrop-blur-sm" />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="relative z-10 max-w-2xl mx-auto text-center"
-        >
-          <h2
-            className="font-display font-bold mb-4"
-            style={{ fontSize: "clamp(1.8rem, 5vw, 2.8rem)", color: "#F5F0E8" }}
-          >
-            {t("footer.ctaTitle") || "¿Listo para elevar tu salón?"}
-          </h2>
-          <p className="text-[#F5F0E8]/50 text-sm md:text-base mb-8 max-w-md mx-auto">
-            {t("footer.ctaSubtitle") || "Explora herramientas, productos y recursos pensados para profesionales como tú."}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/categorias"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold text-sm transition-all active:scale-95"
-              style={{ background: "#C4A97D", color: "#2D2218" }}
-            >
-              {t("footer.ctaButton") || "Explorar Catálogo"} <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              to="/diagnostico-capilar"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-medium border border-[#F5F0E8]/15 text-[#F5F0E8]/80 hover:text-[#F5F0E8] hover:border-[#F5F0E8]/30 hover:bg-white/5 transition-all"
-            >
-              🔬 {t("bento.diagnosticoTitle") || "Diagnóstico Capilar"}
-            </Link>
-          </div>
-        </motion.div>
-      </section>
+      <CoursesPreviewSection />
 
       {/* ── Mega Footer ── */}
       <div style={{ background: "linear-gradient(180deg, #1a1410 0%, #0f0c08 100%)" }}>
@@ -80,7 +33,7 @@ const Footer = () => {
           </div>
 
           {/* Links grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto md:justify-items-center">
             <div>
               <h4 className="font-display font-semibold text-[#C4A97D] text-sm mb-4">{t("footer.men")}</h4>
               <ul className="space-y-2.5 text-sm text-[#F5F0E8]/40">
