@@ -58,8 +58,13 @@
 
     --footer-bg: 26 33% 5%;
 
+    --mocha: 20 33% 18%;
+    --cocoa: 20 26% 23%;
+
     --gradient-hero: linear-gradient(135deg, hsla(24, 29%, 9%, 0.85) 0%, transparent 100%);
     --gradient-card-hover: linear-gradient(135deg, hsl(23, 30%, 15%) 0%, hsl(23, 30%, 13%) 100%);
+    --gradient-mocha: linear-gradient(160deg, hsl(20, 33%, 18%) 0%, hsl(24, 29%, 9%) 100%);
+    --gradient-cocoa: linear-gradient(160deg, hsl(20, 26%, 23%) 0%, hsl(20, 33%, 18%) 100%);
 
     --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
     --shadow-card-hover: 0 4px 20px rgba(196, 169, 125, 0.15);
