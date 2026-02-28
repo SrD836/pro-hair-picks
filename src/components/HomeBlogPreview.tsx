@@ -1,105 +1,118 @@
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Clock } from "lucide-react";
+import { Clock, ChevronRight } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/i18n/LanguageContext";
+
+interface Post {
+  slug: string;
+  title: string;
+  title_en?: string;
+  cover_image_url?: string;
+  category?: string;
+  read_time_minutes?: number;
+}
 
 const HomeBlogPreview = () => {
   const { t, lang } = useLanguage();
   const isEN = lang === "en";
-  const { data: posts } = useQuery({
-    queryKey: ["blog-preview"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("blog_posts")
-        .select("slug, title, title_en, excerpt, excerpt_en, cover_image_url, category, published_at, read_time_minutes")
-        .eq("is_published", true)
-        .order("published_at", { ascending: false })
-        .limit(3);
-      return data ?? [];
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutos — evita refetch en navegación
-  });
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [activeDot, setActiveDot] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  if (!posts || posts.length === 0) return null;
+  useEffect(() => {
+    supabase
+      .from("blog_posts")
+      .select("slug,title,title_en,cover_image_url,category,read_time_minutes")
+      .eq("published", true)
+      .order("published_at", { ascending: false })
+      .limit(6)
+      .then(({ data }) => { if (data) setPosts(data); });
+  }, []);
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el || !posts.length) return;
+    const cardWidth = el.scrollWidth / posts.length;
+    const dot = Math.round(el.scrollLeft / cardWidth);
+    setActiveDot(Math.min(dot, posts.length - 1));
+  };
+
+  const scrollTo = (i: number) => {
+    const el = scrollRef.current;
+    if (!el || !posts.length) return;
+    el.scrollTo({ left: (el.scrollWidth / posts.length) * i, behavior: "smooth" });
+  };
+
+  if (!posts.length) return null;
 
   return (
-    <section className="container mx-auto px-4 py-16 md:py-20">
-      <div className="flex items-center justify-between mb-10">
+    <section className="py-10 md:py-14">
+      {/* Header */}
+      <div className="px-4 md:px-8 flex items-center justify-between mb-6 max-w-screen-xl mx-auto">
         <motion.h2
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="font-display text-3xl md:text-4xl font-bold text-foreground"
+          className="font-display text-3xl md:text-4xl font-bold text-[#F5F0E8]"
         >
           {t("blog.latestArticles")}
         </motion.h2>
         <Link
           to="/blog"
-          className="hidden md:inline-flex items-center gap-1.5 text-secondary text-sm font-semibold hover:text-secondary/80 transition-colors group"
+          className="hidden md:inline-flex items-center gap-1 text-[#C4A97D] text-sm font-medium hover:underline"
         >
-          {t("blog.viewAll")}
-          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          {t("blog.viewAll")} <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {/* Horizontal scroll carousel */}
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex gap-3 overflow-x-auto px-4 md:px-8 pb-3 snap-x snap-mandatory scrollbar-none"
+        style={{ scrollPaddingLeft: "1rem" }}
+      >
         {posts.map((post, i) => (
           <motion.article
             key={post.slug}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.1, duration: 0.4 }}
-            whileHover={{
-              y: -6,
-              boxShadow: "0 20px 40px rgba(196,169,125,0.18)",
-              borderColor: "rgba(196,169,125,0.45)",
-              transition: { duration: 0.22 },
-            }}
-            className="rounded-2xl border border-secondary/15 bg-card overflow-hidden group"
+            transition={{ delay: i * 0.07, duration: 0.4 }}
+            className="flex-shrink-0 rounded-2xl border border-[#C4A97D]/10 bg-[#2D2218] overflow-hidden snap-start group"
+            style={{ width: "68vw", maxWidth: "260px" }}
           >
             <Link to={`/blog/${post.slug}`} className="block">
-              {/* Image */}
-              <div className="aspect-[16/9] overflow-hidden bg-secondary/5">
-                {post.cover_image_url ? (
+              {post.cover_image_url && (
+                <div className="aspect-video overflow-hidden">
                   <img
-                    src={`${post.cover_image_url}?width=378&height=252&resize=cover`}
-                    srcSet={`${post.cover_image_url}?width=378&height=252&resize=cover 1x, ${post.cover_image_url}?width=756&height=504&resize=cover 2x`}
-                    alt={post.title}
-                    width={378}
-                    height={252}
+                    src={`${post.cover_image_url}?width=400&height=225&resize=cover`}
+                    alt={(isEN && post.title_en) || post.title}
+                    width={400}
+                    height={225}
                     loading="lazy"
                     decoding="async"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-secondary/20 text-4xl font-display font-bold">GS</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Content */}
-              <div className="p-5">
-                {/* Meta row */}
-                <div className="flex items-center gap-2 mb-3">
+                </div>
+              )}
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
                   {post.category && (
-                    <span className="text-[10px] font-bold text-secondary uppercase tracking-[0.12em] bg-secondary/10 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold text-[#C4A97D] uppercase tracking-widest">
                       {post.category}
                     </span>
                   )}
                   {post.read_time_minutes && (
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground ml-auto">
-                      <Clock className="w-3 h-3" />
+                    <span className="flex items-center gap-1 text-[10px] text-[#F5F0E8]/45 ml-auto">
+                      <Clock className="w-2.5 h-2.5" />
                       {post.read_time_minutes} {t("blog.min")}
                     </span>
                   )}
                 </div>
-
-                {/* Title */}
-                <h3 className="font-display text-lg font-bold text-foreground line-clamp-2 group-hover:text-secondary transition-colors duration-200">
+                <h3 className="font-display text-sm font-bold text-[#F5F0E8] leading-snug line-clamp-3 group-hover:text-[#C4A97D] transition-colors">
                   {(isEN && post.title_en) || post.title}
                 </h3>
               </div>
@@ -108,13 +121,27 @@ const HomeBlogPreview = () => {
         ))}
       </div>
 
-      <div className="mt-8 text-center md:hidden">
+      {/* Scroll dots — mobile only */}
+      <div className="flex justify-center gap-1.5 mt-3 md:hidden">
+        {posts.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollTo(i)}
+            aria-label={`Slide ${i + 1}`}
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              i === activeDot ? "w-5 bg-[#C4A97D]" : "w-1.5 bg-[#C4A97D]/25"
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Mobile "Ver todo" */}
+      <div className="px-4 mt-5 md:hidden">
         <Link
           to="/blog"
-          className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold hover:bg-secondary/90 transition-colors"
+          className="flex items-center justify-center gap-1.5 w-full py-3 rounded-xl border border-[#C4A97D]/20 text-[#C4A97D] text-sm font-semibold hover:bg-[#C4A97D]/10 transition-colors"
         >
-          {t("blog.viewAll")}
-          <ArrowRight className="w-4 h-4" />
+          {t("blog.viewAll")} <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
     </section>

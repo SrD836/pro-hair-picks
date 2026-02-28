@@ -97,6 +97,10 @@
 ::-webkit-scrollbar { width: 6px; background: hsl(24, 29%, 9%); }
 ::-webkit-scrollbar-thumb { background: hsl(37, 39%, 63%); border-radius: 3px; }
 
+/* ── Hide scrollbar utility (horizontal carousels) ── */
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
 /* ── Text selection ─────────────────────────── */
 ::selection { background: hsl(37, 39%, 63%); color: hsl(24, 29%, 9%); }
 
