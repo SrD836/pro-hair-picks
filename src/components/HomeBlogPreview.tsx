@@ -8,16 +8,25 @@ import { useLanguage } from "@/i18n/LanguageContext";
 interface Post {
   slug: string;
   title: string;
-  title_en?: string;
-  excerpt?: string;
-  excerpt_en?: string;
-  cover_image_url?: string;
-  category?: string;
+  title_en?: string | null;
+  excerpt?: string | null;
+  excerpt_en?: string | null;
+  cover_image_url?: string | null;
+  category?: string | null;
 }
 
-function FeedCard({ post, index, isEN, readMoreLabel }: {
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
+};
+
+function BlogCard({ post, isEN, readMoreLabel }: {
   post: Post;
-  index: number;
   isEN: boolean;
   readMoreLabel: string;
 }) {
@@ -26,62 +35,44 @@ function FeedCard({ post, index, isEN, readMoreLabel }: {
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.4 }}
-      className="flex gap-4 py-4"
-      style={{ borderBottom: "1px solid rgba(45,34,24,0.1)" }}
+      variants={cardVariants}
+      className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#3E2D1F] to-[#2D2218] border border-white/8"
     >
-      {/* Thumbnail */}
+      {/* Image */}
       {post.cover_image_url && (
-        <Link
-          to={`/blog/${post.slug}`}
-          className="flex-shrink-0 rounded-xl overflow-hidden"
-          style={{ width: 100, height: 80 }}
-        >
+        <Link to={`/blog/${post.slug}`} className="block aspect-[16/10] overflow-hidden">
           <img
-            src={`${post.cover_image_url}?width=200&height=160&resize=cover`}
+            src={`${post.cover_image_url}?width=600&height=375&resize=cover`}
             alt={title}
-            width={100}
-            height={80}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
         </Link>
       )}
 
-      {/* Text */}
-      <div className="flex-1 min-w-0 flex flex-col justify-between">
-        <div>
-          <h3
-            className="font-display font-bold text-sm md:text-base leading-snug line-clamp-2 mb-1"
-            style={{ color: "#2D2218" }}
-          >
-            <Link to={`/blog/${post.slug}`} className="hover:opacity-70 transition-opacity">
-              {title}
-            </Link>
-          </h3>
-          {excerpt && (
-            <p
-              className="text-xs leading-relaxed line-clamp-2 mb-2"
-              style={{ color: "#2D2218", opacity: 0.55 }}
-            >
-              {excerpt}
-            </p>
-          )}
-        </div>
+      {/* Content */}
+      <div className="p-5">
+        {post.category && (
+          <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-[#C4A97D] mb-2">
+            {post.category}
+          </span>
+        )}
+        <h3 className="font-display font-bold text-base md:text-lg leading-snug line-clamp-2 mb-2 text-[#F5F0E8]">
+          <Link to={`/blog/${post.slug}`} className="hover:opacity-80 transition-opacity">
+            {title}
+          </Link>
+        </h3>
+        {excerpt && (
+          <p className="text-xs leading-relaxed line-clamp-2 mb-3 text-[#F5F0E8]/50">
+            {excerpt}
+          </p>
+        )}
         <Link
           to={`/blog/${post.slug}`}
-          className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg self-start transition-all active:scale-95"
-          style={{
-            background: "#F5F0E8",
-            color: "#2D2218",
-            border: "1px solid rgba(45,34,24,0.2)",
-          }}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C4A97D] group-hover:gap-3 transition-all duration-300"
         >
-          {readMoreLabel} <ArrowRight className="w-3 h-3" />
+          {readMoreLabel} <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
     </motion.article>
@@ -94,58 +85,63 @@ const HomeBlogPreview = () => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    supabase
-      .from("blog_posts")
-      .select("slug,title,title_en,excerpt,excerpt_en,cover_image_url,category")
-      .eq("published", true)
-      .order("published_at", { ascending: false })
-      .limit(3)
-      .then(({ data }) => { if (data) setPosts(data); });
+    const fetchPosts = async () => {
+      const { data } = await supabase
+        .from("blog_posts")
+        .select("slug,title,title_en,excerpt,excerpt_en,cover_image_url,category")
+        .eq("is_published", true)
+        .order("published_at", { ascending: false })
+        .limit(3);
+      if (data) setPosts(data as Post[]);
+    };
+    fetchPosts();
   }, []);
 
   if (!posts.length) return null;
 
   return (
-    <section className="py-12 md:py-16 px-4 md:px-8" style={{ background: "#F5F0E8" }}>
-      <div className="max-w-2xl mx-auto">
+    <section className="py-16 md:py-24 px-4 md:px-8" style={{ background: "#2D2218" }}>
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <motion.h2
-          initial={{ opacity: 0, y: 12 }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="font-display font-bold text-center mb-6"
-          style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)", color: "#2D2218" }}
+          className="text-center mb-10"
         >
-          {t("blog.latestArticles") || "Feed de Noticias"}
-        </motion.h2>
+          <h2
+            className="font-display font-bold mb-3"
+            style={{ fontSize: "clamp(1.8rem, 5vw, 2.6rem)", color: "#F5F0E8" }}
+          >
+            {t("blog.latestArticles") || "Últimos Artículos"}
+          </h2>
+        </motion.div>
 
-        {/* Feed list */}
-        <div
-          className="rounded-xl overflow-hidden px-4"
-          style={{ border: "1px solid rgba(45,34,24,0.12)", background: "#F5F0E8" }}
+        {/* Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5"
         >
-          {posts.map((post, i) => (
-            <FeedCard
+          {posts.map((post) => (
+            <BlogCard
               key={post.slug}
               post={post}
-              index={i}
               isEN={isEN}
               readMoreLabel={t("blog.readMore") || "Leer Más"}
             />
           ))}
-        </div>
+        </motion.div>
 
         {/* View all */}
-        <div className="text-center mt-5">
+        <div className="text-center mt-10">
           <Link
             to="/blog"
-            className="inline-flex items-center gap-1.5 px-6 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95"
-            style={{
-              background: "#2D2218",
-              color: "#F5F0E8",
-            }}
+            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95 border border-[#C4A97D]/30 text-[#C4A97D] hover:bg-[#C4A97D]/10"
           >
-            {t("blog.viewAll")} <ArrowRight className="w-4 h-4" />
+            {t("blog.viewAll") || "Ver Todos"} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

@@ -310,7 +310,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "py-2" : "py-3"}`}>
 
-          {/* ── Logo ── */}
+          {/* ── Logo (compact GS) ── */}
           <Link to="/" className="flex items-center group shrink-0">
             <picture>
               <source srcSet="/logo-compact-40.webp 40w, /logo-compact-80.webp 80w" type="image/webp" sizes="40px" />
@@ -319,7 +319,7 @@ const Navbar = () => {
                 alt="Guía del Salón"
                 width={40}
                 height={40}
-                className={`w-auto brightness-0 invert transition-all duration-300 group-hover:rotate-[5deg] ${scrolled ? "h-7" : "h-9"}`}
+                className={`w-auto brightness-0 invert transition-all duration-500 group-hover:rotate-[8deg] group-hover:brightness-110 group-hover:drop-shadow-[0_0_8px_rgba(196,169,125,0.4)] ${scrolled ? "h-7" : "h-9"}`}
               />
             </picture>
           </Link>
