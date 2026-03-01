@@ -1,0 +1,644 @@
+[
+  {
+    "id": "ppd",
+    "inci_name": "p-Phenylenediamine",
+    "common_name": "PPD / Para-fenilendiamina",
+    "cas_number": "106-50-3",
+    "category": "colorant",
+    "function_technical": "Colorante oxidativo primario. Reacciona con peróxido de hidrógeno formando polímeros coloreados de alto peso molecular que quedan atrapados en la corteza capilar. Proporciona resultados de color permanentes y alta cobertura de canas.",
+    "function_simple": "Colorante que hace que el tinte sea permanente. Abre la fibra del cabello y crea el color de forma duradera, pero con el tiempo puede causar alergia grave.",
+    "risks": {
+      "irritation": "high",
+      "sensitization": "high",
+      "endocrine_disruption": "no",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Alta estabilidad del color y excelente cobertura de canas. Índice de reflectividad espectral amplio para reproducir tonos naturales. Insustituible en tintes oxidativos de alta cobertura.",
+    "profile_sensitive_scalp": {
+      "level": "red",
+      "note": "Sensibilizador de contacto tipo IV potente. Alto riesgo de eccema alérgico de contacto. Evitar en dermatitis seborreica o atópica activa."
+    },
+    "profile_allergy": {
+      "level": "red",
+      "note": "Alergia de contacto tipo IV (hipersensibilidad retardada) más prevalente en dermatología profesional. Contraindicado con alergia previa documentada al PPD o aminas aromáticas. Puede causar angioedema severo o anafilaxia."
+    },
+    "profile_pregnancy": {
+      "level": "yellow",
+      "note": "Estudios in vitro confirman penetración dérmica. SCCS recomienda precaución. Evitar en primer trimestre; minimizar tiempo de contacto y garantizar ventilación."
+    },
+    "eu_restriction": "Permitido en Annex III del Reglamento (CE) 1223/2009. Prohibido en tintes de pestañas y cejas. Etiquetado obligatorio: 'Puede causar reacciones alérgicas', 'Contiene fenilendiaminas'.",
+    "max_concentration_eu": "6% en producto oxidativo listo para aplicar",
+    "sources": [
+      {
+        "organism": "SCCS",
+        "document": "SCCS/1608/19 — Opinion on p-Phenylenediamine",
+        "year": 2019,
+        "url": "https://health.ec.europa.eu/document/download/88388be0-74f3-4675-95cd-f42c1d47b402_en"
+      },
+      {
+        "organism": "CIR",
+        "document": "Safety Assessment of p-Phenylenediamine — TAR December 2023",
+        "year": 2023,
+        "url": "https://www.cir-safety.org/sites/default/files/TAR_Phenylenediamine_122023.pdf"
+      },
+      {
+        "organism": "ECHA",
+        "document": "p-Phenylenediamine — Substance Information",
+        "year": 2024,
+        "url": "https://echa.europa.eu/substance-information/-/substanceinfo/100.003.096"
+      }
+    ]
+  },
+  {
+    "id": "ammonia",
+    "inci_name": "Ammonia",
+    "common_name": "Amoniaco / Hidróxido de amonio",
+    "cas_number": "7664-41-7",
+    "category": "alkaline_agent",
+    "function_technical": "Agente alcalinizante. Eleva el pH a 9–11 para abrir las escamas de la cutícula capilar y facilitar la penetración del colorante oxidativo. Activa el peróxido de hidrógeno para la oxidación del pigmento capilar natural.",
+    "function_simple": "Abre la cutícula del cabello para que el tinte penetre. Responsable del olor fuerte en los tintes. Irrita las vías respiratorias si se inhala en espacios mal ventilados.",
+    "risks": {
+      "irritation": "moderate",
+      "sensitization": "low",
+      "endocrine_disruption": "no",
+      "respiratory": "high",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Alcalinizante rápido y eficaz. Maximiza penetración del colorante y cobertura de canas. Alternativas ammonia-free ofrecen menor penetración y menor cobertura.",
+    "profile_sensitive_scalp": {
+      "level": "yellow",
+      "note": "Irritante a concentraciones altas en contacto prolongado con cuero cabelludo. Reducir tiempo de exposición y garantizar ventilación."
+    },
+    "profile_allergy": {
+      "level": "green",
+      "note": "No es sensibilizador de contacto tipo IV. No hay alergia inmunológica documentada al amoniaco en uso cosmético habitual."
+    },
+    "profile_pregnancy": {
+      "level": "yellow",
+      "note": "Los vapores son irritantes respiratorios. Evitar inhalación prolongada. Usar siempre en locales bien ventilados. Sin datos de teratogenicidad a concentraciones cosméticas habituales."
+    },
+    "eu_restriction": "Sin entrada específica en Annex II/III del Reglamento (CE) 1223/2009 para tintes capilares. Regulado por directivas de seguridad laboral (Directiva 98/24/CE).",
+    "max_concentration_eu": "Sin límite específico para uso cosmético (CIR referencia: hasta 6% efectivo en tintes oxidativos)",
+    "sources": [
+      {
+        "organism": "CIR",
+        "document": "Safety Assessment of Ammonia and Ammonium Hydroxide as Used in Cosmetics",
+        "year": 2016,
+        "url": "https://www.cir-safety.org/sites/default/files/Ammonia%20and%20Ammonia%20Hydroxide.pdf"
+      },
+      {
+        "organism": "FDA",
+        "document": "Cosmetics Safety Q&A: Hair Dyes",
+        "year": 2023,
+        "url": "https://www.fda.gov/cosmetics/resources-consumers-cosmetics/cosmetics-safety-qa-hair-dyes"
+      }
+    ]
+  },
+  {
+    "id": "resorcinol",
+    "inci_name": "Resorcinol",
+    "common_name": "Resorcinol / 1,3-bencenodiol",
+    "cas_number": "108-46-3",
+    "category": "colorant",
+    "function_technical": "Copulante oxidativo. Reacciona con intermediarios de color (PPD) durante la oxidación formando complejos cromóforos para tonos rojizos y cobrizos. También con efecto queratolítico secundario.",
+    "function_simple": "Ingrediente del tinte que crea los matices y reflejos de color. La OMS ha confirmado que altera el sistema tiroideo; la UE lo mantiene permitido pero con límites estrictos.",
+    "risks": {
+      "irritation": "moderate",
+      "sensitization": "moderate",
+      "endocrine_disruption": "confirmed",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Imprescindible para tonos rojizos y cobrizos de alta saturación. Amplía el espectro cromático. Efecto queratolítico secundario beneficioso.",
+    "profile_sensitive_scalp": {
+      "level": "yellow",
+      "note": "Irritante dérmico moderado. En dermatitis seborreica puede exacerbar la inflamación. Usar a concentraciones mínimas."
+    },
+    "profile_allergy": {
+      "level": "yellow",
+      "note": "Sensibilizador de contacto moderado. Reactividad cruzada documentada con PPD en pacientes alérgicos."
+    },
+    "profile_pregnancy": {
+      "level": "red",
+      "note": "Disruptor endocrino del eje tiroideo confirmado por evidencia científica (OMS). El SCCS reconoce esta propiedad. Evitar durante el embarazo y la lactancia por principio de precaución."
+    },
+    "eu_restriction": "Annex III, entrada 22 del Reglamento (CE) 1223/2009. Modificado por Commission Regulation (EU) 2022/2195. Solo autorizado en tintes oxidativos y lociones/champús bajo condiciones estrictas.",
+    "max_concentration_eu": "1.25% en tintes oxidativos; 0.5% en lociones y champús",
+    "sources": [
+      {
+        "organism": "SCCS",
+        "document": "SCCS/1619/20 — Opinion on Resorcinol",
+        "year": 2022,
+        "url": "https://health.ec.europa.eu/system/files/2022-08/sccs_o_241.pdf"
+      },
+      {
+        "organism": "ECHA",
+        "document": "Endocrine Disruptor Assessment — Resorcinol",
+        "year": 2024,
+        "url": "https://echa.europa.eu/ed-assessment/-/dislist/details/0b0236e1842682c7"
+      },
+      {
+        "organism": "EUR-Lex",
+        "document": "Commission Regulation (EU) 2022/2195",
+        "year": 2022,
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32022R2195"
+      }
+    ]
+  },
+  {
+    "id": "sls",
+    "inci_name": "Sodium Lauryl Sulfate",
+    "common_name": "SLS / Lauril Sulfato Sódico",
+    "cas_number": "151-21-3",
+    "category": "surfactant",
+    "function_technical": "Surfactante aniónico de alta potencia. Reduce la tensión superficial incorporando su cadena alquílica en membranas lipídicas. Agente limpiador, espumante y emulsificante. Penetra el estrato córneo y puede alterar la función barrera cutánea.",
+    "function_simple": "El ingrediente que hace espuma en champús y jabones. Muy eficaz limpiando, pero irrita la piel con facilidad, especialmente con uso frecuente o en pieles sensibles.",
+    "risks": {
+      "irritation": "high",
+      "sensitization": "low",
+      "endocrine_disruption": "no",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Excelente poder detergente y espumante. Bajo costo, alta estabilidad, biodegradable. Eficacia antimicrobiana secundaria.",
+    "profile_sensitive_scalp": {
+      "level": "red",
+      "note": "Irritante cutáneo confirmado a partir del 2%. El uso repetido daña la función barrera y exacerba dermatitis seborreica y atópica. Evitar en cuero cabelludo sensible."
+    },
+    "profile_allergy": {
+      "level": "yellow",
+      "note": "No es sensibilizador primario tipo IV. Pero aumenta la permeabilidad cutánea a otros alérgenos y puede exacerbar eccemas preexistentes."
+    },
+    "profile_pregnancy": {
+      "level": "green",
+      "note": "Sin datos de toxicidad reproductiva documentada a concentraciones cosméticas. Sin restricciones específicas por embarazo."
+    },
+    "eu_restriction": "Sin restricción específica en Annex III del Reglamento (CE) 1223/2009. CIR recomienda preferir en productos de enjuague (rinse-off) y evitar contacto prolongado.",
+    "max_concentration_eu": "Sin límite máximo establecido (CIR: safe with qualifications para rinse-off)",
+    "sources": [
+      {
+        "organism": "CIR",
+        "document": "Amended Safety Assessment of Sodium Lauryl Sulfate",
+        "year": 2005,
+        "url": "https://www.cir-safety.org/sites/default/files/imports/alerts.pdf"
+      },
+      {
+        "organism": "PubMed",
+        "document": "Human and Environmental Toxicity of Sodium Lauryl Sulfate — Environ Health Insights 2015",
+        "year": 2015,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/26617461/"
+      },
+      {
+        "organism": "PubMed",
+        "document": "Long-term repetitive SLS-induced irritation — Contact Dermatitis 2006",
+        "year": 2006,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/16283906/"
+      }
+    ]
+  },
+  {
+    "id": "sles",
+    "inci_name": "Sodium Laureth Sulfate",
+    "common_name": "SLES / Laureth Sulfato Sódico",
+    "cas_number": "9004-82-4",
+    "category": "surfactant",
+    "function_technical": "Surfactante aniónico etoxilado. Similar al SLS pero con cadena etoxilada que reduce la irritación cutánea. Menor capacidad de penetración en el estrato córneo. Puede contener trazas de 1,4-dioxano como subproducto de la etoxilación.",
+    "function_simple": "Versión más suave del SLS: limpia y espuma bien con menos irritación. Puede contener trazas de 1,4-dioxano (contaminante vigilado) según el proceso de fabricación.",
+    "risks": {
+      "irritation": "moderate",
+      "sensitization": "low",
+      "endocrine_disruption": "no",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Mejor perfil de tolerancia dérmico que el SLS. Alta espumosidad y poder limpiador. Ampliamente disponible y económico.",
+    "profile_sensitive_scalp": {
+      "level": "yellow",
+      "note": "Menos irritante que SLS pero puede exacerbar la barrera cutánea comprometida con uso muy frecuente. Preferir alternativas más suaves como coco glucósidos en pieles muy sensibles."
+    },
+    "profile_allergy": {
+      "level": "green",
+      "note": "No es sensibilizador de contacto tipo IV confirmado según CIR 2010. Sin antecedentes significativos de alergia inmunológica."
+    },
+    "profile_pregnancy": {
+      "level": "green",
+      "note": "Sin datos de toxicidad reproductiva a concentraciones cosméticas. Verificar que el producto esté libre de 1,4-dioxano (límite técnico recomendado: <10 ppm)."
+    },
+    "eu_restriction": "Sin restricción específica en Annex III. Las trazas de 1,4-dioxano son objeto de seguimiento por ECHA.",
+    "max_concentration_eu": "Sin límite máximo establecido",
+    "sources": [
+      {
+        "organism": "PubMed",
+        "document": "Final report amended safety assessment sodium laureth sulfate — Int J Toxicol 2010",
+        "year": 2010,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/20634505/"
+      }
+    ]
+  },
+  {
+    "id": "methylparaben",
+    "inci_name": "Methylparaben",
+    "common_name": "Metilparabeno / Conservante E218",
+    "cas_number": "99-76-3",
+    "category": "preservative",
+    "function_technical": "Conservante antimicrobiano de amplio espectro. Inhibe el crecimiento de hongos y bacterias mediante disrupción de la membrana celular microbiana. Mayor actividad frente a mohos y levaduras que frente a bacterias gramnegativas.",
+    "function_simple": "Conservante que evita que el producto se contamine con bacterias u hongos. El SCCS concluyó en 2024 que es seguro en las concentraciones permitidas.",
+    "risks": {
+      "irritation": "low",
+      "sensitization": "low",
+      "endocrine_disruption": "suspected",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Alta eficacia conservante a bajas concentraciones. Estable en amplio rango de pH. Largo historial de uso y seguridad bien documentada. Bajo costo.",
+    "profile_sensitive_scalp": {
+      "level": "green",
+      "note": "Raramente provoca irritación o sensibilización en cuero cabelludo. Perfil de tolerancia favorable según SCCS/1652/23 (2024)."
+    },
+    "profile_allergy": {
+      "level": "yellow",
+      "note": "Paradoja del parabeno: raramente sensibiliza en piel sana, pero puede provocar reacción en piel dañada o con eccema activo. Riesgo de sensibilización bajo según CIR y SCCS."
+    },
+    "profile_pregnancy": {
+      "level": "yellow",
+      "note": "Débil actividad estrogénica documentada in vitro. El SCCS/1652/23 (2024) concluye que no hay evidencia suficiente de riesgo real a concentraciones permitidas, pero la incertidumbre científica persiste."
+    },
+    "eu_restriction": "Annex V del Reglamento (CE) 1223/2009. Prohibido en productos para zona del pañal en niños menores de 3 años.",
+    "max_concentration_eu": "0.4% como ácido (SCCS/1652/23, 2024); suma total parabenos autorizados ≤ 0.8%",
+    "sources": [
+      {
+        "organism": "SCCS",
+        "document": "SCCS/1652/23 — Opinion on Methylparaben (Corrigendum Feb 2024)",
+        "year": 2024,
+        "url": "https://health.ec.europa.eu/system/files/2023-12/sccs_o_276_final.pdf"
+      },
+      {
+        "organism": "SCCS",
+        "document": "SCCS/1623/20 — Opinion on Parabens",
+        "year": 2022,
+        "url": "https://health.ec.europa.eu/system/files/2022-08/sccs_o_243.pdf"
+      }
+    ]
+  },
+  {
+    "id": "propylparaben",
+    "inci_name": "Propylparaben",
+    "common_name": "Propilparabeno / Conservante E216",
+    "cas_number": "94-13-3",
+    "category": "preservative",
+    "function_technical": "Conservante lipofílico de amplio espectro. Mayor actividad antifúngica que el metilparabeno. Buena distribución en fases lipídicas de emulsiones. Frecuentemente combinado con metilparabeno para ampliar el espectro antimicrobiano.",
+    "function_simple": "Conservante que protege cremas y lociones de hongos y bacterias. Tiene una débil actividad similar a los estrógenos, lo que provocó restricciones más estrictas en la UE.",
+    "risks": {
+      "irritation": "low",
+      "sensitization": "low",
+      "endocrine_disruption": "suspected",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Alta eficacia antifúngica. Complementa al metilparabeno en mezclas conservantes. Estable en amplio rango de condiciones de formulación.",
+    "profile_sensitive_scalp": {
+      "level": "green",
+      "note": "Bajo potencial irritante. Bien tolerado en cuero cabelludo a las concentraciones permitidas."
+    },
+    "profile_allergy": {
+      "level": "yellow",
+      "note": "Paradoja del parabeno aplicable. Muy infrecuente como sensibilizador primario pero puede reactivar eccemas preexistentes."
+    },
+    "profile_pregnancy": {
+      "level": "red",
+      "note": "Actividad estrogénica débil confirmada in vitro. La UE redujo el límite a 0.14% por precaución. SCCS/1651/23: evidencia insuficiente para clasificar como DE definitivo, pero la restricción persiste. Evitar durante el embarazo por principio de precaución."
+    },
+    "eu_restriction": "Annex V del Reglamento (CE) 1223/2009. Suma de propil + butilparabeno no debe superar 0.14%. Prohibido en zona del pañal en niños menores de 3 años.",
+    "max_concentration_eu": "0.14% (solo o combinado con butilparabeno)",
+    "sources": [
+      {
+        "organism": "SCCS",
+        "document": "SCCS/1651/23 — Opinion on Propylparaben",
+        "year": 2023,
+        "url": "https://health.ec.europa.eu/system/files/2023-11/sccs_o_275.pdf"
+      },
+      {
+        "organism": "PubMed",
+        "document": "SCCS Opinion on propylparaben — Regul Toxicol Pharmacol 2021",
+        "year": 2021,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/34274358/"
+      }
+    ]
+  },
+  {
+    "id": "butylparaben",
+    "inci_name": "Butylparaben",
+    "common_name": "Butilparabeno / Conservante E209",
+    "cas_number": "94-26-8",
+    "category": "preservative",
+    "function_technical": "Conservante más lipofílico de la serie de parabenos de cadena corta. Alta actividad antifúngica. Distribución preferente en fases oleosas de emulsiones y sistemas bifásicos.",
+    "function_simple": "Conservante que impide el crecimiento de hongos en cosméticos. La UE lo restringe al mínimo posible porque puede actuar de forma débil como hormona femenina.",
+    "risks": {
+      "irritation": "low",
+      "sensitization": "low",
+      "endocrine_disruption": "suspected",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Excelente actividad antifúngica. Útil en formulaciones lipídicas donde otros conservantes tienen menor eficacia.",
+    "profile_sensitive_scalp": {
+      "level": "green",
+      "note": "Bajo potencial irritante. Bien tolerado a las concentraciones permitidas."
+    },
+    "profile_allergy": {
+      "level": "yellow",
+      "note": "Paradoja del parabeno aplicable. Sensibilizador infrecuente pero puede reactivar eccemas en piel dañada."
+    },
+    "profile_pregnancy": {
+      "level": "red",
+      "note": "Actividad estrogénica débil documentada. La UE lo restringe a 0.14% combinado con propilparabeno precisamente por precaución ante posibles efectos hormonales. Evitar durante el embarazo."
+    },
+    "eu_restriction": "Annex V del Reglamento (CE) 1223/2009. Suma de butil + propilparabeno ≤ 0.14%. Prohibido en zona del pañal en niños menores de 3 años.",
+    "max_concentration_eu": "0.14% (combinado con propilparabeno; suma total parabenos ≤ 0.8%)",
+    "sources": [
+      {
+        "organism": "SCCS",
+        "document": "SCCS/1623/20 — Opinion on Parabens",
+        "year": 2022,
+        "url": "https://health.ec.europa.eu/system/files/2022-08/sccs_o_243.pdf"
+      }
+    ]
+  },
+  {
+    "id": "dimethicone",
+    "inci_name": "Dimethicone",
+    "common_name": "Dimeticona / Polidimetilsiloxano",
+    "cas_number": "9006-65-9",
+    "category": "conditioning",
+    "function_technical": "Polisiloxano lineal de alto peso molecular. Forma película oclusiva sobre la fibra capilar y la epidermis reduciendo la fricción interfibrosa. Agente antiespumante, lubricante y film-forming. No penetra el estrato córneo a alto peso molecular.",
+    "function_simple": "Silicona que da suavidad y brillo al cabello. Recubre la fibra creando una capa protectora. Considerada segura por las principales agencias reguladoras del mundo.",
+    "risks": {
+      "irritation": "low",
+      "sensitization": "low",
+      "endocrine_disruption": "no",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Excelente relleno de porosidades y reducción del frizz. Facilita el peinado y reduce daño mecánico por cepillado. Estable térmicamente. Amplia evidencia de seguridad (CIR 2022).",
+    "profile_sensitive_scalp": {
+      "level": "green",
+      "note": "Excelente tolerancia. No comedogénico ni irritante. Puede usarse en cuero cabelludo con dermatitis seborreica sin riesgo añadido."
+    },
+    "profile_allergy": {
+      "level": "green",
+      "note": "Muy bajo potencial sensibilizador. No se han documentado alergias de contacto tipo IV significativas al dimethicone en la literatura revisada."
+    },
+    "profile_pregnancy": {
+      "level": "green",
+      "note": "Sin datos de toxicidad reproductiva. CIR 2022 concluye que es seguro. No se absorbe sistémicamente en formulaciones tópicas de alto peso molecular."
+    },
+    "eu_restriction": "Sin restricción en Annex II ni III del Reglamento (CE) 1223/2009. El dimethicone no volátil NO está afectado por la nueva restricción de ciclosiloxanos D4/D5/D6 (ECHA 2024).",
+    "max_concentration_eu": "Sin límite establecido",
+    "sources": [
+      {
+        "organism": "CIR",
+        "document": "Amended Safety Assessment of Dimethicone, Methicone and Substituted Methicones — March 2022",
+        "year": 2022,
+        "url": "https://www.cir-safety.org/sites/default/files/FAR_Methicones_032022.pdf"
+      },
+      {
+        "organism": "ECHA",
+        "document": "Cyclosiloxanes — Hot Topic (referencia negativa para dimethicone)",
+        "year": 2024,
+        "url": "https://echa.europa.eu/hot-topics/cyclosiloxanes"
+      }
+    ]
+  },
+  {
+    "id": "cyclomethicone",
+    "inci_name": "Cyclomethicone / Cyclopentasiloxane (D5)",
+    "common_name": "Ciclometicona / Silicona Cíclica Volátil (D4/D5/D6)",
+    "cas_number": "556-67-2 (D4); 541-02-6 (D5); 540-97-6 (D6)",
+    "category": "solvent",
+    "function_technical": "Silicona cíclica volátil. Solvente y vehículo de aplicación que se evapora tras la aplicación dejando el principio activo sobre el sustrato. Mejora la extensibilidad de formulaciones y aporta tacto no graso.",
+    "function_simple": "Silicona volátil usada como vehículo en sprays y sérum. Se evapora al aplicarse. La UE prohibirá su uso en cosméticos en junio de 2026 por acumularse en el medioambiente.",
+    "risks": {
+      "irritation": "low",
+      "sensitization": "low",
+      "endocrine_disruption": "suspected",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Volatilidad controlada que mejora el tacto de la formulación. Baja viscosidad y alta estabilidad. Vehículo insustituible en muchas formulaciones profesionales actuales.",
+    "profile_sensitive_scalp": {
+      "level": "yellow",
+      "note": "D4 es tóxico reproductor categoría 2 en la UE. D5/D6 son muy persistentes y bioacumulables. Usar con precaución hasta la prohibición total en junio 2026."
+    },
+    "profile_allergy": {
+      "level": "green",
+      "note": "Bajo potencial sensibilizador. No hay evidencia significativa de alergia de contacto tipo IV a ciclosiloxanos."
+    },
+    "profile_pregnancy": {
+      "level": "yellow",
+      "note": "D4 clasificado como tóxico reproductor categoría 2 en la UE (daño testicular en animales a altas dosis). Evitar exposición elevada durante el embarazo."
+    },
+    "eu_restriction": "Nueva restricción ECHA adoptada mayo 2024: D4, D5 y D6 prohibidos en cosméticos desde el 6 de junio de 2026 (concentración ≥0.1%). D4 ya restringido desde 2018 en wash-off (≤0.1%).",
+    "max_concentration_eu": "D4: ≤0.1% en wash-off (ya vigente); D5/D6: prohibición total desde junio 2026",
+    "sources": [
+      {
+        "organism": "ECHA",
+        "document": "Cyclosiloxanes Restriction — Adopted May 2024",
+        "year": 2024,
+        "url": "https://echa.europa.eu/hot-topics/cyclosiloxanes"
+      },
+      {
+        "organism": "CIR",
+        "document": "Amended Safety Assessment of Dimethicone, Methicone — March 2022",
+        "year": 2022,
+        "url": "https://www.cir-safety.org/sites/default/files/FAR_Methicones_032022.pdf"
+      }
+    ]
+  },
+  {
+    "id": "amodimethicone",
+    "inci_name": "Amodimethicone",
+    "common_name": "Amodimeticona / Silicona Amino-funcional",
+    "cas_number": "106842-44-8",
+    "category": "conditioning",
+    "function_technical": "Silicona aminofuncional. Se adsorbe preferentemente sobre las zonas dañadas de la fibra capilar mediante interacción iónica entre los grupos aminos y la superficie cargada negativamente del cabello dañado. Mayor substantividad que el dimethicone.",
+    "function_simple": "Silicona especial que se fija más en la zona dañada del cabello. Repara visualmente las puntas abiertas y protege la fibra frágil. Perfil de seguridad excelente.",
+    "risks": {
+      "irritation": "low",
+      "sensitization": "low",
+      "endocrine_disruption": "no",
+      "respiratory": "low",
+      "carcinogenicity": "no"
+    },
+    "benefits_technical": "Deposición selectiva en zonas dañadas. Excelente acondicionamiento y reparación superficial. No interfiere con la coloración posterior. CIR 2022: safe.",
+    "profile_sensitive_scalp": {
+      "level": "green",
+      "note": "Muy bien tolerado. Sin actividad irritante documentada en cuero cabelludo."
+    },
+    "profile_allergy": {
+      "level": "green",
+      "note": "No hay evidencia de sensibilización de contacto tipo IV a amodimethicone en literatura peer-reviewed."
+    },
+    "profile_pregnancy": {
+      "level": "green",
+      "note": "Sin datos de toxicidad reproductiva. CIR 2022 concluye que es seguro. No hay restricciones por embarazo."
+    },
+    "eu_restriction": "Sin restricción en Annex II ni III del Reglamento (CE) 1223/2009. No incluido en la restricción de ciclosiloxanos D4/D5/D6.",
+    "max_concentration_eu": "Sin límite establecido",
+    "sources": [
+      {
+        "organism": "CIR",
+        "document": "Amended Safety Assessment of Dimethicone, Methicone and Substituted Methicones — March 2022",
+        "year": 2022,
+        "url": "https://www.cir-safety.org/sites/default/files/FAR_Methicones_032022.pdf"
+      }
+    ]
+  },
+  {
+    "id": "formaldehyde",
+    "inci_name": "Formaldehyde",
+    "common_name": "Formaldehído / Metanal",
+    "cas_number": "50-00-0",
+    "category": "preservative",
+    "function_technical": "Agente conservante y reticulante. En concentraciones bajas: antimicrobiano de amplio espectro. En alisados keratínicos: agente reticulante de proteínas de queratina para efecto alisador prolongado.",
+    "function_simple": "Conservante carcinógeno PROHIBIDO directamente en cosméticos en la UE. Puede aparecer liberado por otros ingredientes. IARC lo clasifica como cancerígeno para humanos (Grupo 1).",
+    "risks": {
+      "irritation": "high",
+      "sensitization": "high",
+      "endocrine_disruption": "no",
+      "respiratory": "high",
+      "carcinogenicity": "iarc_1"
+    },
+    "benefits_technical": "Alta eficacia conservante y antimicrobiana. En alisados: reticulación duradera. Sin embargo, los riesgos superan los beneficios en cualquier uso cosmético dado el marco regulatorio actual.",
+    "profile_sensitive_scalp": {
+      "level": "red",
+      "note": "Irritante cutáneo potente y sensibilizador tipo IV. Prohibido como ingrediente directo en la UE. Impurezas y liberación por otros ingredientes deben ser < 10 ppm."
+    },
+    "profile_allergy": {
+      "level": "red",
+      "note": "Uno de los alérgenos de contacto más relevantes en dermatología. Alergia tipo IV con alta prevalencia. Los liberadores de formaldehído pueden reactivar la alergia."
+    },
+    "profile_pregnancy": {
+      "level": "red",
+      "note": "IARC Grupo 1: carcinógeno humano conocido (leucemia en exposición inhalatoria). Prohibido en cosméticos de la UE. Evitar cualquier exposición durante el embarazo."
+    },
+    "eu_restriction": "PROHIBIDO como ingrediente en cosméticos (Annex II del Reglamento CE 1223/2009). Commission Regulation (EU) 2022/1181: etiquetado obligatorio 'libera formaldehído' cuando la formulación libera >10 ppm.",
+    "max_concentration_eu": "PROHIBIDO. Umbral de etiquetado para liberadores: 10 ppm de formaldehído liberado",
+    "sources": [
+      {
+        "organism": "SCCS",
+        "document": "SCCS/1632/21 — Scientific Advice on Formaldehyde Releasers",
+        "year": 2022,
+        "url": "https://health.ec.europa.eu/system/files/2022-08/sccs_o_254.pdf"
+      },
+      {
+        "organism": "EUR-Lex",
+        "document": "Commission Regulation (EU) 2022/1181 — Umbral formaldehído liberado",
+        "year": 2022,
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32022R1181"
+      },
+      {
+        "organism": "ECHA",
+        "document": "Annex XV Investigation Report — Formaldehyde and Releasers",
+        "year": 2023,
+        "url": "https://echa.europa.eu/documents/10162/13641/annex_xv_report_formaldehyde_en.pdf"
+      }
+    ]
+  },
+  {
+    "id": "dmdm-hydantoin",
+    "inci_name": "DMDM Hydantoin",
+    "common_name": "DMDM Hidantoína / Liberador de formaldehído",
+    "cas_number": "6440-58-4",
+    "category": "preservative",
+    "function_technical": "Conservante liberador de formaldehído (formaldehyde releaser). Libera formaldehído de forma gradual ejerciendo actividad antimicrobiana. La cantidad liberada varía con pH, temperatura y tiempo de almacenamiento.",
+    "function_simple": "Conservante que libera poco a poco formaldehído para proteger el producto de bacterias. Puede causar alergia en personas sensibles al formaldehído. En la UE, el producto debe avisar en la etiqueta si libera >10 ppm.",
+    "risks": {
+      "irritation": "moderate",
+      "sensitization": "high",
+      "endocrine_disruption": "no",
+      "respiratory": "moderate",
+      "carcinogenicity": "iarc_1"
+    },
+    "benefits_technical": "Eficaz en amplio rango de pH. Estable en formulaciones acuosas. Bajo costo. Sin embargo, la regulación vigente exige etiquetado específico y existe presión industrial por su reemplazo.",
+    "profile_sensitive_scalp": {
+      "level": "red",
+      "note": "Libera formaldehído, irritante y sensibilizador confirmado. En pieles con barrera comprometida el riesgo de sensibilización es elevado."
+    },
+    "profile_allergy": {
+      "level": "red",
+      "note": "Alérgeno de contacto tipo IV relevante. Los pacientes con alergia al formaldehído reaccionan también a DMDM Hydantoin. Buscar en etiquetas la indicación 'libera formaldehído'."
+    },
+    "profile_pregnancy": {
+      "level": "red",
+      "note": "El formaldehído liberado es carcinógeno IARC Grupo 1. Evitar durante el embarazo cualquier exposición a liberadores de formaldehído."
+    },
+    "eu_restriction": "Permitido en Annex V como conservante, pero con etiquetado obligatorio 'libera formaldehído' si se superan los 10 ppm liberados (Commission Regulation EU 2022/1181). En revisión activa por parte del SCCS.",
+    "max_concentration_eu": "Sin límite explícito de DMDM Hydantoin, pero umbral de etiquetado: >10 ppm de formaldehído liberado",
+    "sources": [
+      {
+        "organism": "SCCS",
+        "document": "SCCS/1632/21 — Scientific Advice on Formaldehyde Releasers",
+        "year": 2022,
+        "url": "https://health.ec.europa.eu/system/files/2022-08/sccs_o_254.pdf"
+      },
+      {
+        "organism": "EUR-Lex",
+        "document": "Commission Regulation (EU) 2022/1181",
+        "year": 2022,
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32022R1181"
+      },
+      {
+        "organism": "PubMed",
+        "document": "Investigation on formaldehyde release from preservatives in cosmetics — Contact Dermatitis 2015",
+        "year": 2015,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/25704726/"
+      }
+    ]
+  },
+  {
+    "id": "quaternium-15",
+    "inci_name": "Quaternium-15",
+    "common_name": "Quaternium-15 / Dow Corning preservante",
+    "cas_number": "51229-78-8",
+    "category": "preservative",
+    "function_technical": "Conservante de amonio cuaternario liberador de formaldehído. Alta eficacia antimicrobiana. Mayor liberación de formaldehído que DMDM Hydantoin en condiciones equivalentes.",
+    "function_simple": "Conservante fuertemente sensibilizador PROHIBIDO en la UE. Uno de los alérgenos de contacto más comunes en cosméticos. Puede aparecer en productos importados de EEUU.",
+    "risks": {
+      "irritation": "high",
+      "sensitization": "high",
+      "endocrine_disruption": "no",
+      "respiratory": "moderate",
+      "carcinogenicity": "iarc_1"
+    },
+    "benefits_technical": "Alta eficacia antimicrobiana de amplio espectro. Sin embargo, su perfil de seguridad es inaceptable para el marco regulatorio europeo actual.",
+    "profile_sensitive_scalp": {
+      "level": "red",
+      "note": "PROHIBIDO en la UE. Sensibilizador de contacto tipo IV potente. El SCCS concluyó que su seguridad no puede establecerse."
+    },
+    "profile_allergy": {
+      "level": "red",
+      "note": "Uno de los alérgenos de contacto más prevalentes en dermatología cosmética mundial. Causa eccema de contacto alérgico en una proporción significativa de pacientes sensibilizados al formaldehído."
+    },
+    "profile_pregnancy": {
+      "level": "red",
+      "note": "PROHIBIDO en la UE. El formaldehído que libera es carcinógeno IARC Grupo 1. Evitar completamente."
+    },
+    "eu_restriction": "PROHIBIDO en la UE (Annex II del Reglamento CE 1223/2009). Eliminado de la lista de conservantes permitidos (Annex V). Puede aparecer en productos importados de terceros países.",
+    "max_concentration_eu": "PROHIBIDO",
+    "sources": [
+      {
+        "organism": "SCCS",
+        "document": "SCCS/1632/21 — Scientific Advice on Formaldehyde Releasers (incluye Quaternium-15)",
+        "year": 2022,
+        "url": "https://health.ec.europa.eu/system/files/2022-08/sccs_o_254.pdf"
+      },
+      {
+        "organism": "EUR-Lex",
+        "document": "Commission Regulation (EU) 2022/1181",
+        "year": 2022,
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32022R1181"
+      }
+    ]
+  }
+]

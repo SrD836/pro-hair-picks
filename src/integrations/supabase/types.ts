@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      inci_ingredients: {
+        Row: {
+          id: string
+          inci_name: string
+          common_name: string
+          cas_number: string | null
+          category: string
+          function_technical: string | null
+          function_simple: string | null
+          risks: Json | null
+          benefits_technical: string | null
+          profile_sensitive_scalp: Json | null
+          profile_allergy: Json | null
+          profile_pregnancy: Json | null
+          eu_restriction: string | null
+          max_concentration_eu: string | null
+          sources: Json | null
+          pending_review: boolean | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id: string
+          inci_name: string
+          common_name: string
+          cas_number?: string | null
+          category: string
+          function_technical?: string | null
+          function_simple?: string | null
+          risks?: Json | null
+          benefits_technical?: string | null
+          profile_sensitive_scalp?: Json | null
+          profile_allergy?: Json | null
+          profile_pregnancy?: Json | null
+          eu_restriction?: string | null
+          max_concentration_eu?: string | null
+          sources?: Json | null
+          pending_review?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          inci_name?: string
+          common_name?: string
+          cas_number?: string | null
+          category?: string
+          function_technical?: string | null
+          function_simple?: string | null
+          risks?: Json | null
+          benefits_technical?: string | null
+          profile_sensitive_scalp?: Json | null
+          profile_allergy?: Json | null
+          profile_pregnancy?: Json | null
+          eu_restriction?: string | null
+          max_concentration_eu?: string | null
+          sources?: Json | null
+          pending_review?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       actual_expenses: {
         Row: {
           actual_amount: number | null

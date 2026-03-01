@@ -43,6 +43,7 @@ const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
 const ColorMatchPage = lazy(() => import("./pages/ColorMatchPage"));
 const DiagnosticoCapilarPage = lazy(() => import('./pages/DiagnosticoCapilarPage'));
 const CompatibilidadQuimicaPage = lazy(() => import('./pages/CompatibilidadQuimicaPage'));
+const InciCheckerPage = lazy(() => import('./pages/InciCheckerPage'));
 const RecoveryTimelinePage = lazy(() => import('./pages/RecoveryTimelinePage'));
 const PasaporteCapilarPage = lazy(() => import("./pages/PasaporteCapilarPage"));
 
@@ -74,7 +75,7 @@ function AnimatedRoutes() {
           <Route path="/color-match" element={<ColorMatchPage />} />
           <Route path="/diagnostico-capilar" element={<DiagnosticoCapilarPage />} />
           <Route path="/compatibilidad-quimica" element={<CompatibilidadQuimicaPage />} />
-          <Route path="/inci-check" element={<CompatibilidadQuimicaPage />} />
+          <Route path="/inci-check" element={<InciCheckerPage />} />
           <Route path="/recuperacion-capilar" element={<RecoveryTimelinePage />} />
           <Route path="/pasaporte-capilar" element={
             <Suspense fallback={<ScissorsSpinner />}>
