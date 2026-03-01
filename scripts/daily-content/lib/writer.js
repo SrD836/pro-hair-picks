@@ -224,6 +224,23 @@ AMAZON (max 3, only if applicable to topic):
 RESPOND ONLY with the article HTML. No explanations before or after.`;
 }
 
+function callClaudeWithRetry(prompt, options = {}, maxRetries = 2) {
+  let lastErr;
+  for (let i = 0; i <= maxRetries; i++) {
+    try {
+      const result = callClaude(prompt, options);
+      if (result && result.trim().length > 100) return result;
+      throw new Error('Respuesta vacía o muy corta');
+    } catch (err) {
+      lastErr = err;
+      if (i < maxRetries) {
+        console.log(`     ⚠️  Retry ${i + 1}/${maxRetries} — ${err.message.slice(0, 60)}`);
+      }
+    }
+  }
+  throw lastErr;
+}
+
 async function writePost(post, date) {
   const isUS = post.type === 'core_us';
   console.log(`  ✍️  Escribiendo [${post.type}] slot ${post.slot}: ${(post.topic || '').slice(0, 55)}...`);
@@ -240,7 +257,7 @@ Genera SOLO este JSON (sin texto adicional):
 
   let titleData = {};
   try {
-    const titleResp = callClaude(titlePrompt, { timeout: 45_000 });
+    const titleResp = callClaudeWithRetry(titlePrompt, { timeout: 45_000 });
     titleData = extractJSON(titleResp, false);
   } catch {
     titleData = isUS ? {
@@ -260,7 +277,7 @@ Genera SOLO este JSON (sin texto adicional):
 
   // 2. Generar contenido principal (la llamada más larga — hasta 5 min)
   console.log(`     Generando contenido (puede tardar 2-4 min)...`);
-  const mainContent = callClaude(
+  const mainContent = callClaudeWithRetry(
     isUS
       ? buildContentPromptUS({ ...post, ...titleData }, internalLinks)
       : buildContentPrompt({ ...post, ...titleData }, internalLinks),
@@ -282,7 +299,7 @@ RESPOND ONLY with the translated HTML, no explanations.
 
 ${contentES}`;
     try {
-      contentEN = callClaude(translationPrompt, { timeout: 300_000 });
+      contentEN = callClaudeWithRetry(translationPrompt, { timeout: 300_000 });
     } catch {
       contentEN = contentES;
     }
@@ -325,7 +342,38 @@ async function writeAllPosts(dailyPlan) {
       post.market = 'es';
       post.topic = 'técnicas de coloración sin amoniaco: guía profesional definitiva';
     }
-    posts.push(await writePost(post, dailyPlan.date));
+    try {
+      const written = await writePost(post, dailyPlan.date);
+      posts.push(written);
+    } catch (err) {
+      // Post fallido no mata el pipeline
+      console.error(`  ❌ Error escribiendo slot ${post.slot} (${post.type}): ${err.message}`);
+      console.error(`     El pipeline continuará con los posts restantes.`);
+      // Guardar post de emergencia para no perder el slot
+      posts.push({
+        ...post,
+        title: post.topic,
+        title_en: post.topic,
+        meta_description: `Guía profesional sobre ${post.target_keyword}.`,
+        category: 'Peluquería',
+        category_en: 'Hairdressing',
+        excerpt: `Artículo sobre ${post.topic}.`,
+        excerpt_en: `Article about ${post.topic}.`,
+        content: `<p>Contenido en preparación.</p>`,
+        content_en: `<p>Content coming soon.</p>`,
+        read_time_minutes: 5,
+        has_expert_verdict: false,
+        has_data_viz: false,
+        keywords: [post.target_keyword],
+        internal_links: ['/blog'],
+        external_links: [],
+        author: 'Equipo GuiaDelSalon',
+        lang: post.lang || 'es',
+        market: post.market || 'es',
+        schema_markup: null,
+        _failed: true, // flag para identificarlo en el report
+      });
+    }
   }
   return { ...dailyPlan, posts };
 }
