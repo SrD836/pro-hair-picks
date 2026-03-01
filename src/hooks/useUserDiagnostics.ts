@@ -12,6 +12,7 @@ export function useUserDiagnostics(userId: string | null | undefined) {
       const { data, error } = await supabase
         .from('user_diagnostics')
         .select('*')
+        .eq('user_id', userId!)
         .order('created_at', { ascending: false })
         .limit(20);
       if (error) throw error;
