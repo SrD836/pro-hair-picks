@@ -10,13 +10,14 @@
     <!-- End Google Tag Manager -->
 
     <!-- PRELOADS CRÍTICOS: primeras líneas del <head> para máximo impacto en LCP -->
-    <!-- Hero image (LCP element): preload por breakpoint — móvil descarga 24 KB, desktop 64 KB -->
-    <link rel="preload" as="image" href="/images/hero-barbershop-mobile.webp" media="(max-width: 768px)" type="image/webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/images/hero-barbershop.webp" media="(min-width: 769px)" type="image/webp" fetchpriority="high" />
+    <!-- Hero image (LCP element): preload por breakpoint -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=75&auto=format&fit=crop" media="(max-width: 768px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1920&q=80&auto=format&fit=crop" media="(min-width: 769px)" fetchpriority="high" />
     <!-- Logo hero: visible above the fold, cargado antes de React -->
     <link rel="preload" as="image" href="/logo-160.webp" type="image/webp" imagesrcset="/logo-160.webp 1x, /logo-240.webp 2x" />
 
     <!-- Preconnect a orígenes críticos -->
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://hscarzgjltsdronamltt.supabase.co" crossorigin="anonymous" />
