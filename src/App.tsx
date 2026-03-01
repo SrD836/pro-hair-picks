@@ -46,6 +46,7 @@ const CompatibilidadQuimicaPage = lazy(() => import('./pages/CompatibilidadQuimi
 const InciCheckerPage = lazy(() => import('./pages/InciCheckerPage'));
 const RecoveryTimelinePage = lazy(() => import('./pages/RecoveryTimelinePage'));
 const PasaporteCapilarPage = lazy(() => import("./pages/PasaporteCapilarPage"));
+const CanicieAnalyzerPage = lazy(() => import('./pages/CanicieAnalyzerPage'));
 
 const queryClient = new QueryClient();
 
@@ -77,6 +78,7 @@ function AnimatedRoutes() {
           <Route path="/compatibilidad-quimica" element={<CompatibilidadQuimicaPage />} />
           <Route path="/inci-check" element={<InciCheckerPage />} />
           <Route path="/recuperacion-capilar" element={<RecoveryTimelinePage />} />
+          <Route path="/analizador-canicie" element={<CanicieAnalyzerPage />} />
           <Route path="/pasaporte-capilar" element={
             <Suspense fallback={<ScissorsSpinner />}>
               <PasaporteCapilarPage />

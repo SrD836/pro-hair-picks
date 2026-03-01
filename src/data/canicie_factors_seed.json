@@ -1,0 +1,312 @@
+{
+  "factors": [
+    {
+      "id": "melanocyte_stem_cell_depletion",
+      "category": "biologico",
+      "factor_name": "Agotamiento de células madre melanocíticas (McSCs)",
+      "factor_technical": "El envejecimiento progresivo agota el pool de células madre melanocíticas (McSCs) del bulge folicular. Sin este reservorio, cada nuevo ciclo anágeno produce un pelo con menos melanocitos activos hasta la despigmentación total.",
+      "factor_simple": "El melanocito es la fábrica de pintura de tu pelo. Con los años, la fábrica se queda sin trabajadores — la fibra sale sin color. Una vez que ese reservorio se vacía, no hay forma natural de rellenarlo.",
+      "evidence_level": "A",
+      "modifiable": false,
+      "impact_magnitude": "alto",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Nishimura, E. K. et al.",
+          "year": 2005,
+          "journal": "Nature",
+          "doi": "10.1038/nature04162"
+        },
+        {
+          "authors": "Jabbari, A. et al.",
+          "year": 2023,
+          "journal": "Journal of Investigative Dermatology",
+          "doi": "10.1016/j.jid.2023.11.001"
+        }
+      ]
+    },
+    {
+      "id": "h2o2_accumulation",
+      "category": "biologico",
+      "factor_name": "Acumulación de H₂O₂ endógeno",
+      "factor_technical": "El cabello canoso acumula peróxido de hidrógeno en concentraciones milimolares por deficiencia progresiva de catalasa folicular y metionina sulfóxido reductasas A/B. Inhibe la tirosinasa y genera daño oxidativo directo a los melanocitos.",
+      "factor_simple": "El H₂O₂ que produce tu propio cuerpo actúa como un decolorante interno muy lento que blanquea el pelo desde el folículo hacia afuera. Es el mismo compuesto que usas para decolorarte, pero producido por tus propias células.",
+      "evidence_level": "A",
+      "modifiable": false,
+      "impact_magnitude": "alto",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Wood, J. M. et al.",
+          "year": 2009,
+          "journal": "FASEB Journal",
+          "doi": "10.1096/fj.08-125435"
+        }
+      ]
+    },
+    {
+      "id": "catalase_deficiency",
+      "category": "biologico",
+      "factor_name": "Deficiencia progresiva de catalasa folicular",
+      "factor_technical": "La catalasa es la enzima que descompone el H₂O₂ en agua y oxígeno. Su expresión disminuye con la edad en el folículo piloso por daño oxidativo acumulativo en el promotor del gen CAT y reducción de la actividad del factor de transcripción Nrf2.",
+      "factor_simple": "La catalasa es el 'escudo antioxidante' del folículo. Con los años, ese escudo se rompe y el peróxido acumulado actúa sin oposición sobre los melanocitos.",
+      "evidence_level": "A",
+      "modifiable": false,
+      "impact_magnitude": "alto",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Wood, J. M. et al.",
+          "year": 2009,
+          "journal": "FASEB Journal",
+          "doi": "10.1096/fj.08-125435"
+        },
+        {
+          "authors": "Herdiana, Y.",
+          "year": 2025,
+          "journal": "CCID",
+          "doi": "10.2147/CCID.S510817"
+        }
+      ]
+    },
+    {
+      "id": "irf4_gene_variant",
+      "category": "genetico",
+      "factor_name": "Variante genética en IRF4 (rs12203592)",
+      "factor_technical": "El polimorfismo rs12203592 en el gen IRF4 (Interferon Regulatory Factor 4) fue identificado en un GWAS de 6.000 individuos latinoamericanos como el marcador genético más fuertemente asociado con canicie prematura. IRF4 coopera con MITF para regular la expresión de Tirosinasa.",
+      "factor_simple": "Si llevas la variante 'T' del gen IRF4, tu biología regula la producción de pigmento con menos eficiencia desde el inicio. No es mala suerte — es el código de fábrica con el que naciste.",
+      "evidence_level": "A",
+      "modifiable": false,
+      "impact_magnitude": "alto",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Adhikari, K. et al.",
+          "year": 2016,
+          "journal": "Nature Communications",
+          "doi": "10.1038/ncomms10815"
+        }
+      ]
+    },
+    {
+      "id": "bcl2_apoptosis",
+      "category": "genetico",
+      "factor_name": "Deficiencia de BCL2 en células madre melanocíticas",
+      "factor_technical": "BCL2 actúa como supresor de apoptosis en las McSCs del bulge. La reducción de BCL2 por estrés oxidativo o envejecimiento conduce a apoptosis selectiva de McSCs. En modelos murinos BCL2−/−, las McSCs desaparecen en el día 8.5 del ciclo piloso sin alteración morfológica folicular.",
+      "factor_simple": "BCL2 es el 'guardián de la vida' de las células madre del color. Cuando ese guardián falla — ya sea por genes o por estrés oxidativo crónico — las células madre no sobreviven al paso de un ciclo piloso al siguiente.",
+      "evidence_level": "A",
+      "modifiable": false,
+      "impact_magnitude": "alto",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Nishimura, E. K. et al.",
+          "year": 2005,
+          "journal": "Nature",
+          "doi": "10.1038/nature04162"
+        }
+      ]
+    },
+    {
+      "id": "chronic_stress",
+      "category": "externo",
+      "factor_name": "Estrés crónico (vía norepinefrina)",
+      "factor_technical": "El estrés activa el sistema nervioso simpático y genera una liberación masiva de norepinefrina en el microentorno del folículo piloso. La norepinefrina se une a receptores adrenérgicos β2 en las McSCs, induciendo su diferenciación prematura y emigración del nicho. El proceso es potencialmente irreversible si el agotamiento del nicho es completo.",
+      "factor_simple": "Decir que el estrés te da canas de un día para otro es como decir que una planta se seca en un minuto — el proceso existe, pero es acumulativo. El estrés crónico drena las reservas de células madre del color de tu pelo, semana a semana.",
+      "evidence_level": "A",
+      "modifiable": true,
+      "impact_magnitude": "alto",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Hsu, Y. C. et al.",
+          "year": 2020,
+          "journal": "Nature",
+          "doi": "10.1038/s41586-020-1935-3"
+        },
+        {
+          "authors": "Hordinsky, M. & Ericson, M.",
+          "year": 2020,
+          "journal": "Scientific Reports",
+          "doi": "10.1038/s41598-020-75334-9"
+        }
+      ]
+    },
+    {
+      "id": "b12_deficiency",
+      "category": "externo",
+      "factor_name": "Déficit de vitamina B12",
+      "factor_technical": "La B12 es cofactor en la síntesis de S-adenosilmetionina (SAM), necesaria para la síntesis de melanina y la metilación del DNA. Su déficit puede alterar la melanogénesis y la viabilidad del melanocito. Es la única deficiencia nutricional con evidencia de reversión de canicie prematura tras repleción.",
+      "factor_simple": "La B12 es el combustible para la maquinaria química que produce el pigmento. Si el depósito está vacío, la fábrica no funciona a pleno rendimiento. La buena noticia: si las canas son solo por este déficit, corregirlo puede devolver el color.",
+      "evidence_level": "B",
+      "modifiable": true,
+      "impact_magnitude": "moderado",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Herdiana, Y.",
+          "year": 2025,
+          "journal": "Clinical, Cosmetic and Investigational Dermatology",
+          "doi": "10.2147/CCID.S510817"
+        }
+      ]
+    },
+    {
+      "id": "copper_deficiency",
+      "category": "externo",
+      "factor_name": "Déficit de cobre",
+      "factor_technical": "El cobre es cofactor directo de la Tirosinasa (enzima rate-limiting de la síntesis de eumelanina) y de la Cu/Zn-SOD (superóxido dismutasa). Niveles séricos de cobre consistentemente reducidos en estudios de canicie prematura vs. controles sanos.",
+      "factor_simple": "El cobre es la 'llave' que activa la enzima que fabrica el pigmento oscuro. Sin suficiente cobre, la fábrica produce menos melanina por turno.",
+      "evidence_level": "B",
+      "modifiable": true,
+      "impact_magnitude": "moderado",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Zayed, A. A. et al.",
+          "year": 2019,
+          "journal": "Open Access Macedonian Journal of Medical Sciences",
+          "doi": "10.3889/oamjms.2019.232"
+        }
+      ]
+    },
+    {
+      "id": "smoking",
+      "category": "externo",
+      "factor_name": "Tabaquismo",
+      "factor_technical": "Los metabolitos del tabaco (benzopirenos, nicotina) generan radicales libres en el folículo piloso, aceleran el agotamiento de las defensas antioxidantes (GSH, catalasa) y producen vasoconstricción crónica que genera hipoxia folicular. OR ≈ 2.5–4.0 para canicie prematura en estudios observacionales.",
+      "factor_simple": "El tabaco es como verter arena en el motor de tu folículo: obstruye los mecanismos de defensa antioxidante, reduce el suministro de sangre y acelera el envejecimiento celular de las fábricas de pigmento.",
+      "evidence_level": "B",
+      "modifiable": true,
+      "impact_magnitude": "moderado",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Herdiana, Y.",
+          "year": 2025,
+          "journal": "CCID",
+          "doi": "10.2147/CCID.S510817"
+        }
+      ]
+    },
+    {
+      "id": "pm25_pollution",
+      "category": "externo",
+      "factor_name": "Exposición a PM2.5 (contaminación ambiental)",
+      "factor_technical": "Partículas PM2.5 (<2.5 µm) penetran en folículos pilosos e inducen estrés oxidativo en melanocitos mediante activación del receptor AhR y NF-κB, inhibición de SCF/bFGF en queratinocitos y daño oxidativo a DNA y lípidos de membrana.",
+      "factor_simple": "Las partículas finas de la contaminación urbana son tan pequeñas que entran en el folículo y crean un ambiente hostil para los melanocitos — como si añadieras suciedad al aire del que respira la fábrica de pigmento.",
+      "evidence_level": "B",
+      "modifiable": true,
+      "impact_magnitude": "moderado",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Desai, S. R. et al.",
+          "year": 2020,
+          "journal": "Free Radical Biology and Medicine",
+          "doi": null,
+          "pmid": "32200039",
+          "pending_verification": true
+        }
+      ]
+    },
+    {
+      "id": "grey_hair_structure",
+      "category": "estructural",
+      "factor_name": "Cambios estructurales del pelo canoso",
+      "factor_technical": "El pelo canoso presenta pérdida de la capa F-lipídica (18-MEA), reducción del CMC (Cell Membrane Complex), mayor porosidad y ausencia de melanina como fotoprotector endógeno. El resultado es una fibra más rígida, con mayor fricción superficial y más vulnerable al daño por UV y mecánico.",
+      "factor_simple": "El pelo canoso no es solo blanco — su química interna también ha cambiado. Sin el pigmento que actuaba como barniz protector, la fibra es más porosa, más frágil ante el sol y más difícil de hidratar. Necesita más cuidado, no menos.",
+      "evidence_level": "A",
+      "modifiable": false,
+      "impact_magnitude": "alto",
+      "myth_verdict": null,
+      "sources": [
+        {
+          "authors": "Grosvenor, A. J. et al.",
+          "year": 2019,
+          "journal": "International Journal of Cosmetic Science",
+          "doi": "10.1111/ics.12563"
+        },
+        {
+          "authors": "Prado, G. et al.",
+          "year": 2021,
+          "journal": "International Journal of Cosmetic Science",
+          "doi": "10.1111/ics.12684"
+        }
+      ]
+    }
+  ],
+  "myths": [
+    {
+      "id": "pulling_grey_causes_more",
+      "myth_statement": "Arrancar una cana hace que salgan tres o más en su lugar",
+      "verdict": "mito",
+      "verdict_simple": "100% falso. Arrancar un pelo no envía señales a los folículos vecinos. El folículo afectado puede dañarse con el tiempo por tracción repetida, pero no existe mecanismo biológico alguno que multiplique los folículos adyacentes.",
+      "scientific_explanation": "Un folículo piloso produce exactamente un pelo. La foliculogénesis (formación de nuevos folículos) ocurre exclusivamente durante el desarrollo embrionario. Ningún mecanismo de señalización conocido conecta la tracción de un pelo con la activación de folículos vecinos.",
+      "study_reference": {
+        "authors": "Trüeb, R. M.",
+        "year": 2020,
+        "journal": "International Journal of Cosmetic Science",
+        "doi": "10.1111/ics.12736"
+      },
+      "nuance": "Arrancar canas repetidamente puede traumatizar el folículo y provocar miniaturización o alopecia localizada, pero no acelera la canicie global."
+    },
+    {
+      "id": "stress_overnight_graying",
+      "myth_statement": "El estrés intenso puede volver cano a alguien de la noche a la mañana",
+      "verdict": "parcialmente_cierto",
+      "verdict_simple": "El mecanismo existe — el estrés sí accelera la canicie — pero la velocidad es exagerada. El pelo que ya ha crecido no puede cambiar de color. Lo que se ve en casos de 'encanecimiento súbito' suele ser alopecia areata difusa: el estrés elimina los pelos pigmentados, dejando visibles solo los que ya eran blancos.",
+      "scientific_explanation": "El estrés activa el sistema nervioso simpático y libera norepinefrina en el folículo, que agota las McSCs en días (modelo murino) o semanas (humanos). Pero el cambio de color requiere que los cabellos afectados crezcan con el nuevo estado del melanocito. Un cambio 'de noche a la mañana' se explica mejor por alopecia areata difusa aguda, donde el sistema inmunitario elimina selectivamente los pelos pigmentados.",
+      "study_reference": {
+        "authors": "Hsu, Y. C. et al.",
+        "year": 2020,
+        "journal": "Nature",
+        "doi": "10.1038/s41586-020-1935-3"
+      },
+      "nuance": "Casos auténticos del síndrome de Marie Antoinette (canities subita) son extraordinariamente raros y no han sido replicados en estudios controlados."
+    },
+    {
+      "id": "b12_reverses_grey",
+      "myth_statement": "La vitamina B12 puede revertir las canas",
+      "verdict": "parcialmente_cierto",
+      "verdict_simple": "Solo si tus canas son causadas por déficit de B12. Para la canicie genética o relacionada con la edad, la B12 no tiene ningún efecto revertidor. Es una solución condicional, no universal.",
+      "scientific_explanation": "La B12 es cofactor en la síntesis de S-adenosilmetionina (SAM), necesaria para la melanogénesis. Su déficit puede causar canicie prematura que revierte con repleción. Sin embargo, no existen ensayos clínicos controlados en humanos que demuestren reversión de canicie no deficitaria con suplementación de B12.",
+      "study_reference": {
+        "authors": "Herdiana, Y.",
+        "year": 2025,
+        "journal": "Clinical, Cosmetic and Investigational Dermatology",
+        "doi": "10.2147/CCID.S510817"
+      },
+      "nuance": "La deficiencia de B12 es una causa médica tratable de canicie prematura. La suplementación sin deficiencia documentada no tiene efecto sobre el color del pelo."
+    },
+    {
+      "id": "plex_antioxidants_reverse_grey",
+      "myth_statement": "Los tratamientos Plex o antioxidantes tópicos revierten la canicie",
+      "verdict": "mito",
+      "verdict_simple": "Los tratamientos Plex mejoran la estructura del pelo existente — la elasticidad, la resistencia a la rotura — pero no tienen ningún efecto sobre los melanocitos ni sobre la síntesis de melanina. El pelo que ya es blanco no puede repigmentarse con Olaplex, K18 ni ningún antioxidante tópico comercial.",
+      "scientific_explanation": "Los tratamientos Plex actúan sobre los puentes disulfuro y enlaces en la queratina del córtex. No alcanzan los melanocitos del bulbo ni el reservorio de McSCs del bulge. Los antioxidantes tópicos no penetran hasta los melanocitos con la concentración suficiente para reactivar la melanogénesis. No existen ensayos clínicos humanos peer-reviewed con grupos control que documenten repigmentación por antioxidantes tópicos.",
+      "study_reference": {
+        "authors": "Breakspear, S. et al.",
+        "year": 2024,
+        "journal": "International Journal of Cosmetic Science",
+        "doi": "10.1111/ics.12967"
+      },
+      "nuance": "Algunos ensayos preliminares con análogos de catalasa aplicados en el cuero cabelludo muestran repigmentación parcial en vitíligo (no en canicie senil). Estos datos no son extrapolables a la canicie general."
+    },
+    {
+      "id": "meditation_slows_grey",
+      "myth_statement": "La meditación o reducción del estrés frena la canicie",
+      "verdict": "parcialmente_cierto",
+      "verdict_simple": "Biológicamente tiene todo el sentido: menos estrés = menos norepinefrina = menos agotamiento de células madre del color. Y hay un estudio observacional pequeño que documentó recuperación parcial del color al cesar el estrés. Pero aún no tenemos el ensayo clínico que lo confirme con metodología sólida.",
+      "scientific_explanation": "La reducción del estrés crónico debería, teóricamente, disminuir la activación simpática y preservar las McSCs del nicho folicular. El estudio de Columbia (2021, N=14) documentó reversión de algunos pelos grises al eliminar el estímulo estresante en humanos. Sin embargo, la potencia estadística es insuficiente y no se ha replicado en RCTs con grupos control.",
+      "study_reference": {
+        "authors": "Columbia University Irving Medical Center",
+        "year": 2021,
+        "journal": "eLife",
+        "doi": null,
+        "pending_verification": true
+      },
+      "nuance": "El beneficio aplica principalmente si el proceso de canicie aún no está consolidado (piscina de McSCs no completamente agotada). En canicie avanzada o genética, la reducción del estrés no revertirá los pelos ya blancos."
+    }
+  ]
+}

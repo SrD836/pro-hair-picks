@@ -182,6 +182,114 @@ export type Database = {
         }
         Relationships: []
       }
+      canicie_factors: {
+        Row: {
+          id: string
+          factor_id: string
+          category: string
+          title_es: string
+          subtitle_es: string | null
+          explanation_simple_es: string
+          explanation_technical_es: string
+          impact_level: string
+          modifiable: boolean
+          evidence_level: string
+          key_mechanism: string | null
+          sources: Json | null
+          pending_review: boolean | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          factor_id: string
+          category: string
+          title_es: string
+          subtitle_es?: string | null
+          explanation_simple_es: string
+          explanation_technical_es: string
+          impact_level: string
+          modifiable: boolean
+          evidence_level: string
+          key_mechanism?: string | null
+          sources?: Json | null
+          pending_review?: boolean | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          factor_id?: string
+          category?: string
+          title_es?: string
+          subtitle_es?: string | null
+          explanation_simple_es?: string
+          explanation_technical_es?: string
+          impact_level?: string
+          modifiable?: boolean
+          evidence_level?: string
+          key_mechanism?: string | null
+          sources?: Json | null
+          pending_review?: boolean | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      canicie_myths: {
+        Row: {
+          id: string
+          myth_id: string
+          myth_statement_es: string
+          verdict: string
+          explanation_es: string
+          explanation_technical_es: string | null
+          reference: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          myth_id: string
+          myth_statement_es: string
+          verdict: string
+          explanation_es: string
+          explanation_technical_es?: string | null
+          reference?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          myth_id?: string
+          myth_statement_es?: string
+          verdict?: string
+          explanation_es?: string
+          explanation_technical_es?: string | null
+          reference?: string | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      canicie_reports: {
+        Row: {
+          id: string
+          session_id: string
+          input_data: Json
+          report_data: Json
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          input_data: Json
+          report_data: Json
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          input_data?: Json
+          report_data?: Json
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       actual_expenses: {
         Row: {
           actual_amount: number | null
