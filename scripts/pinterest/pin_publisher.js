@@ -90,6 +90,11 @@ function showPreview(pin, index, total) {
 // ── Publicar Pin via API v5 ────────────────────────────────────────────────
 function publishPin(pin) {
   return new Promise((resolve, reject) => {
+    // Compliance: all pins must link to GuiaDelSalon.com content
+    if (!pin.link || !pin.link.startsWith('https://guiadelsalon.com')) {
+      reject(new Error('El link debe apuntar a guiadelsalon.com: ' + pin.link));
+      return;
+    }
     const body = JSON.stringify({
       board_id:    pin.board_id,
       title:       pin.title,
