@@ -12,7 +12,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "content": "node scripts/daily-content/index.js",
-    "content:dry": "node scripts/daily-content/index.js --dry-run"
+    "content:dry": "node scripts/daily-content/index.js --dry-run",
+    "pinterest:auth": "node scripts/pinterest/pinterest_oauth.js",
+    "pinterest:publish": "node scripts/pinterest/pin_publisher.js",
+    "pinterest:demo": "node scripts/pinterest/demo_server.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
