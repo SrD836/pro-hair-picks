@@ -147,7 +147,7 @@ export default function DiagnosticoCompletoPage() {
                     {isDone ? '✓' : tool.emoji}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[#F5F0E8] text-sm font-semibold">{tool.title}</p>
+                    <p className="text-[#F5F0E8] text-sm font-semibold">{t(`wizard.tools.${tool.id}`) || tool.title}</p>
                     <p className="text-[#F5F0E8]/40 text-xs">{tool.questionsCount} {t("wizard.questions")} · {tool.duration}</p>
                     {isDone && (
                       <p className="text-green-400 text-xs mt-0.5">
@@ -199,7 +199,7 @@ export default function DiagnosticoCompletoPage() {
                   size="lg"
                   className="w-full sm:w-auto px-10 gap-2"
                 >
-                  {completedIds.length === 0 ? t("wizard.startBtn") : t("wizard.continueBtn")} — {nextTool?.title}
+                  {completedIds.length === 0 ? t("wizard.startBtn") : t("wizard.continueBtn")} — {nextTool ? (t(`wizard.tools.${nextTool.id}`) || nextTool.title) : ''}
                   <ArrowRight className="w-4 h-4" />
                 </Button>
                 <p className="text-[#F5F0E8]/30 text-xs">
