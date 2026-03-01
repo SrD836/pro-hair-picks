@@ -138,6 +138,8 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
     { label: "🎨 Asesor de Color", href: "https://guiadelsalon.com/asesor-color" },
     { label: "🔬 Diagnóstico Capilar", to: "/diagnostico-capilar" },
     { label: "🧪 Compatibilidad Química", to: "/inci-check" },
+    { label: "🌿 Recuperación Capilar", to: "/recuperacion-capilar" },
+    { label: "🦳 Analizador de Canicie", to: "/analizador-canicie" },
     { label: "📊 Calculadora ROI", to: "/calculadora-precio" },
   ];
 
@@ -420,6 +422,14 @@ const Navbar = () => {
                     {
                       label: lang === "es" ? "🧪 Compatibilidad Química" : "🧪 Chemical Compatibility",
                       to: "/inci-check",
+                    },
+                    {
+                      label: lang === "es" ? "🌿 Recuperación Capilar" : "🌿 Hair Recovery",
+                      to: "/recuperacion-capilar",
+                    },
+                    {
+                      label: lang === "es" ? "🦳 Analizador de Canicie" : "🦳 Grey Hair Analyzer",
+                      to: "/analizador-canicie",
                     },
                     {
                       label: lang === "es" ? "📊 Calculadora ROI" : "📊 ROI Calculator",

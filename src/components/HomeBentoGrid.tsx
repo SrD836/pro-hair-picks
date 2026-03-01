@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Microscope, Palette, Calculator, FlaskConical, Sparkles } from "lucide-react";
+import { ArrowRight, Microscope, Palette, Dna, FlaskConical, Sparkles } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const tools = [
@@ -29,15 +29,15 @@ const tools = [
     external: false,
   },
   {
-    icon: Calculator,
-    labelKey: "bento.roiCalc",
-    defaultLabel: "Calculadora de ROI",
-    descKey: "bento.roiDesc",
-    defaultDesc: "Calcula cuánto tardarás en amortizar tu próxima inversión en equipo.",
-    href: "/calculadora-roi",
-    accentColor: "#8BAF7C",
-    bgPattern: "radial-gradient(circle at 80% 80%, rgba(139,175,124,0.08) 0%, transparent 60%)",
-    tag: "Gratis",
+    icon: Dna,
+    labelKey: "bento.canicieTitle",
+    defaultLabel: "Analizador de Canicie",
+    descKey: "bento.canicieDesc",
+    defaultDesc: "¿Tus canas son genéticas o ambientales? Diagnóstico honesto basado en biología del melanocito.",
+    href: "/analizador-canicie",
+    accentColor: "#A8C5A0",
+    bgPattern: "radial-gradient(circle at 80% 80%, rgba(168,197,160,0.08) 0%, transparent 60%)",
+    tag: "Científico",
     external: false,
   },
   {
