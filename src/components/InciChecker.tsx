@@ -330,7 +330,7 @@ export default function InciChecker() {
       .from("inci_ingredients")
       .select("*")
       .then(({ data }) => {
-        if (data) setAllIngredients(data as InciIngredient[]);
+        if (data) setAllIngredients(data as unknown as InciIngredient[]);
       });
   }, []);
 
@@ -348,7 +348,7 @@ export default function InciChecker() {
         .select("*")
         .or(`inci_name.ilike.%${query}%,common_name.ilike.%${query}%`)
         .limit(8);
-      setSuggestions((data as InciIngredient[]) ?? []);
+      setSuggestions((data as unknown as InciIngredient[]) ?? []);
       setShowDropdown(true);
       setIsSearching(false);
     }, 300);

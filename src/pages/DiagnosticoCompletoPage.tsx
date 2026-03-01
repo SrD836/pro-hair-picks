@@ -7,6 +7,7 @@ import { ArrowRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import WizardProgress from '@/components/WizardProgress';
 import { TOOLS_CONFIG, WIZARD_TOOL_ORDER } from '@/data/tools.config';
+import { useLanguage } from '@/i18n/LanguageContext';
 import type { WizardSession, ToolId } from '@/types/tools.types';
 
 const WIZARD_KEY = 'wizard_session';
@@ -30,6 +31,7 @@ function clearSession() {
 
 export default function DiagnosticoCompletoPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const session = loadSession();
 
   const orderedTools = useMemo(
@@ -65,10 +67,10 @@ export default function DiagnosticoCompletoPage() {
   return (
     <>
       <Helmet>
-        <title>Diagnóstico Capilar Completo · GuiaDelSalon.com</title>
+        <title>{t("wizard.title")} · GuiaDelSalon.com</title>
         <meta
           name="description"
-          content="6 análisis capilares en una sola sesión guiada. Conoce tu cabello desde la ciencia."
+          content={t("wizard.subtitle")}
         />
       </Helmet>
 
@@ -88,16 +90,16 @@ export default function DiagnosticoCompletoPage() {
               className="inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
               style={{ background: 'rgba(196,169,125,0.12)', color: '#C4A97D', border: '1px solid rgba(196,169,125,0.25)' }}
             >
-              Diagnóstico Completo
+              {t("wizard.badge")}
             </span>
             <h1
               className="font-display font-bold text-[#F5F0E8] mb-3"
               style={{ fontSize: 'clamp(1.8rem, 5vw, 2.8rem)' }}
             >
-              Tu Diagnóstico Capilar Completo
+              {t("wizard.title")}
             </h1>
             <p className="text-[#F5F0E8]/55 text-sm max-w-md mx-auto leading-relaxed">
-              6 análisis · ~25 minutos · Informe personalizado
+              {t("wizard.subtitle")}
             </p>
           </motion.div>
 
@@ -146,15 +148,15 @@ export default function DiagnosticoCompletoPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[#F5F0E8] text-sm font-semibold">{tool.title}</p>
-                    <p className="text-[#F5F0E8]/40 text-xs">{tool.questionsCount} preguntas · {tool.duration}</p>
+                    <p className="text-[#F5F0E8]/40 text-xs">{tool.questionsCount} {t("wizard.questions")} · {tool.duration}</p>
                     {isDone && (
                       <p className="text-green-400 text-xs mt-0.5">
-                        ✓ {session?.completedModules[tool.id]?.summary ?? 'Completado'}
+                        ✓ {session?.completedModules[tool.id]?.summary ?? t("wizard.completed")}
                       </p>
                     )}
                   </div>
                   <div className="shrink-0 text-xs text-[#F5F0E8]/30 font-medium">
-                    {isDone ? 'Hecho' : isCurrent ? 'Ahora →' : `${i + 1}`}
+                    {isDone ? t("wizard.done") : isCurrent ? t("wizard.now") : `${i + 1}`}
                   </div>
                 </motion.div>
               );
@@ -172,10 +174,10 @@ export default function DiagnosticoCompletoPage() {
               <div>
                 <div className="text-4xl mb-4">🎉</div>
                 <h2 className="font-display font-bold text-[#F5F0E8] text-xl mb-2">
-                  ¡Diagnóstico completo!
+                  {t("wizard.allDoneTitle")}
                 </h2>
                 <p className="text-[#F5F0E8]/55 text-sm mb-6">
-                  Has completado los {orderedTools.length} módulos.
+                  {t("wizard.allDoneSubtitle").replace("{count}", String(orderedTools.length))}
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-3">
                   <Link
@@ -183,10 +185,10 @@ export default function DiagnosticoCompletoPage() {
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold"
                     style={{ background: '#C4A97D', color: '#2D2218' }}
                   >
-                    Ver mis resultados <ArrowRight className="w-4 h-4" />
+                    {t("wizard.viewResults")} <ArrowRight className="w-4 h-4" />
                   </Link>
                   <Button variant="outline" onClick={resetWizard} className="gap-2">
-                    <RotateCcw className="w-4 h-4" /> Repetir diagnóstico
+                    <RotateCcw className="w-4 h-4" /> {t("wizard.repeatDiagnosis")}
                   </Button>
                 </div>
               </div>
@@ -197,11 +199,11 @@ export default function DiagnosticoCompletoPage() {
                   size="lg"
                   className="w-full sm:w-auto px-10 gap-2"
                 >
-                  {completedIds.length === 0 ? 'Comenzar' : 'Continuar'} — {nextTool?.title}
+                  {completedIds.length === 0 ? t("wizard.startBtn") : t("wizard.continueBtn")} — {nextTool?.title}
                   <ArrowRight className="w-4 h-4" />
                 </Button>
                 <p className="text-[#F5F0E8]/30 text-xs">
-                  Puedes pausar y retomar. Tu progreso se guarda localmente.
+                  {t("wizard.pauseNote")}
                 </p>
               </>
             )}
@@ -210,7 +212,7 @@ export default function DiagnosticoCompletoPage() {
           {/* Back */}
           <div className="mt-8 text-center">
             <Link to="/mi-pelo" className="text-sm text-[#F5F0E8]/30 hover:text-[#F5F0E8]/60 transition-colors">
-              ← Volver a Mi Pelo
+              {t("wizard.backToMyHair")}
             </Link>
           </div>
         </div>

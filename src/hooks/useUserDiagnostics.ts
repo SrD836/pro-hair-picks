@@ -36,13 +36,13 @@ export function useSaveDiagnostic() {
 
       const { data, error } = await supabase
         .from('user_diagnostics')
-        .insert({
+        .insert([{
           user_id: user.id,
           tool_id: payload.toolId,
           result_summary: payload.resultSummary,
-          full_result: payload.fullResult,
+          full_result: payload.fullResult as unknown as import('@/integrations/supabase/types').Json,
           is_complete_diagnostic: payload.isCompleteDiagnostic ?? false,
-        })
+        }])
         .select()
         .single();
 

@@ -34,7 +34,7 @@ export interface ModuleResult {
 /** Wizard session saved to localStorage key 'wizard_session' */
 export interface WizardSession {
   startedAt: string;
-  completedModules: Record<ToolId, ModuleResult>;
+  completedModules: Partial<Record<ToolId, ModuleResult>>;
 }
 
 /** Row shape for Supabase user_diagnostics table */
