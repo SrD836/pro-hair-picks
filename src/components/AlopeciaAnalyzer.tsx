@@ -214,7 +214,7 @@ function AlopeciaFactorCard({ factor }: { factor: AlopeciaFactor }) {
 type TreatmentSexFilter = "todos" | "male" | "female";
 type TreatmentTypeFilter =
   | "todos"
-  | "farmacológico"
+  | "farmacologico"
   | "procedimiento"
   | "cosmético"
   | "nutraceutico";
@@ -266,19 +266,28 @@ function TreatmentsTab({
           ))}
         </div>
         <div className="flex gap-1">
-          {(["todos", "farmacológico", "procedimiento", "cosmético", "nutraceutico"] as TreatmentTypeFilter[]).map((v) => (
-            <button
-              key={v}
-              onClick={() => setTypeFilter(v)}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all capitalize ${
-                typeFilter === v
-                  ? "bg-[#2D2218] text-[#F5F0E8] border-[#2D2218]"
-                  : "bg-white text-[#2D2218]/65 border-[#2D2218]/15 hover:border-[#C4A97D]"
-              }`}
-            >
-              {v === "todos" ? "Todos" : v}
-            </button>
-          ))}
+          {(["todos", "farmacologico", "procedimiento", "cosmético", "nutraceutico"] as TreatmentTypeFilter[]).map((v) => {
+            const TYPE_LABELS: Record<TreatmentTypeFilter, string> = {
+              todos: "Todos",
+              farmacologico: "Farmacológico",
+              procedimiento: "Procedimiento",
+              cosmético: "Cosmético",
+              nutraceutico: "Nutraceutico",
+            };
+            return (
+              <button
+                key={v}
+                onClick={() => setTypeFilter(v)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all capitalize ${
+                  typeFilter === v
+                    ? "bg-[#2D2218] text-[#F5F0E8] border-[#2D2218]"
+                    : "bg-white text-[#2D2218]/65 border-[#2D2218]/15 hover:border-[#C4A97D]"
+                }`}
+              >
+                {TYPE_LABELS[v]}
+              </button>
+            );
+          })}
         </div>
         <div className="flex gap-1">
           {(["todos", "A", "B", "C"] as EvidenceFilter[]).map((v) => (
@@ -1222,8 +1231,7 @@ function RiskReport({
   report: AlopeciaReport;
   onReset: () => void;
 }) {
-  const isUrgent =
-    report.risk_level === "muy_alto" && report.recommended_action === "dermatologo_urgente";
+  const isUrgent = report.recommended_action === "dermatologo_urgente";
   const riskCfg = RISK_LEVEL_CONFIG[report.risk_level];
 
   return (
