@@ -21,6 +21,7 @@ interface LatestArticlesProps {
 
 /* ── Article card — bento style ──────────────────────────────────────────── */
 function ArticleCard({ article, index }: { article: Article; index: number }) {
+  const { t } = useLanguage();
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -68,7 +69,7 @@ function ArticleCard({ article, index }: { article: Article; index: number }) {
               <span className="text-[10px]">{article.readTime} min</span>
             </div>
             <span className="text-[10px] font-semibold text-[#C4A97D] uppercase tracking-wider group-hover:translate-x-0.5 transition-transform">
-              Leer →
+              {t("blog.readMore")} →
             </span>
           </div>
         </div>
@@ -186,14 +187,14 @@ export default function LatestArticles({ articles, title }: LatestArticlesProps)
           className="flex items-end justify-between mb-8"
         >
           <div>
-            <p className="text-[#C4A97D] text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Blog</p>
+            <p className="text-[#C4A97D] text-[10px] font-bold uppercase tracking-[0.2em] mb-1">{t("blog.sectionLabel")}</p>
             <h2 className="font-display font-bold text-[#2D2218] text-2xl md:text-3xl">{displayTitle}</h2>
           </div>
           <Link
             to="/blog"
             className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#2D2218]/50 hover:text-[#C4A97D] transition-colors group"
           >
-            Ver todos
+            {t("blog.viewAll")}
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </motion.div>
@@ -247,7 +248,7 @@ export default function LatestArticles({ articles, title }: LatestArticlesProps)
             to="/blog"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#2D2218] text-[#F5F0E8] rounded-full text-sm font-medium hover:bg-[#2D2218]/90 transition-colors"
           >
-            Ver todos los artículos
+            {t("blog.viewAll")}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

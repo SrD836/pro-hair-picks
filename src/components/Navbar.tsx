@@ -19,6 +19,7 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
   onToggle: () => void;
   onClose: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="relative" onMouseLeave={onClose}>
       <button
@@ -46,9 +47,9 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
             <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
               <div className="p-3 space-y-3">
                 {groups.map((group) => (
-                  <div key={group.section}>
+                  <div key={group.sectionKey}>
                     <p className="text-[10px] font-bold text-[#C4A97D]/60 uppercase tracking-[0.15em] px-2 mb-1.5">
-                      {group.section}
+                      {t(`catSection.${group.sectionKey}`)}
                     </p>
                     <div className="grid grid-cols-2 gap-1">
                       {group.items.map((item) => (
@@ -59,7 +60,7 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
                           className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
                         >
                           <span className="text-base">{item.icon}</span>
-                          <span className="truncate text-xs">{item.name}</span>
+                          <span className="truncate text-xs">{t(`cat.${item.slug}`)}</span>
                         </Link>
                       ))}
                     </div>
@@ -82,6 +83,7 @@ function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
   onToggle: () => void;
   onClose: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="relative" onMouseLeave={onClose}>
       <button
@@ -116,7 +118,7 @@ function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
                     className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
                   >
                     <span className="text-base">{item.icon}</span>
-                    <span className="truncate text-xs">{item.name}</span>
+                    <span className="truncate text-xs">{t(`cat.${item.slug}`)}</span>
                   </Link>
                 ))}
               </div>
@@ -134,16 +136,18 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
   onToggle: () => void;
   onClose: () => void;
 }) {
+  const { t, lang } = useLanguage();
+
   const tools: Array<{ label: string; to?: string; href?: string; badge?: string }> = [
-    { label: "✨ Mi Diagnóstico Completo", to: "/mi-pelo/diagnostico-completo", badge: "NUEVO" },
-    { label: "🎨 Asesor de Color", href: "https://guiadelsalon.com/asesor-color" },
-    { label: "🔬 Diagnóstico Capilar", to: "/diagnostico-capilar" },
-    { label: "🧪 Compatibilidad Química", to: "/inci-check" },
-    { label: "🌿 Recuperación Capilar", to: "/recuperacion-capilar" },
-    { label: "🦳 Analizador de Canicie", to: "/analizador-canicie" },
-    { label: "💈 Analizador de Alopecia", to: "/analizador-alopecia" },
+    { label: `✨ ${t("nav.fullDiagnosticLabel")}`, to: "/mi-pelo/diagnostico-completo", badge: t("nav.newBadge") },
+    { label: `🎨 ${t("nav.colorAdvisorLabel")}`, href: "https://guiadelsalon.com/asesor-color" },
+    { label: `🔬 ${t("nav.diagnosticLabel")}`, to: "/diagnostico-capilar" },
+    { label: `🧪 ${t("nav.compatibilityLabel")}`, to: "/inci-check" },
+    { label: `🌿 ${t("nav.recoveryLabel")}`, to: "/recuperacion-capilar" },
+    { label: `🦳 ${t("nav.canicieLabel")}`, to: "/analizador-canicie" },
+    { label: `💈 ${t("nav.alopeciaLabel")}`, to: "/analizador-alopecia" },
     { label: "separator" },
-    { label: "👤 Mi cuenta", to: "/mi-pelo/mis-resultados" },
+    { label: `👤 ${t("nav.myAccountLabel")}`, to: "/mi-pelo/mis-resultados" },
   ];
 
   return (
@@ -157,7 +161,7 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
             : "text-foreground/80 hover:text-foreground hover:bg-white/5"
         }`}
       >
-        Mi pelo
+        {t("nav.myHair")}
         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
@@ -209,6 +213,7 @@ function MobileGroupedSection({ label, groups, onClose }: {
   onClose: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <div className="border-b border-border/40">
@@ -222,9 +227,9 @@ function MobileGroupedSection({ label, groups, onClose }: {
       {expanded && (
         <div className="pb-3">
           {groups.map((group) => (
-            <div key={group.section} className="mb-2">
+            <div key={group.sectionKey} className="mb-2">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-2 mb-1">
-                {group.section}
+                {t(`catSection.${group.sectionKey}`)}
               </p>
               <div className="grid grid-cols-2 gap-1">
                 {group.items.map((item) => (
@@ -235,7 +240,7 @@ function MobileGroupedSection({ label, groups, onClose }: {
                     className="flex items-center gap-2 px-2 py-2 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
                   >
                     <span>{item.icon}</span>
-                    <span className="truncate text-xs">{item.name}</span>
+                    <span className="truncate text-xs">{t(`cat.${item.slug}`)}</span>
                   </Link>
                 ))}
               </div>
@@ -254,6 +259,7 @@ function MobileFlatSection({ label, items, onClose }: {
   onClose: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <div className="border-b border-border/40">
@@ -274,7 +280,7 @@ function MobileFlatSection({ label, items, onClose }: {
               className="flex items-center gap-2 px-2 py-2 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
             >
               <span>{item.icon}</span>
-              <span className="truncate text-xs">{item.name}</span>
+              <span className="truncate text-xs">{t(`cat.${item.slug}`)}</span>
             </Link>
           ))}
         </div>
@@ -410,40 +416,40 @@ const Navbar = () => {
               {/* Tools section */}
               <div className="border-t border-border/40 pt-3">
                 <p className="text-[10px] font-bold text-[#C4A97D]/60 uppercase tracking-[0.15em] px-2 mb-2">
-                  {lang === "es" ? "Herramientas" : "Tools"}
+                  {t("nav.toolsSectionLabel")}
                 </p>
                 <div className="space-y-0.5">
                   {[
                     {
-                      label: lang === "es" ? "✨ Mi Diagnóstico Completo" : "✨ Full Diagnostic",
+                      label: `✨ ${t("nav.fullDiagnosticLabel")}`,
                       to: "/mi-pelo/diagnostico-completo",
                     },
                     {
-                      label: lang === "es" ? "🎨 Asesor de Color" : "🎨 Color Advisor",
+                      label: `🎨 ${t("nav.colorAdvisorLabel")}`,
                       to: lang === "es" ? "/asesor-color" : "/color-match",
                     },
                     {
-                      label: lang === "es" ? "🔬 Diagnóstico Capilar" : "🔬 Hair Diagnostic",
+                      label: `🔬 ${t("nav.diagnosticLabel")}`,
                       to: "/diagnostico-capilar",
                     },
                     {
-                      label: lang === "es" ? "🧪 Compatibilidad Química" : "🧪 Chemical Compatibility",
+                      label: `🧪 ${t("nav.compatibilityLabel")}`,
                       to: "/inci-check",
                     },
                     {
-                      label: lang === "es" ? "🌿 Recuperación Capilar" : "🌿 Hair Recovery",
+                      label: `🌿 ${t("nav.recoveryLabel")}`,
                       to: "/recuperacion-capilar",
                     },
                     {
-                      label: lang === "es" ? "🦳 Analizador de Canicie" : "🦳 Grey Hair Analyzer",
+                      label: `🦳 ${t("nav.canicieLabel")}`,
                       to: "/analizador-canicie",
                     },
                     {
-                      label: lang === "es" ? "💈 Analizador de Alopecia" : "💈 Alopecia Analyzer",
+                      label: `💈 ${t("nav.alopeciaLabel")}`,
                       to: "/analizador-alopecia",
                     },
                     {
-                      label: lang === "es" ? "👤 Mi cuenta" : "👤 My account",
+                      label: `👤 ${t("nav.myAccountLabel")}`,
                       to: "/mi-pelo/mis-resultados",
                     },
                   ].map((tool) => (
