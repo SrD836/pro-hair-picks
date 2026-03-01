@@ -19,6 +19,7 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
   onToggle: () => void;
   onClose: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="relative" onMouseLeave={onClose}>
       <button
@@ -46,9 +47,9 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
             <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
               <div className="p-3 space-y-3">
                 {groups.map((group) => (
-                  <div key={group.section}>
+                  <div key={group.sectionKey}>
                     <p className="text-[10px] font-bold text-[#C4A97D]/60 uppercase tracking-[0.15em] px-2 mb-1.5">
-                      {group.section}
+                      {t(`catSection.${group.sectionKey}`)}
                     </p>
                     <div className="grid grid-cols-2 gap-1">
                       {group.items.map((item) => (
@@ -59,7 +60,7 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
                           className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
                         >
                           <span className="text-base">{item.icon}</span>
-                          <span className="truncate text-xs">{item.name}</span>
+                          <span className="truncate text-xs">{t(`cat.${item.slug}`)}</span>
                         </Link>
                       ))}
                     </div>
@@ -82,6 +83,7 @@ function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
   onToggle: () => void;
   onClose: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="relative" onMouseLeave={onClose}>
       <button
@@ -116,7 +118,7 @@ function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
                     className="flex items-center gap-2 px-2.5 py-2 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
                   >
                     <span className="text-base">{item.icon}</span>
-                    <span className="truncate text-xs">{item.name}</span>
+                    <span className="truncate text-xs">{t(`cat.${item.slug}`)}</span>
                   </Link>
                 ))}
               </div>
@@ -211,6 +213,7 @@ function MobileGroupedSection({ label, groups, onClose }: {
   onClose: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <div className="border-b border-border/40">
@@ -224,9 +227,9 @@ function MobileGroupedSection({ label, groups, onClose }: {
       {expanded && (
         <div className="pb-3">
           {groups.map((group) => (
-            <div key={group.section} className="mb-2">
+            <div key={group.sectionKey} className="mb-2">
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-2 mb-1">
-                {group.section}
+                {t(`catSection.${group.sectionKey}`)}
               </p>
               <div className="grid grid-cols-2 gap-1">
                 {group.items.map((item) => (
@@ -237,7 +240,7 @@ function MobileGroupedSection({ label, groups, onClose }: {
                     className="flex items-center gap-2 px-2 py-2 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
                   >
                     <span>{item.icon}</span>
-                    <span className="truncate text-xs">{item.name}</span>
+                    <span className="truncate text-xs">{t(`cat.${item.slug}`)}</span>
                   </Link>
                 ))}
               </div>
@@ -256,6 +259,7 @@ function MobileFlatSection({ label, items, onClose }: {
   onClose: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <div className="border-b border-border/40">
@@ -276,7 +280,7 @@ function MobileFlatSection({ label, items, onClose }: {
               className="flex items-center gap-2 px-2 py-2 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
             >
               <span>{item.icon}</span>
-              <span className="truncate text-xs">{item.name}</span>
+              <span className="truncate text-xs">{t(`cat.${item.slug}`)}</span>
             </Link>
           ))}
         </div>

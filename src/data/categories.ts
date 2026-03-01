@@ -6,6 +6,7 @@ export interface CategoryItem {
 
 export interface CategoryGroup {
   section: string;
+  sectionKey: string;
   items: CategoryItem[];
 }
 
@@ -24,6 +25,7 @@ function toSlug(name: string): string {
 export const menGroups: CategoryGroup[] = [
   {
     section: "Hardware Core",
+    sectionKey: "hardware-core",
     items: [
       { name: "Clippers", slug: "clippers", icon: "✂️" },
       { name: "Trimmers", slug: "trimmers", icon: "🔧" },
@@ -34,6 +36,7 @@ export const menGroups: CategoryGroup[] = [
   },
   {
     section: "Styling",
+    sectionKey: "styling",
     items: [
       { name: "Ceras y pomadas", slug: "ceras-y-pomadas", icon: "🫙" },
       { name: "Productos para la barba", slug: "productos-para-la-barba", icon: "🧔" },
@@ -44,6 +47,7 @@ export const menGroups: CategoryGroup[] = [
   },
   {
     section: "Mobiliario",
+    sectionKey: "mobiliario",
     items: [
       { name: "Sillones de barbero hidráulico", slug: "sillones-de-barbero-hidraulico", icon: "💺" },
       { name: "Lavacabezas (portátiles y fijos)", slug: "lavacabezas-portatiles-y-fijos", icon: "🚿" },
@@ -53,6 +57,7 @@ export const menGroups: CategoryGroup[] = [
   },
   {
     section: "Equipamiento",
+    sectionKey: "equipamiento",
     items: [
       { name: "Esterilizadores y desinfección", slug: "esterilizadores-y-desinfeccion", icon: "🧫" },
       { name: "Mantenimiento de máquinas", slug: "mantenimiento-de-maquinas", icon: "🛠️" },
@@ -69,6 +74,7 @@ export const menGroups: CategoryGroup[] = [
 export const womenGroups: CategoryGroup[] = [
   {
     section: "Herramientas Térmicas",
+    sectionKey: "herramientas-termicas",
     items: [
       { name: "Secadores profesionales", slug: "secadores-profesionales", icon: "💨" },
       { name: "Planchas de pelo", slug: "planchas-de-pelo", icon: "🔥" },
@@ -79,6 +85,7 @@ export const womenGroups: CategoryGroup[] = [
   },
   {
     section: "Color",
+    sectionKey: "color",
     items: [
       { name: "Tintes", slug: "tintes", icon: "🎨" },
       { name: "Decoloración", slug: "decoloracion", icon: "⭐" },
@@ -87,6 +94,7 @@ export const womenGroups: CategoryGroup[] = [
   },
   {
     section: "Tratamiento",
+    sectionKey: "tratamiento",
     items: [
       { name: "Champús técnicos", slug: "champus-tecnicos", icon: "🧴" },
       { name: "Tratamientos capilares profundos", slug: "tratamientos-capilares-profundos", icon: "💆" },
@@ -96,6 +104,7 @@ export const womenGroups: CategoryGroup[] = [
   },
   {
     section: "Corte/Styling",
+    sectionKey: "corte-styling",
     items: [
       { name: "Tijeras profesionales", slug: "tijeras-profesionales", icon: "✂️" },
       { name: "Cepillos térmicos", slug: "cepillos-termicos", icon: "🌡️" },
@@ -106,6 +115,7 @@ export const womenGroups: CategoryGroup[] = [
   },
   {
     section: "Técnico",
+    sectionKey: "tecnico",
     items: [
       { name: "Extensiones", slug: "extensiones", icon: "💇" },
       { name: "Medidores de humedad capilar", slug: "medidores-de-humedad-capilar", icon: "📊" },

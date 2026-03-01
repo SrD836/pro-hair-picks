@@ -5,7 +5,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { menGroups, womenGroups, mixedCategories } from "@/data/categories";
 
 const CategoriesPage = () => {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
 
   const sections = [
     {
@@ -21,7 +21,7 @@ const CategoriesPage = () => {
     {
       title: lang === "es" ? "Salón Mixto" : "Unisex Salon",
       accent: "#8BAF7C",
-      groups: [{ section: lang === "es" ? "Todas las categorías" : "All categories", items: mixedCategories }],
+      groups: [{ section: lang === "es" ? "Todas las categorías" : "All categories", sectionKey: "todas", items: mixedCategories }],
     },
   ];
 
@@ -87,7 +87,7 @@ const CategoriesPage = () => {
                     className="text-[10px] font-bold uppercase tracking-[0.15em] mb-3"
                     style={{ color: `${section.accent}80` }}
                   >
-                    {group.section}
+                    {t(`catSection.${group.sectionKey}`)}
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                     {group.items.map((item) => (
@@ -109,7 +109,7 @@ const CategoriesPage = () => {
                         }}
                       >
                         <span className="text-base shrink-0">{item.icon}</span>
-                        <span className="text-xs leading-tight">{item.name}</span>
+                        <span className="text-xs leading-tight">{t(`cat.${item.slug}`)}</span>
                       </Link>
                     ))}
                   </div>
