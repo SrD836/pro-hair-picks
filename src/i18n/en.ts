@@ -228,6 +228,7 @@ export const en = {
     done: "Done",
     now: "Now →",
     completed: "Completed",
+    modules: "modules",
     allDoneTitle: "Diagnosis complete!",
     allDoneSubtitle: "You have completed all {count} modules.",
     viewResults: "View my results",
@@ -236,6 +237,14 @@ export const en = {
     continueBtn: "Continue",
     pauseNote: "You can pause and resume. Your progress is saved locally.",
     backToMyHair: "← Back to My Hair",
+    tools: {
+      "diagnostico-capilar": "Hair Diagnosis",
+      "asesor-color": "Color Advisor",
+      "compatibilidad-quimica": "Chemical Compatibility",
+      "recuperacion-capilar": "Hair Recovery",
+      "analizador-canicie": "Gray Hair Analyzer",
+      "analizador-alopecia": "Alopecia Analyzer",
+    },
   },
   pasaporte: {
     title: "Your Hair Passport",

@@ -1,5 +1,6 @@
 // src/components/WizardProgress.tsx
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/i18n/LanguageContext';
 import type { ToolConfig } from '@/types/tools.types';
 
 interface WizardProgressProps {
@@ -9,6 +10,7 @@ interface WizardProgressProps {
 }
 
 export default function WizardProgress({ tools, currentIndex, completedIds }: WizardProgressProps) {
+  const { t } = useLanguage();
   const percent = Math.round((completedIds.length / tools.length) * 100);
 
   return (
@@ -18,6 +20,7 @@ export default function WizardProgress({ tools, currentIndex, completedIds }: Wi
         {tools.map((tool, i) => {
           const isDone = completedIds.includes(tool.id);
           const isCurrent = i === currentIndex;
+          const translatedName = t(`wizard.tools.${tool.id}`) || tool.title;
           return (
             <div key={tool.id} className="flex flex-col items-center gap-1">
               <div
@@ -41,7 +44,7 @@ export default function WizardProgress({ tools, currentIndex, completedIds }: Wi
                 className="text-[9px] text-center hidden sm:block max-w-[64px] leading-tight"
                 style={{ color: isCurrent ? '#F5F0E8' : 'rgba(245,240,232,0.4)' }}
               >
-                {tool.title.split(' ')[0]}
+                {translatedName.split(' ')[0]}
               </span>
             </div>
           );
@@ -59,7 +62,7 @@ export default function WizardProgress({ tools, currentIndex, completedIds }: Wi
         />
       </div>
       <div className="flex justify-between mt-1">
-        <span className="text-[10px] text-[#F5F0E8]/40">{completedIds.length} / {tools.length} módulos</span>
+        <span className="text-[10px] text-[#F5F0E8]/40">{completedIds.length} / {tools.length} {t("wizard.modules")}</span>
         <span className="text-[10px] text-[#F5F0E8]/40">{percent}%</span>
       </div>
     </div>

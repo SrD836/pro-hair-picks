@@ -228,6 +228,7 @@ export const es = {
     done: "Hecho",
     now: "Ahora →",
     completed: "Completado",
+    modules: "módulos",
     allDoneTitle: "¡Diagnóstico completo!",
     allDoneSubtitle: "Has completado los {count} módulos.",
     viewResults: "Ver mis resultados",
@@ -236,6 +237,14 @@ export const es = {
     continueBtn: "Continuar",
     pauseNote: "Puedes pausar y retomar. Tu progreso se guarda localmente.",
     backToMyHair: "← Volver a Mi Pelo",
+    tools: {
+      "diagnostico-capilar": "Diagnóstico Capilar",
+      "asesor-color": "Asesor de Color",
+      "compatibilidad-quimica": "Compatibilidad Química",
+      "recuperacion-capilar": "Recuperación Capilar",
+      "analizador-canicie": "Analizador de Canicie",
+      "analizador-alopecia": "Analizador de Alopecia",
+    },
   },
   pasaporte: {
     title: "Tu Pasaporte Capilar",
