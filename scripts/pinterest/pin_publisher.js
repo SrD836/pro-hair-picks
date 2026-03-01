@@ -154,7 +154,13 @@ async function main() {
       console.error('❌ Archivo de cola no encontrado: ' + queuePath);
       process.exit(1);
     }
-    pins = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
+    try {
+      pins = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
+    } catch (e) {
+      console.error('❌ El archivo de cola no contiene JSON valido: ' + queuePath);
+      console.error('   ' + e.message);
+      process.exit(1);
+    }
     if (!Array.isArray(pins)) pins = [pins];
   } else {
     // Cola de ejemplo para demo (1 Pin con board_id real)
