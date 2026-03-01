@@ -18,6 +18,7 @@
 
 'use strict';
 const https    = require('https');
+const zlib     = require('zlib');
 const fs       = require('fs');
 const path     = require('path');
 const readline = require('readline');
@@ -107,20 +108,25 @@ function publishPin(pin) {
     });
 
     const options = {
-      hostname: 'api.pinterest.com',
+      hostname: 'api-sandbox.pinterest.com',
       path:     '/v5/pins',
       method:   'POST',
       headers: {
-        'Authorization':  `Bearer ${ACCESS_TOKEN}`,
-        'Content-Type':   'application/json',
-        'Content-Length': Buffer.byteLength(body),
+        'Authorization':   `Bearer ${ACCESS_TOKEN}`,
+        'Content-Type':    'application/json',
+        'Content-Length':  Buffer.byteLength(body),
+        'Accept-Encoding': 'identity',
       },
     };
 
     const req = https.request(options, res => {
+      const encoding = res.headers['content-encoding'];
+      const stream = encoding === 'gzip' ? res.pipe(zlib.createGunzip())
+                   : encoding === 'br'   ? res.pipe(zlib.createBrotliDecompress())
+                   : res;
       let data = '';
-      res.on('data', chunk => { data += chunk; });
-      res.on('end', () => {
+      stream.on('data', chunk => { data += chunk; });
+      stream.on('end', () => {
         try {
           const json = JSON.parse(data);
           if (res.statusCode >= 200 && res.statusCode < 300) resolve(json);
@@ -174,7 +180,7 @@ async function main() {
       description: 'Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.',
       link:        'https://guiadelsalon.com/color-match',
       board_id:    '1133218393678035986',
-      image_url:   'https://guiadelsalon.com/og-color-match.jpg',
+      image_url:   'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&h=630&fit=crop',
     }];
     log('(!) No se especifico --queue. Usando cola de ejemplo (1 Pin).');
     log('    Uso real: npm run pinterest:publish -- --queue=ruta/pins.json');

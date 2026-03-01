@@ -8,19 +8,21 @@ const Hero = () => {
 
   return (
     <section className="relative overflow-hidden flex items-center" style={{ minHeight: "92svh" }}>
-      {/* Background image */}
-      <img
-        src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1920&q=80&auto=format&fit=crop"
-        srcSet="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=75&auto=format&fit=crop 800w, https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1920&q=80&auto=format&fit=crop 1920w"
-        sizes="100vw"
-        alt=""
-        fetchPriority="high"
-        loading="eager"
-        decoding="sync"
-        width={1920}
-        height={1080}
-        className="absolute inset-0 w-full h-full object-cover object-center"
-      />
+      {/* Background image — local webp matches preloads in index.html */}
+      <picture>
+        <source srcSet="/images/hero-barbershop-mobile.webp" media="(max-width: 768px)" type="image/webp" />
+        <source srcSet="/images/hero-barbershop.webp" type="image/webp" />
+        <img
+          src="/images/hero-barbershop.jpg"
+          alt=""
+          fetchPriority="high"
+          loading="eager"
+          decoding="sync"
+          width={1920}
+          height={1080}
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+      </picture>
 
       {/* Multi-layer gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#110b05]/95 via-[#110b05]/70 to-transparent" />
@@ -50,10 +52,11 @@ const Hero = () => {
           className="mb-8 flex justify-center"
         >
           <img
-            src="/logo-full.png"
+            src="/logo-160.webp"
+            srcSet="/logo-160.webp 1x, /logo-240.webp 2x"
             alt="Guía del Salón"
-            width={220}
-            height={110}
+            width={160}
+            height={80}
             className="h-24 w-auto brightness-0 invert opacity-90 drop-shadow-[0_4px_24px_rgba(196,169,125,0.25)]"
             loading="eager"
             decoding="sync"
