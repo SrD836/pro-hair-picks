@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Scissors, Sparkles, Users } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface FeaturedCat {
   name: string;
@@ -51,6 +52,7 @@ function CategoryBlock({
   categories: FeaturedCat[];
   delay?: number;
 }) {
+  const { t } = useLanguage();
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -83,7 +85,7 @@ function CategoryBlock({
                 {cat.icon}
               </span>
               <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors">
-                {cat.name}
+                {t(`cat.${cat.slug}`)}
               </span>
             </Link>
           </motion.div>

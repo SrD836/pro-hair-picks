@@ -40,7 +40,7 @@ const genderConfig = {
 const GenderPage = () => {
   const location = useLocation();
   const gender = location.pathname.replace("/", "");
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
 
   const config = genderConfig[gender as keyof typeof genderConfig];
   if (!config) {
@@ -56,7 +56,7 @@ const GenderPage = () => {
       ? menGroups
       : gender === "mujer"
       ? womenGroups
-      : [{ section: lang === "es" ? "Todas" : "All", items: mixedCategories }];
+      : [{ section: lang === "es" ? "Todas" : "All", sectionKey: "todas", items: mixedCategories }];
 
   const title = config.title[lang as "es" | "en"] || config.title.es;
   const subtitle = config.subtitle[lang as "es" | "en"] || config.subtitle.es;
@@ -110,7 +110,7 @@ const GenderPage = () => {
                 className="text-[10px] font-bold uppercase tracking-[0.18em] mb-3"
                 style={{ color: `${config.accent}90` }}
               >
-                {group.section}
+                {t(`catSection.${group.sectionKey}`)}
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                 {group.items.map((item) => (
@@ -133,7 +133,7 @@ const GenderPage = () => {
                     }}
                   >
                     <span className="text-lg shrink-0">{item.icon}</span>
-                    <span className="text-xs leading-tight font-medium">{item.name}</span>
+                    <span className="text-xs leading-tight font-medium">{t(`cat.${item.slug}`)}</span>
                   </Link>
                 ))}
               </div>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCategories } from "@/hooks/useCategory";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const CategoryGrid = () => {
   const { data: menCats = [], isLoading: menLoading } = useCategories("hombre");
@@ -39,6 +40,7 @@ function CategorySection({
   gender: string;
   isLoading: boolean;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="mb-16">
       <div className="mb-8">
@@ -71,7 +73,7 @@ function CategorySection({
                 {cat.image_url ? (
                   <img
                     src={cat.image_url}
-                    alt={cat.name}
+                    alt={t(`cat.${cat.slug}`) || cat.name}
                     className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-200"
                     loading="lazy"
                   />
@@ -81,7 +83,7 @@ function CategorySection({
                   </span>
                 )}
                 <span className="text-sm font-medium text-foreground text-center leading-tight">
-                  {cat.name}
+                  {t(`cat.${cat.slug}`) || cat.name}
                 </span>
               </Link>
             </motion.div>
@@ -91,5 +93,4 @@ function CategorySection({
     </div>
   );
 }
-
 export default CategoryGrid;
