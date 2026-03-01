@@ -43,7 +43,8 @@ function loadEnv(filePath) {
 
 function updateEnvKey(filePath, key, value) {
   let content = fs.readFileSync(filePath, 'utf8');
-  const regex = new RegExp(`^(${key}=).*$`, 'm');
+  const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`^(${escapedKey}=).*$`, 'm');
   if (regex.test(content)) {
     content = content.replace(regex, `$1${value}`);
   } else {
@@ -102,7 +103,8 @@ const server = http.createServer((req, res) => {
 
   if (error) {
     res.writeHead(400, { 'Content-Type': 'text/html' });
-    res.end(`<h1>Error: ${error}</h1><p>Puedes cerrar esta ventana.</p>`);
+    const safeError = String(error).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    res.end(`<h1>Error: ${safeError}</h1><p>Puedes cerrar esta ventana.</p>`);
     log(`Error Pinterest: ${error}`);
     server.close();
     process.exit(1);
@@ -121,9 +123,17 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end('<h1>Autorizacion recibida. Puedes cerrar esta ventana.</h1>');
 
+  clearTimeout(authTimeout);
   server.close();
   exchangeCodeForTokens(code);
 });
+
+const AUTH_TIMEOUT_MS = 5 * 60 * 1000;
+const authTimeout = setTimeout(() => {
+  log('Tiempo de espera agotado (5 min). Ejecuta de nuevo: npm run pinterest:auth');
+  server.close();
+  process.exit(1);
+}, AUTH_TIMEOUT_MS);
 
 server.listen(8080);
 
