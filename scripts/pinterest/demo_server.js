@@ -16,7 +16,6 @@
 const http   = require('http');
 const fs     = require('fs');
 const path   = require('path');
-const crypto = require('crypto');
 
 const PORT     = 3001;
 const HTML     = path.join(__dirname, 'demo', 'index.html');
@@ -105,18 +104,20 @@ var server = http.createServer(function(req, res) {
   }
 
   // GET /api/auth-url
+  // Note: state (CSRF token) is intentionally omitted here. The full OAuth flow with
+  // proper state validation runs via `npm run pinterest:auth` (pinterest_oauth.js on :8080).
+  // This endpoint only provides the URL for display purposes in the demo interface.
   if (url.pathname === '/api/auth-url') {
     var e = loadEnv(ENV_PATH);
     if (!e.PINTEREST_CLIENT_ID) {
       sendJson(res, { error: 'PINTEREST_CLIENT_ID no configurado' }, 400);
       return;
     }
-    var st    = crypto.randomBytes(16).toString('hex');
     var redir = e.PINTEREST_REDIRECT_URI || 'http://localhost:8080/callback';
     var authUrl = 'https://www.pinterest.com/oauth/?client_id=' + e.PINTEREST_CLIENT_ID
       + '&redirect_uri=' + encodeURIComponent(redir)
       + '&scope=' + encodeURIComponent('boards:read,pins:write')
-      + '&response_type=code&state=' + st;
+      + '&response_type=code';
     sendJson(res, { url: authUrl });
     return;
   }
