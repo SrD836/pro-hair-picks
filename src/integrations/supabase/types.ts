@@ -1142,6 +1142,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_diagnostics: {
+        Row: {
+          id: string
+          user_id: string
+          tool_id: string
+          result_summary: string
+          full_result: Json
+          is_complete_diagnostic: boolean
+          share_token: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          tool_id: string
+          result_summary?: string
+          full_result?: Json
+          is_complete_diagnostic?: boolean
+          share_token?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          tool_id?: string
+          result_summary?: string
+          full_result?: Json
+          is_complete_diagnostic?: boolean
+          share_token?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
