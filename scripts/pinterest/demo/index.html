@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuiaDelSalon.com x Pinterest</title>
+  <style>
+    :root {
+      --cream:    #F5F0E8;
+      --espresso: #2D2218;
+      --gold:     #C4A97D;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      background: var(--cream);
+      color: var(--espresso);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    header { text-align: center; margin-bottom: 40px; }
+    h1 { font-size: 2rem; letter-spacing: 0.05em; }
+    h1 span { color: var(--gold); }
+    .tagline { font-size: 0.9rem; color: #7a6a55; margin-top: 6px; }
+    .card {
+      background: white;
+      border: 1px solid #e0d8cc;
+      border-radius: 12px;
+      padding: 28px 32px;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(44,34,24,0.06);
+    }
+    .card h2 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .status-row { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
+    .dot.connected    { background: #4caf50; }
+    .dot.disconnected { background: #e53935; }
+    button {
+      margin-top: 18px;
+      background: var(--espresso);
+      color: var(--cream);
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      width: 100%;
+      letter-spacing: 0.03em;
+      transition: background 0.2s;
+    }
+    button:hover    { background: #4a3828; }
+    button:disabled { background: #999; cursor: not-allowed; }
+    .pin-preview { display: none; }
+    .pin-preview.visible { display: block; }
+    .pin-img { width: 100%; border-radius: 8px; margin-bottom: 14px; object-fit: cover; max-height: 200px; }
+    .pin-title { font-size: 1rem; font-weight: bold; margin-bottom: 6px; }
+    .pin-desc  { font-size: 0.85rem; color: #7a6a55; margin-bottom: 10px; line-height: 1.5; }
+    .pin-link a { font-size: 0.8rem; color: var(--gold); text-decoration: none; }
+    .pin-link a:hover { text-decoration: underline; }
+    .pin-meta { font-size: 0.75rem; color: #aaa; margin-top: 8px; }
+    footer { font-size: 0.75rem; color: #aaa; margin-top: 32px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Guia<span>Del</span>Salon</h1>
+  <p class="tagline">Herramienta de publicacion en Pinterest - Uso editorial</p>
+</header>
+
+<div class="card">
+  <h2>Conexion con Pinterest</h2>
+  <div class="status-row">
+    <div class="dot" id="statusDot"></div>
+    <span id="statusText">Comprobando...</span>
+  </div>
+  <button id="connectBtn" disabled onclick="connectPinterest()">Conectar con Pinterest</button>
+</div>
+
+<div class="card pin-preview" id="lastPinCard">
+  <h2>Ultimo Pin aprobado y publicado</h2>
+  <img class="pin-img" id="lastPinImg" src="" alt="Imagen del Pin">
+  <div class="pin-title" id="lastPinTitle"></div>
+  <div class="pin-desc"  id="lastPinDesc"></div>
+  <div class="pin-link"><a id="lastPinLink" href="#" target="_blank" rel="noopener">Ver articulo original</a></div>
+  <div class="pin-meta" id="lastPinMeta"></div>
+</div>
+
+<footer>GuiaDelSalon.com - Pines enlazados siempre a contenido editorial original</footer>
+
+<script>
+var API = 'http://localhost:3001/api';
+
+function checkStatus() {
+  fetch(API + '/status')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var dot  = document.getElementById('statusDot');
+      var text = document.getElementById('statusText');
+      var btn  = document.getElementById('connectBtn');
+      if (d.connected) {
+        dot.className    = 'dot connected';
+        text.textContent = 'Conectado' + (d.username ? ' como: ' + d.username : '');
+        btn.textContent  = 'Conectado';
+        btn.disabled     = true;
+      } else {
+        dot.className    = 'dot disconnected';
+        text.textContent = 'No conectado';
+        btn.textContent  = 'Conectar con Pinterest';
+        btn.disabled     = false;
+      }
+    })
+    .catch(function() {
+      document.getElementById('statusText').textContent = 'Error al contactar el servidor local';
+    });
+}
+
+function loadLastPin() {
+  fetch(API + '/last-pin')
+    .then(function(r) { if (!r.ok) return null; return r.json(); })
+    .then(function(p) {
+      if (!p) return;
+      document.getElementById('lastPinCard').classList.add('visible');
+      document.getElementById('lastPinImg').src          = p.image_url || '';
+      document.getElementById('lastPinTitle').textContent = p.title || '';
+      document.getElementById('lastPinDesc').textContent  = p.description || '';
+      document.getElementById('lastPinLink').href         = p.link || '#';
+      document.getElementById('lastPinMeta').textContent  =
+        'Publicado: ' + (p.timestamp ? new Date(p.timestamp).toLocaleString('es-ES') : '-') +
+        ' | ID Pinterest: ' + (p.pinterest_id || '-');
+    })
+    .catch(function() {});
+}
+
+function connectPinterest() {
+  fetch(API + '/auth-url')
+    .then(function(r) { return r.json(); })
+    .then(function(d) { if (d.url) window.open(d.url, '_blank'); })
+    .catch(function() { alert('Error al obtener URL de autorizacion'); });
+}
+
+checkStatus();
+loadLastPin();
+</script>
+</body>
+</html>
