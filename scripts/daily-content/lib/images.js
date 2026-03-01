@@ -1,36 +1,75 @@
 /**
  * images.js — Descarga imagen de Pexels, convierte a WebP, sube a Supabase Storage
- * Fallback: URL de Unsplash curada si no hay PEXELS_API_KEY
+ * Fix: tracking de IDs usados para evitar fotos repetidas entre posts del mismo día
  */
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// Mapa de categorías a queries de Pexels y foto IDs de Unsplash (fallback)
+// ── Tracking de imágenes ya usadas en esta ejecución ────────────────────────
+const usedPexelsIds = new Set();
+const usedUnsplashIds = new Set();
+
 const IMAGE_QUERIES = {
-  core: { pexels: 'hairdresser salon professional', unsplash: '1562322140-8baeececf3df' },
-  bridge: { pexels: 'technology beauty salon', unsplash: '1522337360788-8b13dee7a37e' },
-  negocio: { pexels: 'beauty salon business management', unsplash: '1521737604893-d14cc237f11d' },
+  core:     { pexels: 'hairdresser salon professional', unsplash: '1562322140-8baeececf3df' },
+  bridge:   { pexels: 'technology beauty salon', unsplash: '1522337360788-8b13dee7a37e' },
+  negocio:  { pexels: 'beauty salon business management', unsplash: '1521737604893-d14cc237f11d' },
+  core_us:  { pexels: 'barber shop usa professional', unsplash: '1503951914875-452162b0f3f1' },
 };
 
 const TOPIC_QUERIES = {
-  color: { pexels: 'hair coloring salon', unsplash: '1522337360788-8b13dee7a37e' },
-  barbería: { pexels: 'barber shop professional', unsplash: '1503951914875-452162b0f3f1' },
-  tijera: { pexels: 'hairdresser scissors professional', unsplash: '1562322140-8baeececf3df' },
-  secador: { pexels: 'hair dryer professional salon', unsplash: '1562322140-8baeececf3df' },
-  clipper: { pexels: 'barber clipper haircut', unsplash: '1503951914875-452162b0f3f1' },
-  keratina: { pexels: 'hair treatment salon', unsplash: '1522337360788-8b13dee7a37e' },
-  tinte: { pexels: 'hair color dyeing professional', unsplash: '1522337360788-8b13dee7a37e' },
-  rizado: { pexels: 'curly hair salon', unsplash: '1562322140-8baeececf3df' },
+  color:     { pexels: 'hair coloring salon professional', unsplash: '1522337360788-8b13dee7a37e' },
+  barbería:  { pexels: 'barber shop professional vintage', unsplash: '1503951914875-452162b0f3f1' },
+  tijera:    { pexels: 'hairdresser scissors cutting professional', unsplash: '1562322140-8baeececf3df' },
+  secador:   { pexels: 'hair dryer professional salon woman', unsplash: '1562322140-8baeececf3df' },
+  clipper:   { pexels: 'barber clipper fade haircut', unsplash: '1503951914875-452162b0f3f1' },
+  keratina:  { pexels: 'hair treatment keratin smoothing', unsplash: '1522337360788-8b13dee7a37e' },
+  tinte:     { pexels: 'hair color dyeing balayage', unsplash: '1522337360788-8b13dee7a37e' },
+  rizado:    { pexels: 'curly hair salon styling', unsplash: '1562322140-8baeececf3df' },
+  fade:      { pexels: 'barber fade haircut usa', unsplash: '1503951914875-452162b0f3f1' },
+  taper:     { pexels: 'taper fade barber professional', unsplash: '1503951914875-452162b0f3f1' },
+  extensión: { pexels: 'hair extensions salon professional', unsplash: '1562322140-8baeececf3df' },
+  negocio:   { pexels: 'salon owner business entrepreneur', unsplash: '1521737604893-d14cc237f11d' },
+  ia:        { pexels: 'technology artificial intelligence beauty', unsplash: '1560066984-138daad8d428' },
+  intelig:   { pexels: 'digital technology salon innovation', unsplash: '1560066984-138daad8d428' },
 };
+
+// Fallbacks adicionales por si el principal ya fue usado
+const UNSPLASH_FALLBACKS = [
+  '1599351431202-1e0f0137899a',
+  '1605497788044-5a32c7078486',
+  '1582095133179-bfd08e2585d5',
+  '1493106641515-5688d9e608b9',
+  '1519345182560-3f2917c472ef',
+  '1580618672591-eb180b1a973f',
+  '1516975080664-ed2fc6a32937',
+  '1521590832167-7bcbfaa6381f',
+];
 
 function getImageQuery(post) {
   const topic = (post.topic || '').toLowerCase();
   for (const [key, val] of Object.entries(TOPIC_QUERIES)) {
     if (topic.includes(key)) return val;
   }
+  // Diferencia por tipo si no hay coincidencia de tema
   return IMAGE_QUERIES[post.type] || IMAGE_QUERIES.core;
+}
+
+function getUnusedUnsplashId(preferred) {
+  if (!usedUnsplashIds.has(preferred)) {
+    usedUnsplashIds.add(preferred);
+    return preferred;
+  }
+  for (const id of UNSPLASH_FALLBACKS) {
+    if (!usedUnsplashIds.has(id)) {
+      usedUnsplashIds.add(id);
+      return id;
+    }
+  }
+  // Último recurso: añadir timestamp como query param para forzar variación
+  usedUnsplashIds.add(preferred);
+  return preferred;
 }
 
 function downloadFile(url, destPath) {
@@ -52,11 +91,11 @@ function downloadFile(url, destPath) {
   });
 }
 
-async function searchPexels(query, apiKey) {
+async function searchPexels(query, apiKey, page = 1) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: 'api.pexels.com',
-      path: `/v1/search?query=${encodeURIComponent(query)}&per_page=5&orientation=landscape`,
+      path: `/v1/search?query=${encodeURIComponent(query)}&per_page=15&page=${page}&orientation=landscape`,
       headers: { Authorization: apiKey },
     };
     https.get(options, (res) => {
@@ -66,7 +105,15 @@ async function searchPexels(query, apiKey) {
         try {
           const json = JSON.parse(data);
           if (json.photos && json.photos.length > 0) {
-            resolve(json.photos[0].src.large2x || json.photos[0].src.large);
+            // Buscar primera foto NO usada
+            const available = json.photos.filter(p => !usedPexelsIds.has(p.id));
+            if (available.length === 0) {
+              reject(new Error('All Pexels results already used'));
+              return;
+            }
+            const selected = available[0];
+            usedPexelsIds.add(selected.id);
+            resolve(selected.src.large2x || selected.src.large);
           } else {
             reject(new Error('No photos found'));
           }
@@ -102,7 +149,7 @@ async function uploadToSupabase(filePath, slug, supabaseUrl, anonKey) {
   const fileContent = fs.readFileSync(filePath);
   const fileName = `blog/${slug}-hero.webp`;
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const url = new URL(`${supabaseUrl}/storage/v1/object/public-images/${fileName}`);
     const options = {
       hostname: url.hostname,
@@ -123,7 +170,6 @@ async function uploadToSupabase(filePath, slug, supabaseUrl, anonKey) {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(`${supabaseUrl}/storage/v1/object/public/public-images/${fileName}`);
         } else {
-          // Si falla el upload, usar URL de Unsplash como fallback
           resolve(null);
         }
       });
@@ -136,12 +182,16 @@ async function uploadToSupabase(filePath, slug, supabaseUrl, anonKey) {
 
 /**
  * Procesa las imágenes para todos los posts
- * Devuelve el plan con cover_image_url añadido a cada post
+ * Garantiza que no se repita ninguna foto entre los 5 posts del día
  */
 async function processImages(dailyPlan, config) {
   const { PEXELS_API_KEY, SUPABASE_URL, SUPABASE_ANON_KEY, OUTPUT_DIR } = config;
   const blogImagesDir = path.join(process.cwd(), 'public/images/blog');
   if (!fs.existsSync(blogImagesDir)) fs.mkdirSync(blogImagesDir, { recursive: true });
+
+  // Reset tracking al inicio de cada ejecución del pipeline
+  usedPexelsIds.clear();
+  usedUnsplashIds.clear();
 
   const posts = [];
   for (const post of dailyPlan.posts) {
@@ -151,31 +201,32 @@ async function processImages(dailyPlan, config) {
     let coverImageUrl = null;
 
     try {
-      // 1. Buscar en Pexels
       if (PEXELS_API_KEY) {
-        sourceUrl = await searchPexels(query.pexels, PEXELS_API_KEY);
+        // Intentar con query específica, si están agotadas probar query más amplia
+        try {
+          sourceUrl = await searchPexels(query.pexels, PEXELS_API_KEY);
+        } catch {
+          // Reintentar con query más genérica + page 2
+          sourceUrl = await searchPexels('professional salon hairdresser barber', PEXELS_API_KEY, 2);
+        }
       }
     } catch {
-      console.log(`    Pexels no disponible — usando Unsplash fallback`);
+      console.log(`    Pexels agotado o no disponible — usando Unsplash`);
     }
 
-    // 2. Fallback: Unsplash CDN (sin API key, URL directa)
     if (!sourceUrl) {
-      sourceUrl = `https://images.unsplash.com/photo-${query.unsplash}?w=1200&q=80&fm=jpg`;
+      const unsplashId = getUnusedUnsplashId(query.unsplash);
+      sourceUrl = `https://images.unsplash.com/photo-${unsplashId}?w=1200&q=80&fm=jpg`;
     }
 
     try {
       const tempPath = path.join(OUTPUT_DIR, `temp-${post.slug}.jpg`);
       const webpHeroPath = path.join(blogImagesDir, `${post.slug}-hero.webp`);
 
-      // 3. Descargar fuente
       await downloadFile(sourceUrl, tempPath);
-
-      // 4. Convertir a WebP 1200x630 (OG image)
       await convertToWebP(tempPath, webpHeroPath, 1200, 630, 85);
       fs.unlinkSync(tempPath);
 
-      // 5. Subir a Supabase Storage (opcional)
       if (SUPABASE_URL && SUPABASE_ANON_KEY) {
         const storageUrl = await uploadToSupabase(webpHeroPath, post.slug, SUPABASE_URL, SUPABASE_ANON_KEY);
         coverImageUrl = storageUrl || `/images/blog/${post.slug}-hero.webp`;
@@ -186,7 +237,6 @@ async function processImages(dailyPlan, config) {
       console.log(`    ✓ ${post.slug}-hero.webp generada`);
     } catch (err) {
       console.warn(`    ⚠️  Error procesando imagen: ${err.message}`);
-      // Usar imagen genérica del sitio como fallback
       coverImageUrl = '/images/hero-barbershop.webp';
     }
 

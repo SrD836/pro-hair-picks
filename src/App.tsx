@@ -47,6 +47,7 @@ const InciCheckerPage = lazy(() => import('./pages/InciCheckerPage'));
 const RecoveryTimelinePage = lazy(() => import('./pages/RecoveryTimelinePage'));
 const PasaporteCapilarPage = lazy(() => import("./pages/PasaporteCapilarPage"));
 const CanicieAnalyzerPage = lazy(() => import('./pages/CanicieAnalyzerPage'));
+const AlopeciaAnalyzerPage = lazy(() => import('./pages/AlopeciaAnalyzerPage'));
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,7 @@ function AnimatedRoutes() {
           <Route path="/inci-check" element={<InciCheckerPage />} />
           <Route path="/recuperacion-capilar" element={<RecoveryTimelinePage />} />
           <Route path="/analizador-canicie" element={<CanicieAnalyzerPage />} />
+          <Route path="/analizador-alopecia" element={<AlopeciaAnalyzerPage />} />
           <Route path="/pasaporte-capilar" element={
             <Suspense fallback={<ScissorsSpinner />}>
               <PasaporteCapilarPage />
