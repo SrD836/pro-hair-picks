@@ -290,6 +290,183 @@ export type Database = {
         }
         Relationships: []
       }
+      alopecia_factors: {
+        Row: {
+          id: string
+          factor_id: string
+          category: string
+          factor_name: string
+          factor_technical: string
+          factor_simple: string
+          evidence_level: string
+          modifiable: boolean
+          applies_to: string
+          impact_magnitude: string
+          sources: Json | null
+          pending_verification: boolean
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          factor_id: string
+          category: string
+          factor_name: string
+          factor_technical: string
+          factor_simple: string
+          evidence_level: string
+          modifiable: boolean
+          applies_to: string
+          impact_magnitude: string
+          sources?: Json | null
+          pending_verification?: boolean
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          factor_id?: string
+          category?: string
+          factor_name?: string
+          factor_technical?: string
+          factor_simple?: string
+          evidence_level?: string
+          modifiable?: boolean
+          applies_to?: string
+          impact_magnitude?: string
+          sources?: Json | null
+          pending_verification?: boolean
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      alopecia_treatments: {
+        Row: {
+          id: string
+          treatment_id: string
+          name: string
+          type: string
+          evidence_level: string
+          effective_stages_hamilton: number[]
+          effective_stages_ludwig: number[]
+          applies_to: string
+          time_to_results_months: number | null
+          requires_maintenance: boolean
+          contraindications: string[]
+          avg_cost_spain_eur: number | null
+          realistic_expectation: string
+          sources: Json | null
+          pending_verification: boolean
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          treatment_id: string
+          name: string
+          type: string
+          evidence_level: string
+          effective_stages_hamilton?: number[]
+          effective_stages_ludwig?: number[]
+          applies_to: string
+          time_to_results_months?: number | null
+          requires_maintenance?: boolean
+          contraindications?: string[]
+          avg_cost_spain_eur?: number | null
+          realistic_expectation: string
+          sources?: Json | null
+          pending_verification?: boolean
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          treatment_id?: string
+          name?: string
+          type?: string
+          evidence_level?: string
+          effective_stages_hamilton?: number[]
+          effective_stages_ludwig?: number[]
+          applies_to?: string
+          time_to_results_months?: number | null
+          requires_maintenance?: boolean
+          contraindications?: string[]
+          avg_cost_spain_eur?: number | null
+          realistic_expectation?: string
+          sources?: Json | null
+          pending_verification?: boolean
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      alopecia_myths: {
+        Row: {
+          id: string
+          myth_id: string
+          myth_statement: string
+          verdict: string
+          verdict_simple: string
+          scientific_explanation: string
+          study_reference: Json | null
+          common_in_profiles: string[]
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          myth_id: string
+          myth_statement: string
+          verdict: string
+          verdict_simple: string
+          scientific_explanation: string
+          study_reference?: Json | null
+          common_in_profiles?: string[]
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          myth_id?: string
+          myth_statement?: string
+          verdict?: string
+          verdict_simple?: string
+          scientific_explanation?: string
+          study_reference?: Json | null
+          common_in_profiles?: string[]
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      alopecia_reports: {
+        Row: {
+          id: string
+          session_id: string
+          input_data: Json
+          risk_level: string
+          risk_score: number
+          recommended_action: string
+          evidence_based_options: Json
+          myth_alerts: string[]
+          generated_at: string
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          input_data: Json
+          risk_level: string
+          risk_score: number
+          recommended_action: string
+          evidence_based_options?: Json
+          myth_alerts?: string[]
+          generated_at?: string
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          input_data?: Json
+          risk_level?: string
+          risk_score?: number
+          recommended_action?: string
+          evidence_based_options?: Json
+          myth_alerts?: string[]
+          generated_at?: string
+        }
+        Relationships: []
+      }
       actual_expenses: {
         Row: {
           actual_amount: number | null
