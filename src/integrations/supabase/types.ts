@@ -14,459 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      inci_ingredients: {
-        Row: {
-          id: string
-          inci_name: string
-          common_name: string
-          cas_number: string | null
-          category: string
-          function_technical: string | null
-          function_simple: string | null
-          risks: Json | null
-          benefits_technical: string | null
-          profile_sensitive_scalp: Json | null
-          profile_allergy: Json | null
-          profile_pregnancy: Json | null
-          eu_restriction: string | null
-          max_concentration_eu: string | null
-          sources: Json | null
-          pending_review: boolean | null
-          created_at: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          id: string
-          inci_name: string
-          common_name: string
-          cas_number?: string | null
-          category: string
-          function_technical?: string | null
-          function_simple?: string | null
-          risks?: Json | null
-          benefits_technical?: string | null
-          profile_sensitive_scalp?: Json | null
-          profile_allergy?: Json | null
-          profile_pregnancy?: Json | null
-          eu_restriction?: string | null
-          max_concentration_eu?: string | null
-          sources?: Json | null
-          pending_review?: boolean | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          id?: string
-          inci_name?: string
-          common_name?: string
-          cas_number?: string | null
-          category?: string
-          function_technical?: string | null
-          function_simple?: string | null
-          risks?: Json | null
-          benefits_technical?: string | null
-          profile_sensitive_scalp?: Json | null
-          profile_allergy?: Json | null
-          profile_pregnancy?: Json | null
-          eu_restriction?: string | null
-          max_concentration_eu?: string | null
-          sources?: Json | null
-          pending_review?: boolean | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      recovery_phases: {
-        Row: {
-          id: string
-          phase_type: string
-          damage_level_min: number
-          damage_level_max: number
-          week_start: number
-          week_end: number
-          last_treatment_filter: string[] | null
-          porosity_filter: string[] | null
-          objective_technical: string | null
-          objective_simple: string | null
-          key_ingredients: string[] | null
-          avoid: string[] | null
-          checkpoint: string | null
-          pending_review: boolean | null
-          sources: Json | null
-          created_at: string | null
-        }
-        Insert: {
-          id: string
-          phase_type: string
-          damage_level_min: number
-          damage_level_max: number
-          week_start: number
-          week_end: number
-          last_treatment_filter?: string[] | null
-          porosity_filter?: string[] | null
-          objective_technical?: string | null
-          objective_simple?: string | null
-          key_ingredients?: string[] | null
-          avoid?: string[] | null
-          checkpoint?: string | null
-          pending_review?: boolean | null
-          sources?: Json | null
-          created_at?: string | null
-        }
-        Update: {
-          id?: string
-          phase_type?: string
-          damage_level_min?: number
-          damage_level_max?: number
-          week_start?: number
-          week_end?: number
-          last_treatment_filter?: string[] | null
-          porosity_filter?: string[] | null
-          objective_technical?: string | null
-          objective_simple?: string | null
-          key_ingredients?: string[] | null
-          avoid?: string[] | null
-          checkpoint?: string | null
-          pending_review?: boolean | null
-          sources?: Json | null
-          created_at?: string | null
-        }
-        Relationships: []
-      }
-      recovery_calendars: {
-        Row: {
-          id: string
-          damage_level: number
-          last_treatment: string
-          hair_porosity: string
-          scalp_condition: string
-          total_weeks: number
-          weeks: Json
-          chemical_rest_days: number
-          next_safe_treatment_date: string | null
-          summary: Json | null
-          blocked: boolean | null
-          blocked_message: string | null
-          created_at: string | null
-        }
-        Insert: {
-          id?: string
-          damage_level: number
-          last_treatment: string
-          hair_porosity: string
-          scalp_condition: string
-          total_weeks: number
-          weeks: Json
-          chemical_rest_days: number
-          next_safe_treatment_date?: string | null
-          summary?: Json | null
-          blocked?: boolean | null
-          blocked_message?: string | null
-          created_at?: string | null
-        }
-        Update: {
-          id?: string
-          damage_level?: number
-          last_treatment?: string
-          hair_porosity?: string
-          scalp_condition?: string
-          total_weeks?: number
-          weeks?: Json
-          chemical_rest_days?: number
-          next_safe_treatment_date?: string | null
-          summary?: Json | null
-          blocked?: boolean | null
-          blocked_message?: string | null
-          created_at?: string | null
-        }
-        Relationships: []
-      }
-      canicie_factors: {
-        Row: {
-          id: string
-          factor_id: string
-          category: string
-          title_es: string
-          subtitle_es: string | null
-          explanation_simple_es: string
-          explanation_technical_es: string
-          impact_level: string
-          modifiable: boolean
-          evidence_level: string
-          key_mechanism: string | null
-          sources: Json | null
-          pending_review: boolean | null
-          created_at: string | null
-        }
-        Insert: {
-          id?: string
-          factor_id: string
-          category: string
-          title_es: string
-          subtitle_es?: string | null
-          explanation_simple_es: string
-          explanation_technical_es: string
-          impact_level: string
-          modifiable: boolean
-          evidence_level: string
-          key_mechanism?: string | null
-          sources?: Json | null
-          pending_review?: boolean | null
-          created_at?: string | null
-        }
-        Update: {
-          id?: string
-          factor_id?: string
-          category?: string
-          title_es?: string
-          subtitle_es?: string | null
-          explanation_simple_es?: string
-          explanation_technical_es?: string
-          impact_level?: string
-          modifiable?: boolean
-          evidence_level?: string
-          key_mechanism?: string | null
-          sources?: Json | null
-          pending_review?: boolean | null
-          created_at?: string | null
-        }
-        Relationships: []
-      }
-      canicie_myths: {
-        Row: {
-          id: string
-          myth_id: string
-          myth_statement_es: string
-          verdict: string
-          explanation_es: string
-          explanation_technical_es: string | null
-          reference: string | null
-          created_at: string | null
-        }
-        Insert: {
-          id?: string
-          myth_id: string
-          myth_statement_es: string
-          verdict: string
-          explanation_es: string
-          explanation_technical_es?: string | null
-          reference?: string | null
-          created_at?: string | null
-        }
-        Update: {
-          id?: string
-          myth_id?: string
-          myth_statement_es?: string
-          verdict?: string
-          explanation_es?: string
-          explanation_technical_es?: string | null
-          reference?: string | null
-          created_at?: string | null
-        }
-        Relationships: []
-      }
-      canicie_reports: {
-        Row: {
-          id: string
-          session_id: string
-          input_data: Json
-          report_data: Json
-          created_at: string | null
-        }
-        Insert: {
-          id?: string
-          session_id: string
-          input_data: Json
-          report_data: Json
-          created_at?: string | null
-        }
-        Update: {
-          id?: string
-          session_id?: string
-          input_data?: Json
-          report_data?: Json
-          created_at?: string | null
-        }
-        Relationships: []
-      }
-      alopecia_factors: {
-        Row: {
-          id: string
-          factor_id: string
-          category: string
-          factor_name: string
-          factor_technical: string
-          factor_simple: string
-          evidence_level: string
-          modifiable: boolean
-          applies_to: string
-          impact_magnitude: string
-          sources: Json | null
-          pending_verification: boolean
-          created_at: string | null
-        }
-        Insert: {
-          id?: string
-          factor_id: string
-          category: string
-          factor_name: string
-          factor_technical: string
-          factor_simple: string
-          evidence_level: string
-          modifiable: boolean
-          applies_to: string
-          impact_magnitude: string
-          sources?: Json | null
-          pending_verification?: boolean
-          created_at?: string | null
-        }
-        Update: {
-          id?: string
-          factor_id?: string
-          category?: string
-          factor_name?: string
-          factor_technical?: string
-          factor_simple?: string
-          evidence_level?: string
-          modifiable?: boolean
-          applies_to?: string
-          impact_magnitude?: string
-          sources?: Json | null
-          pending_verification?: boolean
-          created_at?: string | null
-        }
-        Relationships: []
-      }
-      alopecia_treatments: {
-        Row: {
-          id: string
-          treatment_id: string
-          name: string
-          type: string
-          evidence_level: string
-          effective_stages_hamilton: number[]
-          effective_stages_ludwig: number[]
-          applies_to: string
-          time_to_results_months: number | null
-          requires_maintenance: boolean
-          contraindications: string[]
-          avg_cost_spain_eur: number | null
-          realistic_expectation: string
-          sources: Json | null
-          pending_verification: boolean
-          created_at: string | null
-        }
-        Insert: {
-          id?: string
-          treatment_id: string
-          name: string
-          type: string
-          evidence_level: string
-          effective_stages_hamilton?: number[]
-          effective_stages_ludwig?: number[]
-          applies_to: string
-          time_to_results_months?: number | null
-          requires_maintenance?: boolean
-          contraindications?: string[]
-          avg_cost_spain_eur?: number | null
-          realistic_expectation: string
-          sources?: Json | null
-          pending_verification?: boolean
-          created_at?: string | null
-        }
-        Update: {
-          id?: string
-          treatment_id?: string
-          name?: string
-          type?: string
-          evidence_level?: string
-          effective_stages_hamilton?: number[]
-          effective_stages_ludwig?: number[]
-          applies_to?: string
-          time_to_results_months?: number | null
-          requires_maintenance?: boolean
-          contraindications?: string[]
-          avg_cost_spain_eur?: number | null
-          realistic_expectation?: string
-          sources?: Json | null
-          pending_verification?: boolean
-          created_at?: string | null
-        }
-        Relationships: []
-      }
-      alopecia_myths: {
-        Row: {
-          id: string
-          myth_id: string
-          myth_statement: string
-          verdict: string
-          verdict_simple: string
-          scientific_explanation: string
-          study_reference: Json | null
-          common_in_profiles: string[]
-          created_at: string | null
-        }
-        Insert: {
-          id?: string
-          myth_id: string
-          myth_statement: string
-          verdict: string
-          verdict_simple: string
-          scientific_explanation: string
-          study_reference?: Json | null
-          common_in_profiles?: string[]
-          created_at?: string | null
-        }
-        Update: {
-          id?: string
-          myth_id?: string
-          myth_statement?: string
-          verdict?: string
-          verdict_simple?: string
-          scientific_explanation?: string
-          study_reference?: Json | null
-          common_in_profiles?: string[]
-          created_at?: string | null
-        }
-        Relationships: []
-      }
-      alopecia_reports: {
-        Row: {
-          id: string
-          session_id: string
-          input_data: Json
-          risk_level: string
-          risk_score: number
-          recommended_action: string
-          evidence_based_options: Json
-          myth_alerts: string[]
-          generated_at: string
-        }
-        Insert: {
-          id?: string
-          session_id: string
-          input_data: Json
-          risk_level: string
-          risk_score: number
-          recommended_action: string
-          evidence_based_options?: Json
-          myth_alerts?: string[]
-          generated_at?: string
-        }
-        Update: {
-          id?: string
-          session_id?: string
-          input_data?: Json
-          risk_level?: string
-          risk_score?: number
-          recommended_action?: string
-          evidence_based_options?: Json
-          myth_alerts?: string[]
-          generated_at?: string
-        }
-        Relationships: []
-      }
       actual_expenses: {
         Row: {
           actual_amount: number | null
@@ -539,6 +86,183 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      alopecia_factors: {
+        Row: {
+          applies_to: string
+          category: string
+          created_at: string
+          evidence_level: string
+          factor_id: string
+          factor_name: string
+          factor_simple: string
+          factor_technical: string
+          id: string
+          impact_magnitude: string
+          modifiable: boolean
+          pending_verification: boolean
+          sources: Json | null
+        }
+        Insert: {
+          applies_to: string
+          category: string
+          created_at?: string
+          evidence_level: string
+          factor_id: string
+          factor_name: string
+          factor_simple: string
+          factor_technical: string
+          id?: string
+          impact_magnitude: string
+          modifiable?: boolean
+          pending_verification?: boolean
+          sources?: Json | null
+        }
+        Update: {
+          applies_to?: string
+          category?: string
+          created_at?: string
+          evidence_level?: string
+          factor_id?: string
+          factor_name?: string
+          factor_simple?: string
+          factor_technical?: string
+          id?: string
+          impact_magnitude?: string
+          modifiable?: boolean
+          pending_verification?: boolean
+          sources?: Json | null
+        }
+        Relationships: []
+      }
+      alopecia_myths: {
+        Row: {
+          common_in_profiles: string[]
+          created_at: string
+          id: string
+          myth_id: string
+          myth_statement: string
+          scientific_explanation: string
+          study_reference: Json | null
+          verdict: string
+          verdict_simple: string
+        }
+        Insert: {
+          common_in_profiles?: string[]
+          created_at?: string
+          id?: string
+          myth_id: string
+          myth_statement: string
+          scientific_explanation: string
+          study_reference?: Json | null
+          verdict: string
+          verdict_simple: string
+        }
+        Update: {
+          common_in_profiles?: string[]
+          created_at?: string
+          id?: string
+          myth_id?: string
+          myth_statement?: string
+          scientific_explanation?: string
+          study_reference?: Json | null
+          verdict?: string
+          verdict_simple?: string
+        }
+        Relationships: []
+      }
+      alopecia_reports: {
+        Row: {
+          evidence_based_options: Json
+          generated_at: string
+          id: string
+          input_data: Json
+          myth_alerts: string[]
+          recommended_action: string
+          risk_level: string
+          risk_score: number
+          session_id: string
+        }
+        Insert: {
+          evidence_based_options?: Json
+          generated_at?: string
+          id?: string
+          input_data: Json
+          myth_alerts?: string[]
+          recommended_action: string
+          risk_level: string
+          risk_score: number
+          session_id: string
+        }
+        Update: {
+          evidence_based_options?: Json
+          generated_at?: string
+          id?: string
+          input_data?: Json
+          myth_alerts?: string[]
+          recommended_action?: string
+          risk_level?: string
+          risk_score?: number
+          session_id?: string
+        }
+        Relationships: []
+      }
+      alopecia_treatments: {
+        Row: {
+          applies_to: string
+          avg_cost_spain_eur: number | null
+          contraindications: string[]
+          created_at: string
+          effective_stages_hamilton: number[]
+          effective_stages_ludwig: number[]
+          evidence_level: string
+          id: string
+          name: string
+          pending_verification: boolean
+          realistic_expectation: string
+          requires_maintenance: boolean
+          sources: Json | null
+          time_to_results_months: number | null
+          treatment_id: string
+          type: string
+        }
+        Insert: {
+          applies_to: string
+          avg_cost_spain_eur?: number | null
+          contraindications?: string[]
+          created_at?: string
+          effective_stages_hamilton?: number[]
+          effective_stages_ludwig?: number[]
+          evidence_level: string
+          id?: string
+          name: string
+          pending_verification?: boolean
+          realistic_expectation: string
+          requires_maintenance?: boolean
+          sources?: Json | null
+          time_to_results_months?: number | null
+          treatment_id: string
+          type: string
+        }
+        Update: {
+          applies_to?: string
+          avg_cost_spain_eur?: number | null
+          contraindications?: string[]
+          created_at?: string
+          effective_stages_hamilton?: number[]
+          effective_stages_ludwig?: number[]
+          evidence_level?: string
+          id?: string
+          name?: string
+          pending_verification?: boolean
+          realistic_expectation?: string
+          requires_maintenance?: boolean
+          sources?: Json | null
+          time_to_results_months?: number | null
+          treatment_id?: string
+          type?: string
+        }
+        Relationships: []
       }
       blog_posts: {
         Row: {
@@ -730,6 +454,123 @@ export type Database = {
         }
         Relationships: []
       }
+      canicie_factors: {
+        Row: {
+          category: string
+          created_at: string | null
+          evidence_level: string
+          factor_name: string
+          factor_simple: string | null
+          factor_technical: string | null
+          id: string
+          impact_magnitude: string | null
+          modifiable: boolean
+          myth_verdict: string | null
+          sources: Json | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          evidence_level: string
+          factor_name: string
+          factor_simple?: string | null
+          factor_technical?: string | null
+          id: string
+          impact_magnitude?: string | null
+          modifiable?: boolean
+          myth_verdict?: string | null
+          sources?: Json | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          evidence_level?: string
+          factor_name?: string
+          factor_simple?: string | null
+          factor_technical?: string | null
+          id?: string
+          impact_magnitude?: string | null
+          modifiable?: boolean
+          myth_verdict?: string | null
+          sources?: Json | null
+        }
+        Relationships: []
+      }
+      canicie_myths: {
+        Row: {
+          created_at: string | null
+          id: string
+          myth_statement: string
+          nuance: string | null
+          scientific_explanation: string | null
+          study_reference: Json | null
+          verdict: string
+          verdict_simple: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          myth_statement: string
+          nuance?: string | null
+          scientific_explanation?: string | null
+          study_reference?: Json | null
+          verdict: string
+          verdict_simple?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          myth_statement?: string
+          nuance?: string | null
+          scientific_explanation?: string | null
+          study_reference?: Json | null
+          verdict?: string
+          verdict_simple?: string | null
+        }
+        Relationships: []
+      }
+      canicie_reports: {
+        Row: {
+          canicie_type: string
+          generated_at: string | null
+          id: string
+          input_data: Json
+          modifiable_factors: Json | null
+          non_modifiable_factors: Json | null
+          onset_classification: string
+          realistic_expectations: string | null
+          recommendations: Json | null
+          session_id: string
+          structural_care_needed: boolean | null
+        }
+        Insert: {
+          canicie_type: string
+          generated_at?: string | null
+          id?: string
+          input_data: Json
+          modifiable_factors?: Json | null
+          non_modifiable_factors?: Json | null
+          onset_classification: string
+          realistic_expectations?: string | null
+          recommendations?: Json | null
+          session_id: string
+          structural_care_needed?: boolean | null
+        }
+        Update: {
+          canicie_type?: string
+          generated_at?: string | null
+          id?: string
+          input_data?: Json
+          modifiable_factors?: Json | null
+          non_modifiable_factors?: Json | null
+          onset_classification?: string
+          realistic_expectations?: string | null
+          recommendations?: Json | null
+          session_id?: string
+          structural_care_needed?: boolean | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string | null
@@ -871,6 +712,72 @@ export type Database = {
           scalp_score?: number
           total_score?: number
           user_session_id?: string
+        }
+        Relationships: []
+      }
+      inci_ingredients: {
+        Row: {
+          benefits_technical: string | null
+          cas_number: string | null
+          category: string
+          common_name: string
+          created_at: string | null
+          eu_restriction: string | null
+          function_simple: string | null
+          function_technical: string | null
+          id: string
+          inci_name: string
+          max_concentration_eu: string | null
+          pending_review: boolean | null
+          profile_allergy: Json | null
+          profile_pregnancy: Json | null
+          profile_sensitive_scalp: Json | null
+          risks: Json | null
+          search_vector: unknown
+          sources: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          benefits_technical?: string | null
+          cas_number?: string | null
+          category: string
+          common_name: string
+          created_at?: string | null
+          eu_restriction?: string | null
+          function_simple?: string | null
+          function_technical?: string | null
+          id: string
+          inci_name: string
+          max_concentration_eu?: string | null
+          pending_review?: boolean | null
+          profile_allergy?: Json | null
+          profile_pregnancy?: Json | null
+          profile_sensitive_scalp?: Json | null
+          risks?: Json | null
+          search_vector?: unknown
+          sources?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          benefits_technical?: string | null
+          cas_number?: string | null
+          category?: string
+          common_name?: string
+          created_at?: string | null
+          eu_restriction?: string | null
+          function_simple?: string | null
+          function_technical?: string | null
+          id?: string
+          inci_name?: string
+          max_concentration_eu?: string | null
+          pending_review?: boolean | null
+          profile_allergy?: Json | null
+          profile_pregnancy?: Json | null
+          profile_sensitive_scalp?: Json | null
+          risks?: Json | null
+          search_vector?: unknown
+          sources?: Json | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -1144,34 +1051,34 @@ export type Database = {
       }
       user_diagnostics: {
         Row: {
-          id: string
-          user_id: string
-          tool_id: string
-          result_summary: string
-          full_result: Json
-          is_complete_diagnostic: boolean
-          share_token: string | null
           created_at: string
+          full_result: Json
+          id: string
+          is_complete_diagnostic: boolean
+          result_summary: string
+          share_token: string | null
+          tool_id: string
+          user_id: string
         }
         Insert: {
-          id?: string
-          user_id: string
-          tool_id: string
-          result_summary?: string
-          full_result?: Json
-          is_complete_diagnostic?: boolean
-          share_token?: string | null
           created_at?: string
+          full_result?: Json
+          id?: string
+          is_complete_diagnostic?: boolean
+          result_summary?: string
+          share_token?: string | null
+          tool_id: string
+          user_id: string
         }
         Update: {
-          id?: string
-          user_id?: string
-          tool_id?: string
-          result_summary?: string
-          full_result?: Json
-          is_complete_diagnostic?: boolean
-          share_token?: string | null
           created_at?: string
+          full_result?: Json
+          id?: string
+          is_complete_diagnostic?: boolean
+          result_summary?: string
+          share_token?: string | null
+          tool_id?: string
+          user_id?: string
         }
         Relationships: []
       }

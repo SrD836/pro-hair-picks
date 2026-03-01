@@ -110,7 +110,7 @@ const Hero = () => {
             className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-bold text-sm transition-all active:scale-95 hover:shadow-[0_0_30px_rgba(196,169,125,0.4)] group"
             style={{ background: "#C4A97D", color: "#2D2218" }}
           >
-            {lang === "es" ? "Explorar Catálogo" : "Explore Catalog"}
+            {t("footer.ctaButton")}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
@@ -123,8 +123,8 @@ const Hero = () => {
           className="flex items-center gap-5 mt-8"
         >
           {[
-            { num: "431+", label: lang === "es" ? "Productos" : "Products" },
-            { num: "47", label: lang === "es" ? "Categorías" : "Categories" },
+            { num: "431+", label: t("hero.productsAnalyzed").split(" ").slice(-1)[0] || (lang === "es" ? "Productos" : "Products") },
+            { num: "47", label: t("hero.categories") },
             { num: "100%", label: lang === "es" ? "Gratis" : "Free" },
           ].map((stat) => (
             <div key={stat.label} className="flex flex-col">
