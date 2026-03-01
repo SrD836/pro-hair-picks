@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 import {
   generateCanicieReport,
   type CanicieInput,
@@ -954,7 +956,11 @@ function DiagnosticReport({
 
 type MainView = "library" | "form" | "report";
 
-export default function CanicieAnalyzer() {
+interface CanicieAnalyzerProps {
+  wizardContinue?: (summary: string, score?: number) => void;
+}
+
+export default function CanicieAnalyzer({ wizardContinue }: CanicieAnalyzerProps = {}) {
   const [view, setView] = useState<MainView>("library");
   const [report, setReport] = useState<CanicieReport | null>(null);
 
@@ -1101,6 +1107,19 @@ export default function CanicieAnalyzer() {
             transition={{ duration: 0.3 }}
           >
             <DiagnosticReport report={report} onReset={handleReset} />
+            {wizardContinue && (
+              <div className="flex justify-center mt-6">
+                <Button
+                  onClick={() => wizardContinue(
+                    `Canicie ${report.canicie_type} — G:${report.genetic_weight}/10 A:${report.environmental_weight}/10`,
+                    report.genetic_weight
+                  )}
+                  className="gap-2"
+                >
+                  Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

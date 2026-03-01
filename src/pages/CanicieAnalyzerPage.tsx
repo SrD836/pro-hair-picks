@@ -2,8 +2,15 @@ import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import CanicieAnalyzer from "@/components/CanicieAnalyzer";
 import CanicieExpertVerdict from "@/components/CanicieExpertVerdict";
+import { useWizardReturn } from "@/hooks/useWizardReturn";
 
 export default function CanicieAnalyzerPage() {
+  const { isWizardMode, completeWizardModule } = useWizardReturn('analizador-canicie');
+
+  const handleWizardComplete = (summary: string, score?: number) => {
+    completeWizardModule({ summary, score, rawResult: { summary } });
+  };
+
   return (
     <>
       <Helmet>
@@ -51,8 +58,8 @@ export default function CanicieAnalyzerPage() {
 
       {/* Main content */}
       <div className="container mx-auto px-4 py-16 max-w-4xl space-y-16">
-        <CanicieAnalyzer />
-        <CanicieExpertVerdict />
+        <CanicieAnalyzer wizardContinue={isWizardMode ? handleWizardComplete : undefined} />
+        {!isWizardMode && <CanicieExpertVerdict />}
       </div>
     </>
   );

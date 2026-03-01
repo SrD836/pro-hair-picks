@@ -15,6 +15,7 @@ import {
   type ScoreBreakdown,
   type Product,
 } from "@/lib/diagnosticoCapilarEngine";
+import { useWizardReturn } from "@/hooks/useWizardReturn";
 
 // ── Session ID helper ──────────────────────────────────
 function getSessionId(): string {
@@ -62,6 +63,7 @@ export default function DiagnosticoCapilarPage() {
   const [scores, setScores] = useState<ScoreBreakdown | null>(null);
   const [riskLevel, setRiskLevel] = useState<RiskLevel | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const { isWizardMode, completeWizardModule } = useWizardReturn('diagnostico-capilar');
 
   const q = QUESTIONS[currentQ];
   const selectedOption = answers[q?.id];
@@ -286,6 +288,14 @@ export default function DiagnosticoCapilarPage() {
                   riskLevel={riskLevel}
                   products={products}
                   onReset={reset}
+                  isWizardMode={isWizardMode}
+                  onWizardContinue={() =>
+                    completeWizardModule({
+                      summary: `${riskLevel} — ${scores.total} pts`,
+                      score: scores.total,
+                      rawResult: { scores, riskLevel },
+                    })
+                  }
                 />
               </motion.div>
             )}
@@ -412,11 +422,15 @@ function ResultsScreen({
   riskLevel,
   products,
   onReset,
+  isWizardMode,
+  onWizardContinue,
 }: {
   scores: ScoreBreakdown;
   riskLevel: RiskLevel;
   products: Product[];
   onReset: () => void;
+  isWizardMode?: boolean;
+  onWizardContinue?: () => void;
 }) {
   const { t, lang } = useLanguage();
   const colors = RISK_COLORS[riskLevel];
@@ -598,6 +612,14 @@ function ResultsScreen({
           {t("diagnostico.resetBtn")}
         </Button>
       </div>
+
+      {isWizardMode && onWizardContinue && (
+        <div className="flex justify-center pt-2">
+          <Button onClick={onWizardContinue} className="gap-2">
+            Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
