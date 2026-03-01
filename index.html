@@ -5,6 +5,14 @@
     <meta name="p:domain_verify" content="a12306a391315c9d9876a4a19cb171f4"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5CHKPRNB');</script>
+    <!-- End Google Tag Manager -->
+
     <!-- PRELOADS CRÍTICOS: primeras líneas del <head> para máximo impacto en LCP -->
     <!-- Hero image (LCP element): preload por breakpoint — móvil descarga 24 KB, desktop 64 KB -->
     <link rel="preload" as="image" href="/images/hero-barbershop-mobile.webp" media="(max-width: 768px)" type="image/webp" fetchpriority="high" />
@@ -67,57 +75,47 @@
   </head>
 
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CHKPRNB"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div id="root"></div>
     <!-- data-cfasync="false" → Rocket Loader de Cloudflare omite este script -->
     <script type="module" src="/src/main.tsx" data-cfasync="false"></script>
 
-    <!-- Scripts de terceros: carga diferida por scroll/interacción, fallback 5s.
-         Libera el hilo principal durante FCP/LCP. -->
+    <!-- AdSense: carga diferida por scroll/interacción, fallback 5s.
+         GA4 ahora gestionado por GTM (GTM-5CHKPRNB). -->
     <script>
     (function() {
       'use strict';
       var loaded = false;
 
-      function loadThirdParty() {
+      function loadAds() {
         if (loaded) return;
         loaded = true;
 
-        // Google Analytics (GA4)
-        var ga = document.createElement('script');
-        ga.async = true;
-        ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-M2NB7DFCT1';
-        document.head.appendChild(ga);
-        ga.onload = function() {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-M2NB7DFCT1');
-        };
-
-        // AdSense: 1s después de GA para no saturar la red en el mismo tick
-        setTimeout(function() {
-          var ads = document.createElement('script');
-          ads.async = true;
-          ads.crossOrigin = 'anonymous';
-          ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5744390861435224';
-          document.head.appendChild(ads);
-        }, 1000);
+        var ads = document.createElement('script');
+        ads.async = true;
+        ads.crossOrigin = 'anonymous';
+        ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5744390861435224';
+        document.head.appendChild(ads);
       }
 
       // Trigger 1: primer scroll (señal de usuario activo)
-      window.addEventListener('scroll', loadThirdParty, { once: true, passive: true });
+      window.addEventListener('scroll', loadAds, { once: true, passive: true });
 
       // Trigger 2: primera interacción táctil/click/teclado
       ['click', 'keydown', 'touchstart'].forEach(function(e) {
-        document.addEventListener(e, loadThirdParty, { once: true, passive: true });
+        document.addEventListener(e, loadAds, { once: true, passive: true });
       });
 
-      // Fallback: 5s sin interacción (captura bots de Google para indexación)
-      setTimeout(loadThirdParty, 5000);
+      // Fallback: 5s sin interacción
+      setTimeout(loadAds, 5000);
 
       // Tab visible de nuevo tras perder el foco
       document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible') loadThirdParty();
+        if (document.visibilityState === 'visible') loadAds();
       });
     })();
     </script>
