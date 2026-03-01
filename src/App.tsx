@@ -48,6 +48,9 @@ const RecoveryTimelinePage = lazy(() => import('./pages/RecoveryTimelinePage'));
 const PasaporteCapilarPage = lazy(() => import("./pages/PasaporteCapilarPage"));
 const CanicieAnalyzerPage = lazy(() => import('./pages/CanicieAnalyzerPage'));
 const AlopeciaAnalyzerPage = lazy(() => import('./pages/AlopeciaAnalyzerPage'));
+const MiPeloPage = lazy(() => import('./pages/MiPeloPage'));
+const DiagnosticoCompletoPage = lazy(() => import('./pages/DiagnosticoCompletoPage'));
+const MisResultadosPage = lazy(() => import('./pages/MisResultadosPage'));
 
 const queryClient = new QueryClient();
 
@@ -81,6 +84,9 @@ function AnimatedRoutes() {
           <Route path="/recuperacion-capilar" element={<RecoveryTimelinePage />} />
           <Route path="/analizador-canicie" element={<CanicieAnalyzerPage />} />
           <Route path="/analizador-alopecia" element={<AlopeciaAnalyzerPage />} />
+          <Route path="/mi-pelo" element={<MiPeloPage />} />
+          <Route path="/mi-pelo/diagnostico-completo" element={<DiagnosticoCompletoPage />} />
+          <Route path="/mi-pelo/mis-resultados" element={<MisResultadosPage />} />
           <Route path="/pasaporte-capilar" element={
             <Suspense fallback={<ScissorsSpinner />}>
               <PasaporteCapilarPage />

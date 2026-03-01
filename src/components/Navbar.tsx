@@ -134,14 +134,16 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
   onToggle: () => void;
   onClose: () => void;
 }) {
-  const tools = [
+  const tools: Array<{ label: string; to?: string; href?: string; badge?: string }> = [
+    { label: "✨ Mi Diagnóstico Completo", to: "/mi-pelo/diagnostico-completo", badge: "NUEVO" },
     { label: "🎨 Asesor de Color", href: "https://guiadelsalon.com/asesor-color" },
     { label: "🔬 Diagnóstico Capilar", to: "/diagnostico-capilar" },
     { label: "🧪 Compatibilidad Química", to: "/inci-check" },
     { label: "🌿 Recuperación Capilar", to: "/recuperacion-capilar" },
     { label: "🦳 Analizador de Canicie", to: "/analizador-canicie" },
     { label: "💈 Analizador de Alopecia", to: "/analizador-alopecia" },
-    { label: "📊 Calculadora ROI", to: "/calculadora-precio" },
+    { label: "separator" },
+    { label: "👤 Mi cuenta", to: "/mi-pelo/mis-resultados" },
   ];
 
   return (
@@ -170,27 +172,27 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
           >
             <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
               <div className="p-2">
-                {tools.map((tool) =>
-                  tool.href ? (
-                    <a
-                      key={tool.href}
-                      href={tool.href}
-                      onClick={onClose}
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
-                    >
-                      {tool.label}
-                    </a>
+                {tools.map((tool, idx) => {
+                  if (tool.label === "separator") {
+                    return <div key={idx} className="my-1.5 border-t border-white/8" />;
+                  }
+                  const cls = "flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors";
+                  const inner = (
+                    <>
+                      <span>{tool.label}</span>
+                      {tool.badge && (
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[#C4A97D]/20 text-[#C4A97D]">
+                          {tool.badge}
+                        </span>
+                      )}
+                    </>
+                  );
+                  return tool.href ? (
+                    <a key={tool.href} href={tool.href} onClick={onClose} className={cls}>{inner}</a>
                   ) : (
-                    <Link
-                      key={tool.to}
-                      to={tool.to!}
-                      onClick={onClose}
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
-                    >
-                      {tool.label}
-                    </Link>
-                  )
-                )}
+                    <Link key={tool.to} to={tool.to!} onClick={onClose} className={cls}>{inner}</Link>
+                  );
+                })}
               </div>
             </div>
           </motion.div>
@@ -413,6 +415,10 @@ const Navbar = () => {
                 <div className="space-y-0.5">
                   {[
                     {
+                      label: lang === "es" ? "✨ Mi Diagnóstico Completo" : "✨ Full Diagnostic",
+                      to: "/mi-pelo/diagnostico-completo",
+                    },
+                    {
                       label: lang === "es" ? "🎨 Asesor de Color" : "🎨 Color Advisor",
                       to: lang === "es" ? "/asesor-color" : "/color-match",
                     },
@@ -437,8 +443,8 @@ const Navbar = () => {
                       to: "/analizador-alopecia",
                     },
                     {
-                      label: lang === "es" ? "📊 Calculadora ROI" : "📊 ROI Calculator",
-                      to: "/calculadora-precio",
+                      label: lang === "es" ? "👤 Mi cuenta" : "👤 My account",
+                      to: "/mi-pelo/mis-resultados",
                     },
                   ].map((tool) => (
                     <Link
