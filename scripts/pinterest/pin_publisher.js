@@ -205,7 +205,10 @@ async function main() {
       pin = await editPin(rl, pin);
       entry.pin_after = Object.assign({}, pin);
       showPreview(pin, i + 1, pins.length);
-      const confirm = (await ask(rl, 'Publicar version editada? (s/n): ')).trim().toLowerCase();
+      let confirm = '';
+      while (!['s', 'n'].includes(confirm)) {
+        confirm = (await ask(rl, 'Publicar version editada? (s/n): ')).trim().toLowerCase();
+      }
       if (confirm !== 's') {
         entry.decision = 'saltado_tras_edicion';
         logData.pins.push(entry);
