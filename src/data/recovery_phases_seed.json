@@ -1,0 +1,110 @@
+[
+  {
+    "id": "ph_restoration",
+    "name": "Restauración de pH",
+    "week_start": 1,
+    "week_end": 2,
+    "damage_level_min": 1,
+    "damage_level_max": 10,
+    "objective_technical": "Restaurar el pH de la fibra capilar (4.5–5.5) y reponer la barrera lipídica (ceramidas, 18-MEA) tras procesos alcalinos. Rehidratar la corteza sin carga proteica prematura.",
+    "objective_simple": "Tu cabello está bebiendo agua — no lo interrumpas con proteína todavía.",
+    "key_ingredients": ["ceramidas", "ácido cítrico", "pantenol", "ácido hialurónico", "18-MEA", "argán", "jojoba"],
+    "avoid": ["proteína hidrolizada", "alcalinos pH>7", "calor >150°C", "SLS/SLES en alta concentración"],
+    "expected_hours_ph_normalize": null,
+    "pending_review": true,
+    "sources": [
+      {
+        "author": "Malinauskyte et al.",
+        "year": 2020,
+        "title": "Effect of equilibrium pH on the structure and properties of bleach-damaged human hair fibers",
+        "doi": "10.1002/bip.23401",
+        "pmid": "32926408"
+      },
+      {
+        "author": "Zhang et al.",
+        "year": 2025,
+        "title": "Reinforcing chemically treated human hair with citric acid",
+        "doi": "10.1111/ics.13039"
+      }
+    ]
+  },
+  {
+    "id": "protein_reconstruction",
+    "name": "Reconstrucción Proteica",
+    "week_start": 3,
+    "week_end": 4,
+    "damage_level_min": 4,
+    "damage_level_max": 10,
+    "objective_technical": "Reposición de proteínas hidrolizadas de bajo peso molecular (<1000 Da) en la corteza. Reconstitución de enlaces mediante tecnología Plex si el nivel de daño lo requiere. Mejora del módulo de Young (elasticidad medida por tracción).",
+    "objective_simple": "Reponemos el cemento natural entre las capas de tu pelo para que no se rompa.",
+    "key_ingredients": ["queratina hidrolizada <1000 Da", "proteína de soja hidrolizada", "proteína de trigo hidrolizada", "bis-aminopropyl diglycol dimaleate", "aminoácidos", "jojoba"],
+    "avoid": ["procesos oxidativos", "alisado químico", "calor >180°C", "más de 2 aplicaciones proteínicas/semana"],
+    "expected_hours_ph_normalize": null,
+    "pending_review": true,
+    "sources": [
+      {
+        "author": "Malinauskyte et al.",
+        "year": 2021,
+        "title": "Penetration of different molecular weight hydrolysed keratins into hair fibres and their effects on the physical properties of textured hair",
+        "doi": "10.1111/ics.12663",
+        "pmid": "32946595"
+      },
+      {
+        "author": "Breakspear et al.",
+        "year": 2024,
+        "title": "Chemical bonds and hair behaviour — A review",
+        "doi": "10.1111/ics.12967"
+      }
+    ]
+  },
+  {
+    "id": "cuticle_sealing",
+    "name": "Sellado de Cutícula",
+    "week_start": 5,
+    "week_end": 6,
+    "damage_level_min": 7,
+    "damage_level_max": 10,
+    "objective_technical": "Sellado de la cutícula mediante acidificación controlada (pH 4.0–4.5). Creación de capa hidrofóbica protectora con lípidos y silicones de alto peso molecular. Cierre definitivo de escamas.",
+    "objective_simple": "Sellamos todo lo que reconstruimos, como barnizar madera restaurada. Esta semana: brillo y protección.",
+    "key_ingredients": ["ácido acético (vinagre de sidra)", "ácido cítrico", "dimeticona", "manteca de karité", "cera de carnaúba", "argán", "ricino"],
+    "avoid": ["productos pH>7", "calor sin protector", "humedad extrema sin protección", "nueva carga proteica"],
+    "expected_hours_ph_normalize": null,
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Robbins, C. R.",
+        "year": 1997,
+        "title": "The role of 18-methyleicosanoic acid in the structure and formation of mammalian hair fibres",
+        "pmid": "9519472"
+      },
+      {
+        "author": "Rosen, A. J. et al.",
+        "year": 2012,
+        "title": "Damaged hair retrieval with ceramide-rich liposomes",
+        "pmid": "22682400"
+      }
+    ]
+  },
+  {
+    "id": "maintenance",
+    "name": "Mantenimiento",
+    "week_start": 3,
+    "week_end": 8,
+    "damage_level_min": 1,
+    "damage_level_max": 9,
+    "objective_technical": "Consolidación de los resultados obtenidos. Rutina de mantenimiento estable que prevenga el deterioro. Monitorización de la ventana de re-tratamiento químico.",
+    "objective_simple": "Tu cabello está estabilizado — ahora solo necesita consistencia para no perder lo ganado.",
+    "key_ingredients": ["champú pH equilibrado", "mascarilla de mantenimiento", "protector térmico", "aceite ligero"],
+    "avoid": ["cambios bruscos de rutina", "mezclas de pH alcalino y ácido el mismo día"],
+    "expected_hours_ph_normalize": null,
+    "pending_review": false,
+    "sources": [
+      {
+        "author": "Lai, G. et al.",
+        "year": 2025,
+        "title": "Utilizing Lipid Bond Technology with Molecular Lipid Complex to Provide Lipid Treatment for Damaged Hair",
+        "doi": "10.1155/drp/5385312"
+      }
+    ]
+  }
+]

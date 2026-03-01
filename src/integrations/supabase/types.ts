@@ -77,6 +77,111 @@ export type Database = {
         }
         Relationships: []
       }
+      recovery_phases: {
+        Row: {
+          id: string
+          phase_type: string
+          damage_level_min: number
+          damage_level_max: number
+          week_start: number
+          week_end: number
+          last_treatment_filter: string[] | null
+          porosity_filter: string[] | null
+          objective_technical: string | null
+          objective_simple: string | null
+          key_ingredients: string[] | null
+          avoid: string[] | null
+          checkpoint: string | null
+          pending_review: boolean | null
+          sources: Json | null
+          created_at: string | null
+        }
+        Insert: {
+          id: string
+          phase_type: string
+          damage_level_min: number
+          damage_level_max: number
+          week_start: number
+          week_end: number
+          last_treatment_filter?: string[] | null
+          porosity_filter?: string[] | null
+          objective_technical?: string | null
+          objective_simple?: string | null
+          key_ingredients?: string[] | null
+          avoid?: string[] | null
+          checkpoint?: string | null
+          pending_review?: boolean | null
+          sources?: Json | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          phase_type?: string
+          damage_level_min?: number
+          damage_level_max?: number
+          week_start?: number
+          week_end?: number
+          last_treatment_filter?: string[] | null
+          porosity_filter?: string[] | null
+          objective_technical?: string | null
+          objective_simple?: string | null
+          key_ingredients?: string[] | null
+          avoid?: string[] | null
+          checkpoint?: string | null
+          pending_review?: boolean | null
+          sources?: Json | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      recovery_calendars: {
+        Row: {
+          id: string
+          damage_level: number
+          last_treatment: string
+          hair_porosity: string
+          scalp_condition: string
+          total_weeks: number
+          weeks: Json
+          chemical_rest_days: number
+          next_safe_treatment_date: string | null
+          summary: Json | null
+          blocked: boolean | null
+          blocked_message: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          damage_level: number
+          last_treatment: string
+          hair_porosity: string
+          scalp_condition: string
+          total_weeks: number
+          weeks: Json
+          chemical_rest_days: number
+          next_safe_treatment_date?: string | null
+          summary?: Json | null
+          blocked?: boolean | null
+          blocked_message?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          damage_level?: number
+          last_treatment?: string
+          hair_porosity?: string
+          scalp_condition?: string
+          total_weeks?: number
+          weeks?: Json
+          chemical_rest_days?: number
+          next_safe_treatment_date?: string | null
+          summary?: Json | null
+          blocked?: boolean | null
+          blocked_message?: string | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       actual_expenses: {
         Row: {
           actual_amount: number | null
