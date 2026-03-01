@@ -1,3 +1,130 @@
 {
-  "pins": []
+  "pins": [
+    {
+      "timestamp": "2026-03-01T23:00:21.506Z",
+      "decision": "error",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://guiadelsalon.com/og-color-match.jpg"
+      },
+      "pin_after": null,
+      "pinterest_id": null,
+      "error": "{\"code\":3,\"message\":\"Your token does not have sufficient permissions to perform this operation. Please ensure your token is authorized with the correct set of scopes. Missing: ['boards:write', 'pins:write']\"}"
+    },
+    {
+      "timestamp": "2026-03-01T23:04:18.470Z",
+      "decision": "error",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://guiadelsalon.com/og-color-match.jpg"
+      },
+      "pin_after": null,
+      "pinterest_id": null,
+      "error": "{\"code\":3,\"message\":\"Your token does not have sufficient permissions to perform this operation. Please ensure your token is authorized with the correct set of scopes. Missing: ['pins:read']\"}"
+    },
+    {
+      "timestamp": "2026-03-01T23:04:49.979Z",
+      "decision": "error",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://guiadelsalon.com/og-color-match.jpg"
+      },
+      "pin_after": null,
+      "pinterest_id": null,
+      "error": "{\"code\":29,\"message\":\"Apps with Trial access may not create Pins in production https://api.pinterest.com - use API Sandbox https://api-sandbox.pinterest.com instead.\"}"
+    },
+    {
+      "timestamp": "2026-03-01T23:05:11.630Z",
+      "decision": "error",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://guiadelsalon.com/og-color-match.jpg"
+      },
+      "pin_after": null,
+      "pinterest_id": null,
+      "error": "{\"code\":2,\"message\":\"Authentication failed.\",\"status\":\"failure\"}"
+    },
+    {
+      "timestamp": "2026-03-01T23:05:56.909Z",
+      "decision": "error",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://guiadelsalon.com/og-color-match.jpg"
+      },
+      "pin_after": null,
+      "pinterest_id": null,
+      "error": "{\"code\":1,\"message\":\"Sorry we could not fetch the image.\"}"
+    },
+    {
+      "timestamp": "2026-03-01T23:06:45.099Z",
+      "decision": "error",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&h=630&fit=crop"
+      },
+      "pin_after": null,
+      "pinterest_id": null,
+      "error": "\u001f�\b\u0000\u0000\u0000\u0000\u0000\u0004\u0003�TMo�0\f�+������I|\u001b�����b;\r��H��M�\fIn\u0012\u0014����.\u0005z\b\"R|z$\u001f�\u0017�C�\u0016=��\u001fp�;T\u001ax�2\u001d�x��\\w�\"�M�!]g�8�/\u001d�Z�\u0003�ɚ�\u0003��\u0010/��\ra\u000f1��^.���Vw�B�ny�/3\\�����E�.�\u001b\t�,*\u0010\u0005\b�mʍ\u0014�r�o�댯�8\u0015➗<7^���wx/���V�{WlY�n���z���O\u001fg���)�}㬊�\u000b\u001d�\u001f%}�\u0006K�\u0010�3^������'\u0012_a�^�Q;K�~&k�yd$�ch\u0018X0:��T�\u0019癄^\u001b��n��``XD\u0006�A\u0001\u0003�`�}�Fmɯ\u0015R@\u000f\u001eX\u001c\b�Cc܂=\u000e\u001a\u0012Io0���7��\u0012nL:D��ԣ�.,Ҡ��c�agh~�`\u0002��΁W�V�}�\u0015E�m�mQ�7�(���PS@@�j\u001c\u0003�`\f�v\u000f�K!��\"/�5Ah��\u000e�ג�b�6�������Wh\u0002\u0018g��\u001f�3� �\u0003=\u0010uL)��\u00032�\"\f{\u0018��-ݳ�K\u000b��6���YǨ�=%��R���\u000b\u001f\u0002z\u000b]zx�c��1\u001e�9D�B�\"0��x�E�R����M*&�:9�I@�\u0000��\\��\\\u0014s��ȋZT��$V�:m��cMW �\u0006I\f�RS~������\u0010mCW��H\u001c\u0017MH(\u0012�*Rf�\u0004��\u0003\u0000\u0000��\u0003\u0000�Q�\u001b�\u0004\u0000\u0000"
+    },
+    {
+      "timestamp": "2026-03-01T23:06:58.130Z",
+      "decision": "error",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&h=630&fit=crop"
+      },
+      "pin_after": null,
+      "pinterest_id": null,
+      "error": "\u001f�\b\u0000\u0000\u0000\u0000\u0000\u0004\u0003�SMo�0\f�+�v͇l�N���\r�l�\u0015�i\u0018\f�flm�dHt� �\u001f�Mz)P\u0004�E���{z>K\u001d*w��eI~ę\u001c��z$�� K;\u001a3��G ��\u0015�\u0006��|�z����\u00079�\r��끴����Ѹ�(j�;�F�\u0005��\u000e��9㼨a�\u0006�\u0018��c�60�P�il@\u0000�`�}l%m9�\u001b�\u0001<\b\u001a�y�Ƹ��\u001f5D�� Ń�\u0019��5\\�t ��8�'\u0017\u0016��nx�$ɲ4�di��vˏlův\u000e|S�)�f�z��|�)��4���ǈ\u0002y�\u0011w\u0013��@u'�.�N/�_I8�\u0004o�ǚ\\���ڂ�j\u0012��}�&���B�B\u0016eZ�Y{��?.숆P.�-3o�\u00040�.X��4i��=^�\\��,ǀ�B\u001f7�kj�;P\u0017N��\u000f�\u0015\t���=�.�ۃ\t���#o\u0018m\u0010\u0005�q\u00006\u0015\u0010�JUZ�U6W��4+պT�\u0000\u000fc�m�J�X��F�,�r:��G��bl�O��Y&�:�?\u001e\u000f��N�\u001c�d���\u0018p\nFond�\u000b�O��$��}��r�.UU��u��԰^�Y\u0001*\u0003ŹM���*_�\u001d����1S������|\u0007���q܂qo����\n�n�wA���q�$}\u000b\u0019�+f��Ot��(�\u0013\u000b�A�v���Ͻw�쌋��PEx��}6\u0018\u00174c�9h�\u0012��<�\u0007\u0000\u0000��\u0003\u0000�\u0017^��\u0004\u0000\u0000"
+    },
+    {
+      "timestamp": "2026-03-01T23:07:24.477Z",
+      "decision": "publicado",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&h=630&fit=crop"
+      },
+      "pin_after": null,
+      "pinterest_id": "1133218325009932555",
+      "error": null
+    },
+    {
+      "timestamp": "2026-03-01T23:10:46.116Z",
+      "decision": "publicado",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&h=630&fit=crop"
+      },
+      "pin_after": null,
+      "pinterest_id": "1133218325009932706",
+      "error": null
+    }
+  ]
 }

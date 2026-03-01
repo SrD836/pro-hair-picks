@@ -5,12 +5,8 @@
     <meta name="p:domain_verify" content="a12306a391315c9d9876a4a19cb171f4"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5CHKPRNB');</script>
+    <!-- Google Tag Manager: dataLayer init inmediato, script diferido tras window.load -->
+    <script>window.dataLayer=window.dataLayer||[];window.dataLayer.push({'gtm.start':new Date().getTime(),event:'gtm.js'});window.addEventListener('load',function(){setTimeout(function(){var f=document.getElementsByTagName('script')[0],j=document.createElement('script');j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id=GTM-5CHKPRNB';f.parentNode.insertBefore(j,f);},800);},{once:true});</script>
     <!-- End Google Tag Manager -->
 
     <!-- PRELOADS CRÍTICOS: primeras líneas del <head> para máximo impacto en LCP -->
@@ -18,7 +14,7 @@
     <link rel="preload" as="image" href="/images/hero-barbershop-mobile.webp" media="(max-width: 768px)" type="image/webp" fetchpriority="high" />
     <link rel="preload" as="image" href="/images/hero-barbershop.webp" media="(min-width: 769px)" type="image/webp" fetchpriority="high" />
     <!-- Logo hero: visible above the fold, cargado antes de React -->
-    <link rel="preload" as="image" href="/logo-160.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/logo-160.webp" type="image/webp" imagesrcset="/logo-160.webp 1x, /logo-240.webp 2x" />
 
     <!-- Preconnect a orígenes críticos -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -71,7 +71,7 @@ function log(msg) { console.log(`[${ts()}] ${msg}`); }
 const state = crypto.randomBytes(16).toString('hex');
 
 // ── 4. Construir URL de autorización ──────────────────────────────────────
-const scopes = 'boards:read,pins:write';
+const scopes = 'boards:read,boards:write,pins:read,pins:write';
 const authUrl = `https://www.pinterest.com/oauth/?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(scopes)}&response_type=code&state=${state}`;
 
 log('=== PASO 1: Abre este URL en tu navegador para autorizar la app ===');
@@ -81,9 +81,11 @@ log('');
 log('=== Esperando redireccion en http://localhost:8080/callback ... ===');
 
 // ── 5. Intentar abrir el navegador automáticamente (seguro: execFile) ──────
-// execFile separa el ejecutable de sus argumentos — sin interpolación shell
+// En Windows, cmd interpreta & como separador de comandos, por lo que hay que
+// escapar los & de la URL con ^& antes de pasarla a "start".
 if (process.platform === 'win32') {
-  execFile('cmd', ['/c', 'start', '', authUrl], () => {});
+  const escapedUrl = authUrl.replace(/&/g, '^&');
+  execFile('cmd', ['/c', 'start', '', escapedUrl], () => {});
 } else if (process.platform === 'darwin') {
   execFile('open', [authUrl], () => {});
 } else {
@@ -142,19 +144,19 @@ function exchangeCodeForTokens(code) {
   log('=== PASO 3: Intercambiando code por tokens... ===');
 
   const credentials = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
-  const body = JSON.stringify({
+  const body = new URLSearchParams({
     grant_type:   'authorization_code',
     code,
     redirect_uri: REDIRECT_URI,
-  });
+  }).toString();
 
   const options = {
-    hostname: 'api.pinterest.com',
+    hostname: 'api-sandbox.pinterest.com',
     path:     '/v5/oauth/token',
     method:   'POST',
     headers: {
       'Authorization':  `Basic ${credentials}`,
-      'Content-Type':   'application/json',
+      'Content-Type':   'application/x-www-form-urlencoded',
       'Content-Length': Buffer.byteLength(body),
     },
   };
