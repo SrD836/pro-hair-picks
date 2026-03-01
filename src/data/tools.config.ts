@@ -1,0 +1,81 @@
+// src/data/tools.config.ts
+import type { ToolConfig } from '@/types/tools.types';
+
+export const TOOLS_CONFIG: ToolConfig[] = [
+  {
+    id: 'asesor-color',
+    title: 'Asesor de Color',
+    description: 'Encuentra el tono exacto para tu tipo de piel y cabello base.',
+    duration: '5 min',
+    questionsCount: 7,
+    badge: 'IA',
+    emoji: '🎨',
+    href: '/asesor-color',
+    accentColor: '#D4956A',
+  },
+  {
+    id: 'diagnostico-capilar',
+    title: 'Diagnóstico Capilar',
+    description: 'Test clínico de cutícula, porosidad, elasticidad y cuero cabelludo.',
+    duration: '8 min',
+    questionsCount: 12,
+    badge: 'CIENTÍFICO',
+    emoji: '🔬',
+    href: '/diagnostico-capilar',
+    accentColor: '#C4A97D',
+  },
+  {
+    id: 'compatibilidad-quimica',
+    title: 'Compatibilidad Química',
+    description: 'Verifica si tus tratamientos son seguros de combinar.',
+    duration: '2 min',
+    questionsCount: 2,
+    badge: 'TÉCNICO',
+    emoji: '🧪',
+    href: '/inci-check',
+    accentColor: '#7B9EC7',
+  },
+  {
+    id: 'recuperacion-capilar',
+    title: 'Recuperación Capilar',
+    description: 'Calendario personalizado de recuperación semana a semana.',
+    duration: '4 min',
+    questionsCount: 6,
+    badge: 'CIENTÍFICO',
+    emoji: '🌿',
+    href: '/recuperacion-capilar',
+    accentColor: '#A8C5A0',
+  },
+  {
+    id: 'analizador-canicie',
+    title: 'Analizador de Canicie',
+    description: 'Descubre si tus canas son genéticas o ambientales.',
+    duration: '5 min',
+    questionsCount: 8,
+    badge: 'CIENTÍFICO',
+    emoji: '🦳',
+    href: '/analizador-canicie',
+    accentColor: '#B0A0C8',
+  },
+  {
+    id: 'analizador-alopecia',
+    title: 'Analizador de Alopecia',
+    description: 'Evalúa tu riesgo de calvicie con base en genética y hábitos.',
+    duration: '6 min',
+    questionsCount: 9,
+    badge: 'CIENTÍFICO',
+    emoji: '💈',
+    href: '/analizador-alopecia',
+    accentColor: '#C4A97D',
+  },
+];
+
+/** Ordered list for the wizard sequence */
+export const WIZARD_TOOL_ORDER: ToolConfig['id'][] = [
+  'diagnostico-capilar',
+  'asesor-color',
+  'compatibilidad-quimica',
+  'recuperacion-capilar',
+  'analizador-canicie',
+  'analizador-alopecia',
+];
