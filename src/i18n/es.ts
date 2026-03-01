@@ -103,6 +103,10 @@ export const es = {
     colorDesc: "Encuentra el tono exacto para cada cliente según su tono de piel y cabello base.",
     chemCompat: "Compatibilidad Química",
     chemCompatDesc: "Verifica la compatibilidad química entre tratamientos. Evita daños y reacciones.",
+    canicieTitle: "Analizador de Canicie",
+    canicieDesc: "Descubre por qué aparecen las canas y qué factores puedes controlar según la ciencia.",
+    alopeciaTitle: "Analizador de Alopecia",
+    alopeciaDesc: "Evalúa tu riesgo de calvicie con un protocolo clínico basado en genética y factores modificables.",
     analysisTools: "Análisis de Herramientas",
   },
   solutions: {

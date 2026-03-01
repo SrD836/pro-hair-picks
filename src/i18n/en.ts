@@ -103,6 +103,10 @@ export const en = {
     colorDesc: "Find the exact shade for each client based on their skin tone and base hair color.",
     chemCompat: "Chemical Compatibility",
     chemCompatDesc: "Verify chemical compatibility between treatments. Prevent damage and reactions.",
+    canicieTitle: "Grey Hair Analyzer",
+    canicieDesc: "Find out why grey hair appears and which factors you can control according to science.",
+    alopeciaTitle: "Alopecia Analyzer",
+    alopeciaDesc: "Assess your hair loss risk with a clinical protocol based on genetics and modifiable factors.",
     analysisTools: "Tool Analysis",
   },
   solutions: {

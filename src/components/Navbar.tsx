@@ -140,6 +140,7 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
     { label: "🧪 Compatibilidad Química", to: "/inci-check" },
     { label: "🌿 Recuperación Capilar", to: "/recuperacion-capilar" },
     { label: "🦳 Analizador de Canicie", to: "/analizador-canicie" },
+    { label: "💈 Analizador de Alopecia", to: "/analizador-alopecia" },
     { label: "📊 Calculadora ROI", to: "/calculadora-precio" },
   ];
 
@@ -430,6 +431,10 @@ const Navbar = () => {
                     {
                       label: lang === "es" ? "🦳 Analizador de Canicie" : "🦳 Grey Hair Analyzer",
                       to: "/analizador-canicie",
+                    },
+                    {
+                      label: lang === "es" ? "💈 Analizador de Alopecia" : "💈 Alopecia Analyzer",
+                      to: "/analizador-alopecia",
                     },
                     {
                       label: lang === "es" ? "📊 Calculadora ROI" : "📊 ROI Calculator",
