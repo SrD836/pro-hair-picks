@@ -66,7 +66,7 @@ export function usePageMeta() {
     }
 
     // Canonical tag
-    const canonical = SITE_ORIGIN + pathname;
+    const canonical = `${SITE_ORIGIN}${pathname === "/" ? "/" : pathname.replace(/\/$/, "")}`;
     let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!link) {
       link = document.createElement("link");

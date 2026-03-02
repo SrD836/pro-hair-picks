@@ -34,11 +34,12 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Redirect /categoria/ (sin s) → /categorias/ (con s)
+# 301: /categoria/ → /categorias/ (corrección SEO legacy)
 [[redirects]]
   from = "/categoria/:slug"
   to = "/categorias/:slug"
   status = 301
+  force = true
 
 # SPA redirect: todas las rutas al index.html
 [[redirects]]
