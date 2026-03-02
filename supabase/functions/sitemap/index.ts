@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
     if (categories) {
       for (const cat of categories) {
         urls.push(`  <url>
-    <loc>${BASE_URL}/categoria/${cat.slug}</loc>
+    <loc>${BASE_URL}/categorias/${cat.slug}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
