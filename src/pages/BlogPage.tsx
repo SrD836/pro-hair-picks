@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Clock, Heart, Calendar } from "lucide-react";
@@ -56,10 +56,10 @@ const BlogPage = () => {
 
   return (
     <section className="min-h-screen bg-background">
-      <Helmet>
-        <title>Blog | Guía del Salón</title>
-        <meta name="description" content="Consejos, tendencias y guías para profesionales del salón. Artículos sobre técnicas, productos y negocio." />
-      </Helmet>
+      <SEOHead
+        title="Blog | Guía del Salón"
+        description="Consejos, tendencias y guías para profesionales del salón. Artículos sobre técnicas, productos y negocio."
+      />
       {/* Header */}
       <div className="container mx-auto px-4 pt-12 pb-6">
         <motion.h1

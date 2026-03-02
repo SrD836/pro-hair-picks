@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
 import AlopeciaAnalyzer from "@/components/AlopeciaAnalyzer";
 import AlopeciaExpertVerdict from "@/components/AlopeciaExpertVerdict";
@@ -6,14 +6,10 @@ import AlopeciaExpertVerdict from "@/components/AlopeciaExpertVerdict";
 export default function AlopeciaAnalyzerPage() {
   return (
     <>
-      <Helmet>
-        <title>Analizador de Riesgo de Alopecia — GuiaDelSalon</title>
-        <meta
-          name="description"
-          content="¿Perderé el pelo? Análisis de riesgo de alopecia basado en genética, biología y factores modificables. Sin falsas promesas — solo ciencia."
-        />
-        <link rel="canonical" href="https://guiadelsalon.com/analizador-alopecia" />
-      </Helmet>
+      <SEOHead
+        title="Analizador de Riesgo de Alopecia — GuiaDelSalon"
+        description="¿Perderé el pelo? Análisis de riesgo de alopecia basado en genética, biología y factores modificables. Sin falsas promesas — solo ciencia."
+      />
 
       {/* Hero */}
       <div

@@ -1,0 +1,21 @@
+GuiaDelSalon.com
+
+Plataforma de comparativas de equipamiento profesional para peluquería y barbería en España y LATAM.
+
+Secciones principales
+
+/: Inicio con catálogo completo
+
+/blog: Artículos técnicos para profesionales
+
+/categoria/[slug]: Rankings por categoría (47 categorías)
+
+/comparar, /quiz, /calculadora-roi: Herramientas interactivas
+
+Contenido
+
+Comparativas con precios verificados en Amazon España
+
+Diagnóstico capilar, asesor de color, analizador de canas y alopecia
+
+Guías de negocio para propietarios de salones
