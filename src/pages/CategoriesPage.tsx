@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { menGroups, womenGroups, mixedCategories } from "@/data/categories";
@@ -32,13 +32,10 @@ const CategoriesPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>
-          {lang === "es"
-            ? "Todas las Categorías | GuiaDelSalon.com"
-            : "All Categories | GuiaDelSalon.com"}
-        </title>
-      </Helmet>
+      <SEOHead
+        title={lang === "es" ? "Todas las Categorías | GuiaDelSalon.com" : "All Categories | GuiaDelSalon.com"}
+        description={lang === "es" ? "Explora todas las categorías de equipamiento profesional para peluquería y barbería." : "Browse all professional hair salon and barbershop equipment categories."}
+      />
 
       <div className="min-h-screen" style={{ background: "#1a1008" }}>
         {/* Header */}

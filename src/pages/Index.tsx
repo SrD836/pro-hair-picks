@@ -1,3 +1,4 @@
+import { SEOHead } from "@/components/seo/SEOHead";
 import { Helmet } from "react-helmet-async";
 import Hero from "@/components/Hero";
 import PhotoSections from "@/components/PhotoSections";
@@ -22,11 +23,12 @@ const Index = () => {
 
   return (
     <>
+      <SEOHead
+        title={t("meta.homeTitle")}
+        description={t("meta.homeDescription")}
+        ogImage="https://guiadelsalon.com/logo-full.png"
+      />
       <Helmet>
-        <title>{t("meta.homeTitle")}</title>
-        <meta name="description" content={t("meta.homeDescription")} />
-        <meta property="og:title" content="Guía del Salón" />
-        <meta property="og:image" content="/logo-full.png" />
         <script type="application/ld+json">{websiteSchema}</script>
       </Helmet>
       <Hero />

@@ -11,6 +11,7 @@ import {
   Scissors, Wind, Sofa, User, Zap, Palette, Sparkles, ShieldCheck,
   Euro, Star, ThumbsUp, Clock, RotateCcw, ArrowRight, Store,
 } from "lucide-react";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 /* ─── Types ─────────────────────────────────────── */
 type SalonType = "barberia" | "peluqueria" | "mixto" | "personal";
@@ -199,6 +200,10 @@ const QuizPage = () => {
   /* ─── Render ──────────────────────────────────── */
   return (
     <div className="container mx-auto px-4 py-12 max-w-2xl min-h-[60vh]">
+      <SEOHead
+        title="Recomendador de Productos | Guía del Salón"
+        description="Encuentra el producto perfecto para tu salón con nuestro quiz personalizado. Responde 4 preguntas y obtén recomendaciones."
+      />
       {/* Progress */}
       {step < 4 && (
         <div className="mb-8">
