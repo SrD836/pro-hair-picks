@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, ExternalLink, RotateCcw, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -175,10 +175,10 @@ export default function DiagnosticoCapilarPage() {
 
   return (
     <>
-      <Helmet>
-        <title>{t("diagnostico.metaTitle")}</title>
-        <meta name="description" content={t("diagnostico.metaDesc")} />
-      </Helmet>
+      <SEOHead
+        title={t("diagnostico.metaTitle")}
+        description={t("diagnostico.metaDesc")}
+      />
 
       <div className="min-h-screen bg-background text-foreground">
         <div className="container mx-auto px-4 py-12 max-w-2xl">

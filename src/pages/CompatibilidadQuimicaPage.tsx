@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
 import ChemicalCompatibilityAnalyzer from "@/components/ChemicalCompatibilityAnalyzer";
@@ -8,11 +8,10 @@ export default function CompatibilidadQuimicaPage() {
 
   return (
     <>
-      <Helmet>
-        <title>{t("quimica.pageTitle")}</title>
-        <meta name="description" content={t("quimica.pageDesc")} />
-        <link rel="canonical" href="https://guiadelsalon.com/compatibilidad-quimica" />
-      </Helmet>
+      <SEOHead
+        title={t("quimica.pageTitle")}
+        description={t("quimica.pageDesc")}
+      />
 
       {/* Hero */}
       <div

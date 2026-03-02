@@ -1,7 +1,7 @@
 // src/pages/MisResultadosPage.tsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { motion } from 'framer-motion';
 import { ArrowRight, LogOut, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -43,10 +43,10 @@ export default function MisResultadosPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Mis Diagnósticos · GuiaDelSalon.com</title>
-        <meta name="robots" content="noindex" />
-      </Helmet>
+      <SEOHead
+        title="Mis Diagnósticos · GuiaDelSalon.com"
+        noIndex={true}
+      />
 
       <div className="min-h-screen py-16 px-4 max-w-2xl mx-auto">
         <motion.div

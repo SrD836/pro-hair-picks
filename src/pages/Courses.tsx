@@ -6,7 +6,7 @@ import { ExternalLink, MapPin, Clock, BookOpen, Briefcase, Scissors, DollarSign,
 import { courses, type CourseModality, type CourseLang } from "@/data/coursesData";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const Courses = () => {
   const { lang, t } = useLanguage();
@@ -37,13 +37,13 @@ const Courses = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>{isES ? "Cursos de Peluquería Profesional | GuiaDelSalon.com" : "Professional Hairdressing Courses | GuiaDelSalon.com"}</title>
-        <meta name="description" content={isES
+      <SEOHead
+        title={isES ? "Cursos de Peluquería Profesional | GuiaDelSalon.com" : "Professional Hairdressing Courses | GuiaDelSalon.com"}
+        description={isES
           ? "Los 15 mejores cursos de peluquería online y presenciales en España y EEUU. Formación profesional seleccionada por expertos."
           : "The 15 best online and in-person hairdressing courses in Spain and the US. Professional training curated by experts."
-        } />
-      </Helmet>
+        }
+      />
 
       {/* Hero */}
       <section className="relative py-16 md:py-24 overflow-hidden">

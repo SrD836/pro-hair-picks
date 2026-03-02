@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
 import InciChecker from "@/components/InciChecker";
@@ -17,11 +17,10 @@ export default function InciCheckerPage() {
 
   return (
     <>
-      <Helmet>
-        <title>{title} | GuiaDelSalon.com</title>
-        <meta name="description" content={desc} />
-        <link rel="canonical" href="https://guiadelsalon.com/inci-check" />
-      </Helmet>
+      <SEOHead
+        title={`${title} | GuiaDelSalon.com`}
+        description={desc}
+      />
 
       <div style={{ background: "#1a1008" }}>
         {/* Hero */}

@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
 import RecoveryTimeline from "@/components/RecoveryTimeline";
 import RecoveryExpertVerdict from "@/components/RecoveryExpertVerdict";
@@ -6,14 +6,10 @@ import RecoveryExpertVerdict from "@/components/RecoveryExpertVerdict";
 export default function RecoveryTimelinePage() {
   return (
     <>
-      <Helmet>
-        <title>Calculadora de Recuperación Capilar — GuiaDelSalon</title>
-        <meta
-          name="description"
-          content="Genera tu calendario personalizado de recuperación capilar. Basado en nivel de daño, porosidad y último tratamiento. Respaldado por evidencia científica."
-        />
-        <link rel="canonical" href="https://guiadelsalon.com/recuperacion-capilar" />
-      </Helmet>
+      <SEOHead
+        title="Calculadora de Recuperación Capilar — GuiaDelSalon"
+        description="Genera tu calendario personalizado de recuperación capilar. Basado en nivel de daño, porosidad y último tratamiento. Respaldado por evidencia científica."
+      />
 
       {/* Hero */}
       <div

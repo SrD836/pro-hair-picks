@@ -1,7 +1,7 @@
 // src/pages/DiagnosticoCompletoPage.tsx
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { motion } from 'framer-motion';
 import { ArrowRight, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -66,13 +66,10 @@ export default function DiagnosticoCompletoPage() {
 
   return (
     <>
-      <Helmet>
-        <title>{t("wizard.title")} · GuiaDelSalon.com</title>
-        <meta
-          name="description"
-          content={t("wizard.subtitle")}
-        />
-      </Helmet>
+      <SEOHead
+        title={`${t("wizard.title")} · GuiaDelSalon.com`}
+        description={t("wizard.subtitle")}
+      />
 
       <div
         className="min-h-screen py-16 md:py-24 px-4"

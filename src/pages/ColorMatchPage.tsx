@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella, BookOpen, Gem, Palette, ShirtIcon } from "lucide-react";
@@ -319,7 +319,7 @@ export default function ColorMatchPage() {
   if (loading) {
     return (
       <>
-        <Helmet><title>{metaTitle}</title><meta name="description" content={metaDesc} /></Helmet>
+        <SEOHead title={metaTitle} description={metaDesc} />
         <div className="min-h-[70vh] flex items-center justify-center">
           <motion.div className="text-center space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <motion.div className="w-20 h-20 mx-auto rounded-full border-4 border-secondary border-t-transparent" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} />
@@ -351,7 +351,7 @@ export default function ColorMatchPage() {
 
     return (
       <>
-        <Helmet><title>{metaTitle}</title><meta name="description" content={metaDesc} /></Helmet>
+        <SEOHead title={metaTitle} description={metaDesc} />
 
         {/* ── Hero ── */}
         <div
@@ -615,11 +615,7 @@ export default function ColorMatchPage() {
   // ── Stepper ──
   return (
     <>
-      <Helmet>
-        <title>{metaTitle}</title>
-        <meta name="description" content={metaDesc} />
-        <link rel="canonical" href={`https://pro-hair-picks.lovable.app/${lang === "es" ? "asesor-color" : "color-match"}`} />
-      </Helmet>
+      <SEOHead title={metaTitle} description={metaDesc} />
 
       <section className="container mx-auto px-4 py-12 max-w-xl">
         <div className="text-center mb-8 space-y-2">

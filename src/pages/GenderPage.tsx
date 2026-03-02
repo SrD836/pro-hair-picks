@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { menGroups, womenGroups, mixedCategories } from "@/data/categories";
@@ -63,9 +63,10 @@ const GenderPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{title} | GuiaDelSalon.com</title>
-      </Helmet>
+      <SEOHead
+        title={`${title} | GuiaDelSalon.com`}
+        description={subtitle}
+      />
 
       <div className="min-h-screen" style={{ background: "#1a1008" }}>
         {/* Hero banner */}

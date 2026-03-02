@@ -1,6 +1,6 @@
 // src/pages/MiPeloPage.tsx
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, Clock, User } from 'lucide-react';
 import { format } from 'date-fns';
@@ -20,13 +20,10 @@ export default function MiPeloPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Mi Pelo · Diagnósticos Capilares · GuiaDelSalon.com</title>
-        <meta
-          name="description"
-          content="Diagnósticos y análisis profesionales para conocer tu cabello desde la ciencia. Asesor de Color, Diagnóstico Capilar, Compatibilidad Química y más."
-        />
-      </Helmet>
+      <SEOHead
+        title="Mi Pelo · Diagnósticos Capilares · GuiaDelSalon.com"
+        description="Diagnósticos y análisis profesionales para conocer tu cabello desde la ciencia. Asesor de Color, Diagnóstico Capilar, Compatibilidad Química y más."
+      />
 
       <div className="min-h-screen bg-background text-foreground">
 

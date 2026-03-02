@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { BookOpen, Wrench, Users, ShieldCheck, Heart, Target } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import aboutHero from "@/assets/about-hero.jpg";
@@ -37,11 +37,10 @@ const QuienesSomos = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{t("about.metaTitle")}</title>
-        <meta name="description" content={t("about.metaDesc")} />
-        <link rel="canonical" href={`https://pro-hair-picks.lovable.app${lang === "es" ? "/quienes-somos" : "/about-us"}`} />
-      </Helmet>
+      <SEOHead
+        title={t("about.metaTitle")}
+        description={t("about.metaDesc")}
+      />
 
       {/* ── Hero ──────────────────────────────── */}
       <section className="relative h-[60vh] min-h-[400px] flex items-end overflow-hidden">

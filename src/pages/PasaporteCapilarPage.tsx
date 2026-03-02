@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 // @ts-ignore — Supabase client import
 import { supabase } from "@/integrations/supabase/client";
 import PasaporteCapilar from "@/components/PasaporteCapilar";
@@ -15,14 +15,11 @@ export default function PasaporteCapilarPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Tu Pasaporte Capilar · Guía del Salón</title>
-        <meta
-          name="description"
-          content="Resumen ejecutivo de tus diagnósticos capilares, asesoría de color, seguridad química y plan de recuperación personalizado."
-        />
-        <meta name="robots" content="noindex" />
-      </Helmet>
+      <SEOHead
+        title="Tu Pasaporte Capilar · Guía del Salón"
+        description="Resumen ejecutivo de tus diagnósticos capilares, asesoría de color, seguridad química y plan de recuperación personalizado."
+        noIndex={true}
+      />
 
       <PasaporteCapilar userId={userId} />
     </>

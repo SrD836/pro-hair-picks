@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
 import CanicieAnalyzer from "@/components/CanicieAnalyzer";
 import CanicieExpertVerdict from "@/components/CanicieExpertVerdict";
@@ -13,14 +13,10 @@ export default function CanicieAnalyzerPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Analizador de Canicie — GuiaDelSalon</title>
-        <meta
-          name="description"
-          content="Descubre si tu canicie tiene origen genético, ambiental o mixto. Diagnóstico basado en biología del melanocito y factores modificables. Sin falsas promesas."
-        />
-        <link rel="canonical" href="https://guiadelsalon.com/analizador-canicie" />
-      </Helmet>
+      <SEOHead
+        title="Analizador de Canicie — GuiaDelSalon"
+        description="Descubre si tu canicie tiene origen genético, ambiental o mixto. Diagnóstico basado en biología del melanocito y factores modificables. Sin falsas promesas."
+      />
 
       {/* Hero */}
       <div
