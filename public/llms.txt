@@ -2,10 +2,10 @@
 > Plataforma de comparativas de equipamiento profesional para peluquería y barbería en España y LATAM.
 
 ## Secciones principales
-- /: Inicio con catálogo completo
-- /blog: Artículos técnicos para profesionales
-- /categorias/[slug]: Rankings por categoría (47 categorías)
-- /comparar, /quiz, /calculadora-roi: Herramientas interactivas
+- /: Inicio
+- /blog: Artículos técnicos
+- /categorias/[slug]: Rankings por categoría
+- /comparar, /quiz, /calculadora-roi: Herramientas
 
 ## Contenido
 - Comparativas con precios verificados en Amazon España
