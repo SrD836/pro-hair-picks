@@ -89,6 +89,11 @@ BEGIN
 
   final_slug := base_slug;
 
+  -- Guard: empty name produces empty slug
+  IF base_slug = '' OR base_slug = '-' THEN
+    RAISE EXCEPTION 'Cannot generate slug for product with empty/invalid name: %', NEW.name;
+  END IF;
+
   -- Append suffix until unique
   WHILE EXISTS (
     SELECT 1 FROM products WHERE slug = final_slug AND id != NEW.id
@@ -102,6 +107,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER set_product_slug
+CREATE OR REPLACE TRIGGER set_product_slug
 BEFORE INSERT ON products
 FOR EACH ROW EXECUTE FUNCTION generate_product_slug();
