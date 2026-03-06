@@ -5,15 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function toProductSlug(name: string): string {
-  const from = 'áéíóúàèìòùäëïöüñÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑ';
-  const to   = 'aeiouaeiouaeiounAEIOUAEIOUAEIOUN';
-  const charMap: Record<string, string> = {};
-  for (let i = 0; i < from.length; i++) charMap[from[i]] = to[i];
+const _slugFrom = 'áéíóúàèìòùäëïöüñÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑ';
+const _slugTo   = 'aeiouaeiouaeiounAEIOUAEIOUAEIOUN';
+const _slugCharMap: Record<string, string> = {};
+for (let i = 0; i < _slugFrom.length; i++) _slugCharMap[_slugFrom[i]] = _slugTo[i];
 
+export function toProductSlug(name: string): string {
   return name
     .split('')
-    .map((c) => charMap[c] ?? c)
+    .map((c) => _slugCharMap[c] ?? c)
     .join('')
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')
