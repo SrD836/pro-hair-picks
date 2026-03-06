@@ -51,6 +51,7 @@ const AlopeciaAnalyzerPage = lazy(() => import('./pages/AlopeciaAnalyzerPage'));
 const MiPeloPage = lazy(() => import('./pages/MiPeloPage'));
 const DiagnosticoCompletoPage = lazy(() => import('./pages/DiagnosticoCompletoPage'));
 const MisResultadosPage = lazy(() => import('./pages/MisResultadosPage'));
+const ProductPage = lazy(() => import('./pages/ProductPage'));
 
 const queryClient = new QueryClient();
 
@@ -76,6 +77,7 @@ function AnimatedRoutes() {
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/productos/:slug" element={<ProductPage />} />
           <Route path="/asesor-color" element={<ColorMatchPage />} />
           <Route path="/color-match" element={<ColorMatchPage />} />
           <Route path="/diagnostico-capilar" element={<DiagnosticoCapilarPage />} />

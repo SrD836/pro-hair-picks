@@ -2,7 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Clock, Calendar, ThumbsUp, ThumbsDown, Link2, Share2, ArrowLeft } from "lucide-react";
+import { Clock, Calendar, ThumbsUp, ThumbsDown, Link2, Share2, ArrowLeft, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import ScissorsSpinner from "@/components/ScissorsSpinner";
 import { AuthorBox } from "@/components/AuthorBox";
 import { DisclaimerAI } from "@/components/DisclaimerAI";
+import { toProductSlug } from "@/lib/utils";
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800";
 
 /* Session ID for anonymous reactions */
@@ -63,7 +64,7 @@ const BlogPostPage = () => {
       });
   }, [post, sessionId]);
 
-  /* Related posts */
+  /* Related posts (sidebar) */
   const { data: related = [] } = useQuery({
     queryKey: ["blog-related", post?.category, post?.id],
     queryFn: async () => {
@@ -77,6 +78,68 @@ const BlogPostPage = () => {
       return data ?? [];
     },
     enabled: !!post?.category,
+  });
+
+  /* Related products (Section A) */
+  const { data: relatedProducts = [] } = useQuery({
+    queryKey: ["blog-related-products", post?.category, post?.id],
+    queryFn: async () => {
+      if (post!.category) {
+        const { data } = await supabase
+          .from("products")
+          .select("id, name, image_url, amazon_rating, category")
+          .ilike("category", `%${post!.category}%`)
+          .order("amazon_rating", { ascending: false })
+          .limit(4);
+        if (data && data.length > 0) return data;
+      }
+      const { data: fallback } = await supabase
+        .from("products")
+        .select("id, name, image_url, amazon_rating, category")
+        .order("amazon_rating", { ascending: false })
+        .limit(4);
+      return fallback ?? [];
+    },
+    enabled: !!post,
+  });
+
+  /* Related articles with keywords (Section B) */
+  const { data: relatedArticles = [] } = useQuery({
+    queryKey: ["blog-related-articles", post?.keywords, post?.category, post?.id],
+    queryFn: async () => {
+      const keywords = (post!.keywords ?? []).filter(Boolean).slice(0, 2);
+      if (keywords.length > 0) {
+        const { data } = await supabase
+          .from("blog_posts")
+          .select("id, title, slug, excerpt, published_at")
+          .eq("is_published", true)
+          .overlaps("keywords", keywords)
+          .neq("id", post!.id)
+          .order("published_at", { ascending: false })
+          .limit(4);
+        if (data && data.length > 0) return data;
+      }
+      if (post!.category) {
+        const { data } = await supabase
+          .from("blog_posts")
+          .select("id, title, slug, excerpt, published_at")
+          .eq("is_published", true)
+          .eq("category", post!.category)
+          .neq("id", post!.id)
+          .order("published_at", { ascending: false })
+          .limit(4);
+        if (data && data.length > 0) return data;
+      }
+      const { data: fallback } = await supabase
+        .from("blog_posts")
+        .select("id, title, slug, excerpt, published_at")
+        .eq("is_published", true)
+        .neq("id", post!.id)
+        .order("published_at", { ascending: false })
+        .limit(4);
+      return fallback ?? [];
+    },
+    enabled: !!post,
   });
 
   /* Vote mutation */
@@ -240,6 +303,70 @@ const BlogPostPage = () => {
                 </motion.button>
               </div>
             </div>
+
+            {/* Section A: Productos relacionados */}
+            {relatedProducts.length > 0 && (
+              <div className="mt-12 border-t border-border pt-8">
+                <h2 className="font-display text-xl font-bold text-[#2D2218] mb-6">Productos relacionados</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {relatedProducts.map((product) => (
+                    <Link
+                      key={product.id}
+                      to={`/productos/${toProductSlug(product.name)}`}
+                      className="group flex flex-col rounded-lg border border-border bg-card overflow-hidden hover:border-[#C4A97D]/50 transition-colors"
+                    >
+                      {product.image_url ? (
+                        <img
+                          src={product.image_url}
+                          alt={product.name}
+                          className="w-full h-28 object-contain p-2 bg-muted/30"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-28 bg-muted rounded-t-lg" />
+                      )}
+                      <div className="p-3 flex flex-col gap-1">
+                        <span className="text-xs font-semibold text-[#2D2218] line-clamp-2 group-hover:text-[#C4A97D] transition-colors">
+                          {product.name}
+                        </span>
+                        {product.amazon_rating != null && (
+                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <Star className="w-3 h-3 fill-[#C4A97D] text-[#C4A97D]" />
+                            {product.amazon_rating.toFixed(1)}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Section B: Artículos relacionados */}
+            {relatedArticles.length > 0 && (
+              <div className="mt-12 border-t border-border pt-8">
+                <h2 className="font-display text-xl font-bold text-[#2D2218] mb-6">Artículos relacionados</h2>
+                <ul className="space-y-4">
+                  {relatedArticles.map((article) => (
+                    <li key={article.id} className="group">
+                      <Link
+                        to={`/blog/${article.slug}`}
+                        className="block hover:opacity-80 transition-opacity"
+                      >
+                        <span className="font-semibold text-[#2D2218] group-hover:text-[#C4A97D] transition-colors text-sm">
+                          {article.title}
+                        </span>
+                        {article.excerpt && (
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                            {article.excerpt.slice(0, 100)}{article.excerpt.length > 100 ? "…" : ""}
+                          </p>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Related (mobile) */}
             {related.length > 0 && (

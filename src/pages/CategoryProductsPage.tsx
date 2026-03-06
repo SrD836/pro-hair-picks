@@ -5,6 +5,8 @@ import { useProductsByCategory } from "@/hooks/useProductsByCategory";
 import { getCategoryNameBySlug } from "@/data/categories";
 import ClipperProductCard from "@/components/ClipperProductCard";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const CategoryProductsPage = () => {
   const { categoria } = useParams<{ categoria: string }>();
@@ -13,6 +15,50 @@ const CategoryProductsPage = () => {
 
   const categoryName = getCategoryNameBySlug(slug) || slug;
   const { data: products = [], isLoading } = useProductsByCategory(categoryName);
+
+  const { data: categoryPostsResult } = useQuery({
+    queryKey: ["category-blog-posts", slug, categoryName],
+    queryFn: async () => {
+      const { data: byName } = await supabase
+        .from("blog_posts")
+        .select("id, title, slug, excerpt")
+        .eq("is_published", true)
+        .ilike("category", `%${categoryName}%`)
+        .order("published_at", { ascending: false })
+        .limit(3);
+
+      if (byName && byName.length > 0) {
+        return { posts: byName, isFallback: false };
+      }
+
+      const { data: byKeywords } = await supabase
+        .from("blog_posts")
+        .select("id, title, slug, excerpt")
+        .eq("is_published", true)
+        .overlaps("keywords", [slug])
+        .order("published_at", { ascending: false })
+        .limit(3);
+
+      if (byKeywords && byKeywords.length > 0) {
+        return { posts: byKeywords, isFallback: false };
+      }
+
+      const { data: fallback } = await supabase
+        .from("blog_posts")
+        .select("id, title, slug, excerpt")
+        .eq("is_published", true)
+        .order("published_at", { ascending: false })
+        .limit(3);
+
+      return { posts: fallback ?? [], isFallback: true };
+    },
+    enabled: !!slug,
+  });
+
+  const categoryPosts = categoryPostsResult?.posts ?? [];
+  const postsSectionTitle = categoryPostsResult?.isFallback
+    ? "Últimas guías del salón"
+    : `Artículos sobre ${categoryName}`;
 
   const today = new Date().toLocaleDateString(lang === "es" ? "es-ES" : "en-US", { day: "numeric", month: "long", year: "numeric" });
   const displayName = categoryName;
@@ -69,6 +115,31 @@ const CategoryProductsPage = () => {
           </div>
         )}
       </div>
+
+      {categoryPosts.length > 0 && (
+        <div className="max-w-4xl mt-12 border-t border-border pt-8">
+          <h2 className="font-display text-xl font-bold text-[#2D2218] mb-6">{postsSectionTitle}</h2>
+          <ul className="space-y-4">
+            {categoryPosts.map((post) => (
+              <li key={post.id} className="group">
+                <Link
+                  to={`/blog/${post.slug}`}
+                  className="block hover:opacity-80 transition-opacity"
+                >
+                  <span className="font-semibold text-[#2D2218] group-hover:text-[#C4A97D] transition-colors text-sm">
+                    {post.title}
+                  </span>
+                  {post.excerpt && (
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                      {post.excerpt.slice(0, 100)}{post.excerpt.length > 100 ? "…" : ""}
+                    </p>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
