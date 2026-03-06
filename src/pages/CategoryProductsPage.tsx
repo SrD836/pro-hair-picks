@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { buildPageTitle } from "@/utils/seo";
+import { buildPageTitle, buildBreadcrumbSchema } from "@/utils/seo";
 import { ChevronRight } from "lucide-react";
 import { useProductsByCategory } from "@/hooks/useProductsByCategory";
 import { getCategoryNameBySlug } from "@/data/categories";
@@ -84,6 +85,9 @@ const CategoryProductsPage = () => {
         title={buildPageTitle(`${categoryName} — Equipamiento Profesional`)}
         description={`Comparativa de los mejores ${categoryName.toLowerCase()} profesionales. Rankings honestos con precios verificados en Amazon España.`}
       />
+      <Helmet>
+        <script type="application/ld+json">{buildBreadcrumbSchema(categoryName, slug)}</script>
+      </Helmet>
       <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
         <Link to="/" className="hover:text-foreground transition-colors">{t("category.home")}</Link>
         <ChevronRight className="w-3 h-3" />

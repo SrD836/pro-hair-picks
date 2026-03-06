@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { buildPageTitle } from "@/utils/seo";
+import { buildPageTitle, buildArticleSchema } from "@/utils/seo";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Clock, Calendar, ThumbsUp, ThumbsDown, Link2, Share2, ArrowLeft, Star } from "lucide-react";
@@ -202,6 +203,9 @@ const BlogPostPage = () => {
         description={localExcerpt || localTitle}
         ogImage={post.cover_image_url || FALLBACK_IMAGE}
       />
+      <Helmet>
+        <script type="application/ld+json">{buildArticleSchema(post)}</script>
+      </Helmet>
       {/* Hero */}
       <div className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
           <img src={post.cover_image_url || FALLBACK_IMAGE} alt={post.title} className="w-full h-full object-cover" loading="eager" />

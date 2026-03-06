@@ -58,6 +58,10 @@ function generateSchema(post, date) {
     description: post.meta_description || post.excerpt || '',
     keywords: (post.keywords || []).join(', '),
     inLanguage: post.lang === 'en' ? 'en-US' : 'es-ES',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://guiadelsalon.com/blog/${post.slug}`,
+    },
   };
 }
 

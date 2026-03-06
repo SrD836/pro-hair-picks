@@ -1,8 +1,9 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Helmet } from "react-helmet-async";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { buildPageTitle } from "@/utils/seo";
+import { buildPageTitle, buildProductSchema } from "@/utils/seo";
 import { Star, ArrowLeft, ExternalLink, ArrowRight } from "lucide-react";
 import { toProductSlug } from "@/lib/utils";
 import ScissorsSpinner from "@/components/ScissorsSpinner";
@@ -132,6 +133,9 @@ const ProductPage = () => {
         title={buildPageTitle(product.name)}
         description={`Análisis y comparativa de ${product.name}. ${product.brand ? `Marca: ${product.brand}.` : ""} Precios verificados y opiniones reales.`}
       />
+      <Helmet>
+        <script type="application/ld+json">{buildProductSchema(product)}</script>
+      </Helmet>
 
       <div className="container mx-auto px-4 py-10 max-w-4xl">
         {categorySlug && (
