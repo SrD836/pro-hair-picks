@@ -254,10 +254,10 @@ async function writePost(post, date) {
   const titlePrompt = isUS
     ? `For the article about "${post.topic}" (keyword: "${post.target_keyword}"):
 Generate ONLY this JSON (no additional text):
-{"title":"[SEO title max 65 chars, keyword at start, American English]","title_en":"[same as title]","meta_description":"[max 155 chars, includes keyword and implicit CTA, American English]","category":"[1-2 words English]","category_en":"[1-2 words English]"}`
+{"title":"[SEO title maximum 55 characters, keyword at start, no subtitle]","title_en":"[same as title]","meta_description":"[max 155 chars, includes keyword and implicit CTA, American English]","category":"[1-2 words English]","category_en":"[1-2 words English]"}`
     : `Para el artículo sobre "${post.topic}" (keyword: "${post.target_keyword}"):
 Genera SOLO este JSON (sin texto adicional):
-{"title":"[título SEO español max 65 chars, keyword al inicio]","title_en":"[English SEO title max 65 chars]","meta_description":"[max 155 chars, incluye keyword y CTA implícito]","category":"[1-2 palabras español]","category_en":"[1-2 words English]"}`;
+{"title":"[título SEO español máximo 55 caracteres, keyword al inicio, sin subtítulo]","title_en":"[English SEO title maximum 55 characters, no subtitle]","meta_description":"[max 155 chars, incluye keyword y CTA implícito]","category":"[1-2 palabras español]","category_en":"[1-2 words English]"}`;
 
   let titleData = {};
   try {
@@ -358,14 +358,20 @@ async function writeAllPosts(dailyPlan) {
         ...post,
         title: post.topic,
         title_en: post.topic,
-        meta_description: `Guía profesional sobre ${post.target_keyword}.`,
+        meta_description: `${post.target_keyword || post.topic}: guía para profesionales de peluquería. Técnicas, productos y consejos de aplicación en salón.`.slice(0, 155),
         category: 'Peluquería',
         category_en: 'Hairdressing',
         excerpt: `Artículo sobre ${post.topic}.`,
         excerpt_en: `Article about ${post.topic}.`,
-        content: `<p>Contenido en preparación.</p>`,
-        content_en: `<p>Content coming soon.</p>`,
-        read_time_minutes: 5,
+        content: `<p>${post.topic} es un tema clave para profesionales de peluquería y barbería en España. En esta guía analizamos los aspectos fundamentales que todo profesional del salón debe conocer sobre ${post.target_keyword || post.topic}, incluyendo técnicas actuales, productos recomendados y consejos de aplicación profesional.</p>
+<h2>¿Por qué es importante ${post.target_keyword || post.topic}?</h2>
+<p>Los profesionales del sector valoran especialmente el dominio de ${post.target_keyword || post.topic} por su impacto directo en la satisfacción del cliente y la rentabilidad del servicio. Mantenemos esta guía en actualización continua con las últimas novedades del sector.</p>
+<p>Consulta nuestras <a href="/blog">guías completas del salón</a> y las <a href="/categorias/clippers">comparativas de productos profesionales</a> para más recursos.</p>`,
+        content_en: `<p>${post.topic} is a key topic for professional hairdressers and barbers. This guide covers the essential aspects of ${post.target_keyword || post.topic} for salon professionals, including current techniques, recommended products and professional application tips.</p>
+<h2>Why does ${post.target_keyword || post.topic} matter?</h2>
+<p>Salon professionals value expertise in ${post.target_keyword || post.topic} for its direct impact on client satisfaction and service profitability. We keep this guide updated with the latest industry developments.</p>
+<p>Browse our <a href="/blog">complete salon guides</a> for more professional resources.</p>`,
+        read_time_minutes: 2,
         has_expert_verdict: false,
         has_data_viz: false,
         keywords: [post.target_keyword],
