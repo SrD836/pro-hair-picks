@@ -1,6 +1,6 @@
 // ─── CONFIG ────────────────────────────────────────────────────────────────
-const SUPABASE_URL = SUPABASE_URL_ENV;       // definida como variable en CF Dashboard
-const SUPABASE_KEY = SUPABASE_ANON_KEY_ENV;  // anon key — solo SELECTs públicos
+const SUPABASE_URL = typeof SUPABASE_URL_ENV !== 'undefined' ? SUPABASE_URL_ENV : '';
+const SUPABASE_KEY = typeof SUPABASE_ANON_KEY_ENV !== 'undefined' ? SUPABASE_ANON_KEY_ENV : '';
 const DEFAULT_TITLE = "Guía del Salón — Equipamiento Profesional de Peluquería";
 const DEFAULT_DESC  = "Rankings honestos, precios reales y herramientas para profesionales del salón.";
 const BRAND         = "Guía del Salón";
