@@ -30,14 +30,26 @@ const ProductPage = () => {
   const { data: product, isLoading } = useQuery({
     queryKey: ["product-by-slug", slug],
     queryFn: async () => {
-      const nameSearch = slug!.replace(/-/g, " ");
-      const { data } = await supabase
+      // Primary: exact slug lookup (indexed, O(log n))
+      const { data: exact } = await supabase
         .from("products")
-        .select("id, name, image_url, amazon_rating, amazon_reviews, current_price, brand, category, amazon_url, amazon_url_us")
+        .select("id, name, slug, image_url, amazon_rating, amazon_reviews, current_price, brand, category, amazon_url, amazon_url_us")
+        .eq("slug", slug!)
+        .maybeSingle();
+      if (exact) return exact;
+
+      // Fallback: product exists but slug column not yet backfilled
+      const nameSearch = slug!.replace(/-/g, " ");
+      const { data: byName } = await supabase
+        .from("products")
+        .select("id, name, slug, image_url, amazon_rating, amazon_reviews, current_price, brand, category, amazon_url, amazon_url_us")
         .ilike("name", `%${nameSearch}%`)
-        .limit(10);
-      if (!data) return null;
-      return data.find((p) => toProductSlug(p.name) === slug) ?? data[0] ?? null;
+        .limit(5);
+      const found = byName?.find((p) => toProductSlug(p.name) === slug) ?? byName?.[0] ?? null;
+      if (found) {
+        console.warn("[ProductPage] Product found by name fallback, slug missing:", slug);
+      }
+      return found ?? null;
     },
     enabled: !!slug,
   });
