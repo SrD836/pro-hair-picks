@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { buildPageTitle } from "@/utils/seo";
 import { ChevronRight } from "lucide-react";
 import { useProductsByCategory } from "@/hooks/useProductsByCategory";
 import { getCategoryNameBySlug } from "@/data/categories";
@@ -80,7 +81,7 @@ const CategoryProductsPage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <SEOHead
-        title={`${categoryName} — Equipamiento Profesional | Guía del Salón`}
+        title={buildPageTitle(`${categoryName} — Equipamiento Profesional`)}
         description={`Comparativa de los mejores ${categoryName.toLowerCase()} profesionales. Rankings honestos con precios verificados en Amazon España.`}
       />
       <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">

@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { buildPageTitle } from "@/utils/seo";
 import { Star, ArrowLeft, ExternalLink, ArrowRight } from "lucide-react";
 import { toProductSlug } from "@/lib/utils";
 import ScissorsSpinner from "@/components/ScissorsSpinner";
@@ -128,7 +129,7 @@ const ProductPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={`${product.name} | Guía del Salón`}
+        title={buildPageTitle(product.name)}
         description={`Análisis y comparativa de ${product.name}. ${product.brand ? `Marca: ${product.brand}.` : ""} Precios verificados y opiniones reales.`}
       />
 

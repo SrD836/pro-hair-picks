@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { buildPageTitle } from "@/utils/seo";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Clock, Calendar, ThumbsUp, ThumbsDown, Link2, Share2, ArrowLeft, Star } from "lucide-react";
@@ -197,7 +198,7 @@ const BlogPostPage = () => {
   return (
     <article className="min-h-screen bg-background">
       <SEOHead
-        title={`${localTitle} | Blog Guía del Salón`}
+        title={buildPageTitle(localTitle, post.keywords?.[0])}
         description={localExcerpt || localTitle}
         ogImage={post.cover_image_url || FALLBACK_IMAGE}
       />
