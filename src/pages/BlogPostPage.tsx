@@ -201,7 +201,11 @@ const BlogPostPage = () => {
     <article className="min-h-screen bg-background">
       <SEOHead
         title={buildPageTitle(localTitle, post.keywords?.[0])}
-        description={localExcerpt || localTitle}
+        description={
+          post.meta_description ||
+          localExcerpt ||
+          (localTitle ? `Guía profesional sobre ${localTitle}. Consejos y productos para profesionales del salón.` : undefined)
+        }
         ogImage={post.cover_image_url || FALLBACK_IMAGE}
       />
       <Helmet>
