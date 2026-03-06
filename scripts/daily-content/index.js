@@ -142,9 +142,10 @@ async function run() {
   // FASE 5b — Publicación
   if (dryRun) {
     console.log('\n⏭️  DRY RUN — Posts que se insertarían:');
-    finalPlan.posts.forEach(p =>
-      console.log(`  · [${p.type}] "${p.title}" → /blog/${p.slug}`)
-    );
+    finalPlan.posts.forEach(p => {
+      console.log(`  · [${p.type}] "${p.title}" → /blog/${p.slug}`);
+      console.log(`    meta_description: ${p.meta_description ? p.meta_description.slice(0, 80) + '…' : '⚠️  NULL'}`);
+    });
   } else {
     console.log('\n📤 FASE 5b — Publicando drafts en Supabase...');
     await publishAll(finalPlan, config);
