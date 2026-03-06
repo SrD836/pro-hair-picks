@@ -92,12 +92,20 @@ const CompararPage = () => {
         <span className="text-foreground font-medium">Comparar</span>
       </nav>
 
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="font-display text-2xl md:text-3xl font-bold">Comparativa de productos</h1>
         <Button variant="ghost" size="sm" onClick={clear}>
           <Trash2 className="w-4 h-4 mr-1" /> Limpiar
         </Button>
       </div>
+
+      <section className="max-w-2xl mt-4 mb-8 text-sm text-muted-foreground leading-relaxed">
+        <p>
+          Compara especificaciones técnicas, precio y valoraciones de los principales
+          productos profesionales del mercado. Datos actualizados desde
+          Amazon España y fabricantes. Selecciona hasta 3 modelos para comparar en paralelo.
+        </p>
+      </section>
 
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="w-full text-sm">

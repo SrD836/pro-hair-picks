@@ -100,6 +100,23 @@ const CategoryProductsPage = () => {
         </div>
       </header>
 
+      <section className="max-w-3xl mt-6 mb-8 text-sm text-muted-foreground leading-relaxed">
+        <h2 className="text-base font-semibold text-[#2D2218] mb-3">
+          ¿Cómo elegir el mejor {categoryName || 'producto'} profesional?
+        </h2>
+        <p className="mb-3">
+          Los {(categoryName || 'producto').toLowerCase()} profesionales se diferencian por potencia sostenida,
+          durabilidad del motor en jornadas largas y precisión de acabado en entorno de salón.
+          En esta comparativa analizamos los modelos mejor valorados por peluqueros y barberos
+          profesionales en España, con pruebas reales de rendimiento.
+        </p>
+        <p>
+          Revisamos precio actualizado en Amazon España, calidad de construcción,
+          ergonomía en uso continuado y relación entre prestaciones y coste de adquisición.
+          Todos los modelos incluidos cuentan con enlace directo al proveedor verificado.
+        </p>
+      </section>
+
       <div className="max-w-4xl space-y-6">
         {products.length > 0 ? (
           products.map((product, i) => (
