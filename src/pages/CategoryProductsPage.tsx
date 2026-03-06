@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { buildPageTitle, buildBreadcrumbSchema } from "@/utils/seo";
-import { ChevronRight } from "lucide-react";
+import Breadcrumb from "@/components/Breadcrumb";
 import { useProductsByCategory } from "@/hooks/useProductsByCategory";
 import { getCategoryNameBySlug } from "@/data/categories";
 import ClipperProductCard from "@/components/ClipperProductCard";
@@ -88,11 +88,13 @@ const CategoryProductsPage = () => {
       <Helmet>
         <script type="application/ld+json">{buildBreadcrumbSchema(categoryName, slug)}</script>
       </Helmet>
-      <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
-        <Link to="/" className="hover:text-foreground transition-colors">{t("category.home")}</Link>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-foreground font-medium">{displayName}</span>
-      </nav>
+      <Breadcrumb
+        injectSchema={false}
+        items={[
+          { label: t("category.home"), href: "/" },
+          { label: displayName },
+        ]}
+      />
 
       <header className="mb-10">
         <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground leading-tight">

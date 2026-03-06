@@ -2,9 +2,10 @@ import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { buildPageTitle, buildArticleSchema } from "@/utils/seo";
+import Breadcrumb from "@/components/Breadcrumb";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Clock, Calendar, ThumbsUp, ThumbsDown, Link2, Share2, ArrowLeft, Star } from "lucide-react";
+import { Clock, Calendar, ThumbsUp, ThumbsDown, Link2, Share2, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -233,9 +234,13 @@ const BlogPostPage = () => {
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Main content */}
           <div className="flex-1 max-w-[720px] mx-auto lg:mx-0">
-            <Link to="/blog" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-secondary mb-6 transition-colors">
-              <ArrowLeft className="w-4 h-4" /> Volver al blog
-            </Link>
+            <Breadcrumb
+              items={[
+                { label: "Inicio", href: "/" },
+                { label: "Blog", href: "/blog" },
+                { label: post.title.length > 40 ? post.title.slice(0, 40) + "…" : post.title },
+              ]}
+            />
 
 
             {/* Article body */}

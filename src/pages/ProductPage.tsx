@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet-async";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { buildPageTitle, buildProductSchema } from "@/utils/seo";
-import { Star, ArrowLeft, ExternalLink, ArrowRight } from "lucide-react";
+import Breadcrumb from "@/components/Breadcrumb";
+import { Star, ExternalLink, ArrowRight } from "lucide-react";
 import { toProductSlug } from "@/lib/utils";
 import ScissorsSpinner from "@/components/ScissorsSpinner";
 
@@ -138,14 +139,15 @@ const ProductPage = () => {
       </Helmet>
 
       <div className="container mx-auto px-4 py-10 max-w-4xl">
-        {categorySlug && (
-          <Link
-            to={`/categorias/${categorySlug}`}
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-[#C4A97D] mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> Volver a {product.category}
-          </Link>
-        )}
+        <Breadcrumb
+          items={[
+            { label: "Inicio", href: "/" },
+            ...(product.category && categorySlug
+              ? [{ label: product.category, href: `/categorias/${categorySlug}` }]
+              : [{ label: "Productos", href: "/categorias" }]),
+            { label: product.name },
+          ]}
+        />
 
         {/* Product card */}
         <div className="bg-card rounded-xl border border-border shadow-sm p-6 flex flex-col sm:flex-row gap-6">
