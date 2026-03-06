@@ -1,6 +1,6 @@
 // ─── CONFIG ────────────────────────────────────────────────────────────────
-const SUPABASE_URL = typeof SUPABASE_URL_ENV !== 'undefined' ? SUPABASE_URL_ENV : '';
-const SUPABASE_KEY = typeof SUPABASE_ANON_KEY_ENV !== 'undefined' ? SUPABASE_ANON_KEY_ENV : '';
+let SUPABASE_URL = '';
+let SUPABASE_KEY = '';
 const DEFAULT_TITLE = "Guía del Salón — Equipamiento Profesional de Peluquería";
 const DEFAULT_DESC  = "Rankings honestos, precios reales y herramientas para profesionales del salón.";
 const BRAND         = "Guía del Salón";
@@ -111,9 +111,13 @@ class MetaRewriter {
 }
 
 // ─── HANDLER PRINCIPAL ────────────────────────────────────────────────────
-addEventListener("fetch", event => {
-  event.respondWith(handleRequest(event.request));
-});
+export default {
+  async fetch(request, env) {
+    SUPABASE_URL = env.SUPABASE_URL_ENV || '';
+    SUPABASE_KEY = env.SUPABASE_ANON_KEY_ENV || '';
+    return handleRequest(request);
+  }
+};
 
 async function handleRequest(request) {
   const url = new URL(request.url);
