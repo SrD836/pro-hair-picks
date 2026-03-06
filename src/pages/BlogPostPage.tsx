@@ -87,7 +87,7 @@ const BlogPostPage = () => {
       if (post!.category) {
         const { data } = await supabase
           .from("products")
-          .select("id, name, image_url, amazon_rating, category")
+          .select("id, name, slug, image_url, amazon_rating, category")
           .ilike("category", `%${post!.category}%`)
           .order("amazon_rating", { ascending: false })
           .limit(4);
@@ -95,7 +95,7 @@ const BlogPostPage = () => {
       }
       const { data: fallback } = await supabase
         .from("products")
-        .select("id, name, image_url, amazon_rating, category")
+        .select("id, name, slug, image_url, amazon_rating, category")
         .order("amazon_rating", { ascending: false })
         .limit(4);
       return fallback ?? [];
@@ -312,7 +312,7 @@ const BlogPostPage = () => {
                   {relatedProducts.map((product) => (
                     <Link
                       key={product.id}
-                      to={`/productos/${toProductSlug(product.name)}`}
+                      to={`/productos/${product.slug ?? toProductSlug(product.name)}`}
                       className="group flex flex-col rounded-lg border border-border bg-card overflow-hidden hover:border-[#C4A97D]/50 transition-colors"
                     >
                       {product.image_url ? (

@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export interface Product {
   id: string;
+  slug: string;
   category: string;
   price_range: "ELITE" | "VALUE" | "STARTER";
   name: string;
@@ -29,7 +30,7 @@ export const useProductsByCategory = (category: string) => {
 
       const { data, error } = await supabase
         .from("products")
-        .select("id, category, price_range, name, brand, amazon_asin, amazon_url, amazon_url_us, current_price, amazon_reviews, amazon_rating, features, image_url, position, tech_specs")
+        .select("id, slug, category, price_range, name, brand, amazon_asin, amazon_url, amazon_url_us, current_price, amazon_reviews, amazon_rating, features, image_url, position, tech_specs")
         .ilike("category", category);
 
       console.log("[useProductsByCategory] Result:", { data, error, count: data?.length });
