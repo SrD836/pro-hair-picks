@@ -44,7 +44,7 @@ export function buildArticleSchema(post: {
   cover_image_url?: string | null;
   meta_description?: string | null;
   excerpt?: string | null;
-  schema_markup?: Record<string, unknown> | null;
+  schema_markup?: Record<string, unknown> | unknown | null;
 }): string {
   const base: Record<string, unknown> = {
     "@context": "https://schema.org",
