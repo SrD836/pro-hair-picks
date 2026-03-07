@@ -58,6 +58,14 @@ export function usePageMeta() {
   const { pathname } = useLocation();
 
   useEffect(() => {
+    // Rutas dinámicas: dejar que SEOHead (react-helmet-async) lo gestione
+    const isDynamicRoute =
+      pathname.startsWith('/blog/') ||
+      pathname.startsWith('/categorias/') ||
+      pathname.startsWith('/productos/');
+
+    if (isDynamicRoute) return;
+
     const meta = ROUTE_META[pathname];
     if (meta) {
       document.title = meta.title;
@@ -65,7 +73,7 @@ export function usePageMeta() {
       if (descTag) descTag.setAttribute("content", meta.description);
     }
 
-    // Canonical tag
+    // Canonical tag — solo para rutas estáticas
     const canonical = `${SITE_ORIGIN}${pathname === "/" ? "/" : pathname.replace(/\/$/, "")}`;
     let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!link) {
