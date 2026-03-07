@@ -64,7 +64,12 @@ export function usePageMeta() {
       pathname.startsWith('/categorias/') ||
       pathname.startsWith('/productos/');
 
-    if (isDynamicRoute) return;
+    if (isDynamicRoute) {
+      // Eliminar canonical del DOM para que SEOHead lo gestione solo
+      const existingCanonical = document.querySelector('link[rel="canonical"]');
+      if (existingCanonical) existingCanonical.remove();
+      return;
+    }
 
     const meta = ROUTE_META[pathname];
     if (meta) {
