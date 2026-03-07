@@ -300,6 +300,11 @@ const QuizPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <section className="sr-only">
+        <p>Elegir los productos profesionales adecuados para una peluquería o barbería requiere considerar el tipo de servicios que se ofrecen, el volumen de clientes y las marcas más valoradas por los profesionales del sector. Este recomendador guía la decisión en cuatro preguntas clave orientadas a las necesidades reales del salón.</p>
+        <p>El equipamiento para salones se divide en grandes categorías: maquinaria eléctrica como clippers, trimmers, secadores y planchas; mobiliario profesional como sillones hidráulicos y lavacabezas; y consumibles como tintes, tratamientos capilares y productos de barba. Cada categoría responde a criterios técnicos específicos según el tipo de trabajo.</p>
+        <p>Los criterios de selección por servicio y volumen de clientes determinan si conviene priorizar la potencia y durabilidad para uso intensivo, o la versatilidad para salones mixtos. Marcas como Wahl, BaByliss, Andis y Dyson ofrecen gamas adaptadas a cada perfil profesional, con precios y prestaciones que este quiz ayuda a filtrar de forma personalizada.</p>
+      </section>
     </div>
   );
 };

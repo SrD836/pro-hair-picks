@@ -254,10 +254,10 @@ async function writePost(post, date) {
   const titlePrompt = isUS
     ? `For the article about "${post.topic}" (keyword: "${post.target_keyword}"):
 Generate ONLY this JSON (no additional text):
-{"title":"[SEO title maximum 55 characters, keyword at start, no subtitle]","title_en":"[same as title]","meta_description":"[max 155 chars, includes keyword and implicit CTA, American English]","category":"[1-2 words English]","category_en":"[1-2 words English]"}`
+{"title":"[SEO title maximum 43 characters, keyword at start, no subtitle]","title_en":"[same as title]","meta_description":"[max 155 chars, includes keyword and implicit CTA, American English]","category":"[1-2 words English]","category_en":"[1-2 words English]"}`
     : `Para el artículo sobre "${post.topic}" (keyword: "${post.target_keyword}"):
 Genera SOLO este JSON (sin texto adicional):
-{"title":"[título SEO español máximo 55 caracteres, keyword al inicio, sin subtítulo]","title_en":"[English SEO title maximum 55 characters, no subtitle]","meta_description":"[max 155 chars, incluye keyword y CTA implícito]","category":"[1-2 palabras español]","category_en":"[1-2 words English]"}`;
+{"title":"[título SEO español máximo 43 caracteres, keyword al inicio, sin subtítulo]","title_en":"[English SEO title maximum 43 characters, no subtitle]","meta_description":"[max 155 chars, incluye keyword y CTA implícito]","category":"[1-2 palabras español]","category_en":"[1-2 words English]"}`;
 
   let titleData = {};
   try {

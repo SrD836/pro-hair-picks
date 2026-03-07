@@ -170,6 +170,11 @@ const CompararPage = () => {
           </tbody>
         </table>
       </div>
+      <section className="sr-only">
+        <p>El comparador de productos profesionales de peluquería y barbería permite analizar en paralelo hasta tres modelos de la misma categoría. Compara especificaciones técnicas, precio actualizado y valoraciones reales de Amazon para marcas como Wahl, BaByliss, Dyson y Andis.</p>
+        <p>Las diferencias técnicas entre modelos —potencia del motor, peso, ciclos por minuto o tipo de hoja— determinan el rendimiento en servicios de alta demanda. Conocer estas variables ayuda a elegir el equipamiento más adecuado según el tipo de salón, el volumen de clientes y los servicios principales que se ofrecen.</p>
+        <p>La relación calidad-precio varía según la gama: las marcas profesionales ofrecen mayor durabilidad y garantías de servicio técnico en España. Este comparador facilita la decisión de compra con datos objetivos y actualizados para barberos y peluqueros profesionales.</p>
+      </section>
     </div>
   );
 };

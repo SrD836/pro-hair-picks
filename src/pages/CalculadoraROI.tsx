@@ -20,6 +20,11 @@ const CalculadoraROI = () => (
         </p>
       </section>
       <ROICalculator />
+      <section className="sr-only">
+        <p>Calcular el ROI en peluquerías es clave para tomar decisiones de inversión fundamentadas. El retorno de inversión en equipamiento profesional depende del número de servicios realizados, el precio medio por servicio y la vida útil del equipo, factores que esta calculadora analiza con datos calibrados para el mercado español.</p>
+        <p>La rentabilidad por servicio aumenta cuando el equipamiento reduce los tiempos de trabajo y mejora la calidad del resultado. Herramientas profesionales como secadores de alta potencia, planchas de temperatura controlada o maquinillas de precisión permiten atender más clientes por jornada, acelerando la amortización de la inversión.</p>
+        <p>El ahorro de tiempo en peluquerías y barberías tiene un valor económico directo. Reducir diez minutos por servicio en un salón con cuarenta clientes semanales equivale a recuperar más de cien horas anuales de trabajo productivo. Esta calculadora cuantifica ese impacto para ayudarte a justificar cada inversión en equipamiento.</p>
+      </section>
     </div>
   </>
 );
