@@ -1,10 +1,13 @@
 /**
  * planner.js — FASE 0: Clasifica los 5 posts del día
- * Distribución: 3 core · 1 bridge · 1 negocio
+ * Distribución: 2 core ES · 1 core US · 1 bridge · 1 negocio
  * Usa `claude -p` (autenticación de Claude Code, sin API key separada)
+ * Keywords: cargadas desde Semrush Excel via keyword-loader.js
  */
 const { callClaude, extractJSON } = require('./claude-cli');
+const { getKeywordForDay }        = require('../keyword-loader');
 
+// TOPICS_POOL mantenido como fallback si keyword-loader falla
 const TOPICS_POOL = {
   core: [
     'coloración vegetal sin amoniaco: guía técnica 2026',
@@ -77,35 +80,51 @@ const TOPICS_POOL = {
 };
 
 async function planDay(date) {
-  const dayNum = new Date(date).getDate();
-  const monthNum = new Date(date).getMonth();
-  const pick = (arr, offset) => arr[(dayNum + monthNum * 3 + offset) % arr.length];
+  // ── Obtener topics desde Semrush keywords (con fallback al TOPICS_POOL) ──
+  let topicES0, topicES1, topicUS, topicBridge, topicNegocio;
+  try {
+    topicES0    = getKeywordForDay('es', date, 0);
+    topicES1    = getKeywordForDay('es', date, 1);
+    topicUS     = getKeywordForDay('us', date, 0);
+    topicBridge = getKeywordForDay('es', date, 2);
+    topicNegocio = getKeywordForDay('es', date, 3);
+    console.log('  ✓ Keywords cargadas desde Semrush Excel');
+  } catch (err) {
+    console.warn(`  ⚠️  keyword-loader falló (${err.message}) — usando TOPICS_POOL fallback`);
+    const dayNum   = new Date(date).getDate();
+    const monthNum = new Date(date).getMonth();
+    const pick = (arr, offset) => arr[(dayNum + monthNum * 3 + offset) % arr.length];
+    topicES0     = pick(TOPICS_POOL.core, 0);
+    topicES1     = pick(TOPICS_POOL.core, 7);
+    topicUS      = pick(TOPICS_POOL.core_us, 0);
+    topicBridge  = pick(TOPICS_POOL.bridge, 0);
+    topicNegocio = pick(TOPICS_POOL.negocio, 0);
+  }
 
   const slots = [
-    { slot: 1, type: 'core',    lang: 'es', market: 'es', topic: pick(TOPICS_POOL.core, 0) },
-    { slot: 2, type: 'core',    lang: 'es', market: 'es', topic: pick(TOPICS_POOL.core, 7) },
-    { slot: 3, type: 'core_us', lang: 'en', market: 'us', topic: pick(TOPICS_POOL.core_us, 0) },
-    { slot: 4, type: 'bridge',  lang: 'es', market: 'es', topic: pick(TOPICS_POOL.bridge, 0) },
-    { slot: 5, type: 'negocio', lang: 'es', market: 'es', topic: pick(TOPICS_POOL.negocio, 0) },
+    { slot: 1, type: 'core',    lang: 'es', market: 'es', topic: topicES0 },
+    { slot: 2, type: 'core',    lang: 'es', market: 'es', topic: topicES1 },
+    { slot: 3, type: 'core_us', lang: 'en', market: 'us', topic: topicUS },
+    { slot: 4, type: 'bridge',  lang: 'es', market: 'es', topic: topicBridge },
+    { slot: 5, type: 'negocio', lang: 'es', market: 'es', topic: topicNegocio },
   ];
 
-  console.log('  Generando keywords y slugs SEO...');
+  console.log('  Generando slug, meta y secondary keywords SEO...');
   const prompt = `Eres un experto SEO del sector peluquería/barbería.
 
-Para estos temas de blog, genera keywords y slugs SEO optimizados:
-${slots.map((s, i) => `${i + 1}. [${s.type.toUpperCase()}] ${s.topic}${s.market === 'us' ? ' ← MERCADO US: keywords en inglés americano' : ' ← MERCADO ES/LATAM: keywords en español'}`).join('\n')}
+Para estas keywords de Semrush, genera slugs SEO y datos de publicación:
+${slots.map((s, i) => `${i + 1}. [${s.type.toUpperCase()}] "${s.topic}"${s.market === 'us' ? ' ← MERCADO US' : ' ← MERCADO ES/LATAM'}`).join('\n')}
 
-CRITERIOS POR MERCADO:
-- Posts ES/LATAM (CORE, BRIDGE, NEGOCIO): keywords en español, 200-2000 búsquedas/mes en España
-- Posts US (CORE_US): keywords en inglés americano (ej: "best professional clippers 2026"), 500-5000 búsquedas/mes en EEUU
+La keyword ya está definida (target_keyword = la keyword del post).
+Genera SOLO: slug, meta_description y secondary_keywords.
 
 Responde SOLO con un array JSON (sin texto adicional):
 [
   {
-    "target_keyword": "keyword principal según mercado del post",
-    "secondary_keywords": ["keyword2", "keyword3"],
-    "user_question": "pregunta real del profesional (en el idioma del mercado)",
-    "slug": "slug-kebab-case-max-5-palabras (en el idioma del mercado)"
+    "target_keyword": "la misma keyword recibida, sin modificar",
+    "secondary_keywords": ["keyword2 relacionada", "keyword3 relacionada"],
+    "user_question": "pregunta real del profesional en el idioma del mercado",
+    "slug": "slug-kebab-case-max-5-palabras en el idioma del mercado"
   }
 ]`;
 
