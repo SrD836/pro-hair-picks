@@ -124,8 +124,8 @@ async function main() {
   // 3. Productos
   const products = await query(
     'products',
-    'select=slug,name,description&limit=200',
-    `SELECT slug, name, description FROM products LIMIT 200`
+    'select=slug,name&limit=200',
+    `SELECT slug, name FROM products LIMIT 200`
   );
 
   // ── Construir snapshot ────────────────────────────────────────────────────
@@ -153,9 +153,7 @@ async function main() {
   for (const p of (products || [])) {
     if (!p.slug) continue;
     const name = p.name || p.slug.replace(/-/g, ' ');
-    const rawDesc = p.description
-      ? stripHtml(p.description).slice(0, 155)
-      : `Análisis de ${name}: especificaciones técnicas, precio y veredicto de experto para profesionales del salón.`.slice(0, 155);
+    const rawDesc = `Análisis de ${name}: especificaciones técnicas, precio y veredicto de experto para profesionales del salón.`.slice(0, 155);
     productos[p.slug] = {
       title: `${name.slice(0, 50)} — Análisis profesional | ${BRAND}`,
       description: rawDesc,
