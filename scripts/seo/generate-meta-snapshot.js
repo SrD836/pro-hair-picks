@@ -42,7 +42,12 @@ const PROJECT_ID       = process.env.SUPABASE_PROJECT_ID || '';
 const BRAND            = 'Guía del Salón';
 
 if (!SUPABASE_URL && !PROJECT_ID) {
-  console.warn('⚠️  SUPABASE_URL o SUPABASE_PROJECT_ID no configurado — saltando generación de meta snapshot');
+  console.warn('⚠️  No hay credenciales de Supabase configuradas — se omite la generación de meta snapshot');
+  process.exit(0);
+}
+
+if (!SERVICE_KEY && !ACCESS_TOKEN) {
+  console.warn('⚠️  No hay credenciales de Supabase configuradas — se omite la generación de meta snapshot');
   process.exit(0);
 }
 

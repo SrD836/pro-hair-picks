@@ -44,7 +44,7 @@ export function buildArticleSchema(post: {
   cover_image_url?: string | null;
   meta_description?: string | null;
   excerpt?: string | null;
-  schema_markup?: Record<string, unknown> | null;
+  schema_markup?: Record<string, unknown> | unknown | null;
 }): string {
   const base: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -60,8 +60,8 @@ export function buildArticleSchema(post: {
   };
 
   // Extend with any pre-existing valid fields from DB (never overwrite our keys)
-  if (post.schema_markup && typeof post.schema_markup === "object") {
-    for (const [k, v] of Object.entries(post.schema_markup)) {
+  if (post.schema_markup && typeof post.schema_markup === "object" && !Array.isArray(post.schema_markup)) {
+    for (const [k, v] of Object.entries(post.schema_markup as Record<string, unknown>)) {
       if (!(k in base)) base[k] = v;
     }
   }
