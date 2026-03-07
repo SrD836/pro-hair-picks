@@ -63,6 +63,7 @@ const { researchAllPosts } = require('./lib/researcher');
 const { writeAllPosts }    = require('./lib/writer');
 const { processImages }    = require('./lib/images');
 const { publishAll }       = require('./lib/publisher');
+const { getUsedKeywords }  = require('./keyword-loader');
 
 // ── Argumentos CLI ──────────────────────────────────────────────────────────
 const args    = process.argv.slice(2);
@@ -92,7 +93,12 @@ async function run() {
 
   // FASE 0 — Planificación
   console.log('\n📋 FASE 0 — Planificando 5 posts del día...');
-  const rawPlan = await planDay(TODAY);
+  const usedKeywords = await getUsedKeywords(config.SUPABASE_URL, config.SUPABASE_ANON_KEY);
+  const rawPlan = await planDay(TODAY, {
+    usedKeywords,
+    supabaseUrl: config.SUPABASE_URL,
+    anonKey: config.SUPABASE_ANON_KEY,
+  });
   console.log(`  ✓ Plan: ${rawPlan.posts.map(p => `[${p.type}]`).join(' · ')}`);
   fs.writeFileSync(path.join(OUTPUT_DIR, 'daily_plan_inicial.json'), JSON.stringify(rawPlan, null, 2));
 

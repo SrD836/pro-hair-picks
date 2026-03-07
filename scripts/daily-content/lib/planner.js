@@ -4,8 +4,9 @@
  * Usa `claude -p` (autenticación de Claude Code, sin API key separada)
  * Keywords: cargadas desde Semrush Excel via keyword-loader.js
  */
-const { callClaude, extractJSON } = require('./claude-cli');
-const { getKeywordForDay }        = require('../keyword-loader');
+const { callClaude, extractJSON }  = require('./claude-cli');
+const { getKeywordForDay }         = require('../keyword-loader');
+const { getTrendingKeywords }      = require('../trend-analyzer');
 
 // TOPICS_POOL mantenido como fallback si keyword-loader falla
 const TOPICS_POOL = {
@@ -79,16 +80,73 @@ const TOPICS_POOL = {
   ],
 };
 
-async function planDay(date) {
+/**
+ * Comprueba si un slug existe en Supabase (REST API pública, anon key).
+ */
+async function isSlugAvailable(slug, supabaseUrl, anonKey) {
+  if (!supabaseUrl || !anonKey) return true;
+  try {
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/blog_posts?select=slug&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+      { headers: { apikey: anonKey, Authorization: `Bearer ${anonKey}` } }
+    );
+    if (!res.ok) return true; // En caso de error, asumir disponible
+    const data = await res.json();
+    return !Array.isArray(data) || data.length === 0;
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Devuelve un slug único añadiendo -2, -3... si ya existe en Supabase.
+ */
+async function ensureUniqueSlug(slug, supabaseUrl, anonKey) {
+  if (await isSlugAvailable(slug, supabaseUrl, anonKey)) return slug;
+  for (let i = 2; i <= 20; i++) {
+    const candidate = `${slug}-${i}`;
+    if (await isSlugAvailable(candidate, supabaseUrl, anonKey)) return candidate;
+  }
+  return `${slug}-${Date.now()}`;
+}
+
+/**
+ * Planifica los 5 posts del día.
+ *
+ * @param {string} date — 'YYYY-MM-DD'
+ * @param {object} opts
+ * @param {Set|null}  opts.usedKeywords  — keywords ya publicadas (se saltarán)
+ * @param {string}    opts.supabaseUrl   — para verificar slugs únicos
+ * @param {string}    opts.anonKey       — anon key de Supabase
+ */
+async function planDay(date, { usedKeywords = null, supabaseUrl = null, anonKey = null } = {}) {
+  // ── TAREA 4: Obtener tendencias del día ───────────────────────────────────
+  console.log('  Analizando tendencias del día...');
+  const trends = await getTrendingKeywords();
+  const hasTrendES = trends.es && trends.es.length > 0;
+  const hasTrendUS = trends.us && trends.us.length > 0;
+
   // ── Obtener topics desde Semrush keywords (con fallback al TOPICS_POOL) ──
   let topicES0, topicES1, topicUS, topicBridge, topicNegocio;
   try {
-    topicES0    = getKeywordForDay('es', date, 0);
-    topicES1    = getKeywordForDay('es', date, 1);
-    topicUS     = getKeywordForDay('us', date, 0);
-    topicBridge = getKeywordForDay('es', date, 2);
-    topicNegocio = getKeywordForDay('es', date, 3);
+    // Slots 1, 2, 4, 5 — SIEMPRE mercado ES
+    topicES0     = getKeywordForDay('es', date, 0, usedKeywords);
+    topicES1     = getKeywordForDay('es', date, 1, usedKeywords);
+    topicNegocio = getKeywordForDay('es', date, 3, usedKeywords);
+
+    // Slot 4 (bridge): trending ES si disponible, si no Excel ES
+    topicBridge = hasTrendES
+      ? trends.es[0]
+      : getKeywordForDay('es', date, 2, usedKeywords);
+
+    // Slot 3 (core_us): SIEMPRE mercado US — trending US si disponible
+    topicUS = hasTrendUS
+      ? trends.us[0]
+      : getKeywordForDay('us', date, 0, usedKeywords);
+
     console.log('  ✓ Keywords cargadas desde Semrush Excel');
+    if (hasTrendES) console.log(`  ✓ Bridge slot 4 → tendencia ES: "${topicBridge}"`);
+    if (hasTrendUS) console.log(`  ✓ Core US slot 3 → tendencia US: "${topicUS}"`);
   } catch (err) {
     console.warn(`  ⚠️  keyword-loader falló (${err.message}) — usando TOPICS_POOL fallback`);
     const dayNum   = new Date(date).getDate();
@@ -96,15 +154,19 @@ async function planDay(date) {
     const pick = (arr, offset) => arr[(dayNum + monthNum * 3 + offset) % arr.length];
     topicES0     = pick(TOPICS_POOL.core, 0);
     topicES1     = pick(TOPICS_POOL.core, 7);
-    topicUS      = pick(TOPICS_POOL.core_us, 0);
-    topicBridge  = pick(TOPICS_POOL.bridge, 0);
+    topicBridge  = hasTrendES ? trends.es[0] : pick(TOPICS_POOL.bridge, 0);
     topicNegocio = pick(TOPICS_POOL.negocio, 0);
+    // Slot 3: SIEMPRE US
+    topicUS = hasTrendUS ? trends.us[0] : pick(TOPICS_POOL.core_us, 0);
   }
 
+  // ── Slots: separación ES/US estricta ─────────────────────────────────────
+  // Slots 1, 2, 4, 5 → SIEMPRE lang:'es' market:'es'
+  // Slot 3           → SIEMPRE lang:'en' market:'us'
   const slots = [
     { slot: 1, type: 'core',    lang: 'es', market: 'es', topic: topicES0 },
     { slot: 2, type: 'core',    lang: 'es', market: 'es', topic: topicES1 },
-    { slot: 3, type: 'core_us', lang: 'en', market: 'us', topic: topicUS },
+    { slot: 3, type: 'core_us', lang: 'en', market: 'us', topic: topicUS  },
     { slot: 4, type: 'bridge',  lang: 'es', market: 'es', topic: topicBridge },
     { slot: 5, type: 'negocio', lang: 'es', market: 'es', topic: topicNegocio },
   ];
@@ -138,21 +200,35 @@ Responde SOLO con un array JSON (sin texto adicional):
       target_keyword: s.topic.slice(0, 40),
       secondary_keywords: ['peluquería profesional', 'barbería'],
       user_question: `¿Cómo dominar ${s.topic}?`,
-      slug: s.topic.toLowerCase().replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n').replace(/[^a-z0-9]+/g, '-').slice(0, 50).replace(/-+$/, ''),
+      slug: s.topic.toLowerCase()
+        .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i')
+        .replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n')
+        .replace(/[^a-z0-9]+/g, '-').slice(0, 50).replace(/-+$/, ''),
     }));
   }
 
-  return {
-    date,
-    posts: slots.map((s, i) => ({
-      ...s,
-      target_keyword:    keywordsData[i]?.target_keyword    || s.topic.slice(0, 40),
-      secondary_keywords: keywordsData[i]?.secondary_keywords || [],
-      user_question:     keywordsData[i]?.user_question     || '',
-      slug:              keywordsData[i]?.slug               || `post-${s.slot}-${date}`,
-      bridge_test: s.type === 'bridge' ? 'pending' : null,
-    })),
-  };
+  // ── TAREA 1a: Verificar unicidad de slugs en Supabase ────────────────────
+  const postsRaw = slots.map((s, i) => ({
+    ...s,
+    target_keyword:     keywordsData[i]?.target_keyword     || s.topic.slice(0, 40),
+    secondary_keywords: keywordsData[i]?.secondary_keywords || [],
+    user_question:      keywordsData[i]?.user_question      || '',
+    slug:               keywordsData[i]?.slug                || `post-${s.slot}-${date}`,
+    bridge_test: s.type === 'bridge' ? 'pending' : null,
+  }));
+
+  if (supabaseUrl && anonKey) {
+    console.log('  Verificando unicidad de slugs en Supabase...');
+    for (const post of postsRaw) {
+      const uniqueSlug = await ensureUniqueSlug(post.slug, supabaseUrl, anonKey);
+      if (uniqueSlug !== post.slug) {
+        console.log(`    ⚠️  Slug "${post.slug}" duplicado → "${uniqueSlug}"`);
+        post.slug = uniqueSlug;
+      }
+    }
+  }
+
+  return { date, posts: postsRaw };
 }
 
 module.exports = { planDay };

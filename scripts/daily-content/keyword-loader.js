@@ -50,7 +50,12 @@ function loadKeywords(lang) {
 
       return intentOk && kdOk && volOk && noExcluded && isAscii;
     })
-    .sort((a, b) => (parseInt(b['Volume']) || 0) - (parseInt(a['Volume']) || 0))
+    // Score por oportunidad real: prioriza KD bajo sobre volumen puro
+    .sort((a, b) => {
+      const scoreA = (parseInt(a['Volume']) || 0) / ((parseFloat(a['Keyword Difficulty']) || 0) + 1);
+      const scoreB = (parseInt(b['Volume']) || 0) / ((parseFloat(b['Keyword Difficulty']) || 0) + 1);
+      return scoreB - scoreA;
+    })
     .map(r => r['Keyword']);
 }
 
@@ -69,18 +74,67 @@ function getKeywords(lang) {
 
 /**
  * Devuelve la keyword para un slot del día concreto.
- * El índice avanza automáticamente cada día sin repetir ciclos cortos:
- *   dayIndex = días transcurridos desde 2026-01-01
- *   posición = (dayIndex * 5 + offset) % total_keywords
+ * Salta keywords que ya están publicadas si se pasa el Set usedKeywords.
  *
  * @param {'es'|'us'} lang
- * @param {string}    date   — 'YYYY-MM-DD'
- * @param {number}    offset — 0-4 (uno por slot del día)
+ * @param {string}    date         — 'YYYY-MM-DD'
+ * @param {number}    offset       — 0-4 (uno por slot del día)
+ * @param {Set|null}  usedKeywords — Set de keywords ya publicadas (lowercase)
  */
-function getKeywordForDay(lang, date, offset = 0) {
+function getKeywordForDay(lang, date, offset = 0, usedKeywords = null) {
   const keywords = getKeywords(lang);
   const dayIndex = Math.floor((new Date(date) - new Date('2026-01-01')) / 86400000);
-  return keywords[(dayIndex * 5 + offset) % keywords.length];
+  const baseIdx  = (dayIndex * 5 + offset) % keywords.length;
+
+  if (!usedKeywords || usedKeywords.size === 0) {
+    return keywords[baseIdx];
+  }
+
+  // Iterar desde la posición base hasta encontrar una keyword no usada
+  for (let i = 0; i < keywords.length; i++) {
+    const kw = keywords[(baseIdx + i) % keywords.length];
+    if (!usedKeywords.has(kw.toLowerCase())) return kw;
+  }
+
+  // Todas usadas (improbable) — devolver la base
+  return keywords[baseIdx];
 }
 
-module.exports = { getKeywordForDay, getKeywords };
+/**
+ * Obtiene el Set de keywords ya publicadas en Supabase.
+ * Usa el REST API público con anon key (solo lectura).
+ *
+ * @param {string} supabaseUrl
+ * @param {string} anonKey
+ * @returns {Promise<Set<string>>}
+ */
+async function getUsedKeywords(supabaseUrl, anonKey) {
+  if (!supabaseUrl || !anonKey) return new Set();
+  try {
+    const url = `${supabaseUrl}/rest/v1/blog_posts?select=keywords&is_published=eq.true`;
+    const res = await fetch(url, {
+      headers: {
+        'apikey': anonKey,
+        'Authorization': `Bearer ${anonKey}`,
+      },
+    });
+    if (!res.ok) {
+      console.warn(`  ⚠️  getUsedKeywords HTTP ${res.status} — sin filtrado de duplicados`);
+      return new Set();
+    }
+    const rows = await res.json();
+    const used = new Set();
+    for (const row of rows) {
+      if (Array.isArray(row.keywords)) {
+        row.keywords.forEach(kw => used.add((kw || '').toLowerCase()));
+      }
+    }
+    console.log(`  ✓ ${used.size} keywords ya publicadas cargadas (se saltarán)`);
+    return used;
+  } catch (err) {
+    console.warn(`  ⚠️  getUsedKeywords falló (${err.message}) — sin filtrado`);
+    return new Set();
+  }
+}
+
+module.exports = { getKeywordForDay, getKeywords, getUsedKeywords };

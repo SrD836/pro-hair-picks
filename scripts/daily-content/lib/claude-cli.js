@@ -46,7 +46,8 @@ function callClaude(prompt, options = {}) {
 
 /**
  * Extrae el primer bloque JSON del texto de respuesta de Claude.
- * Claude a veces añade texto explicativo antes/después del JSON.
+ * Claude a veces añade texto explicativo antes/después del JSON,
+ * trailing commas o saltos de línea dentro de strings.
  */
 function extractJSON(text, arrayExpected = false) {
   const open  = arrayExpected ? '[' : '{';
@@ -54,7 +55,27 @@ function extractJSON(text, arrayExpected = false) {
   const start = text.indexOf(open);
   const end   = text.lastIndexOf(close);
   if (start === -1 || end === -1) throw new Error(`No se encontró JSON en la respuesta`);
-  return JSON.parse(text.slice(start, end + 1));
+  const raw = text.slice(start, end + 1);
+
+  // Intento 1: parseo directo
+  try {
+    return JSON.parse(raw);
+  } catch (_) {}
+
+  // Intento 2: sanitización
+  try {
+    let sanitized = raw
+      // Eliminar trailing commas antes de } y ]
+      .replace(/,(\s*[}\]])/g, '$1')
+      // Reemplazar saltos de línea literales dentro de strings JSON
+      .replace(/"((?:[^"\\]|\\.)*)"/g, (match) =>
+        match.replace(/\n/g, '\\n').replace(/\r/g, '\\r')
+      );
+    return JSON.parse(sanitized);
+  } catch (_) {}
+
+  // Intento 3: regex permisivo — extraer strings individuales del JSON
+  throw new Error(`No se pudo parsear JSON (${raw.slice(0, 80).replace(/\n/g, ' ')}...)`);
 }
 
 module.exports = { callClaude, extractJSON };
