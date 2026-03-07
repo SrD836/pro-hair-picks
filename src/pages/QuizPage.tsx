@@ -204,6 +204,7 @@ const QuizPage = () => {
         title="Recomendador de Productos | Guía del Salón"
         description="Encuentra el producto perfecto para tu salón con nuestro quiz personalizado. Responde 4 preguntas y obtén recomendaciones."
       />
+      <h1 className="sr-only">Recomendador de Productos para Peluquería</h1>
       {/* Progress */}
       {step < 4 && (
         <div className="mb-8">

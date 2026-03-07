@@ -8,6 +8,7 @@ const CalculadoraROI = () => (
       description="Calcula el retorno de inversión de tus herramientas de peluquería. Descubre cuánto puedes ahorrar con el equipo adecuado."
     />
     <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <h1 className="sr-only">Calculadora ROI para Peluquerías</h1>
       <section className="max-w-2xl mb-6 text-sm text-muted-foreground leading-relaxed">
         <h2 className="text-base font-semibold text-[#2D2218] mb-2">
           ¿Cómo funciona el cálculo?

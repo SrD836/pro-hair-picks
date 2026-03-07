@@ -265,14 +265,14 @@ Genera SOLO este JSON (sin texto adicional):
     titleData = extractJSON(titleResp, false);
   } catch {
     titleData = isUS ? {
-      title: post.topic.slice(0, 65),
-      title_en: post.topic.slice(0, 65),
+      title: post.topic.slice(0, 43),
+      title_en: post.topic.slice(0, 43),
       meta_description: `Professional guide on ${post.target_keyword}. Everything US salon professionals need to know.`,
       category: 'Technique',
       category_en: 'Technique',
     } : {
-      title: post.topic.slice(0, 65),
-      title_en: post.topic.slice(0, 65),
+      title: post.topic.slice(0, 43),
+      title_en: post.topic.slice(0, 43),
       meta_description: `Guía profesional sobre ${post.target_keyword}. Todo lo que necesitas saber para el salón.`,
       category: 'Técnica',
       category_en: 'Technique',
