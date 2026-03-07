@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 /**
  * fix-long-titles.js
- * Usa la API de Claude para acortar títulos largos (>43 chars) en blog_posts y categories.
+ * Usa `claude -p` para acortar títulos largos (>43 chars) en blog_posts y categories.
  * Muestra antes/después y actualiza la base de datos.
  *
- * USO:
+ * USO (desde terminal independiente, fuera de Claude Code):
  *   node scripts/seo/fix-long-titles.js           # actualiza en DB
  *   node scripts/seo/fix-long-titles.js --dry-run # solo muestra cambios
  *
  * Variables en .env.scripts:
  *   SUPABASE_ACCESS_TOKEN  — Management API token (sbp_...)
  *   SUPABASE_PROJECT_ID    — ID del proyecto Supabase
- *   ANTHROPIC_API_KEY      — API key de Anthropic
  */
 
 'use strict';
@@ -33,21 +32,17 @@ if (fs.existsSync(ENV_FILE)) {
   });
 }
 
-const MGMT_TOKEN    = process.env.SUPABASE_ACCESS_TOKEN;
-const PROJECT_ID    = process.env.SUPABASE_PROJECT_ID;
-const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
-const DRY_RUN       = process.argv.includes('--dry-run');
-const MAX_CHARS     = 43;
-const CLAUDE_MODEL  = 'claude-sonnet-4-20250514';
+const MGMT_TOKEN = process.env.SUPABASE_ACCESS_TOKEN;
+const PROJECT_ID = process.env.SUPABASE_PROJECT_ID;
+const DRY_RUN    = process.argv.includes('--dry-run');
+const MAX_CHARS  = 43;
 
 if (!MGMT_TOKEN || !PROJECT_ID) {
   console.error('[error] Necesitas SUPABASE_ACCESS_TOKEN + SUPABASE_PROJECT_ID en .env.scripts');
   process.exit(1);
 }
-if (!ANTHROPIC_KEY) {
-  console.error('[error] Necesitas ANTHROPIC_API_KEY en .env.scripts');
-  process.exit(1);
-}
+
+const { callClaude } = require('../daily-content/lib/claude-cli');
 
 // ── Slugs a procesar ──────────────────────────────────────────────────────────
 const BLOG_SLUGS = [
@@ -87,14 +82,14 @@ async function sql(query) {
   return res.json();
 }
 
-// ── Claude API ────────────────────────────────────────────────────────────────
-async function shortenTitle(original, keywords) {
+// ── Acortar título con claude -p ──────────────────────────────────────────────
+function shortenTitle(original, keywords) {
   const kwHint = keywords && keywords.length > 0
     ? `Keyword principal: "${keywords[0]}". `
     : '';
 
   const prompt = `Eres un experto en SEO para el sector de peluquería y barbería profesional.
-Tienes que acortar este título de blog a un máximo de ${MAX_CHARS} caracteres.
+Acorta este título de blog a un máximo de ${MAX_CHARS} caracteres.
 
 REGLAS:
 - Máximo ${MAX_CHARS} caracteres (incluyendo espacios)
@@ -106,26 +101,11 @@ REGLAS:
 
 ${kwHint}Título original (${original.length} chars): ${original}`;
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': ANTHROPIC_KEY,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: CLAUDE_MODEL,
-      max_tokens: 100,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
-
-  if (!res.ok) throw new Error(`Anthropic API ${res.status}: ${await res.text()}`);
-  const data = await res.json();
-  const shortened = data.content?.[0]?.text?.trim() ?? '';
+  const response = callClaude(prompt, { timeout: 30_000 });
+  const shortened = response.trim().replace(/^["']|["']$/g, '');
 
   if (!shortened || shortened.length > MAX_CHARS + 5) {
-    throw new Error(`Respuesta inválida de Claude: "${shortened}"`);
+    throw new Error(`Respuesta inválida: "${shortened}"`);
   }
   return shortened.slice(0, MAX_CHARS);
 }
@@ -133,7 +113,7 @@ ${kwHint}Título original (${original.length} chars): ${original}`;
 // ── Main ─────────────────────────────────────────────────────────────────────
 (async () => {
   console.log(`\n🔧  fix-long-titles.js — Modo: ${DRY_RUN ? 'DRY RUN' : 'PRODUCCIÓN'}`);
-  console.log(`📏  Límite: ${MAX_CHARS} chars | Modelo: ${CLAUDE_MODEL}\n`);
+  console.log(`📏  Límite: ${MAX_CHARS} chars\n`);
 
   let totalFixed = 0;
 
@@ -147,21 +127,19 @@ ${kwHint}Título original (${original.length} chars): ${original}`;
   for (const row of posts) {
     const original = row.title ?? '';
     if (original.length <= MAX_CHARS) {
-      console.log(`  ✅  ${original.length}c  ${original}`);
+      console.log(`  ✅  ${String(original.length).padStart(2)}c  ${original}`);
       continue;
     }
 
-    process.stdout.write(`  ✂️   ${original.length}c  ${original.slice(0, 60)}...\n`);
+    console.log(`  ✂️   ${String(original.length).padStart(2)}c  ${original}`);
     try {
       const kw = Array.isArray(row.keywords) ? row.keywords : [];
-      const shortened = await shortenTitle(original, kw);
-      console.log(`       → ${shortened.length}c  ${shortened}`);
+      const shortened = shortenTitle(original, kw);
+      console.log(`       → ${String(shortened.length).padStart(2)}c  ${shortened}`);
 
       if (!DRY_RUN) {
         const escaped = shortened.replace(/'/g, "''");
-        await sql(
-          `UPDATE blog_posts SET title = '${escaped}' WHERE slug = '${row.slug}'`
-        );
+        await sql(`UPDATE blog_posts SET title = '${escaped}' WHERE slug = '${row.slug}'`);
         console.log(`       ✓ Actualizado en DB`);
       }
       totalFixed++;
@@ -181,20 +159,18 @@ ${kwHint}Título original (${original.length} chars): ${original}`;
   for (const row of cats) {
     const original = row.name ?? '';
     if (original.length <= MAX_CHARS) {
-      console.log(`  ✅  ${original.length}c  ${original}`);
+      console.log(`  ✅  ${String(original.length).padStart(2)}c  ${original}`);
       continue;
     }
 
-    process.stdout.write(`  ✂️   ${original.length}c  ${original.slice(0, 60)}...\n`);
+    console.log(`  ✂️   ${String(original.length).padStart(2)}c  ${original}`);
     try {
-      const shortened = await shortenTitle(original, []);
-      console.log(`       → ${shortened.length}c  ${shortened}`);
+      const shortened = shortenTitle(original, []);
+      console.log(`       → ${String(shortened.length).padStart(2)}c  ${shortened}`);
 
       if (!DRY_RUN) {
         const escaped = shortened.replace(/'/g, "''");
-        await sql(
-          `UPDATE categories SET name = '${escaped}' WHERE slug = '${row.slug}'`
-        );
+        await sql(`UPDATE categories SET name = '${escaped}' WHERE slug = '${row.slug}'`);
         console.log(`       ✓ Actualizado en DB`);
       }
       totalFixed++;
@@ -206,8 +182,7 @@ ${kwHint}Título original (${original.length} chars): ${original}`;
 
   console.log('─'.repeat(58));
   if (DRY_RUN) {
-    console.log(`✅  DRY RUN completado — ${totalFixed} títulos serían acortados`);
-    console.log(`   Ejecuta sin --dry-run para aplicar los cambios.\n`);
+    console.log(`✅  DRY RUN — ${totalFixed} títulos serían acortados\n`);
   } else {
     console.log(`✅  Completado — ${totalFixed} títulos actualizados en DB\n`);
   }
