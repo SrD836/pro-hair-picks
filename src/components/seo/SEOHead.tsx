@@ -52,6 +52,20 @@ const STATIC_ROUTE_META: Record<string, { title: string; description: string }> 
   },
 };
 
+const MAX_TITLE = 60;
+
+/** Clamps any title to MAX_TITLE chars, truncating at word boundary before " | ". */
+function clampTitle(t: string): string {
+  if (t.length <= MAX_TITLE) return t;
+  const sep = t.lastIndexOf(" | ");
+  if (sep === -1) return t.slice(0, MAX_TITLE - 1) + "…";
+  const brand = t.slice(sep);                          // " | Guía del Salón"
+  const maxRaw = MAX_TITLE - brand.length - 1;         // room for "…"
+  const raw = t.slice(0, sep);
+  const truncated = raw.slice(0, maxRaw + 1).replace(/\s+\S*$/, "") || raw.slice(0, maxRaw);
+  return `${truncated}…${brand}`;
+}
+
 interface SEOHeadProps {
   title?: string;
   description?: string;
@@ -73,7 +87,8 @@ export const SEOHead = ({
   // Priority: explicit prop → static route → snapshot (bundled, synchronous) → default
   const staticEntry   = STATIC_ROUTE_META[cleanPath];
   const snapshotEntry = getSnapshotMeta(cleanPath);
-  const finalTitle       = title       ?? staticEntry?.title       ?? snapshotEntry?.title       ?? DEFAULT_TITLE;
+  const rawTitle         = title       ?? staticEntry?.title       ?? snapshotEntry?.title       ?? DEFAULT_TITLE;
+  const finalTitle       = clampTitle(rawTitle);
   const finalDescription = description ?? staticEntry?.description ?? snapshotEntry?.description ?? DEFAULT_DESC;
 
   return (

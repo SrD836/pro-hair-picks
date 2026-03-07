@@ -1,30 +1,43 @@
 const BRAND = "Guía del Salón";
-const MAX_CHARS = 60;
+const MAX_CHARS = 60;                    // total <title> length limit
+const SUFFIX = ` | ${BRAND}`;           // 17 chars
+const MAX_RAW = MAX_CHARS - SUFFIX.length; // 43 chars max for the raw title part
 const SITE_URL = "https://guiadelsalon.com";
 const OG_DEFAULT = `${SITE_URL}/og-default.jpg`;
 const LOGO_URL = `${SITE_URL}/logo.png`;
 
 /**
- * Builds a page title truncated to MAX_CHARS before the brand separator.
+ * Builds a page title guaranteed to be ≤ MAX_CHARS (60) total.
  * Priority: rawTitle as-is → keyword-based "Top X 2026" → truncated rawTitle.
+ * Guard: if rawTitle already contains the brand suffix, clamp and return without re-adding.
  */
 export function buildPageTitle(rawTitle: string, keyword?: string): string {
-  if (rawTitle.length <= MAX_CHARS) {
-    return `${rawTitle} | ${BRAND}`;
+  // Guard: already branded — clamp total to MAX_CHARS and return as-is
+  if (rawTitle.includes(SUFFIX)) {
+    if (rawTitle.length <= MAX_CHARS) return rawTitle;
+    const sepIdx = rawTitle.lastIndexOf(SUFFIX);
+    const raw = rawTitle.slice(0, sepIdx);
+    const clamped = raw.slice(0, MAX_RAW - 1).replace(/\s+\S*$/, "") || raw.slice(0, MAX_RAW - 1);
+    return `${clamped}…${SUFFIX}`;
+  }
+
+  if (rawTitle.length <= MAX_RAW) {
+    return `${rawTitle}${SUFFIX}`;
   }
 
   if (keyword && keyword.trim().length > 0) {
     const seoTitle = `Top ${keyword.trim()} 2026`;
-    if (seoTitle.length <= MAX_CHARS) {
-      return `${seoTitle} | ${BRAND}`;
+    if (seoTitle.length <= MAX_RAW) {
+      return `${seoTitle}${SUFFIX}`;
     }
-    const maxKeywordLen = MAX_CHARS - "Top  2026".length;
+    const maxKeywordLen = MAX_RAW - "Top  2026".length;
     const truncatedKeyword = keyword.trim().slice(0, maxKeywordLen);
-    return `Top ${truncatedKeyword} 2026 | ${BRAND}`;
+    return `Top ${truncatedKeyword} 2026${SUFFIX}`;
   }
 
-  const truncated = rawTitle.slice(0, MAX_CHARS).replace(/\s+\S*$/, "");
-  return `${truncated}… | ${BRAND}`;
+  // Truncate at word boundary: MAX_RAW - 1 to leave room for the ellipsis (1c)
+  const truncated = rawTitle.slice(0, MAX_RAW - 1).replace(/\s+\S*$/, "") || rawTitle.slice(0, MAX_RAW - 1);
+  return `${truncated}…${SUFFIX}`;
 }
 
 // ── Schema markup builders ────────────────────────────────────────────────────
