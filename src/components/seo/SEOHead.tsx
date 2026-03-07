@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
+import { getSnapshotMeta } from "@/data/metaSnapshot";
 
 const DEFAULT_TITLE = "Guía del Salón — Equipamiento Profesional de Peluquería";
 const DEFAULT_DESC  = "Rankings honestos, precios reales y herramientas para profesionales del salón.";
@@ -51,36 +52,6 @@ const STATIC_ROUTE_META: Record<string, { title: string; description: string }> 
   },
 };
 
-interface SnapshotEntry { title: string; description: string; }
-interface Snapshot {
-  blog: Record<string, SnapshotEntry>;
-  categorias: Record<string, SnapshotEntry>;
-  productos: Record<string, SnapshotEntry>;
-}
-
-// Module-level singleton — fetched once, shared across all instances
-let snapshotIndex: Record<string, SnapshotEntry> | null = null;
-let snapshotLoading = false;
-
-function loadSnapshot() {
-  if (snapshotIndex !== null || snapshotLoading) return;
-  snapshotLoading = true;
-  fetch("/_meta_snapshot.json")
-    .then(r => (r.ok ? r.json() : null))
-    .then((data: Snapshot | null) => {
-      if (!data) { snapshotIndex = {}; return; }
-      const idx: Record<string, SnapshotEntry> = {};
-      for (const [slug, meta] of Object.entries(data.blog ?? {}))       idx[`/blog/${slug}`] = meta;
-      for (const [slug, meta] of Object.entries(data.categorias ?? {})) idx[`/categorias/${slug}`] = meta;
-      for (const [slug, meta] of Object.entries(data.productos ?? {}))  idx[`/productos/${slug}`] = meta;
-      snapshotIndex = idx;
-    })
-    .catch(() => { snapshotIndex = {}; });
-}
-
-// Kick off load immediately when module is imported
-loadSnapshot();
-
 interface SEOHeadProps {
   title?: string;
   description?: string;
@@ -99,9 +70,9 @@ export const SEOHead = ({
   const cleanPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
   const canonical = `https://guiadelsalon.com${cleanPath}`;
 
-  // Priority: explicit prop → static route → snapshot entry → default
+  // Priority: explicit prop → static route → snapshot (bundled, synchronous) → default
   const staticEntry   = STATIC_ROUTE_META[cleanPath];
-  const snapshotEntry = snapshotIndex?.[cleanPath];
+  const snapshotEntry = getSnapshotMeta(cleanPath);
   const finalTitle       = title       ?? staticEntry?.title       ?? snapshotEntry?.title       ?? DEFAULT_TITLE;
   const finalDescription = description ?? staticEntry?.description ?? snapshotEntry?.description ?? DEFAULT_DESC;
 
