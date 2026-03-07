@@ -873,7 +873,7 @@ export type Database = {
           original_price?: number | null
           position?: number | null
           price_range?: string | null
-          slug?: string | null
+          slug: string
           tech_specs?: Json | null
         }
         Update: {
@@ -901,7 +901,7 @@ export type Database = {
           original_price?: number | null
           position?: number | null
           price_range?: string | null
-          slug?: string | null
+          slug?: string
           tech_specs?: Json | null
         }
         Relationships: [
