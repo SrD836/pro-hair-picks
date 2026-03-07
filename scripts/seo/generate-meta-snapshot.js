@@ -42,8 +42,8 @@ const PROJECT_ID       = process.env.SUPABASE_PROJECT_ID || '';
 const BRAND            = 'Guía del Salón';
 
 if (!SUPABASE_URL && !PROJECT_ID) {
-  console.error('❌ SUPABASE_URL o SUPABASE_PROJECT_ID requerido en .env o .env.scripts');
-  process.exit(1);
+  console.warn('⚠️  SUPABASE_URL o SUPABASE_PROJECT_ID no configurado — saltando generación de meta snapshot');
+  process.exit(0);
 }
 
 // ── Clientes de datos ─────────────────────────────────────────────────────────
