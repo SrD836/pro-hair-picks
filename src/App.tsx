@@ -14,7 +14,6 @@ import ScissorsCursor from "@/components/ScissorsCursor";
 import PageTransition from "@/components/PageTransition";
 import ScissorsSpinner from "@/components/ScissorsSpinner";
 import ScrollToTop from "@/components/ScrollToTop";
-import { usePageMeta } from "@/hooks/usePageMeta";
 import { CompareProvider } from "@/hooks/useCompare";
 import CompareBar from "@/components/CompareBar";
 import { LanguageProvider } from "@/i18n/LanguageContext";
@@ -113,7 +112,6 @@ function AnimatedRoutes() {
 }
 
 function AppContent() {
-  usePageMeta();
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />

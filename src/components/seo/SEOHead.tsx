@@ -4,6 +4,53 @@ import { useLocation } from "react-router-dom";
 const DEFAULT_TITLE = "Guía del Salón — Equipamiento Profesional de Peluquería";
 const DEFAULT_DESC  = "Rankings honestos, precios reales y herramientas para profesionales del salón.";
 
+const STATIC_ROUTE_META: Record<string, { title: string; description: string }> = {
+  "/blog": {
+    title: "Blog | Guía del Salón",
+    description: "Consejos, tendencias y guías para profesionales del salón.",
+  },
+  "/comparar": {
+    title: "Comparar Productos | Guía del Salón",
+    description: "Compara productos profesionales de peluquería y barbería lado a lado.",
+  },
+  "/calculadora-roi": {
+    title: "Calculadora ROI | Guía del Salón",
+    description: "Calcula el retorno de inversión de tus herramientas de peluquería.",
+  },
+  "/calculadora-precio": {
+    title: "Calculadora de Precios para Barberos — GuiaDelSalon.com",
+    description: "Calcula el precio ideal de tus servicios de barbería.",
+  },
+  "/gestionar-mi-local": {
+    title: "Gestionar mi Local — GuiaDelSalon.com",
+    description: "Ranking de los mejores softwares de gestión para peluquerías.",
+  },
+  "/politica-privacidad": {
+    title: "Política de Privacidad — GuiaDelSalon.com",
+    description: "Información sobre cómo tratamos tus datos personales y tus derechos RGPD.",
+  },
+  "/politica-cookies": {
+    title: "Política de Cookies — GuiaDelSalon.com",
+    description: "Información sobre las cookies que utilizamos.",
+  },
+  "/terminos": {
+    title: "Términos y Condiciones — GuiaDelSalon.com",
+    description: "Términos de uso del sitio web e información sobre enlaces de afiliados.",
+  },
+  "/sobre-nosotros": {
+    title: "Sobre Nosotros — GuiaDelSalon.com",
+    description: "Conoce nuestra misión: ayudar a profesionales de peluquería a elegir los mejores productos.",
+  },
+  "/contacto": {
+    title: "Contacto — GuiaDelSalon.com",
+    description: "Contacta con nosotros para consultas, sugerencias o colaboraciones.",
+  },
+  "/quiz": {
+    title: "Recomendador de Productos | Guía del Salón",
+    description: "Encuentra el producto perfecto para tu salón con nuestro quiz personalizado.",
+  },
+};
+
 interface SnapshotEntry { title: string; description: string; }
 interface Snapshot {
   blog: Record<string, SnapshotEntry>;
@@ -52,10 +99,11 @@ export const SEOHead = ({
   const cleanPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
   const canonical = `https://guiadelsalon.com${cleanPath}`;
 
-  // Priority: explicit prop → snapshot entry → default
+  // Priority: explicit prop → static route → snapshot entry → default
+  const staticEntry   = STATIC_ROUTE_META[cleanPath];
   const snapshotEntry = snapshotIndex?.[cleanPath];
-  const finalTitle       = title       ?? snapshotEntry?.title       ?? DEFAULT_TITLE;
-  const finalDescription = description ?? snapshotEntry?.description ?? DEFAULT_DESC;
+  const finalTitle       = title       ?? staticEntry?.title       ?? snapshotEntry?.title       ?? DEFAULT_TITLE;
+  const finalDescription = description ?? staticEntry?.description ?? snapshotEntry?.description ?? DEFAULT_DESC;
 
   return (
     <Helmet>
