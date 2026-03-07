@@ -15,7 +15,8 @@
     "content:dry": "node scripts/daily-content/index.js --dry-run",
     "pinterest:auth": "node scripts/pinterest/pinterest_auth.js",
     "pinterest:publish": "node scripts/pinterest/pin_publisher.js",
-    "pinterest:demo": "node scripts/pinterest/demo_server.js"
+    "pinterest:demo": "node scripts/pinterest/demo_server.js",
+    "meta:snapshot": "node scripts/seo/generate-meta-snapshot.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
