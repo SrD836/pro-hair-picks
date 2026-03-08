@@ -165,6 +165,55 @@ export default function MiPeloPage() {
           </div>
         </section>
       </div>
+      {/* Blog reciente */}
+      {recentPosts && recentPosts.length > 0 && (
+        <div className="bg-espresso px-6 pb-16">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-accent-orange/10 flex items-center justify-center">
+                  <BookOpen className="text-accent-orange w-5 h-5" />
+                </div>
+                <h2 className="text-cream font-bold text-xl font-display">Últimos artículos</h2>
+              </div>
+              <Link to="/blog" className="text-accent-orange text-sm font-bold hover:underline flex items-center gap-1">
+                Ver todos <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {recentPosts.map((post) => (
+                <Link
+                  key={post.id}
+                  to={`/blog/${post.slug}`}
+                  className="group bg-mocha rounded-2xl overflow-hidden border border-cocoa hover:border-accent-orange/50 transition-all"
+                >
+                  <div className="aspect-[16/10] overflow-hidden bg-espresso-dark">
+                    <img
+                      src={post.cover_image_url || '/images/hero-barbershop.webp'}
+                      alt={post.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-4">
+                    {post.category && (
+                      <span className="text-accent-orange text-[10px] font-bold uppercase tracking-wider">{post.category}</span>
+                    )}
+                    <h3 className="text-cream font-semibold text-sm leading-snug mt-1 line-clamp-2 group-hover:text-accent-orange transition-colors">
+                      {post.title}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-2 text-cream/40 text-xs">
+                      {post.read_time_minutes && (
+                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{post.read_time_minutes} min</span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
