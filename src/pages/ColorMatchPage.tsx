@@ -5,8 +5,10 @@ import { Link, useLocation } from "react-router-dom";
 import {
   ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw,
   FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella,
-  BookOpen, Palette, ShirtIcon, ChevronRight, ChevronLeft, Check, Lightbulb, Download
+  BookOpen, Palette, ShirtIcon, ChevronRight, ChevronLeft, Check, Lightbulb, Download,
+  Calendar, ShieldAlert, CheckCircle, XCircle, Minus
 } from "lucide-react";
+import jsPDF from "jspdf";
 import { toast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useLanguage } from "@/i18n/LanguageContext";
