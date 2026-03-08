@@ -208,7 +208,7 @@ const BlogPostPage = () => {
         }
         ogImage={post.cover_image_url || FALLBACK_IMAGE}
         canonical={post.canonical ?? `https://guiadelsalon.com/blog/${post.slug}`}
-        hreflang={post.hreflang ?? undefined}
+        hreflang={undefined}
       />
       <Helmet>
         <script type="application/ld+json">{buildArticleSchema(post)}</script>
