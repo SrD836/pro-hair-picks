@@ -134,96 +134,45 @@ export default function AlopeciaExpertVerdict() {
           </h3>
         </div>
 
-        {/* Body paragraphs */}
-        <div className="space-y-5 text-[#F5F0E8]/75 text-sm md:text-base leading-relaxed max-w-3xl">
-          <p>
-            La ventana terapéutica más eficaz en la alopecia androgénica (AGA)
-            se sitúa en los estadios tempranos —Hamilton I-III en hombres,
-            Ludwig I-II en mujeres—, porque una vez que la miniaturización
-            folicular alcanza un punto de no retorno, caracterizado por una
-            densidad de folículos terminales inferior al 20 % en la zona
-            afectada, ningún tratamiento disponible en 2026 puede restaurar
-            esos folículos. La miniaturización progresiva convierte los
-            folículos terminales en vellos, y cuando la fibrosis periburilar
-            sustituye definitivamente el tejido folicular activo, la
-            capacidad regenerativa del cuero cabelludo queda abolida de forma
-            irreversible. El profesional que conoce este umbral puede orientar
-            al paciente hacia una intervención basada en evidencia antes de
-            cruzar esa línea, lo que supone la diferencia entre preservar el
-            cabello existente y lamentar una oportunidad perdida. Detectar
-            señales tempranas de AGA —retroceso frontotemporal, ensanchamiento
-            de la raya o mayor visibilidad del cuero cabelludo en zona
-            parietal— y derivar al dermatólogo en ese momento es uno de los
-            actos clínicamente más valiosos que un profesional de la peluquería
-            puede realizar.
-          </p>
-
-          <p>
-            En 2026, los tratamientos con mayor nivel de evidencia para la AGA
-            son la combinación de finasteride (inhibidor de la 5-alfa-reductasa
-            tipo II) y minoxidil (vasodilatador y activador de canales de
-            potasio), que en conjunto pueden mantener entre el 70 y el 85 % del
-            cabello existente en estadios leve-moderados, e incluso lograr
-            reversión parcial de la miniaturización en algunos casos. Los
-            inhibidores de JAK —baricitinib, ritlecitinib— han mostrado
-            resultados prometedores en alopecia areata (una enfermedad
-            autoinmune distinta de la AGA), pero en 2026 no están aprobados
-            para la alopecia androgénica, y extrapolar su uso sería
-            clínicamente incorrecto. La terapia génica para la AGA permanece
-            en fase preclínica: los estudios sobre modulación de la vía
-            androgénica a nivel genómico son relevantes para el futuro, pero
-            no tienen aplicación clínica disponible hoy. El mensaje más honesto
-            que un profesional puede transmitir a un paciente es que la ciencia
-            puede frenar la progresión y, en fases tempranas, revertir
-            parcialmente la miniaturización; pero no puede, en 2026, restaurar
-            un cuero cabelludo calvicie establecida a su densidad original.
-            Gestionar esta expectativa con precisión es parte del diagnóstico.
-          </p>
-
-          <p>
-            España presenta una de las tasas más elevadas de alopecia
-            androgénica de Europa: aproximadamente el 50 % de los hombres
-            mayores de 50 años y el 30 % de las mujeres mayores de 60
-            presentan AGA clínicamente significativa, según datos de la
-            Asociación Española de Dermatología y Venereología (AEDV, 2023).
-            El Sistema Nacional de Salud no financia los tratamientos
-            cosméticos para la AGA, lo que incluye el minoxidil y el
-            finasteride cuando se prescriben por pérdida de cabello —aunque
-            el finasteride sí está financiado para la hiperplasia benigna de
-            próstata—. Los tiempos de espera para una consulta de dermatología
-            por el SNS oscilan entre 3 y 6 meses de media; en la sanidad
-            privada, el coste de la primera visita se sitúa entre 150 y 300 €.
-            El plasma rico en plaquetas (PRP) tiene un coste de entre 250 y
-            400 € por sesión en clínicas privadas, y el trasplante capilar
-            mediante técnica FUE oscila entre 3.000 y 8.000 € —un rango que
-            posiciona a España entre los mercados más competitivos de Europa
-            para esta cirugía—. Esta realidad económica hace que el peluquero
-            profesional que detecta una AGA incipiente y deriva al paciente de
-            forma temprana no solo preserve su cabello: le ahorra meses de
-            progresión silenciosa y, potencialmente, miles de euros en
-            intervenciones más complejas.
-          </p>
-        </div>
-
-        {/* Cizura CTA box */}
-        <div className="mt-10 rounded-xl border border-[#C4A97D]/20 bg-[rgba(196,169,125,0.05)] p-6">
-          <p className="text-sm text-[#F5F0E8]/70 leading-relaxed">
-            Un profesional que conoce la ciencia detrás de la alopecia puede
-            ofrecer a su cliente un diagnóstico honesto y un protocolo de
-            cuidado real.{" "}
-            <a
-              href="https://cizura.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#C4A97D] font-semibold hover:underline inline-flex items-center gap-1"
-            >
-              Cizura <ExternalLink className="w-3 h-3" />
-            </a>{" "}
-            registra el historial completo de cada servicio y tratamiento para
-            que ese seguimiento sea preciso desde la primera visita hasta la
-            última.
-          </p>
-        </div>
+        {/* Body — collapsible */}
+        <details className="group/body">
+          <summary className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-[#F5F0E8]/60 hover:text-[#F5F0E8]/90 transition-colors list-none [&::-webkit-details-marker]:hidden rounded-lg border border-[#C4A97D]/15 px-4 py-3 hover:border-[#C4A97D]/30">
+            <Microscope className="w-4 h-4 text-[#C4A97D]/60" />
+            Leer análisis científico completo
+            <ChevronDown className="w-4 h-4 ml-auto text-[#C4A97D]/40 transition-transform duration-300 group-open/body:rotate-180" />
+          </summary>
+          <div className="mt-6 space-y-5 text-[#F5F0E8]/75 text-sm md:text-base leading-relaxed max-w-3xl animate-fade-in">
+            <p>
+              La ventana terapéutica más eficaz en la alopecia androgénica (AGA)
+              se sitúa en los estadios tempranos —Hamilton I-III en hombres,
+              Ludwig I-II en mujeres—. Detectar señales tempranas y derivar al
+              dermatólogo es uno de los actos clínicamente más valiosos que un
+              profesional puede realizar.
+            </p>
+            <p>
+              En 2026, los tratamientos con mayor evidencia son finasteride y
+              minoxidil, que pueden mantener entre el 70-85% del cabello en
+              estadios leve-moderados. La ciencia puede frenar la progresión,
+              pero no restaurar una calvicie establecida.
+            </p>
+            <p>
+              España presenta una de las tasas más elevadas de AGA de Europa.
+              El profesional que detecta una AGA incipiente y deriva tempranamente
+              le ahorra al paciente meses de progresión silenciosa y miles de euros.
+            </p>
+          </div>
+          <div className="mt-10 rounded-xl border border-[#C4A97D]/20 bg-[rgba(196,169,125,0.05)] p-6 animate-fade-in">
+            <p className="text-sm text-[#F5F0E8]/70 leading-relaxed">
+              Un profesional que conoce la ciencia detrás de la alopecia puede
+              ofrecer un diagnóstico honesto.{" "}
+              <a href="https://cizura.com" target="_blank" rel="noopener noreferrer"
+                className="text-[#C4A97D] font-semibold hover:underline inline-flex items-center gap-1">
+                Cizura <ExternalLink className="w-3 h-3" />
+              </a>{" "}
+              registra el historial completo de cada servicio y tratamiento.
+            </p>
+          </div>
+        </details>
 
         {/* Bibliography — collapsible */}
         <details className="mt-10 pt-8 border-t border-[#C4A97D]/15 group">

@@ -85,57 +85,47 @@ export default function InciExpertVerdict() {
           <span className="text-[#C4A97D]"> Es entender qué aplicas sobre tus clientes.</span>
         </h2>
 
-        {/* 3 authority paragraphs */}
-        <div className="space-y-6 text-[#F5F0E8]/75 text-sm md:text-base leading-relaxed max-w-3xl">
-          <p>
-            El nomenclátor INCI (International Nomenclature of Cosmetic Ingredients) es el idioma común que une a
-            reguladores, formuladores y profesionales del sector. En 2026, con el Reglamento (CE) 1223/2009
-            plenamente consolidado y nuevas restricciones activas —como la prohibición de ciclosiloxanos D4/D5/D6
-            a partir de junio de 2026, o el nuevo umbral de etiquetado para liberadores de formaldehído— la
-            actualización del conocimiento deja de ser opcional. Un profesional que conoce lo que contiene
-            cada producto que aplica puede tomar decisiones informadas: qué usar en una cliente embarazada,
-            qué evitar en un cuero cabelludo con dermatitis atópica activa, o cómo detectar un conservante
-            prohibido en un producto importado.
-          </p>
-
-          <p>
-            La sensibilización de contacto tipo IV al PPD —la alergia al tinte más frecuente y grave en
-            dermatología profesional— es acumulativa e irreversible. Una vez que una persona desarrolla alergia
-            al PPD, cualquier exposición posterior puede desencadenar una reacción que va desde el eccema hasta
-            el angioedema o la anafilaxia. Los datos del SCCS y del CIR son inequívocos: no existe un umbral de
-            exposición absolutamente seguro para individuos ya sensibilizados. La prevención empieza antes de
-            aplicar el primer tinte, con una anamnesis correcta y una prueba de tolerancia, y continúa con
-            la lectura sistemática de las etiquetas en cada nuevo producto utilizado.
-          </p>
-
-          <p>
-            El principio de precaución en cosméticos no significa prohibir todo ingrediente con un perfil de
-            riesgo documentado —muchos son insustituibles técnicamente y seguros en las condiciones de uso
-            reglamentadas—, sino aplicar las restricciones vigentes con rigor, comprender los perfiles de
-            riesgo de cada cliente, y actualizar constantemente el conocimiento cuando emergen nuevas evidencias.
-            Las opiniones del SCCS, las restricciones REACH de la ECHA y los estudios peer-reviewed en
-            PubMed son las únicas fuentes fiables para fundamentar ese conocimiento. Todo lo demás es
-            marketing, no ciencia.
-          </p>
-        </div>
-
-        {/* Cizura CTA */}
-        <div
-          className="mt-10 rounded-2xl p-6 md:p-8"
-          style={{ background: "rgba(196,169,125,0.10)", border: "1px solid rgba(196,169,125,0.25)" }}
-        >
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#C4A97D] mb-3">
-            Historial químico de cliente · Cizura
-          </p>
-          <p className="text-[#F5F0E8]/85 text-sm md:text-base leading-relaxed">
-            Conocer los ingredientes que aplicas es solo la mitad del trabajo.{" "}
-            <span className="text-[#F5F0E8] font-semibold">
-              Cizura registra automáticamente qué tratamientos y productos has usado en cada cliente,
-              para que tengas su historial químico completo en cada visita
-            </span>{" "}
-            — sin depender de tu memoria ni de una libreta.
-          </p>
-        </div>
+        {/* Body — collapsible */}
+        <details className="group/body">
+          <summary className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-[#F5F0E8]/60 hover:text-[#F5F0E8]/90 transition-colors list-none [&::-webkit-details-marker]:hidden rounded-lg border border-[#C4A97D]/15 px-4 py-3 hover:border-[#C4A97D]/30">
+            <BookOpen className="w-4 h-4 text-[#C4A97D]/60" />
+            Leer análisis científico completo
+            <ChevronDown className="w-4 h-4 ml-auto text-[#C4A97D]/40 transition-transform duration-300 group-open/body:rotate-180" />
+          </summary>
+          <div className="mt-6 space-y-6 text-[#F5F0E8]/75 text-sm md:text-base leading-relaxed max-w-3xl animate-fade-in">
+            <p>
+              El nomenclátor INCI es el idioma común que une a reguladores,
+              formuladores y profesionales. En 2026, con nuevas restricciones
+              activas —ciclosiloxanos D4/D5/D6 y nuevos umbrales para
+              liberadores de formaldehído— la actualización del conocimiento
+              deja de ser opcional.
+            </p>
+            <p>
+              La sensibilización de contacto tipo IV al PPD es acumulativa e
+              irreversible. Una vez desarrollada, cualquier exposición puede
+              desencadenar desde eccema hasta anafilaxia. La prevención empieza
+              con anamnesis correcta y lectura sistemática de etiquetas.
+            </p>
+            <p>
+              El principio de precaución no significa prohibir todo ingrediente,
+              sino aplicar las restricciones vigentes con rigor y actualizar
+              constantemente el conocimiento. Las opiniones del SCCS y estudios
+              peer-reviewed son las únicas fuentes fiables.
+            </p>
+          </div>
+          <div className="mt-10 rounded-2xl p-6 md:p-8 animate-fade-in"
+            style={{ background: "rgba(196,169,125,0.10)", border: "1px solid rgba(196,169,125,0.25)" }}>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#C4A97D] mb-3">
+              Historial químico de cliente · Cizura
+            </p>
+            <p className="text-[#F5F0E8]/85 text-sm md:text-base leading-relaxed">
+              Conocer los ingredientes que aplicas es solo la mitad.{" "}
+              <span className="text-[#F5F0E8] font-semibold">
+                Cizura registra qué tratamientos y productos has usado en cada cliente.
+              </span>
+            </p>
+          </div>
+        </details>
 
         {/* Bibliography — collapsible */}
         <details className="mt-10 group">
