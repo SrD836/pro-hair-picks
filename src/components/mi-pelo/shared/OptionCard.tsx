@@ -11,7 +11,7 @@ interface OptionCardProps {
   className?: string;
 }
 
-export function OptionCard({ name, value, label, icon, checked, onChange, className }: OptionCardProps) {
+export function OptionCard({ name, value, label, icon, checked = false, onChange, className }: OptionCardProps) {
   return (
     <label
       className={cn(

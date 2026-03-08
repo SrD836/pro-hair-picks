@@ -5,9 +5,11 @@ interface MultiSelectPillsProps {
   selected: string[];
   onChange: (selected: string[]) => void;
   className?: string;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
 }
 
-export function MultiSelectPills({ options, selected, onChange, className }: MultiSelectPillsProps) {
+export function MultiSelectPills({ options, selected, onChange, className, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledby }: MultiSelectPillsProps) {
   const toggle = (value: string) => {
     if (selected.includes(value)) {
       onChange(selected.filter(v => v !== value));
@@ -17,7 +19,7 @@ export function MultiSelectPills({ options, selected, onChange, className }: Mul
   };
 
   return (
-    <div className={cn('flex flex-wrap gap-2', className)} role="group">
+    <div className={cn('flex flex-wrap gap-2', className)} role="group" aria-label={ariaLabel} aria-labelledby={ariaLabelledby}>
       {options.map(opt => {
         const isSelected = selected.includes(opt.value);
         return (
