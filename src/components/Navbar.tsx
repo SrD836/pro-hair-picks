@@ -1,34 +1,26 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Search, Menu, X, Scissors } from "lucide-react";
 import { menGroups, womenGroups, mixedCategories, type CategoryGroup, type CategoryItem } from "@/data/categories";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
 
-// ── Design tokens (2026 system) ──────────────────────────────────────────────
-// bg: #2D2218 (espresso) | accent: #C4A97D (gold) | surface: #F5F0E8 (cream)
-// card radius: rounded-2xl (1rem) | pill radius: rounded-full
-// shadow: 0 4px 20px -2px rgba(45,34,24,0.12)
-
 /* ── Desktop: Grouped dropdown (Hombre / Mujer) ─────────────────────────── */
-function GroupedDropdown({ label, groups, isOpen, onToggle, onClose, onEnter }: {
+function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
   label: string;
   groups: CategoryGroup[];
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
-  onEnter: () => void;
 }) {
   const { t } = useLanguage();
   return (
-    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
+    <div className="relative">
       <button
         onClick={onToggle}
         className={`flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-          isOpen
-            ? "bg-[#C4A97D]/15 text-[#C4A97D]"
-            : "text-foreground/80 hover:text-foreground hover:bg-white/5"
+          isOpen ? "bg-[#C4A97D]/15 text-[#C4A97D]" : "text-foreground/80 hover:text-foreground hover:bg-white/5"
         }`}
       >
         {label}
@@ -76,23 +68,20 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose, onEnter }: 
 }
 
 /* ── Desktop: Flat dropdown (Mixto) ─────────────────────────────────────── */
-function FlatDropdown({ label, items, isOpen, onToggle, onClose, onEnter }: {
+function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
   label: string;
   items: CategoryItem[];
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
-  onEnter: () => void;
 }) {
   const { t } = useLanguage();
   return (
-    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
+    <div className="relative">
       <button
         onClick={onToggle}
         className={`flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-          isOpen
-            ? "bg-[#C4A97D]/15 text-[#C4A97D]"
-            : "text-foreground/80 hover:text-foreground hover:bg-white/5"
+          isOpen ? "bg-[#C4A97D]/15 text-[#C4A97D]" : "text-foreground/80 hover:text-foreground hover:bg-white/5"
         }`}
       >
         {label}
@@ -131,11 +120,10 @@ function FlatDropdown({ label, items, isOpen, onToggle, onClose, onEnter }: {
 }
 
 /* ── Desktop: Hair Tools dropdown ────────────────────────────────────────── */
-function HairToolsDropdown({ isOpen, onToggle, onClose, onEnter }: {
+function HairToolsDropdown({ isOpen, onToggle, onClose }: {
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
-  onEnter: () => void;
 }) {
   const { t, lang } = useLanguage();
 
@@ -152,13 +140,11 @@ function HairToolsDropdown({ isOpen, onToggle, onClose, onEnter }: {
   ];
 
   return (
-    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
+    <div className="relative">
       <button
         onClick={onToggle}
         className={`flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-          isOpen
-            ? "bg-[#C4A97D]/15 text-[#C4A97D]"
-            : "text-foreground/80 hover:text-foreground hover:bg-white/5"
+          isOpen ? "bg-[#C4A97D]/15 text-[#C4A97D]" : "text-foreground/80 hover:text-foreground hover:bg-white/5"
         }`}
       >
         {t("nav.myHair")}
@@ -295,20 +281,26 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { t, lang } = useLanguage();
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const location = useLocation();
+  const navRef = useRef<HTMLElement>(null);
 
-  const scheduleClose = useCallback(() => {
-    closeTimer.current = setTimeout(() => setOpenDropdown(null), 150);
-  }, []);
+  // Close dropdown on route change
+  useEffect(() => {
+    setOpenDropdown(null);
+    setMobileOpen(false);
+  }, [location.pathname]);
 
-  const cancelClose = useCallback(() => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-  }, []);
-
-  useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
+  // Close dropdown on click outside
+  useEffect(() => {
+    if (!openDropdown) return;
+    const handler = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [openDropdown]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -316,15 +308,22 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const toggle = useCallback((key: string) => {
+    setOpenDropdown((prev) => (prev === key ? null : key));
+  }, []);
+
+  const close = useCallback(() => setOpenDropdown(null), []);
+
   return (
     <nav
+      ref={navRef}
       className={`sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border transition-all duration-300 ${
         scrolled ? "shadow-[0_2px_20px_rgba(0,0,0,0.3)]" : ""
       }`}
     >
       <div className="container mx-auto px-4">
         <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "py-2" : "py-3"}`}>
-          {/* Logo — LEFT */}
+          {/* Logo */}
           <Link to="/" className="flex items-center group shrink-0">
             <picture>
               <source srcSet="/logo-compact-40.webp 40w, /logo-compact-80.webp 80w" type="image/webp" sizes="40px" />
@@ -344,25 +343,22 @@ const Navbar = () => {
               label={t("nav.men")}
               groups={menGroups}
               isOpen={openDropdown === "hombre"}
-              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "hombre" ? null : "hombre"); }}
-              onClose={scheduleClose}
-              onEnter={() => { cancelClose(); setOpenDropdown("hombre"); }}
+              onToggle={() => toggle("hombre")}
+              onClose={close}
             />
             <GroupedDropdown
               label={t("nav.women")}
               groups={womenGroups}
               isOpen={openDropdown === "mujer"}
-              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "mujer" ? null : "mujer"); }}
-              onClose={scheduleClose}
-              onEnter={() => { cancelClose(); setOpenDropdown("mujer"); }}
+              onToggle={() => toggle("mujer")}
+              onClose={close}
             />
             <FlatDropdown
               label={t("nav.mixed")}
               items={mixedCategories}
               isOpen={openDropdown === "mixto"}
-              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "mixto" ? null : "mixto"); }}
-              onClose={scheduleClose}
-              onEnter={() => { cancelClose(); setOpenDropdown("mixto"); }}
+              onToggle={() => toggle("mixto")}
+              onClose={close}
             />
             <Link
               to="/blog"
@@ -372,9 +368,8 @@ const Navbar = () => {
             </Link>
             <HairToolsDropdown
               isOpen={openDropdown === "tools"}
-              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "tools" ? null : "tools"); }}
-              onClose={scheduleClose}
-              onEnter={() => { cancelClose(); setOpenDropdown("tools"); }}
+              onToggle={() => toggle("tools")}
+              onClose={close}
             />
             <Link
               to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"}
@@ -422,7 +417,6 @@ const Navbar = () => {
               <MobileGroupedSection label={t("nav.women")} groups={womenGroups} onClose={() => setMobileOpen(false)} />
               <MobileFlatSection label={t("nav.mixed")} items={mixedCategories} onClose={() => setMobileOpen(false)} />
 
-              {/* Blog */}
               <Link
                 to="/blog"
                 onClick={() => setMobileOpen(false)}
@@ -431,45 +425,20 @@ const Navbar = () => {
                 {t("nav.blog")}
               </Link>
 
-              {/* Tools section */}
               <div className="border-t border-border/40 pt-3">
                 <p className="text-[10px] font-bold text-[#C4A97D]/60 uppercase tracking-[0.15em] px-2 mb-2">
                   {t("nav.toolsSectionLabel")}
                 </p>
                 <div className="space-y-0.5">
                   {[
-                    {
-                      label: `✨ ${t("nav.fullDiagnosticLabel")}`,
-                      to: "/mi-pelo/diagnostico-completo",
-                    },
-                    {
-                      label: `🎨 ${t("nav.colorAdvisorLabel")}`,
-                      to: lang === "es" ? "/asesor-color" : "/color-match",
-                    },
-                    {
-                      label: `🔬 ${t("nav.diagnosticLabel")}`,
-                      to: "/diagnostico-capilar",
-                    },
-                    {
-                      label: `🧪 ${t("nav.compatibilityLabel")}`,
-                      to: "/inci-check",
-                    },
-                    {
-                      label: `🌿 ${t("nav.recoveryLabel")}`,
-                      to: "/recuperacion-capilar",
-                    },
-                    {
-                      label: `🦳 ${t("nav.canicieLabel")}`,
-                      to: "/analizador-canicie",
-                    },
-                    {
-                      label: `💈 ${t("nav.alopeciaLabel")}`,
-                      to: "/analizador-alopecia",
-                    },
-                    {
-                      label: `👤 ${t("nav.myAccountLabel")}`,
-                      to: "/mi-pelo/mis-resultados",
-                    },
+                    { label: `✨ ${t("nav.fullDiagnosticLabel")}`, to: "/mi-pelo/diagnostico-completo" },
+                    { label: `🎨 ${t("nav.colorAdvisorLabel")}`, to: lang === "es" ? "/asesor-color" : "/color-match" },
+                    { label: `🔬 ${t("nav.diagnosticLabel")}`, to: "/diagnostico-capilar" },
+                    { label: `🧪 ${t("nav.compatibilityLabel")}`, to: "/inci-check" },
+                    { label: `🌿 ${t("nav.recoveryLabel")}`, to: "/recuperacion-capilar" },
+                    { label: `🦳 ${t("nav.canicieLabel")}`, to: "/analizador-canicie" },
+                    { label: `💈 ${t("nav.alopeciaLabel")}`, to: "/analizador-alopecia" },
+                    { label: `👤 ${t("nav.myAccountLabel")}`, to: "/mi-pelo/mis-resultados" },
                   ].map((tool) => (
                     <Link
                       key={tool.to}
@@ -483,7 +452,6 @@ const Navbar = () => {
                 </div>
               </div>
 
-              {/* Courses */}
               <Link
                 to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"}
                 onClick={() => setMobileOpen(false)}
