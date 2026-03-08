@@ -42,20 +42,6 @@ function getSessionId(): string {
   return id;
 }
 
-// ── Module key map ─────────────────────────────────────
-const MODULE_KEY: Record<1 | 2 | 3 | 4, string> = {
-  1: "cuticleModule",
-  2: "porosityModule",
-  3: "elasticityModule",
-  4: "scalpModule",
-};
-
-const MODULE_MAX: Record<1 | 2 | 3 | 4, number> = {
-  1: 12,
-  2: 20,
-  3: 21,
-  4: 12,
-};
 
 // ── Screen types ───────────────────────────────────────
 type Screen = "intro" | "quiz" | "results";
@@ -212,10 +198,6 @@ export default function DiagnosticoCapilarPage() {
 
   // Icon for current quiz question options
   const QuizIcon: LucideIcon = moduleOfQ ? MODULE_ICONS[moduleOfQ] : FlaskConical;
-
-  // Unused variable reference to suppress TS — MODULE_KEY used in legacy,
-  // keep for type safety: reference to silence unused warning
-  void MODULE_KEY;
 
   return (
     <>
