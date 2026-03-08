@@ -1,9 +1,17 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ExternalLink, RotateCcw, FlaskConical } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import {
+  Layers,
+  Droplets,
+  Activity,
+  ScanSearch,
+  FlaskConical,
+  ExternalLink,
+  RotateCcw,
+  ArrowRight,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/i18n/LanguageContext";
 import {
@@ -16,6 +24,12 @@ import {
   type Product,
 } from "@/lib/diagnosticoCapilarEngine";
 import { useWizardReturn } from "@/hooks/useWizardReturn";
+import { ProgressBar } from "@/components/mi-pelo/shared/ProgressBar";
+import { OptionCard } from "@/components/mi-pelo/shared/OptionCard";
+import { DamageMeter } from "@/components/mi-pelo/shared/DamageMeter";
+import { ExpertPanel } from "@/components/mi-pelo/shared/ExpertPanel";
+import { StepFooter } from "@/components/mi-pelo/shared/StepFooter";
+import { CizuraCTA } from "@/components/mi-pelo/shared/CizuraCTA";
 
 // ── Session ID helper ──────────────────────────────────
 function getSessionId(): string {
@@ -43,19 +57,29 @@ const MODULE_MAX: Record<1 | 2 | 3 | 4, number> = {
   4: 12,
 };
 
-// Risk visual config (colors only — text comes from i18n)
-const RISK_COLORS: Record<RiskLevel, { emoji: string; color: string; bgColor: string; borderColor: string }> = {
-  optimal: { emoji: "🟢", color: "text-green-400", bgColor: "bg-green-950/40", borderColor: "border-green-700" },
-  caution: { emoji: "🟡", color: "text-yellow-400", bgColor: "bg-yellow-950/40", borderColor: "border-yellow-700" },
-  critical: { emoji: "🔴", color: "text-red-400", bgColor: "bg-red-950/40", borderColor: "border-red-700" },
-};
-
 // ── Screen types ───────────────────────────────────────
 type Screen = "intro" | "quiz" | "results";
 
+// ── New constants ──────────────────────────────────────
+const TOTAL_SCORE_MAX = 65;
+
+const MODULE_ICONS: Record<1 | 2 | 3 | 4, LucideIcon> = {
+  1: Layers,
+  2: Droplets,
+  3: Activity,
+  4: ScanSearch,
+};
+
+const MODULE_QUOTES: Record<1 | 2 | 3 | 4, string> = {
+  1: "La cutícula es la primera línea de defensa del cabello. Una cutícula abierta libera humedad y proteínas esenciales con cada lavado.",
+  2: "La porosidad determina cómo el cabello absorbe y retiene los productos. Alta porosidad requiere sellantes como aceites pesados.",
+  3: "La elasticidad sana permite estirarse hasta un 30% sin romperse. Por debajo del 15%, el cabello entra en zona de riesgo de rotura.",
+  4: "El cuero cabelludo es el ecosistema de todo. Un pH desequilibrado o exceso de sebo afecta directamente al ciclo de crecimiento.",
+};
+
 // ── Main component ─────────────────────────────────────
 export default function DiagnosticoCapilarPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [screen, setScreen] = useState<Screen>("intro");
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -63,12 +87,13 @@ export default function DiagnosticoCapilarPage() {
   const [scores, setScores] = useState<ScoreBreakdown | null>(null);
   const [riskLevel, setRiskLevel] = useState<RiskLevel | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
-  const { isWizardMode, completeWizardModule } = useWizardReturn('diagnostico-capilar');
+  const { isWizardMode, completeWizardModule } = useWizardReturn("diagnostico-capilar");
 
   const q = QUESTIONS[currentQ];
-  const selectedOption = answers[q?.id];
-  const hasAnswer = selectedOption !== undefined;
+  const selectedValue = answers[q?.id];
+  const hasAnswer = selectedValue !== undefined;
   const isLastQ = currentQ === QUESTIONS.length - 1;
+  const moduleOfQ = q?.module as 1 | 2 | 3 | 4 | undefined;
 
   // Localize question text & options from i18n
   const localizedQ = q
@@ -82,6 +107,22 @@ export default function DiagnosticoCapilarPage() {
         })),
       }
     : q;
+
+  // Expert quote for current module
+  const expertQuote =
+    moduleOfQ !== undefined ? MODULE_QUOTES[moduleOfQ] : MODULE_QUOTES[1];
+
+  // Real-time damage score
+  const { damageScore } = useMemo(() => {
+    const answered = Object.keys(answers).length;
+    if (answered === 0) return { damageScore: 50 };
+    const partial = calculateScores(answers).total;
+    const proportionalMax = (answered / QUESTIONS.length) * TOTAL_SCORE_MAX;
+    const score = Math.round(
+      100 - Math.min(100, (partial / Math.max(1, proportionalMax)) * 100),
+    );
+    return { damageScore: score };
+  }, [answers]);
 
   // ── Save to Supabase ──────────────────────────────────
   const saveSession = useCallback(
@@ -140,7 +181,7 @@ export default function DiagnosticoCapilarPage() {
     }
   }, [currentQ]);
 
-  const handleOptionSelect = useCallback(
+  const handleSelect = useCallback(
     (value: string) => {
       setAnswers((prev) => ({ ...prev, [q.id]: value }));
     },
@@ -153,25 +194,28 @@ export default function DiagnosticoCapilarPage() {
     setScores(null);
     setRiskLevel(null);
     setProducts([]);
-    // savedSessionId removed
     setDirection(1);
     setScreen("intro");
   }, []);
 
-  // ── Screen variants ───────────────────────────────────
-  const screenVariants = {
-    initial: { opacity: 0, y: 24 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -24 },
-  };
+  // ── Results derived values ─────────────────────────────
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+  const healthPct = scores ? Math.round((scores.total / TOTAL_SCORE_MAX) * 100) : 0;
+  const modules = scores
+    ? [
+        { labelKey: "cuticleModule", score: scores.cuticle, max: 12, icon: Layers },
+        { labelKey: "porosityModule", score: scores.porosity, max: 20, icon: Droplets },
+        { labelKey: "elasticityModule", score: scores.elasticity, max: 21, icon: Activity },
+        { labelKey: "scalpModule", score: scores.scalp, max: 12, icon: ScanSearch },
+      ]
+    : [];
 
-  const questionVariants = {
-    initial: (dir: number) => ({ opacity: 0, x: dir * 60 }),
-    animate: { opacity: 1, x: 0 },
-    exit: (dir: number) => ({ opacity: 0, x: dir * -60 }),
-  };
+  // Icon for current quiz question options
+  const QuizIcon: LucideIcon = moduleOfQ ? MODULE_ICONS[moduleOfQ] : FlaskConical;
 
-  const moduleOfQ = q?.module;
+  // Unused variable reference to suppress TS — MODULE_KEY used in legacy,
+  // keep for type safety: reference to silence unused warning
+  void MODULE_KEY;
 
   return (
     <>
@@ -180,446 +224,406 @@ export default function DiagnosticoCapilarPage() {
         description={t("diagnostico.metaDesc")}
       />
 
-      <div className="min-h-screen bg-background text-foreground">
-        <div className="container mx-auto px-4 py-12 max-w-2xl">
-          <AnimatePresence mode="wait">
-            {/* ─── SCREEN 1: INTRO ─────────────────────── */}
-            {screen === "intro" && (
-              <motion.div
-                key="intro"
-                variants={screenVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: 0.3 }}
-              >
-                <IntroScreen onStart={() => setScreen("quiz")} />
-              </motion.div>
-            )}
-
-            {/* ─── SCREEN 2: QUIZ ──────────────────────── */}
+      <div className="min-h-screen bg-background-light text-espresso">
+        {/* Header toolbar */}
+        <div className="border-b border-espresso/10 bg-background-light/80 backdrop-blur-md px-6 py-4">
+          <div className="max-w-5xl mx-auto flex items-center gap-3">
+            <FlaskConical className="w-5 h-5 text-gold" />
+            <span className="font-display text-base font-semibold text-espresso">
+              Diagnóstico Capilar
+            </span>
             {screen === "quiz" && (
-              <motion.div
-                key="quiz"
-                variants={screenVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: 0.3 }}
-              >
-                {/* Progress bar */}
-                <div className="mb-8">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {t("diagnostico.moduleLabel")} {moduleOfQ}:{" "}
-                      {t(`diagnostico.${MODULE_KEY[moduleOfQ as 1 | 2 | 3 | 4]}`)}
-                    </span>
-                    <span className="text-sm font-semibold text-foreground">
-                      {currentQ + 1} / {QUESTIONS.length}
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-border rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full bg-secondary rounded-full"
-                      initial={false}
-                      animate={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }}
-                      transition={{ duration: 0.35, ease: "easeOut" }}
-                    />
-                  </div>
-                </div>
+              <span className="ml-auto text-xs text-espresso/50 uppercase tracking-widest">
+                Paso {currentQ + 1} / {QUESTIONS.length}
+              </span>
+            )}
+          </div>
+        </div>
 
-                {/* Question card — animated horizontally */}
+        <main className="max-w-5xl mx-auto px-4 py-8">
+          {/* ─── INTRO SCREEN ─────────────────────────── */}
+          {screen === "intro" && (
+            <>
+              {/* Hero */}
+              <div className="mb-8 rounded-2xl bg-espresso overflow-hidden aspect-[21/9] relative flex items-end p-8">
+                <div className="absolute inset-0 bg-gradient-to-t from-espresso/90 via-espresso/40 to-transparent" />
+                <div className="relative z-10">
+                  <h1 className="font-display text-3xl md:text-4xl font-bold italic text-cream">
+                    {t("diagnostico.title")}
+                  </h1>
+                  <p className="text-cream/80 mt-2 text-sm md:text-base max-w-xl">
+                    {t("diagnostico.subtitle")}
+                  </p>
+                </div>
+              </div>
+
+              {/* White card with module preview + start button */}
+              <div className="bg-white rounded-2xl p-8 border border-gold/10">
+                <p className="text-xs font-bold uppercase tracking-widest text-gold mb-6">
+                  4 módulos de análisis
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                  {([1, 2, 3, 4] as const).map((mod) => {
+                    const Icon = MODULE_ICONS[mod];
+                    const labelKey = [
+                      "cuticleModule",
+                      "porosityModule",
+                      "elasticityModule",
+                      "scalpModule",
+                    ][mod - 1];
+                    const subKey = [
+                      "cuticleModuleSub",
+                      "porosityModuleSub",
+                      "elasticityModuleSub",
+                      "scalpModuleSub",
+                    ][mod - 1];
+                    return (
+                      <div
+                        key={mod}
+                        className="flex items-center gap-4 p-5 rounded-2xl border border-gold/10 bg-background-light/50"
+                      >
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-gold shrink-0">
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-espresso text-sm">
+                            {t(`diagnostico.${labelKey}`)}
+                          </p>
+                          <p className="text-espresso/60 text-xs mt-0.5">
+                            {t(`diagnostico.${subKey}`)}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <button
+                  onClick={() => setScreen("quiz")}
+                  className="w-full flex items-center justify-center gap-2 h-14 rounded-xl bg-espresso text-cream font-bold hover:bg-espresso/90 transition-all"
+                >
+                  {t("diagnostico.startBtn")} <ArrowRight className="w-4 h-4" />
+                </button>
+                <p className="mt-4 text-xs text-espresso/50 text-center">
+                  {t("diagnostico.timeNote")}
+                </p>
+              </div>
+            </>
+          )}
+
+          {/* ─── QUIZ SCREEN ──────────────────────────── */}
+          {screen === "quiz" && (
+            <>
+              {/* CizuraCTA shown when entering step 4 */}
+              {currentQ === 3 && <CizuraCTA className="mb-6" />}
+
+              {/* White card */}
+              <div className="bg-white rounded-2xl p-6 md:p-10 border border-gold/10">
+                <ProgressBar
+                  current={currentQ + 1}
+                  total={QUESTIONS.length}
+                  className="mb-8"
+                />
+
+                {/* Question title — animated */}
                 <AnimatePresence mode="wait" custom={direction}>
-                  <motion.div
-                    key={q.id}
+                  <motion.h2
+                    key={q.id + "-title"}
                     custom={direction}
-                    variants={questionVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    initial={{ opacity: 0, x: (direction as number) * 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: (direction as number) * -40 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-espresso text-2xl md:text-3xl font-bold mb-4 leading-snug"
                   >
-                    <QuizQuestion
-                      q={localizedQ as (typeof QUESTIONS)[number]}
-                      selectedOption={selectedOption}
-                      onSelect={handleOptionSelect}
-                    />
-                  </motion.div>
+                    {localizedQ.text}
+                  </motion.h2>
                 </AnimatePresence>
 
-                {/* Navigation */}
-                <div className="flex items-center justify-between mt-8">
-                  <button
-                    onClick={goBack}
-                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    {t("diagnostico.backBtn")}
-                  </button>
+                {/* Protocol box */}
+                {localizedQ.protocol && (
+                  <div className="flex gap-3 p-4 rounded-xl border border-gold/20 bg-gold/5 text-sm text-espresso/70 mb-6">
+                    <span className="shrink-0">🧪</span>
+                    <p>{localizedQ.protocol}</p>
+                  </div>
+                )}
 
-                  {hasAnswer && (
-                    <motion.div
-                      initial={{ opacity: 0, x: 16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.2 }}
+                {/* Two-column grid: options (8 cols) + sidebar (4 cols) for steps 3+ */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  {/* Options */}
+                  <div className="lg:col-span-8">
+                    <div
+                      role="radiogroup"
+                      aria-label={localizedQ.text}
+                      className="space-y-3 mb-6"
                     >
-                      <Button onClick={goNext} className="gap-2">
-                        {isLastQ ? t("diagnostico.finishBtn") : t("diagnostico.nextBtn")}
-                        <ArrowRight className="w-4 h-4" />
-                      </Button>
-                    </motion.div>
+                      <AnimatePresence mode="wait" custom={direction}>
+                        <motion.div
+                          key={q.id}
+                          custom={direction}
+                          initial={{ opacity: 0, x: (direction as number) * 60 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: (direction as number) * -60 }}
+                          transition={{ duration: 0.25 }}
+                          className="space-y-3"
+                        >
+                          {localizedQ.options.map((opt) => (
+                            <OptionCard
+                              key={opt.value}
+                              name={q.id}
+                              value={opt.value}
+                              label={opt.label}
+                              icon={<QuizIcon className="w-4 h-4" />}
+                              checked={selectedValue === opt.value}
+                              onChange={handleSelect}
+                            />
+                          ))}
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+
+                    <StepFooter
+                      onPrev={goBack}
+                      onNext={goNext}
+                      disablePrev={false}
+                      disableNext={!hasAnswer}
+                      prevLabel={t("diagnostico.backBtn")}
+                      nextLabel={
+                        isLastQ
+                          ? t("diagnostico.finishBtn")
+                          : t("diagnostico.nextBtn")
+                      }
+                    />
+                  </div>
+
+                  {/* Sidebar — only from step 3 onward (currentQ >= 2) */}
+                  {currentQ >= 2 && (
+                    <div className="lg:col-span-4 flex flex-col gap-5">
+                      <DamageMeter score={damageScore} />
+                      <ExpertPanel tip={expertQuote} />
+                    </div>
                   )}
                 </div>
-              </motion.div>
-            )}
+              </div>
+            </>
+          )}
 
-            {/* ─── SCREEN 3: RESULTS ───────────────────── */}
-            {screen === "results" && scores && riskLevel && (
-              <motion.div
-                key="results"
-                variants={screenVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: 0.35 }}
-              >
-                <ResultsScreen
-                  scores={scores}
-                  riskLevel={riskLevel}
-                  products={products}
-                  onReset={reset}
-                  isWizardMode={isWizardMode}
-                  onWizardContinue={() =>
-                    completeWizardModule({
-                      summary: `${riskLevel} — ${scores.total} pts`,
-                      score: scores.total,
-                      rawResult: { scores, riskLevel },
-                    })
-                  }
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+          {/* ─── RESULTS SCREEN ───────────────────────── */}
+          {screen === "results" && scores && riskLevel && (
+            <>
+              {/* Results hero */}
+              <div className="relative mb-8 rounded-2xl overflow-hidden bg-espresso py-16 px-8 text-center">
+                <div className="absolute inset-0 bg-gradient-to-b from-espresso via-espresso/90 to-espresso/80" />
+                <div className="relative z-10">
+                  <span className="text-gold uppercase tracking-[0.3em] text-xs mb-4 font-semibold block">
+                    Resultados del Diagnóstico
+                  </span>
+                  <h1 className="text-cream text-4xl md:text-5xl mb-4 italic font-display font-bold">
+                    Pasaporte Capilar
+                  </h1>
+                  <p className="text-cream/80 max-w-lg mx-auto text-base leading-relaxed">
+                    {t("diagnostico.resultsSubtitle")}
+                  </p>
+                </div>
+              </div>
+
+              {/* Two-column layout: main + sidebar */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Main col (2/3) */}
+                <div className="md:col-span-2 space-y-6">
+                  {/* Module bento cards */}
+                  <div className="bg-white rounded-2xl p-6 border border-gold/10">
+                    <h3 className="font-bold text-espresso text-lg mb-4">
+                      Resumen del Perfil
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {modules.map((m) => {
+                        const pct = Math.round((m.score / m.max) * 100);
+                        return (
+                          <motion.div
+                            key={m.labelKey}
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-background-light p-5 rounded-2xl border border-gold/10"
+                          >
+                            <m.icon className="w-5 h-5 text-gold mb-3" />
+                            <p className="text-[10px] uppercase tracking-wider text-espresso/60 mb-1">
+                              {t(`diagnostico.${m.labelKey}`)}
+                            </p>
+                            <p className="font-bold text-lg text-espresso">
+                              {m.score}
+                              <span className="text-espresso/40 text-sm font-normal">
+                                /{m.max}
+                              </span>
+                            </p>
+                            <div className="mt-2 h-1 bg-gold/10 rounded-full overflow-hidden">
+                              <motion.div
+                                className="h-full bg-gold rounded-full"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${pct}%` }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                              />
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Protocol */}
+                  <div className="bg-white rounded-2xl border border-gold/10 p-6">
+                    <p className="text-sm font-semibold text-espresso mb-2">
+                      {t("diagnostico.actionProtocol")}
+                    </p>
+                    <p className="text-sm text-espresso/70 leading-relaxed">
+                      {t(`diagnostico.risk${capitalize(riskLevel)}Protocol`)}
+                    </p>
+                  </div>
+
+                  {/* Products */}
+                  <div>
+                    <h3 className="text-lg font-bold text-espresso mb-4">
+                      {t("diagnostico.productsTitle")}
+                    </h3>
+                    <div className="space-y-3">
+                      {products.map((product, i) => (
+                        <motion.a
+                          key={product.asin}
+                          href={lang === "en" ? product.urlEN : product.urlES}
+                          target="_blank"
+                          rel="nofollow noopener noreferrer"
+                          initial={{ opacity: 0, x: -16 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.1 + i * 0.08 }}
+                          className="flex items-start gap-4 p-4 rounded-xl border border-gold/10 bg-background-light/50 hover:border-gold/40 hover:bg-background-light transition-all group"
+                        >
+                          <div className="p-2 rounded-lg bg-gold/10 text-gold shrink-0 mt-0.5">
+                            <FlaskConical className="w-4 h-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-espresso group-hover:text-gold transition-colors">
+                              {product.name}
+                            </p>
+                            <p className="text-xs text-espresso/60 mt-0.5 leading-relaxed line-clamp-2">
+                              {product.description}
+                            </p>
+                            <span className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-gold">
+                              {t("diagnostico.amazonCta")}{" "}
+                              <ExternalLink className="w-3 h-3" />
+                            </span>
+                          </div>
+                        </motion.a>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Bibliography */}
+                  <details className="group rounded-xl border border-gold/10 bg-background-light/50 overflow-hidden">
+                    <summary className="flex items-center justify-between cursor-pointer px-5 py-4 text-sm font-semibold text-espresso select-none list-none hover:bg-background-light transition-colors">
+                      <span>
+                        <span aria-hidden="true">📚</span>{" "}
+                        {t("diagnostico.bibliographyTitle")}
+                      </span>
+                      <span className="text-espresso/40 text-xs font-normal group-open:hidden">
+                        {t("diagnostico.bibliographySee")}
+                      </span>
+                      <span className="text-espresso/40 text-xs font-normal hidden group-open:inline">
+                        {t("diagnostico.bibliographyHide")}
+                      </span>
+                    </summary>
+                    <ol className="px-5 pb-5 pt-2 space-y-3 text-xs text-espresso/60 leading-relaxed list-decimal list-inside">
+                      <li>
+                        Gavazzoni Dias, M.F.R. et al. (2014). The Shampoo pH can
+                        Affect the Hair Fiber. <em>Int. J. Trichology</em>, 6(3),
+                        95–99.
+                      </li>
+                      <li>
+                        Bolduc, C. &amp; Shapiro, J. (2022). Hair care products.{" "}
+                        <em>Surgical &amp; Cosmetic Dermatology</em>, 14(1), 4–14.
+                      </li>
+                      <li>
+                        Robbins, C.R. (2023). Chemical and Physical Behavior of
+                        Human Hair. Springer, 6th ed.
+                      </li>
+                      <li>
+                        Pinheiro, M.V. et al. (2025). Assessment of Hair Fiber
+                        Integrity. <em>Cosmetics</em> (MDPI), 12(3), 93.
+                      </li>
+                      <li>
+                        Society of Cosmetic Chemists (NYSCC). (2024). Hair
+                        Porosity and Elasticity. Annual Symposium.
+                      </li>
+                    </ol>
+                  </details>
+                </div>
+
+                {/* Sidebar (1/3) */}
+                <div className="flex flex-col gap-6">
+                  {/* Score circle */}
+                  <div className="bg-espresso text-cream p-8 rounded-2xl flex flex-col items-center text-center">
+                    <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-gold mb-4">
+                      Nivel de Salud Capilar
+                    </p>
+                    <div className="relative w-32 h-32 flex items-center justify-center mb-4">
+                      <svg
+                        className="w-full h-full -rotate-90"
+                        viewBox="0 0 36 36"
+                      >
+                        <path
+                          className="stroke-cream/10"
+                          fill="none"
+                          strokeWidth="2"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <path
+                          className="stroke-gold"
+                          fill="none"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeDasharray={`${healthPct}, 100`}
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className="text-4xl font-bold font-display">
+                          {healthPct}%
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-xs px-3 py-1 rounded-full bg-gold/20 text-gold font-semibold uppercase tracking-wide mb-3">
+                      {t(`diagnostico.risk${capitalize(riskLevel)}Label`)}
+                    </span>
+                  </div>
+                  <ExpertPanel tip={MODULE_QUOTES[4]} />
+                </div>
+              </div>
+
+              {/* Bottom actions */}
+              <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
+                <button
+                  onClick={reset}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-gold/20 text-espresso font-semibold hover:bg-background-light transition-all text-sm"
+                >
+                  <RotateCcw className="w-4 h-4" /> {t("diagnostico.resetBtn")}
+                </button>
+                {isWizardMode && (
+                  <button
+                    onClick={() =>
+                      completeWizardModule({
+                        summary: `${riskLevel} — ${scores.total} pts`,
+                        score: scores.total,
+                        rawResult: { scores, riskLevel },
+                      })
+                    }
+                    className="flex-1 flex items-center justify-center gap-2 h-12 rounded-xl bg-espresso text-cream font-bold hover:bg-espresso/90 transition-all"
+                  >
+                    Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+        </main>
       </div>
     </>
-  );
-}
-
-// ── INTRO SCREEN ───────────────────────────────────────
-function IntroScreen({ onStart }: { onStart: () => void }) {
-  const { t } = useLanguage();
-
-  const modules = [
-    { labelKey: "cuticleModule", subKey: "cuticleModuleSub" },
-    { labelKey: "porosityModule", subKey: "porosityModuleSub" },
-    { labelKey: "elasticityModule", subKey: "elasticityModuleSub" },
-    { labelKey: "scalpModule", subKey: "scalpModuleSub" },
-  ];
-
-  return (
-    <div className="text-center">
-      <div className="text-6xl mb-6">🔬</div>
-      <div className="flex justify-center mb-4">
-        <Badge variant="secondary" className="text-sm px-4 py-1.5">
-          {t("diagnostico.badge")}
-        </Badge>
-      </div>
-      <h1 className="font-bold text-3xl md:text-4xl text-foreground mb-4 leading-tight">
-        {t("diagnostico.title")}{" "}
-        <span className="text-secondary">{t("diagnostico.titleHighlight")}</span>
-      </h1>
-      <p className="text-muted-foreground text-base md:text-lg max-w-lg mx-auto mb-10">
-        {t("diagnostico.subtitle")}
-      </p>
-
-      {/* Module cards */}
-      <div className="grid grid-cols-2 gap-3 mb-10">
-        {modules.map((m) => (
-          <div
-            key={m.labelKey}
-            className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card text-left"
-          >
-            <div className="p-2 rounded-lg bg-secondary/10 text-secondary shrink-0">
-              <FlaskConical className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">{t(`diagnostico.${m.labelKey}`)}</p>
-              <p className="text-xs text-muted-foreground">{t(`diagnostico.${m.subKey}`)}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <Button size="lg" onClick={onStart} className="w-full sm:w-auto px-10 text-base">
-        {t("diagnostico.startBtn")}
-      </Button>
-
-      <p className="mt-4 text-xs text-muted-foreground">{t("diagnostico.timeNote")}</p>
-    </div>
-  );
-}
-
-// ── QUIZ QUESTION ──────────────────────────────────────
-function QuizQuestion({
-  q,
-  selectedOption,
-  onSelect,
-}: {
-  q: (typeof QUESTIONS)[number];
-  selectedOption: string | undefined;
-  onSelect: (value: string) => void;
-}) {
-  return (
-    <div>
-      <h2 className="text-xl md:text-2xl font-bold text-foreground mb-5">{q.text}</h2>
-
-      {/* Protocol box */}
-      {q.protocol && (
-        <div className="mb-5 flex gap-3 p-4 rounded-xl border border-secondary/30 bg-secondary/5 text-sm text-muted-foreground">
-          <span className="shrink-0 text-base">🧪</span>
-          <p>{q.protocol}</p>
-        </div>
-      )}
-
-      {/* Options */}
-      <div className="space-y-3">
-        {q.options.map((opt) => {
-          const isSelected = selectedOption === opt.value;
-          return (
-            <button
-              key={opt.value}
-              onClick={() => onSelect(opt.value)}
-              className={[
-                "w-full flex items-start gap-3 p-4 rounded-xl border text-left transition-all duration-200",
-                isSelected
-                  ? "border-secondary bg-secondary/10 text-foreground shadow-sm"
-                  : "border-border bg-card text-foreground hover:border-secondary/60 hover:bg-secondary/5",
-              ].join(" ")}
-            >
-              <span
-                className={[
-                  "shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border transition-colors duration-200",
-                  isSelected
-                    ? "border-secondary bg-secondary text-secondary-foreground"
-                    : "border-border bg-background text-muted-foreground",
-                ].join(" ")}
-              >
-                {opt.value}
-              </span>
-              <span className="text-sm leading-relaxed pt-0.5">{opt.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// ── RESULTS SCREEN ─────────────────────────────────────
-function ResultsScreen({
-  scores,
-  riskLevel,
-  products,
-  onReset,
-  isWizardMode,
-  onWizardContinue,
-}: {
-  scores: ScoreBreakdown;
-  riskLevel: RiskLevel;
-  products: Product[];
-  onReset: () => void;
-  isWizardMode?: boolean;
-  onWizardContinue?: () => void;
-}) {
-  const { t, lang } = useLanguage();
-  const colors = RISK_COLORS[riskLevel];
-  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
-  const modules: { labelKey: string; score: number; max: number; module: 1 | 2 | 3 | 4 }[] = [
-    { labelKey: "cuticleModule", score: scores.cuticle, max: MODULE_MAX[1], module: 1 },
-    { labelKey: "porosityModule", score: scores.porosity, max: MODULE_MAX[2], module: 2 },
-    { labelKey: "elasticityModule", score: scores.elasticity, max: MODULE_MAX[3], module: 3 },
-    { labelKey: "scalpModule", score: scores.scalp, max: MODULE_MAX[4], module: 4 },
-  ];
-
-  return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
-          {t("diagnostico.resultsTitle")}
-        </h2>
-        <p className="text-muted-foreground text-sm">{t("diagnostico.resultsSubtitle")}</p>
-      </div>
-
-      {/* Semaphore card */}
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className={`rounded-2xl border-2 p-8 text-center ${colors.bgColor} ${colors.borderColor}`}
-      >
-        <div className="text-5xl mb-3">{colors.emoji}</div>
-        <div className={`text-3xl font-extrabold mb-1 ${colors.color}`}>
-          {t(`diagnostico.risk${capitalize(riskLevel)}Label`)}
-        </div>
-        <div className="text-muted-foreground text-sm mb-4">
-          {t(`diagnostico.risk${capitalize(riskLevel)}Range`)}
-        </div>
-        <div className="text-5xl font-black text-foreground">
-          {scores.total}
-          <span className="text-2xl font-normal text-muted-foreground"> {t("diagnostico.pts")}</span>
-        </div>
-      </motion.div>
-
-      {/* Module breakdown */}
-      <div className="grid grid-cols-2 gap-3">
-        {modules.map((m, i) => {
-          const pct = Math.min(100, (m.score / m.max) * 100);
-          return (
-            <motion.div
-              key={m.module}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 + i * 0.07, duration: 0.3 }}
-              className="rounded-xl border border-border bg-card p-4"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <FlaskConical className="w-4 h-4 text-secondary shrink-0" />
-                <p className="text-xs font-semibold text-foreground leading-tight">
-                  {t(`diagnostico.${m.labelKey}`)}
-                </p>
-              </div>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span className="text-xl font-bold text-foreground">{m.score}</span>
-                <span className="text-xs text-muted-foreground">/ {m.max}</span>
-              </div>
-              <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-secondary rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${pct}%` }}
-                  transition={{ delay: 0.2 + i * 0.07, duration: 0.5, ease: "easeOut" }}
-                />
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Action protocol */}
-      <div className="rounded-xl border border-border bg-card p-5">
-        <p className="text-sm font-semibold text-foreground mb-1">{t("diagnostico.actionProtocol")}</p>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {t(`diagnostico.risk${capitalize(riskLevel)}Protocol`)}
-        </p>
-      </div>
-
-      {/* Product recommendations */}
-      <div>
-        <h3 className="text-lg font-bold text-foreground mb-4">{t("diagnostico.productsTitle")}</h3>
-        <div className="space-y-3">
-          {products.map((product, i) => (
-            <motion.a
-              key={product.asin}
-              href={lang === 'en' ? product.urlEN : product.urlES}
-              target="_blank"
-              rel="nofollow noopener noreferrer"
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 + i * 0.08, duration: 0.3 }}
-              className="flex items-start gap-4 p-4 rounded-xl border border-border bg-card hover:border-secondary/60 hover:bg-secondary/5 transition-all duration-200 group"
-            >
-              <div className="p-2 rounded-lg bg-secondary/10 text-secondary shrink-0 mt-0.5">
-                <FlaskConical className="w-4 h-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground group-hover:text-secondary transition-colors">
-                  {product.name}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">
-                  {product.description}
-                </p>
-                <span className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-secondary">
-                  {t("diagnostico.amazonCta")}
-                  <ExternalLink className="w-3 h-3" />
-                </span>
-              </div>
-            </motion.a>
-          ))}
-        </div>
-      </div>
-
-      {/* Bibliography */}
-      <details className="group rounded-xl border border-border bg-card overflow-hidden">
-        <summary className="flex items-center justify-between cursor-pointer px-5 py-4 text-sm font-semibold text-foreground select-none list-none hover:bg-secondary/5 transition-colors">
-          <span><span aria-hidden="true">📚</span> {t("diagnostico.bibliographyTitle")}</span>
-          <span className="text-muted-foreground text-xs font-normal group-open:hidden">{t("diagnostico.bibliographySee")}</span>
-          <span className="text-muted-foreground text-xs font-normal hidden group-open:inline">{t("diagnostico.bibliographyHide")}</span>
-        </summary>
-        <ol className="px-5 pb-5 pt-2 space-y-3 text-xs text-muted-foreground leading-relaxed list-decimal list-inside marker:font-semibold marker:text-foreground">
-          <li>
-            Gavazzoni Dias, M.F.R. et al. (2014). The Shampoo pH can Affect the Hair Fiber: Myth or Reality?{" "}
-            <em>International Journal of Trichology</em>, 6(3), 95–99.{" "}
-            <a
-              href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4171909/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-secondary underline underline-offset-2 hover:opacity-80"
-            >
-              PMC4171909
-            </a>
-          </li>
-          <li>
-            Bolduc, C. & Shapiro, J. (2022). Hair care products: Waving, straightening, conditioning,
-            and coloring. <em>Surgical & Cosmetic Dermatology</em>, 14(1), 4–14.
-          </li>
-          <li>
-            Robbins, C.R. (2023). Chemical and Physical Behavior of Human Hair.{" "}
-            <em>Polymers</em> (MDPI/Springer, 6th ed.). PMC open-access chapter on cuticle porosity.{" "}
-            <a
-              href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10054080/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-secondary underline underline-offset-2 hover:opacity-80"
-            >
-              PMC10054080
-            </a>
-          </li>
-          <li>
-            Pinheiro, M.V. et al. (2025). Assessment of Hair Fiber Integrity After Chemical Treatments.{" "}
-            <em>Cosmetics</em> (MDPI), 12(3), 93.{" "}
-            <a
-              href="https://www.mdpi.com/2079-9284/12/3/93"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-secondary underline underline-offset-2 hover:opacity-80"
-            >
-              mdpi.com/2079-9284/12/3/93
-            </a>
-          </li>
-          <li>
-            Society of Cosmetic Chemists (NYSCC). (2024). Hair Porosity and Elasticity: Measurement
-            Methods and Clinical Relevance. Annual Symposium Proceedings.
-          </li>
-        </ol>
-      </details>
-
-      {/* Repeat */}
-      <div className="flex justify-center pt-2">
-        <Button variant="outline" onClick={onReset} className="gap-2">
-          <RotateCcw className="w-4 h-4" />
-          {t("diagnostico.resetBtn")}
-        </Button>
-      </div>
-
-      {isWizardMode && onWizardContinue && (
-        <div className="flex justify-center pt-2">
-          <Button onClick={onWizardContinue} className="gap-2">
-            Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
-          </Button>
-        </div>
-      )}
-    </div>
   );
 }
