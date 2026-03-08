@@ -15,7 +15,8 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 
 # Verificar que node.exe existe
 if (-not (Test-Path $NodePath)) {
-    $NodePath = (Get-Command node -ErrorAction SilentlyContinue)?.Source
+    $nodeCmd = Get-Command node -ErrorAction SilentlyContinue
+    if ($nodeCmd) { $NodePath = $nodeCmd.Source }
     if (-not $NodePath) {
         Write-Host "ERROR: node.exe no encontrado. Instala Node.js primero." -ForegroundColor Red
         exit 1
