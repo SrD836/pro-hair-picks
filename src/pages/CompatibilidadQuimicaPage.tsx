@@ -22,11 +22,11 @@ export default function CompatibilidadQuimicaPage() {
         description={t("quimica.pageDesc")}
       />
 
-      <div className="min-h-screen bg-espresso">
+      <div className="min-h-screen bg-background-light">
         {!started ? (
           <ToolHeader
             badge="QUÍMICA"
-            title={<>{t("quimica.heroTitle")} <span className="text-gold">{t("quimica.heroTitleHighlight")}</span></>}
+            title={<>{t("quimica.heroTitle")} <span className="text-accent-orange">{t("quimica.heroTitleHighlight")}</span></>}
             subtitle={t("quimica.heroSubtitle")}
             microTrust="~2 min · Sin registro · Datos verificados"
             onStart={handleStart}
