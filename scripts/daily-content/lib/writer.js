@@ -306,6 +306,48 @@ ${post.relatedPosts.map(p => `- <a href="/blog/${p.slug}">${p.title}</a>`).join(
 RESPOND ONLY with the article HTML. No explanations before or after.`;
 }
 
+/**
+ * Post-procesado: elimina párrafos y elementos de lista duplicados (>20 palabras).
+ * Mantiene siempre la primera aparición; elimina las subsiguientes.
+ * Evita que Claude repita CTAs, introducciones o conclusiones dentro del mismo artículo.
+ *
+ * @param {string} html - HTML del artículo generado
+ * @returns {string} HTML sin bloques duplicados
+ */
+function deduplicateContent(html) {
+  if (!html || typeof html !== 'string') return html;
+
+  const seen = new Set();
+  let removed = 0;
+
+  const deduped = html.replace(/<(p|li)([^>]*)>([\s\S]*?)<\/\1>/gi, (match, tag, _attrs, inner) => {
+    // Texto plano normalizado para comparación (sin tags, sin mayúsculas, sin espacios extra)
+    const plain = inner
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+
+    const wordCount = plain.split(/\s+/).filter(Boolean).length;
+    if (wordCount <= 20) return match; // bloques cortos: no se comprueban
+
+    if (seen.has(plain)) {
+      removed++;
+      return ''; // eliminar duplicado, conservar la primera aparición
+    }
+
+    seen.add(plain);
+    return match;
+  });
+
+  if (removed > 0) {
+    console.log(`     🔁 Deduplicación: ${removed} bloque(s) duplicado(s) eliminado(s)`);
+  }
+
+  // Limpiar líneas vacías consecutivas que puedan quedar tras eliminar bloques
+  return deduped.replace(/\n{3,}/g, '\n\n').trim();
+}
+
 function callClaudeWithRetry(prompt, options = {}, maxRetries = 2) {
   let lastErr;
   for (let i = 0; i <= maxRetries; i++) {
@@ -370,10 +412,10 @@ Genera SOLO este JSON (sin texto adicional):
   // 3. Para posts ES: traducir al inglés. Para posts US: ya está en inglés.
   let contentES, contentEN;
   if (isUS) {
-    contentES = mainContent;
-    contentEN = mainContent;
+    contentES = deduplicateContent(mainContent);
+    contentEN = contentES;
   } else {
-    contentES = mainContent;
+    contentES = deduplicateContent(mainContent);
     console.log(`     Traduciendo al inglés...`);
     const translationPrompt = `Translate this hairdressing article from Spanish to professional English.
 Keep all HTML tags intact. Adapt for UK/US professionals.
@@ -382,7 +424,7 @@ RESPOND ONLY with the translated HTML, no explanations.
 
 ${contentES}`;
     try {
-      contentEN = callClaudeWithRetry(translationPrompt, { timeout: 300_000 });
+      contentEN = deduplicateContent(callClaudeWithRetry(translationPrompt, { timeout: 300_000 }));
     } catch {
       contentEN = contentES;
     }
@@ -547,4 +589,4 @@ async function writeAllPosts(dailyPlan) {
   return { ...dailyPlan, posts };
 }
 
-module.exports = { writeAllPosts, AMAZON_TAG };
+module.exports = { writeAllPosts, deduplicateContent, AMAZON_TAG };

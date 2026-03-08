@@ -95,7 +95,7 @@ if (versionCheck.error || versionCheck.status !== 0) {
 
 const { planDay }          = require('./lib/planner');
 const { researchAllPosts } = require('./lib/researcher');
-const { writeAllPosts }    = require('./lib/writer');
+const { writeAllPosts, deduplicateContent } = require('./lib/writer');
 const { processImages }    = require('./lib/images');
 const { publishAll, getRelatedPostLinks } = require('./lib/publisher');
 const { getUsedKeywords }                 = require('./keyword-loader');
@@ -194,6 +194,9 @@ async function run() {
     ...planWithImages,
     posts: planWithImages.posts.map(p => ({
       ...p,
+      // Segunda capa de deduplicación (safety net) antes de publicar en Supabase
+      content:    deduplicateContent(p.content),
+      content_en: deduplicateContent(p.content_en),
       published_at: new Date(`${TODAY}T10:00:00Z`).toISOString(),
     })),
   };
