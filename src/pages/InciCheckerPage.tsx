@@ -5,6 +5,7 @@ import InciChecker from "@/components/InciChecker";
 import InciExpertVerdict from "@/components/InciExpertVerdict";
 import { ToolHeader } from "@/components/mi-pelo/shared/ToolHeader";
 import { BibliographyDrawer, type BibReference } from "@/components/mi-pelo/shared/BibliographyDrawer";
+import { useLanguage } from "@/i18n/LanguageContext";
 import { useState, useRef } from "react";
 
 const REFERENCES: BibReference[] = [
