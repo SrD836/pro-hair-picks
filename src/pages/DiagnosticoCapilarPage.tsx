@@ -315,7 +315,7 @@ export default function DiagnosticoCapilarPage() {
 
           <div className="max-w-3xl mx-auto px-6 py-14 space-y-10">
             {/* Dimension cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {modules.map((m) => (
                 <DimensionCard
                   key={m.labelKey}
