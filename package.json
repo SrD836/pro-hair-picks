@@ -18,6 +18,7 @@
     "pinterest:refresh": "node scripts/pinterest/refresh_token.js",
     "pinterest:publish": "node scripts/pinterest/pin_publisher.js",
     "pinterest:generate": "node scripts/pinterest/generate_pin_queue.js",
+    "pinterest:genimage": "node scripts/pinterest/generate_pin_image.js --test",
     "pinterest:auto": "node scripts/pinterest/auto_publish.js",
     "pinterest:demo": "node scripts/pinterest/demo_server.js",
     "meta:snapshot": "node scripts/seo/generate-meta-snapshot.js"
