@@ -224,6 +224,24 @@ async function main() {
   console.log('[info]    Navega manualmente al Keyword Gap y espera a que la tabla cargue.');
   await waitForEnter('\nPulsa ENTER cuando la tabla sea visible y estes listo para empezar: ');
 
+  // ── DEBUG: loguear todas las respuestas de red durante 15s ────────────────
+  // Haz clic en "Volume" (u otra cabecera) en el navegador mientras esto corre.
+  // El endpoint correcto aparecerá en la lista — busca las URLs con datos JSON.
+  console.log('\n[DEBUG] Capturando respuestas de red durante 15 segundos...');
+  console.log('[DEBUG] Haz clic en "Volume" en la tabla ahora.\n');
+  const debugResponses = [];
+  const debugHandler = (response) => {
+    debugResponses.push(`  ${response.status()} ${response.url()}`);
+  };
+  page.on('response', debugHandler);
+  await new Promise(r => setTimeout(r, 15000));
+  page.off('response', debugHandler);
+  console.log(`[DEBUG] ${debugResponses.length} respuestas capturadas:`);
+  debugResponses.forEach(line => console.log(line));
+  console.log('\n[DEBUG] Identifica el endpoint de keywords arriba y actualiza el filtro en extractPageViaXHR().');
+  process.exit(0); // salir tras debug
+  // ── FIN DEBUG ─────────────────────────────────────────────────────────────
+
   // ── Detectar total de paginas ─────────────────────────────────────────────
   let totalPages = await getTotalPages(page);
   if (!totalPages) {
