@@ -41,10 +41,39 @@ function extractExcerpt(html) {
   return text.length > 155 ? text.slice(0, 152) + '...' : text;
 }
 
-function generateSchema(post, date) {
+function extractFAQSchema(html) {
+  if (!html || !html.includes('faq-section')) return null;
+  const faqStart = html.indexOf('faq-section');
+  if (faqStart === -1) return null;
+  const faqSection = html.slice(faqStart, faqStart + 4000);
+  const items = [];
+  const h3Regex = /<h3[^>]*>([\s\S]*?)<\/h3>\s*<p[^>]*>([\s\S]*?)<\/p>/g;
+  let match;
+  while ((match = h3Regex.exec(faqSection)) !== null && items.length < 5) {
+    const question = match[1].replace(/<[^>]+>/g, '').trim();
+    const answer   = match[2].replace(/<[^>]+>/g, '').trim();
+    if (question && answer) {
+      items.push({
+        '@type': 'Question',
+        name: question,
+        acceptedAnswer: { '@type': 'Answer', text: answer },
+      });
+    }
+  }
+  if (items.length === 0) return null;
   return {
     '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items,
+  };
+}
+
+function generateSchema(post, date) {
+  const article = {
+    '@context': 'https://schema.org',
     '@type': 'Article',
+    url: `https://guiadelsalon.com/blog/${post.slug}`,
+    alternateName: post.title_en || post.title,
     headline: post.title,
     datePublished: date,
     dateModified: date,
@@ -63,6 +92,8 @@ function generateSchema(post, date) {
       '@id': `https://guiadelsalon.com/blog/${post.slug}`,
     },
   };
+  const faqSchema = extractFAQSchema(post.content || '');
+  return faqSchema ? [article, faqSchema] : article;
 }
 
 function buildContentPrompt(post, internalLinks) {
@@ -84,14 +115,16 @@ CONTEXTO DE INVESTIGACIÓN:
 ${post.research_context || 'Usa tu conocimiento del sector.'}
 
 ESCRIBE EL ARTÍCULO COMPLETO en HTML semántico. REGLAS:
-- Extensión: mínimo 900 palabras, objetivo 1.100
+- Extensión: mínimo 1.200 palabras, objetivo 1.500. Sin los 4 elementos obligatorios (lista ≥5 items, tabla comparativa, FAQ, veredicto experto) el artículo es incompleto.
 - Sin etiquetas <html>, <head>, <body>
 - Etiquetas: <h2>, <h3>, <p>, <strong>, <ul>, <li>, <table>
 - Párrafos máximo 4 líneas (legibilidad mobile)
 - Negritas SOLO en conceptos técnicos clave
 - NUNCA empezar con "En este artículo...", "Hoy te traemos..."
 - Keyword principal en el primer párrafo y en 2+ H2/H3
+- Los H2 deben contener la keyword principal o variantes semánticas LSI (sinónimos, términos relacionados), NUNCA títulos genéricos como "Introducción" o "Conclusión"
 - Densidad keyword: 1-1.5% (no más)
+- E-E-A-T OBLIGATORIO: mencionar al menos 3 marcas reales del sector (Wahl, BaByliss Pro, Andis, Dyson, L'Oréal Professionnel, Schwarzkopf, Revlon Professional), al menos 1 institución o estudio real (CNAE, Cosmoprof, Intercoiffure, BOE), e incluir al menos 1 precio orientativo en euros
 
 ESTRUCTURA OBLIGATORIA:
 
@@ -121,6 +154,23 @@ ESTRUCTURA OBLIGATORIA:
 <div class="expert-verdict">
   <p class="verdict-title">⚡ Veredicto del Experto</p>
   <p>[Síntesis autoritaria 80-120 palabras. ${post.type === 'bridge' ? 'INCLUIR: "Lo que esta tecnología todavía no puede hacer es..."' : 'Cierra con recomendación profesional concreta.'}]</p>
+</div>
+
+<!-- FAQ — 3 preguntas reales que buscaría un profesional. Activa "People also ask" en Google. OBLIGATORIO -->
+<div class="faq-section">
+  <h2>Preguntas frecuentes</h2>
+  <div class="faq-item">
+    <h3>[Pregunta 1 con keyword LSI — pregunta que escribiría un peluquero/barbero en Google]</h3>
+    <p>[Respuesta directa 40-60 palabras, sin rodeos]</p>
+  </div>
+  <div class="faq-item">
+    <h3>[Pregunta 2 con variante semántica de la keyword]</h3>
+    <p>[Respuesta 40-60 palabras]</p>
+  </div>
+  <div class="faq-item">
+    <h3>[Pregunta 3 orientada a precio/comparativa/recomendación]</h3>
+    <p>[Respuesta 40-60 palabras]</p>
+  </div>
 </div>
 
 <!-- BIBLIOGRAFÍA -->
@@ -167,14 +217,16 @@ RESEARCH CONTEXT:
 ${post.research_context || 'Use your knowledge of the US professional hair industry.'}
 
 WRITE THE COMPLETE ARTICLE in semantic HTML. RULES:
-- Length: minimum 900 words, target 1,100
+- Length: minimum 1,200 words, target 1,500. Without all 4 mandatory elements (list ≥5 items, comparison table, FAQ, expert verdict) the article is incomplete.
 - No <html>, <head>, <body> tags
 - Tags: <h2>, <h3>, <p>, <strong>, <ul>, <li>, <table>
 - Paragraphs max 4 lines (mobile readability)
 - Bold ONLY on key technical concepts
 - NEVER start with "In this article...", "Today we bring you..."
 - Primary keyword in first paragraph and in 2+ H2/H3
+- H2 headings must contain the primary keyword or LSI semantic variants (synonyms, related terms), NEVER generic titles like "Introduction" or "Conclusion"
 - Keyword density: 1-1.5% (no more)
+- E-E-A-T MANDATORY: mention at least 3 real industry brands (Andis, Wahl Professional, Oster, StyleCraft, BaByliss Pro, Dyson, L'Oréal Professionnel), at least 1 real institution or study (Bureau of Labor Statistics, NAHA, CosmoProf, American Board of Certified Haircolorists), and include at least 1 price in USD
 
 MANDATORY STRUCTURE:
 
@@ -204,6 +256,23 @@ MANDATORY STRUCTURE:
 <div class="expert-verdict">
   <p class="verdict-title">⚡ Expert Verdict</p>
   <p>[Authoritative summary 80-120 words. Close with concrete professional recommendation.]</p>
+</div>
+
+<!-- FAQ — 3 real questions a professional would search for. Triggers "People also ask" in Google. MANDATORY -->
+<div class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <h3>[Question 1 with LSI keyword — what a barber/stylist would type into Google]</h3>
+    <p>[Direct answer 40-60 words, no padding]</p>
+  </div>
+  <div class="faq-item">
+    <h3>[Question 2 with semantic keyword variant]</h3>
+    <p>[Answer 40-60 words]</p>
+  </div>
+  <div class="faq-item">
+    <h3>[Question 3 focused on price/comparison/recommendation]</h3>
+    <p>[Answer 40-60 words]</p>
+  </div>
 </div>
 
 <!-- BIBLIOGRAPHY -->
@@ -254,10 +323,10 @@ async function writePost(post, date) {
   const titlePrompt = isUS
     ? `For the article about "${post.topic}" (keyword: "${post.target_keyword}"):
 Generate ONLY this JSON (no additional text):
-{"title":"[SEO title maximum 43 characters, keyword at start, no subtitle]","title_en":"[same as title]","meta_description":"[max 155 chars, includes keyword and implicit CTA, American English]","category":"[1-2 words English]","category_en":"[1-2 words English]"}`
+{"title":"[SEO title maximum 43 characters, keyword at start, no subtitle]","title_en":"[same as title]","meta_description":"[exactly 145-155 chars. Structure: primary keyword + concrete benefit with number if possible + implicit CTA. Example: 'Best professional clippers 2026: tested on 12 models in real barbershops. Updated ranking for serious barbers and stylists.']","category":"[1-2 words English]","category_en":"[1-2 words English]"}`
     : `Para el artículo sobre "${post.topic}" (keyword: "${post.target_keyword}"):
 Genera SOLO este JSON (sin texto adicional):
-{"title":"[título SEO español máximo 43 caracteres, keyword al inicio, sin subtítulo]","title_en":"[English SEO title maximum 43 characters, no subtitle]","meta_description":"[max 155 chars, incluye keyword y CTA implícito]","category":"[1-2 palabras español]","category_en":"[1-2 words English]"}`;
+{"title":"[título SEO español máximo 43 caracteres, keyword al inicio, sin subtítulo]","title_en":"[English SEO title maximum 43 characters, no subtitle]","meta_description":"[exactamente 145-155 chars. Estructura: keyword principal + beneficio concreto con número si posible + CTA implícito. Ejemplo: 'Mejores clippers profesionales 2026: análisis de 12 modelos con prueba real en barbería. Ranking actualizado para barberos exigentes.']","category":"[1-2 palabras español]","category_en":"[1-2 words English]"}`;
 
   let titleData = {};
   try {
@@ -326,13 +395,14 @@ ${contentES}`;
     read_time_minutes: estimateReadTime(primaryContent),
     has_expert_verdict: primaryContent.includes('expert-verdict'),
     has_data_viz:     primaryContent.includes('<table') || primaryContent.includes('data-table'),
+    has_faq:          primaryContent.includes('faq-section'),
     keywords:         [post.target_keyword, ...(post.secondary_keywords || [])],
     internal_links:   internalLinks,
     external_links:   [],
     author:           isUS ? 'GuiaDelSalon Team' : 'Equipo GuiaDelSalon',
     lang:             post.lang || (isUS ? 'en' : 'es'),
     market:           post.market || (isUS ? 'us' : 'es'),
-    schema_markup:    generateSchema({ ...post, ...titleData, excerpt }, date),
+    schema_markup:    generateSchema({ ...post, ...titleData, excerpt, content: contentES }, date),
   };
 }
 
