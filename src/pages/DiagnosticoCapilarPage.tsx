@@ -5,6 +5,7 @@ import {
   Layers, Droplets, Activity, ScanSearch, FlaskConical, ExternalLink,
   RotateCcw, ArrowRight, Download, Check,
 } from "lucide-react";
+import { generateDiagnosticoPDF } from "@/lib/pdfGenerators";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -549,7 +550,16 @@ export default function DiagnosticoCapilarPage() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col gap-4">
-              <button onClick={() => window.print()}
+              <button onClick={() => generateDiagnosticoPDF({
+                  healthPct,
+                  riskLabel: t(`diagnostico.risk${capitalize(riskLevel)}Label`),
+                  cuticle: scores.cuticle,
+                  porosity: scores.porosity,
+                  elasticity: scores.elasticity,
+                  scalp: scores.scalp,
+                  protocol: t(`diagnostico.risk${capitalize(riskLevel)}Protocol`),
+                  products: products.map(p => ({ name: p.name, description: p.description })),
+                })}
                 className="w-full bg-accent-orange hover:bg-accent-orange-hover text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 text-lg">
                 Descargar Informe PDF <Download className="w-5 h-5" />
               </button>

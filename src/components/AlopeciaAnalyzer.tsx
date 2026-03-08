@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { generateAlopeciaPDF } from "@/lib/pdfGenerators";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -1473,7 +1474,18 @@ function RiskReport({
           Nuevo análisis
         </button>
         <button
-          onClick={() => window.print()}
+          onClick={() => generateAlopeciaPDF({
+            riskLevel: report.risk_level,
+            riskScore: report.risk_score,
+            riskType: report.risk_type,
+            estimatedProgression: report.estimated_progression,
+            modifiableFactors: report.modifiable_factors,
+            nonModifiableFactors: report.non_modifiable_factors,
+            recommendedAction: report.recommended_action,
+            evidenceOptions: report.evidence_based_options.map(o => ({ name: o.name, realistic_expectation: o.realistic_expectation })),
+            realisticExpectations: report.realistic_expectations,
+            mythAlerts: report.myth_alerts,
+          })}
           className="flex-1 py-3 bg-[#C4A97D] text-[#2D2218] font-bold uppercase tracking-widest rounded-xl hover:bg-[#b89868] transition-colors text-sm"
         >
           Descargar Informe PDF

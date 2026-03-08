@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { generateCaniciePDF } from "@/lib/pdfGenerators";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -942,7 +943,17 @@ function DiagnosticReport({
           Nuevo diagnóstico
         </button>
         <button
-          onClick={() => window.print()}
+          onClick={() => generateCaniciePDF({
+            canicieType: report.canicie_type,
+            onsetClassification: report.onset_classification,
+            geneticWeight: report.genetic_weight,
+            environmentalWeight: report.environmental_weight,
+            modifiableFactors: report.modifiable_factors,
+            nonModifiableFactors: report.non_modifiable_factors,
+            structuralCareNeeded: report.structural_care_needed,
+            recommendations: report.recommendations,
+            realisticExpectations: report.realistic_expectations,
+          })}
           className="flex-1 py-3 bg-[#C4A97D] text-[#2D2218] font-bold uppercase tracking-widest rounded-xl hover:bg-[#b89868] transition-colors text-sm"
         >
           Descargar PDF
