@@ -24,63 +24,78 @@ import { CizuraCTA } from "@/components/mi-pelo/shared/CizuraCTA";
 
 /* ── Image map per question ─────────────────────── */
 const QUESTION_IMAGES: Record<string, Record<string, string>> = {
-  q1_1: { // Test del Tacto
-    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
-    B: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=75",
-    C: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
-    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  q1_1: { // Test del Tacto Proximal-Distal
+    A: "/images/diagnostico/dc_tacto_a.jpg",
+    B: "/images/diagnostico/dc_tacto_b.jpg",
+    C: "/images/diagnostico/dc_tacto_c.jpg",
+    D: "/images/diagnostico/dc_tacto_d.jpg",
   },
-  q1_2: { // Brillo Visual
-    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
-    B: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=75",
-    C: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
-    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  q1_2: { // Índice de Brillo Visual
+    A: "/images/diagnostico/dc_brillo_a.jpg",
+    B: "/images/diagnostico/dc_brillo_b.jpg",
+    C: "/images/diagnostico/dc_brillo_c.jpg",
+    D: "/images/diagnostico/dc_brillo_d.jpg",
   },
   q2_1: { // Test de Flotación
-    A: "https://images.unsplash.com/photo-1594125674956-61a9b49c8ecc?auto=format&fit=crop&w=400&q=75",
-    B: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=75",
-    C: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=75",
-    D: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=75",
+    A: "/images/diagnostico/dc_flotacion_a.jpg",
+    B: "/images/diagnostico/dc_flotacion_b.jpg",
+    C: "/images/diagnostico/dc_flotacion_c.jpg",
+    D: "/images/diagnostico/dc_flotacion_d.jpg",
   },
-  q2_2: { // Velocidad Absorción
-    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
-    B: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?auto=format&fit=crop&w=400&q=75",
-    C: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
-    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  q2_2: { // Velocidad de Absorción
+    A: "/images/diagnostico/dc_absorcion_a.jpg",
+    B: "/images/diagnostico/dc_absorcion_b.jpg",
+    C: "/images/diagnostico/dc_absorcion_c.jpg",
+    D: "/images/diagnostico/dc_absorcion_d.jpg",
   },
-  // q2_3 — Historial Oxidativo (5 options, text-based — no images, use accent stripe)
-  q3_1: { // Elasticidad
-    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
-    B: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
-    C: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=75",
-    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  q2_3: { // Historial de Tratamientos Oxidativos
+    A: "/images/diagnostico/dc_historial_a.jpg",
+    B: "/images/diagnostico/dc_historial_b.jpg",
+    C: "/images/diagnostico/dc_historial_c.jpg",
+    D: "/images/diagnostico/dc_historial_d.jpg",
+    E: "/images/diagnostico/dc_historial_e.jpg",
   },
-  q3_2: { // Herramientas Térmicas
-    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
-    B: "https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=400&q=75",
-    C: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?auto=format&fit=crop&w=400&q=75",
-    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  q3_1: { // Test de Elasticidad en Mojado
+    A: "/images/diagnostico/dc_elasticidad_a.jpg",
+    B: "/images/diagnostico/dc_elasticidad_b.jpg",
+    C: "/images/diagnostico/dc_elasticidad_c.jpg",
+    D: "/images/diagnostico/dc_elasticidad_d.jpg",
+  },
+  q3_2: { // Exposición al Calor
+    A: "/images/diagnostico/dc_calor_a.jpg",
+    B: "/images/diagnostico/dc_calor_b.jpg",
+    C: "/images/diagnostico/dc_calor_c.jpg",
+    D: "/images/diagnostico/dc_calor_d.jpg",
   },
   q3_3: { // Rotura Mecánica
-    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
-    B: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=75",
-    C: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
-    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+    A: "/images/diagnostico/dc_rotura_a.jpg",
+    B: "/images/diagnostico/dc_rotura_b.jpg",
+    C: "/images/diagnostico/dc_rotura_c.jpg",
+    D: "/images/diagnostico/dc_rotura_d.jpg",
   },
-  q4_1: { // Sebo
-    A: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?auto=format&fit=crop&w=400&q=75",
-    B: "https://images.unsplash.com/photo-1512690459411-b9245aed614b?auto=format&fit=crop&w=400&q=75",
-    C: "https://images.unsplash.com/photo-1512690459411-b9245aed614b?auto=format&fit=crop&w=400&q=75",
-    D: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=400&q=75",
+  q4_1: { // Producción de Sebo
+    A: "/images/diagnostico/dc_sebo_a.jpg",
+    B: "/images/diagnostico/dc_sebo_b.jpg",
+    C: "/images/diagnostico/dc_sebo_c.jpg",
+    D: "/images/diagnostico/dc_sebo_d.jpg",
   },
-  q4_2: { // Barrera cuero cabelludo
-    A: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=400&q=75",
-    B: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=75",
-    C: "https://images.unsplash.com/photo-1594125674956-61a9b49c8ecc?auto=format&fit=crop&w=400&q=75",
-    D: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=400&q=75",
+  q4_2: { // Barrera del Cuero Cabelludo
+    A: "/images/diagnostico/dc_barrera_a.jpg",
+    B: "/images/diagnostico/dc_barrera_b.jpg",
+    C: "/images/diagnostico/dc_barrera_c.jpg",
+    D: "/images/diagnostico/dc_barrera_d.jpg",
   },
-  // q4_3 — Productos pH (3 text-based options — no images)
-  // q4_4 — Frecuencia lavado (4 text-based options — no images)
+  q4_3: { // Productos y pH
+    A: "/images/diagnostico/dc_lavado_a.jpg",
+    B: "/images/diagnostico/dc_lavado_b.jpg",
+    C: "/images/diagnostico/dc_lavado_c.jpg",
+  },
+  q4_4: { // Frecuencia de Lavado
+    A: "/images/diagnostico/dc_lavado_a.jpg",
+    B: "/images/diagnostico/dc_lavado_b.jpg",
+    C: "/images/diagnostico/dc_lavado_c.jpg",
+    D: "/images/diagnostico/dc_lavado_d.jpg",
+  },
 };
 
 const STEP_LABELS = [
