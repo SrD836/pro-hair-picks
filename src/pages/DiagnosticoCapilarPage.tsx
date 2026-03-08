@@ -86,9 +86,9 @@ const QUESTION_IMAGES: Record<string, Record<string, string>> = {
     D: "/images/diagnostico/dc_barrera_d.jpg",
   },
   q4_3: { // Productos y pH
-    A: "/images/diagnostico/dc_lavado_a.jpg",
-    B: "/images/diagnostico/dc_lavado_b.jpg",
-    C: "/images/diagnostico/dc_lavado_c.jpg",
+    A: "/images/diagnostico/dc_productos_a.jpg",
+    B: "/images/diagnostico/dc_productos_b.jpg",
+    C: "/images/diagnostico/dc_productos_c.jpg",
   },
   q4_4: { // Frecuencia de Lavado
     A: "/images/diagnostico/dc_lavado_a.jpg",
