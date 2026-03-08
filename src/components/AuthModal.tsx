@@ -138,7 +138,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#ec5b13] text-white rounded-xl px-6 py-3 w-full font-semibold text-sm hover:bg-[#d44f0f] transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
+              className="bg-gold text-espresso rounded-xl px-6 py-3 w-full font-semibold text-sm hover:bg-gold/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
             >
               {loading && (
                 <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

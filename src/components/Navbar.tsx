@@ -285,7 +285,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const { t, lang } = useLanguage();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
   const navRef = useRef<HTMLElement>(null);
 
@@ -389,9 +389,10 @@ const Navbar = () => {
           <div className="flex items-center gap-1.5">
             {/* Desktop auth */}
             <div className="hidden md:flex items-center">
-              {user ? (
+              {!loading && user ? (
                 <div className="relative">
                   <button
+                    aria-label="Menú de usuario"
                     onClick={() => setOpenDropdown((prev) => prev === "user" ? null : "user")}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-white/8 transition-colors"
                   >
@@ -433,14 +434,14 @@ const Navbar = () => {
                     )}
                   </AnimatePresence>
                 </div>
-              ) : (
+              ) : !loading ? (
                 <button
                   onClick={() => setAuthModalOpen(true)}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium bg-[#C4A97D] text-[#2D2218] hover:bg-[#C4A97D]/90 transition-colors"
                 >
                   Iniciar sesión
                 </button>
-              )}
+              ) : null}
             </div>
 
             <LanguageSelector />
@@ -524,7 +525,7 @@ const Navbar = () => {
 
               {/* Mobile auth */}
               <div className="border-t border-border/40 pt-3">
-                {user ? (
+                {!loading && user ? (
                   <div className="space-y-1">
                     <p className="text-xs text-white/40 px-2 py-1 truncate">{user.email}</p>
                     <Link
@@ -543,14 +544,14 @@ const Navbar = () => {
                       Cerrar sesión
                     </button>
                   </div>
-                ) : (
+                ) : !loading ? (
                   <button
                     onClick={() => { setMobileOpen(false); setAuthModalOpen(true); }}
                     className="w-full flex items-center justify-center gap-1.5 px-4 py-3 rounded-full text-sm font-medium bg-[#C4A97D] text-[#2D2218] hover:bg-[#C4A97D]/90 transition-colors"
                   >
                     Iniciar sesión
                   </button>
-                )}
+                ) : null}
               </div>
             </div>
           </motion.div>
