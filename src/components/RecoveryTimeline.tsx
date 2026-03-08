@@ -367,7 +367,11 @@ function MaintenanceCard({ maintenance, onClick }: MaintenanceCardProps) {
 
 type ViewState = "form" | "blocked" | "calendar";
 
-export default function RecoveryTimeline() {
+interface RecoveryTimelineProps {
+  wizardContinue?: (summary: string, score?: number) => void;
+}
+
+export default function RecoveryTimeline({ wizardContinue }: RecoveryTimelineProps = {}) {
   // ── Form state
   const [damageLevel, setDamageLevel] = useState<number>(5);
   const [lastTreatment, setLastTreatment] = useState<LastTreatment | "">("");
