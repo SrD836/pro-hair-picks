@@ -2,6 +2,7 @@
   publish = "dist"
   command  = "npm run build"
 
+# ── Cache para assets con hash de Vite ───────────────────────────────────────
 [[headers]]
   for = "/assets/*"
   [headers.values]
@@ -23,16 +24,98 @@
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
+# ── Seguridad + charset para rutas HTML (SPA) ────────────────────────────────
+# Content-Type: text/html; charset=UTF-8 cubre todas las rutas extensionless
+# que Netlify sirve como rewrite a index.html.
+# Los bloques de override DESPUÉS de este anulan el Content-Type para cada
+# tipo de archivo estático (precedencia: último bloque que coincida gana).
 [[headers]]
   for = "/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
+    Content-Type = "text/html; charset=UTF-8"
 
 [[headers]]
   for = "/"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# ── Content-Type overrides para archivos estáticos ───────────────────────────
+# Necesarios para que el browser no reciba "text/html" en JS/CSS/imágenes,
+# lo cual rompería la carga con X-Content-Type-Options: nosniff activo.
+
+[[headers]]
+  for = "/assets/*.js"
+  [headers.values]
+    Content-Type = "application/javascript; charset=UTF-8"
+
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+    Content-Type = "text/css; charset=UTF-8"
+
+[[headers]]
+  for = "/images/*.webp"
+  [headers.values]
+    Content-Type = "image/webp"
+
+[[headers]]
+  for = "/images/*.jpg"
+  [headers.values]
+    Content-Type = "image/jpeg"
+
+[[headers]]
+  for = "/images/*.jpeg"
+  [headers.values]
+    Content-Type = "image/jpeg"
+
+[[headers]]
+  for = "/images/*.png"
+  [headers.values]
+    Content-Type = "image/png"
+
+[[headers]]
+  for = "/logo*.webp"
+  [headers.values]
+    Content-Type = "image/webp"
+
+[[headers]]
+  for = "/logo*.png"
+  [headers.values]
+    Content-Type = "image/png"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Content-Type = "image/png"
+
+[[headers]]
+  for = "/*.ico"
+  [headers.values]
+    Content-Type = "image/x-icon"
+
+[[headers]]
+  for = "/*.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json; charset=UTF-8"
+
+[[headers]]
+  for = "/*.json"
+  [headers.values]
+    Content-Type = "application/json; charset=UTF-8"
+
+[[headers]]
+  for = "/*.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=UTF-8"
+
+[[headers]]
+  for = "/*.xml"
+  [headers.values]
+    Content-Type = "application/xml; charset=UTF-8"
+
+# ── Redirects ─────────────────────────────────────────────────────────────────
 
 # 301: /categoria/ → /categorias/ (corrección SEO legacy)
 [[redirects]]
