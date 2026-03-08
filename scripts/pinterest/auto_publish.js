@@ -29,7 +29,8 @@ const https           = require('https');
 const zlib            = require('zlib');
 const fs              = require('fs');
 const path            = require('path');
-const { refreshToken } = require('./refresh_token');
+const { refreshToken }              = require('./refresh_token');
+const { generateQueue: _buildQueue } = require('./generate_pin_queue');
 
 // ── Rutas ──────────────────────────────────────────────────────────────────
 const DIR         = __dirname;
@@ -287,132 +288,9 @@ function getLastNonBlogType(logData) {
   return 'tool';
 }
 
-// ── Generar cola de pins (lógica extraída de generate_pin_queue.js) ─────────
+// ── Generar cola de pins (delegado a generate_pin_queue.js) ──────────────
 async function generateQueue(logData) {
-  const recentUrls  = getRecentUrls(logData);
-  const lastLang    = getLastLang(logData);
-  const lastNonBlog = getLastNonBlogType(logData);
-
-  log('URLs en cooldown (30 días): ' + recentUrls.size);
-  log('Último idioma: ' + lastLang + ' → sesión con: ' + (lastLang === 'es' ? 'en' : 'es'));
-
-  // Fetch blog posts
-  let blogPosts = [];
-  try {
-    const raw = await fetchSupabase(
-      'blog_posts',
-      'select=title,meta_description,slug,cover_image_url,published_at' +
-      '&is_published=eq.true&order=published_at.desc&limit=50'
-    );
-    blogPosts = Array.isArray(raw) ? raw : [];
-    log('Blog posts obtenidos: ' + blogPosts.length);
-  } catch (err) {
-    log('⚠️  Error al obtener blog posts: ' + err.message);
-  }
-
-  // Fetch productos
-  let products = [];
-  try {
-    const raw = await fetchSupabase(
-      'products',
-      'select=name,slug,image_url,price&order=created_at.desc&limit=30'
-    );
-    products = Array.isArray(raw) ? raw : [];
-    log('Productos obtenidos: ' + products.length);
-  } catch (err) {
-    log('⚠️  Error al obtener productos: ' + err.message);
-  }
-
-  // Filtrar candidatos
-  const now    = Date.now();
-  const h48ago = now - 48 * 60 * 60 * 1000;
-
-  const recentBlogs = [];
-  const olderBlogs  = [];
-  for (const p of blogPosts) {
-    const link = 'https://guiadelsalon.com/blog/' + p.slug;
-    if (recentUrls.has(link)) continue;
-    const age = p.published_at ? new Date(p.published_at).getTime() : 0;
-    (age >= h48ago ? recentBlogs : olderBlogs).push(p);
-  }
-  const availableBlogs    = [...recentBlogs, ...olderBlogs];
-  const availableProducts = products.filter(
-    p => !recentUrls.has('https://guiadelsalon.com/categorias/' + p.slug)
-  );
-  const availableTools = TOOLS.filter(t => !recentUrls.has(t.url));
-
-  // Selección de slots
-  const nextNonBlog = lastNonBlog === 'product' ? 'tool' : 'product';
-  const slots = [];
-
-  for (let i = 0; i < 2 && i < availableBlogs.length; i++) {
-    slots.push({ type: 'blog', data: availableBlogs[i] });
-  }
-
-  if (nextNonBlog === 'product' && availableProducts.length > 0) {
-    slots.push({ type: 'product', data: availableProducts[0] });
-  } else if (availableTools.length > 0) {
-    slots.push({ type: 'tool', data: availableTools[0] });
-  } else if (availableProducts.length > 0) {
-    slots.push({ type: 'product', data: availableProducts[0] });
-  }
-
-  const blogUsed = slots.filter(s => s.type === 'blog').length;
-  for (let i = blogUsed; slots.length < 3 && i < availableBlogs.length; i++) {
-    slots.push({ type: 'blog', data: availableBlogs[i] });
-  }
-
-  if (slots.length === 0) {
-    throw new Error('No hay contenido disponible (todo publicado en los últimos 30 días).');
-  }
-
-  // Construir pins con alternancia de idioma
-  const pins   = [];
-  let currLang = lastLang === 'es' ? 'en' : 'es';
-
-  for (const slot of slots) {
-    let link, imageUrl;
-    if (slot.type === 'blog') {
-      link     = 'https://guiadelsalon.com/blog/' + slot.data.slug;
-      imageUrl = slot.data.cover_image_url || FALLBACK[slot.type];
-    } else if (slot.type === 'product') {
-      link     = 'https://guiadelsalon.com/categorias/' + slot.data.slug;
-      imageUrl = slot.data.image_url || FALLBACK[slot.type];
-    } else {
-      link     = slot.data.url;
-      imageUrl = slot.data.image_url || FALLBACK[slot.type];
-    }
-
-    const esTexts = buildEsTexts(slot.type, slot.data);
-    let finalTitle = esTexts.title;
-    let finalDescription = esTexts.description;
-
-    if (currLang === 'en') {
-      try {
-        const translated = await translateToEN(esTexts.title, esTexts.description);
-        finalTitle       = translated.title;
-        finalDescription = translated.description;
-        log('Traducción EN: "' + finalTitle.slice(0, 50) + '"');
-      } catch (err) {
-        log('⚠️  Traducción fallida, usando ES: ' + err.message.slice(0, 60));
-        currLang = 'es';
-      }
-    }
-
-    pins.push({
-      title:        finalTitle,
-      description:  finalDescription,
-      link,
-      board_id:     currLang === 'es' ? BOARD_ES : BOARD_EN,
-      image_url:    imageUrl,
-      lang:         currLang,
-      content_type: slot.type,
-    });
-
-    currLang = currLang === 'es' ? 'en' : 'es';
-  }
-
-  return pins;
+  return _buildQueue(logData);
 }
 
 // ── Publicar un pin via API v5 ─────────────────────────────────────────────
