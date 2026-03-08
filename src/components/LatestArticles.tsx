@@ -161,13 +161,13 @@ export default function LatestArticles({ articles, title }: LatestArticlesProps)
 
         {/* ── Desktop: Bento grid ── */}
         <div className="hidden md:grid grid-cols-3 gap-4">
-          {/* Row 1: featured (2/3) + Cizura banner (1/3) */}
+          {/* Row 1: featured (2/3) */}
           <FeaturedCard article={featured} />
-          <CizuraBanner />
+          {rest.length > 0 && <ArticleCard article={rest[0]} index={0} />}
 
-          {/* Row 2: up to 3 regular cards */}
-          {rest.slice(0, 3).map((article, i) => (
-            <ArticleCard key={article.slug} article={article} index={i} />
+          {/* Row 2: remaining cards */}
+          {rest.slice(1, 4).map((article, i) => (
+            <ArticleCard key={article.slug} article={article} index={i + 1} />
           ))}
         </div>
 
