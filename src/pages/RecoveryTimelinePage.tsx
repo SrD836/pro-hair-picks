@@ -5,6 +5,7 @@ import RecoveryTimeline from "@/components/RecoveryTimeline";
 import RecoveryExpertVerdict from "@/components/RecoveryExpertVerdict";
 import { ToolHeader } from "@/components/mi-pelo/shared/ToolHeader";
 import { BibliographyDrawer, type BibReference } from "@/components/mi-pelo/shared/BibliographyDrawer";
+import { useWizardReturn } from "@/hooks/useWizardReturn";
 import { useState } from "react";
 
 const REFERENCES: BibReference[] = [
