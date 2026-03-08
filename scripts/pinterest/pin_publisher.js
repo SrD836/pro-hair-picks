@@ -108,7 +108,7 @@ function publishPin(pin) {
     });
 
     const options = {
-      hostname: 'api-sandbox.pinterest.com',
+      hostname: 'api.pinterest.com',
       path:     '/v5/pins',
       method:   'POST',
       headers: {
