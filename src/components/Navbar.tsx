@@ -133,10 +133,11 @@ function FlatDropdown({ label, items, isOpen, onToggle, onClose, onEnter }: {
 }
 
 /* ── Desktop: Hair Tools dropdown ────────────────────────────────────────── */
-function HairToolsDropdown({ isOpen, onToggle, onClose }: {
+function HairToolsDropdown({ isOpen, onToggle, onClose, onEnter }: {
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
+  onEnter: () => void;
 }) {
   const { t, lang } = useLanguage();
 
