@@ -125,7 +125,7 @@ export function generateDiagnosticoPDF(data: DiagnosticoPDFData) {
   doc.setTextColor(245, 240, 232);
   doc.text("Tu Pasaporte Capilar", pw / 2, 28, { align: "center" });
   doc.setFontSize(9);
-  doc.setTextColor(245, 240, 232, 0.6 as unknown as undefined);
+  doc.setTextColor(245, 240, 232);
   doc.text("Diagnóstico Capilar Profesional", pw / 2, 35, { align: "center" });
 
   // ── Cream card background
@@ -466,4 +466,116 @@ export function generateRecoveryPDF(data: RecoveryPDFData) {
 
   footer(doc);
   doc.save("calendario-recuperacion-guiadelsalon.pdf");
+}
+
+// ── Master Color Card PDF ────────────────────────────────────────────────────
+
+const CREAM: [number, number, number] = [245, 240, 232];
+
+export function generateMasterColorCardPDF(selections: Record<number, unknown>) {
+  const doc = new jsPDF();
+  const pw = 210;
+
+  // Background
+  doc.setFillColor(...ESPRESSO);
+  doc.rect(0, 0, pw, 297, 'F');
+
+  // Header
+  doc.setFontSize(8);
+  doc.setTextColor(...GOLD);
+  doc.text('DIAGNÓSTICO DE COLORIMETRÍA', pw / 2, 16, { align: 'center' });
+  doc.setFontSize(22);
+  doc.setTextColor(...CREAM);
+  doc.text('Master Color Card', pw / 2, 28, { align: 'center' });
+  doc.setFontSize(9);
+  doc.setTextColor(245, 240, 232);
+  doc.text('Expert Color Matcher — GuiaDelSalon.com', pw / 2, 36, { align: 'center' });
+
+  // Cream card
+  const cardX = 15, cardY = 44, cardW = pw - 30, cardH = 228;
+  doc.setFillColor(...CREAM);
+  doc.roundedRect(cardX, cardY, cardW, cardH, 6, 6, 'F');
+
+  // Match badge
+  doc.setFillColor(...ORANGE);
+  doc.roundedRect(cardX + cardW / 2 - 20, cardY + 10, 40, 10, 5, 5, 'F');
+  doc.setFontSize(8);
+  doc.setTextColor(255, 255, 255);
+  doc.text('MATCH 98%', pw / 2, cardY + 17, { align: 'center' });
+
+  // Tono recomendado
+  doc.setFontSize(8);
+  doc.setTextColor(...ORANGE);
+  doc.text('TONO RECOMENDADO', pw / 2, cardY + 34, { align: 'center' });
+  doc.setFontSize(20);
+  doc.setTextColor(...ESPRESSO);
+  doc.text('10.1 Rubio Platino', pw / 2, cardY + 46, { align: 'center' });
+
+  // Demo disclaimer
+  doc.setFontSize(7);
+  doc.setTextColor(...GRAY);
+  doc.text('* Análisis de demostración — el resultado personalizado estará disponible próximamente', pw / 2, cardY + 54, { align: 'center' });
+
+  // Tags
+  doc.setFontSize(8);
+  doc.setTextColor(GRAY[0], GRAY[1], GRAY[2]);
+  doc.text('Estación: Invierno  ·  Subtono: Frío / Ceniza', pw / 2, cardY + 62, { align: 'center' });
+
+  // Divider
+  doc.setDrawColor(...GOLD);
+  doc.setLineWidth(0.4);
+  doc.line(cardX + 10, cardY + 68, cardX + cardW - 10, cardY + 68);
+
+  // Expert analysis
+  let y = cardY + 78;
+  doc.setFontSize(11);
+  doc.setTextColor(...ESPRESSO);
+  doc.text('Análisis del Experto', cardX + 10, y);
+  y += 7;
+  doc.setFontSize(8.5);
+  doc.setTextColor(80, 80, 80);
+  const analysisText = '"Al tener venas azuladas y piel clara, los tonos dorados excesivos pueden apagar tu luminosidad natural. El matiz ceniza es tu mejor aliado para resaltar la profundidad de tus ojos y definir suavemente tus facciones."';
+  const analysisLines = doc.splitTextToSize(analysisText, cardW - 20);
+  doc.text(analysisLines, cardX + 10, y);
+  y += analysisLines.length * 4.5 + 8;
+
+  // Divider
+  doc.setDrawColor(...GOLD);
+  doc.line(cardX + 10, y, cardX + cardW - 10, y);
+  y += 8;
+
+  // Answers summary
+  doc.setFontSize(11);
+  doc.setTextColor(...ESPRESSO);
+  doc.text('Resumen de Respuestas', cardX + 10, y);
+  y += 7;
+
+  const stepLabels: Record<number, string> = {
+    1: 'Tono de piel',
+    2: 'Test de venas',
+    3: 'Metal favorito',
+    4: 'Color iluminación',
+    5: 'Color de ojos',
+    6: 'Nivel natural',
+    7: 'Color actual',
+  };
+
+  doc.setFontSize(8);
+  for (let i = 1; i <= 7; i++) {
+    const val = selections[i];
+    if (val !== undefined && y < cardY + cardH - 10) {
+      doc.setTextColor(...ESPRESSO);
+      doc.text(`${stepLabels[i]}:`, cardX + 10, y);
+      doc.setTextColor(80, 80, 80);
+      doc.text(String(val), cardX + 55, y);
+      y += 6;
+    }
+  }
+
+  // Footer
+  doc.setFontSize(7);
+  doc.setTextColor(...GOLD);
+  doc.text(`guiadelsalon.com · ${new Date().toLocaleDateString('es-ES')}`, pw / 2, 290, { align: 'center' });
+
+  doc.save('master-color-card-guiadelsalon.pdf');
 }
