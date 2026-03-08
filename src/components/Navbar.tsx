@@ -12,16 +12,17 @@ import LanguageSelector from "@/components/LanguageSelector";
 // shadow: 0 4px 20px -2px rgba(45,34,24,0.12)
 
 /* ── Desktop: Grouped dropdown (Hombre / Mujer) ─────────────────────────── */
-function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
+function GroupedDropdown({ label, groups, isOpen, onToggle, onClose, onEnter }: {
   label: string;
   groups: CategoryGroup[];
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
+  onEnter: () => void;
 }) {
   const { t } = useLanguage();
   return (
-    <div className="relative" onMouseLeave={onClose}>
+    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
       <button
         onMouseEnter={() => !isOpen && onToggle()}
         onClick={onToggle}
