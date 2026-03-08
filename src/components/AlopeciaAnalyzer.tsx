@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { generateAlopeciaPDF } from "@/lib/pdfGenerators";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { AlopeciaInput, AlopeciaReport } from "@/lib/generateAlopeciaReport";
