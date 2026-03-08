@@ -125,46 +125,6 @@ function FeaturedCard({ article }: { article: Article }) {
   );
 }
 
-/* ── Cizura interrupt banner ─────────────────────────────────────────────── */
-function CizuraBanner() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: 0.2, duration: 0.4, ease: "easeOut" }}
-    >
-      <div className="bg-[#2D2218] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(45,34,24,0.12)] flex flex-col justify-between h-full min-h-[180px]">
-        {/* Tag */}
-        <span className="inline-block px-2.5 py-0.5 bg-[#C4A97D]/15 border border-[#C4A97D]/25 text-[#C4A97D] text-[9px] font-bold uppercase tracking-[0.15em] rounded-full w-fit">
-          Gestión · Cizura SaaS
-        </span>
-
-        {/* Copy */}
-        <div className="space-y-1.5 my-4">
-          <p className="text-[#F5F0E8] font-display font-bold text-base leading-tight">
-            Convierte 5 min de corte en dinero real.
-          </p>
-          <p className="text-[#F5F0E8]/55 text-xs leading-relaxed">
-            Cizura llena tu agenda automáticamente mientras tú trabajas.
-          </p>
-        </div>
-
-        {/* CTA */}
-        <a
-          href="https://cizura.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#C4A97D] text-[#2D2218] rounded-full text-xs font-bold hover:bg-[#D4C0A1] transition-colors group w-fit"
-        >
-          Probar gratis
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-        </a>
-      </div>
-    </motion.div>
-  );
-}
-
 /* ── Main component ──────────────────────────────────────────────────────── */
 export default function LatestArticles({ articles, title }: LatestArticlesProps) {
   const { t } = useLanguage();

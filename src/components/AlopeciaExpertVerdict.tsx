@@ -161,17 +161,6 @@ export default function AlopeciaExpertVerdict() {
               le ahorra al paciente meses de progresión silenciosa y miles de euros.
             </p>
           </div>
-          <div className="mt-10 rounded-xl border border-[#C4A97D]/20 bg-[rgba(196,169,125,0.05)] p-6 animate-fade-in">
-            <p className="text-sm text-[#F5F0E8]/70 leading-relaxed">
-              Un profesional que conoce la ciencia detrás de la alopecia puede
-              ofrecer un diagnóstico honesto.{" "}
-              <a href="https://cizura.com" target="_blank" rel="noopener noreferrer"
-                className="text-[#C4A97D] font-semibold hover:underline inline-flex items-center gap-1">
-                Cizura <ExternalLink className="w-3 h-3" />
-              </a>{" "}
-              registra el historial completo de cada servicio y tratamiento.
-            </p>
-          </div>
         </details>
 
         {/* Bibliography — collapsible */}
