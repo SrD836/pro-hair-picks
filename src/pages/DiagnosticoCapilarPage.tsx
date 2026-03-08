@@ -328,11 +328,11 @@ export default function DiagnosticoCapilarPage() {
             </div>
 
             {/* Protocol */}
-            <div className="bg-espresso border border-gold/10 rounded-xl p-6">
-              <h2 className="font-display text-lg text-cream font-bold mb-3">
+            <div className="bg-espresso border border-gold/8 rounded-2xl p-7">
+              <h2 className="font-display text-xl text-cream font-bold mb-4">
                 {t("diagnostico.actionProtocol")}
               </h2>
-              <p className="text-cream/70 text-sm leading-relaxed">
+              <p className="text-cream/50 text-sm leading-relaxed">
                 {t(`diagnostico.risk${capitalize(riskLevel)}Protocol`)}
               </p>
             </div>
