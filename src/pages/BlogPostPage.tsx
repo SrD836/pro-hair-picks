@@ -43,7 +43,7 @@ const BlogPostPage = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
-        .select("*, title_en, excerpt_en, content_en, hreflang, canonical")
+        .select("*, title_en, excerpt_en, content_en, canonical")
         .eq("slug", slug!)
         .eq("is_published", true)
         .single();
@@ -208,7 +208,7 @@ const BlogPostPage = () => {
         }
         ogImage={post.cover_image_url || FALLBACK_IMAGE}
         canonical={post.canonical ?? `https://guiadelsalon.com/blog/${post.slug}`}
-        hreflang={post.hreflang ?? undefined}
+        hreflang={undefined}
       />
       <Helmet>
         <script type="application/ld+json">{buildArticleSchema(post)}</script>

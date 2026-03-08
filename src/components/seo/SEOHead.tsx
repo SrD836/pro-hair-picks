@@ -106,8 +106,8 @@ export const SEOHead = ({
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:type" content="website" />
-      {hreflang && <link rel="alternate" hreflang={hreflang} href={canonicalUrl} />}
-      {hreflang && <link rel="alternate" hreflang="x-default" href={canonicalUrl} />}
+      {hreflang && <link rel="alternate" hrefLang={hreflang} href={canonicalUrl} />}
+      {hreflang && <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />}
     </Helmet>
   );
 };
