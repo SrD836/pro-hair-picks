@@ -18,13 +18,13 @@ export function NavigationBar({
   loading = false,
 }: NavigationBarProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-espresso/95 backdrop-blur border-t border-gold/10 px-4 py-3">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-espresso/90 backdrop-blur-md border-t border-gold/5 px-6 py-4">
       <div className="max-w-2xl mx-auto flex justify-between items-center">
         {onPrev ? (
           <button
             onClick={onPrev}
             disabled={disablePrev}
-            className="text-cream/50 hover:text-cream text-sm font-medium transition-colors disabled:opacity-30"
+            className="text-cream/40 hover:text-cream text-sm font-medium transition-colors disabled:opacity-20"
           >
             {prevLabel}
           </button>
@@ -35,7 +35,7 @@ export function NavigationBar({
         <button
           onClick={onNext}
           disabled={disableNext || loading}
-          className="bg-gold text-espresso font-semibold rounded-lg px-6 py-2.5 text-sm hover:bg-gold-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
+          className="bg-gold text-espresso font-bold rounded-xl px-8 py-3 text-sm hover:bg-gold-light transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed flex items-center gap-2 hover:shadow-[0_4px_20px_-4px_rgba(196,169,125,0.4)]"
         >
           {loading && (
             <span className="w-4 h-4 border-2 border-espresso/30 border-t-espresso rounded-full animate-spin" />

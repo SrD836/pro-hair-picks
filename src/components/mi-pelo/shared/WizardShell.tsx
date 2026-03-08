@@ -11,19 +11,19 @@ export function WizardShell({ toolName, currentStep, totalSteps, children }: Wiz
   const pct = Math.round(((currentStep + 1) / totalSteps) * 100);
 
   return (
-    <div className="min-h-screen bg-espresso pb-20">
-      {/* Sticky progress header */}
-      <div className="sticky top-0 z-30 bg-espresso border-b border-gold/10">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <span className="text-gold text-sm font-mono">{toolName}</span>
-          <span className="text-cream/50 text-xs">
-            Paso {currentStep + 1}/{totalSteps}
+    <div className="min-h-screen bg-espresso pb-24">
+      {/* Minimal sticky progress */}
+      <div className="sticky top-0 z-30 bg-espresso/95 backdrop-blur-sm">
+        <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
+          <span className="text-gold/70 text-xs font-medium tracking-wide">{toolName}</span>
+          <span className="text-cream/30 text-xs tabular-nums">
+            {currentStep + 1} / {totalSteps}
           </span>
         </div>
-        {/* Progress bar */}
-        <div className="h-1 bg-gold/20">
+        {/* Thin progress line */}
+        <div className="h-px bg-gold/10">
           <div
-            className="h-full bg-gold transition-all duration-500 ease-out"
+            className="h-full bg-gold/60 transition-all duration-700 ease-out"
             style={{ width: `${pct}%` }}
           />
         </div>

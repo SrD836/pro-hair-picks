@@ -25,7 +25,7 @@ export function ToolHeader({
   return (
     <div className="bg-espresso">
       {/* Breadcrumb */}
-      <div className="max-w-4xl mx-auto px-4 pt-6 pb-2">
+      <div className="max-w-3xl mx-auto px-6 pt-8 pb-2">
         <nav className="flex items-center gap-1.5 text-xs text-cream/40">
           <Link to="/mi-pelo" className="hover:text-cream/70 transition-colors">
             Mi Pelo
@@ -35,42 +35,42 @@ export function ToolHeader({
         </nav>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 pb-12 pt-4">
+      <div className="max-w-3xl mx-auto px-6 pb-16 pt-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Badge */}
-          <span className="inline-block text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-5 border border-gold/30 bg-gold/10 text-gold">
-            HERRAMIENTA PROFESIONAL · {badge}
+          <span className="inline-block text-[10px] font-bold uppercase tracking-[0.25em] px-3.5 py-1.5 rounded-full mb-6 border border-gold/20 bg-gold/5 text-gold">
+            {badge}
           </span>
 
-          {/* Title */}
-          <h1 className="font-display text-4xl md:text-5xl font-bold italic text-cream mb-4 leading-tight">
+          {/* Title — larger, more presence */}
+          <h1 className="font-display text-[2.5rem] md:text-6xl font-bold italic text-cream mb-5 leading-[1.1] tracking-tight">
             {title}
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-cream/70 text-base max-w-2xl leading-relaxed mb-3">
+          {/* Subtitle — more breathing room */}
+          <p className="text-cream/60 text-lg md:text-xl max-w-xl leading-relaxed mb-4">
             {subtitle}
           </p>
 
           {/* Micro-trust */}
-          <p className="text-cream/40 text-sm mb-8">{microTrust}</p>
+          <p className="text-cream/30 text-sm mb-10">{microTrust}</p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-3">
+          {/* CTAs — larger, more prominent */}
+          <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={onStart}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gold text-espresso font-semibold text-lg hover:bg-gold-light transition-colors"
+              className="w-full sm:w-auto px-10 py-4.5 rounded-2xl bg-gold text-espresso font-bold text-lg hover:bg-gold-light transition-all duration-300 hover:shadow-[0_8px_30px_-8px_rgba(196,169,125,0.4)]"
             >
               {startLabel}
             </button>
             {secondaryAction && (
               <button
                 onClick={secondaryAction.onClick}
-                className="w-full sm:w-auto px-8 py-4 rounded-xl border border-gold/40 text-cream/70 font-medium hover:text-cream hover:border-gold/70 transition-colors"
+                className="w-full sm:w-auto px-10 py-4.5 rounded-2xl border border-gold/30 text-cream/60 font-medium hover:text-cream hover:border-gold/60 transition-all duration-300"
               >
                 {secondaryAction.label}
               </button>
