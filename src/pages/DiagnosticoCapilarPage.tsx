@@ -22,6 +22,73 @@ import { WizardShell } from "@/components/mi-pelo/shared/WizardShell";
 import { NavigationBar } from "@/components/mi-pelo/shared/NavigationBar";
 import { CizuraCTA } from "@/components/mi-pelo/shared/CizuraCTA";
 
+/* ── Image map per question ─────────────────────── */
+const QUESTION_IMAGES: Record<string, Record<string, string>> = {
+  q1_1: { // Test del Tacto
+    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
+    B: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=75",
+    C: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
+    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  },
+  q1_2: { // Brillo Visual
+    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
+    B: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=75",
+    C: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
+    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  },
+  q2_1: { // Test de Flotación
+    A: "https://images.unsplash.com/photo-1594125674956-61a9b49c8ecc?auto=format&fit=crop&w=400&q=75",
+    B: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=75",
+    C: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=75",
+    D: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=75",
+  },
+  q2_2: { // Velocidad Absorción
+    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
+    B: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?auto=format&fit=crop&w=400&q=75",
+    C: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
+    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  },
+  // q2_3 — Historial Oxidativo (5 options, text-based — no images, use accent stripe)
+  q3_1: { // Elasticidad
+    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
+    B: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
+    C: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=75",
+    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  },
+  q3_2: { // Herramientas Térmicas
+    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
+    B: "https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=400&q=75",
+    C: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?auto=format&fit=crop&w=400&q=75",
+    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  },
+  q3_3: { // Rotura Mecánica
+    A: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=75",
+    B: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=75",
+    C: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=75",
+    D: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?auto=format&fit=crop&w=400&q=75",
+  },
+  q4_1: { // Sebo
+    A: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?auto=format&fit=crop&w=400&q=75",
+    B: "https://images.unsplash.com/photo-1512690459411-b9245aed614b?auto=format&fit=crop&w=400&q=75",
+    C: "https://images.unsplash.com/photo-1512690459411-b9245aed614b?auto=format&fit=crop&w=400&q=75",
+    D: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=400&q=75",
+  },
+  q4_2: { // Barrera cuero cabelludo
+    A: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=400&q=75",
+    B: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=75",
+    C: "https://images.unsplash.com/photo-1594125674956-61a9b49c8ecc?auto=format&fit=crop&w=400&q=75",
+    D: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=400&q=75",
+  },
+  // q4_3 — Productos pH (3 text-based options — no images)
+  // q4_4 — Frecuencia lavado (4 text-based options — no images)
+};
+
+const STEP_LABELS = [
+  "Test del tacto", "Brillo visual", "Test de flotación", "Absorción",
+  "Historial químico", "Elasticidad", "Calor", "Rotura mecánica",
+  "Sebo", "Barrera", "Productos", "Frecuencia lavado",
+];
+
 function getSessionId(): string {
   const key = "diag_session_id";
   let id = localStorage.getItem(key);
@@ -65,6 +132,7 @@ export default function DiagnosticoCapilarPage() {
   const hasAnswer = selectedValue !== undefined;
   const isLastQ = currentQ === QUESTIONS.length - 1;
   const moduleOfQ = q?.module as 1 | 2 | 3 | 4 | undefined;
+  const images = q ? QUESTION_IMAGES[q.id] : undefined;
 
   const localizedQ = q ? {
     ...q,
@@ -136,7 +204,6 @@ export default function DiagnosticoCapilarPage() {
     { labelKey: "elasticityModule", score: scores.elasticity, max: 21, icon: Activity },
     { labelKey: "scalpModule", score: scores.scalp, max: 12, icon: ScanSearch },
   ] : [];
-  const QuizIcon: LucideIcon = moduleOfQ ? MODULE_ICONS[moduleOfQ] : FlaskConical;
 
   return (
     <>
@@ -179,7 +246,13 @@ export default function DiagnosticoCapilarPage() {
 
       {/* ─── QUIZ ─── */}
       {screen === "quiz" && (
-        <WizardShell toolName="DIAGNÓSTICO CAPILAR" currentStep={currentQ} totalSteps={QUESTIONS.length} onClose={() => setScreen("intro")}>
+        <WizardShell
+          toolName="DIAGNÓSTICO CAPILAR"
+          currentStep={currentQ}
+          totalSteps={QUESTIONS.length}
+          onClose={() => setScreen("intro")}
+          stepLabel={STEP_LABELS[currentQ]}
+        >
           {currentQ === 3 && <CizuraCTA className="max-w-2xl mx-auto px-6 pt-8" />}
 
           <div className="max-w-2xl mx-auto px-6 py-10">
@@ -212,31 +285,65 @@ export default function DiagnosticoCapilarPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: direction * -40 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="grid grid-cols-2 gap-4 mb-8"
+                className={`grid gap-4 mb-8 ${images ? 'grid-cols-2' : 'grid-cols-1'}`}
               >
-                {localizedQ.options.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => handleSelect(opt.value)}
-                    className={`relative flex flex-col items-center text-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer bg-white ${
-                      selectedValue === opt.value
-                        ? 'border-accent-orange shadow-bento'
-                        : 'border-espresso/8 hover:border-accent-orange/30 hover:shadow-bento'
-                    }`}
-                  >
-                    {selectedValue === opt.value && (
-                      <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-accent-orange flex items-center justify-center">
-                        <Check className="w-3 h-3 text-white" />
-                      </span>
-                    )}
-                    <div className={`flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
-                      selectedValue === opt.value ? 'bg-accent-orange/15' : 'bg-espresso/5'
-                    }`}>
-                      <QuizIcon className={`w-7 h-7 ${selectedValue === opt.value ? 'text-accent-orange' : 'text-espresso/30'}`} />
-                    </div>
-                    <span className="text-espresso font-semibold text-sm">{opt.label}</span>
-                  </button>
-                ))}
+                {localizedQ.options.map((opt) => {
+                  const img = images?.[opt.value];
+                  const selected = selectedValue === opt.value;
+
+                  if (img) {
+                    // Image card variant
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => handleSelect(opt.value)}
+                        className={`group relative overflow-hidden rounded-xl transition-all duration-300 ${
+                          selected
+                            ? 'border-2 border-accent-orange ring-1 ring-accent-orange/30'
+                            : 'border border-espresso/10 hover:border-accent-orange/50'
+                        }`}
+                      >
+                        <div className="relative aspect-[4/3] w-full overflow-hidden bg-espresso/5">
+                          <img
+                            src={img}
+                            alt={opt.label}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                          {selected && (
+                            <div className="absolute top-3 right-3 bg-accent-orange text-white p-1.5 rounded-full z-10">
+                              <Check className="w-3 h-3" />
+                            </div>
+                          )}
+                          <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+                            <p className="text-white font-bold text-sm leading-tight">{opt.label}</p>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  }
+
+                  // Text card variant (no image)
+                  return (
+                    <button
+                      key={opt.value}
+                      onClick={() => handleSelect(opt.value)}
+                      className={`relative flex items-center text-left gap-4 p-5 rounded-2xl border transition-all duration-300 bg-white ${
+                        selected
+                          ? 'border-accent-orange border-2 shadow-bento ring-4 ring-accent-orange/20'
+                          : 'border-espresso/8 hover:border-accent-orange/30 hover:shadow-bento'
+                      }`}
+                    >
+                      {selected && (
+                        <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-accent-orange flex items-center justify-center">
+                          <Check className="w-3 h-3 text-white" />
+                        </span>
+                      )}
+                      <span className="text-espresso text-sm leading-relaxed">{opt.label}</span>
+                    </button>
+                  );
+                })}
               </motion.div>
             </AnimatePresence>
 

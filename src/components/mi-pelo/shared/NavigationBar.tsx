@@ -18,7 +18,7 @@ export function NavigationBar({
   loading = false,
 }: NavigationBarProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-espresso/5 px-6 py-4">
+    <div className="sticky bottom-0 z-40 w-full bg-white/95 backdrop-blur-md border-t border-espresso/5 px-6 py-4">
       <div className="max-w-2xl mx-auto flex items-center justify-between gap-4">
         {/* Back — ghost */}
         {onPrev ? (
