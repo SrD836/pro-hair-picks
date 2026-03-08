@@ -22,8 +22,8 @@ export function WizardShell({ toolName, currentStep, totalSteps, children, onClo
   };
 
   return (
-    <div className="min-h-screen bg-background-light pb-28">
-      {/* Sticky progress header — light background */}
+    <div className="min-h-screen bg-background-light flex flex-col">
+      {/* Sticky progress header */}
       <div className="sticky top-0 z-30 bg-white border-b border-espresso/10">
         <div className="max-w-2xl mx-auto px-4 py-3">
           {/* Top row: tool name + close */}
@@ -63,7 +63,10 @@ export function WizardShell({ toolName, currentStep, totalSteps, children, onClo
         </div>
       </div>
 
-      {children}
+      {/* Scrollable content — flex-1 centers content when short, scrolls when long */}
+      <main className="flex-1 flex flex-col justify-center w-full">
+        {children}
+      </main>
     </div>
   );
 }
