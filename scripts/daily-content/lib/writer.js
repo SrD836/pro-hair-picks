@@ -126,6 +126,9 @@ ESCRIBE EL ARTÍCULO COMPLETO en HTML semántico. REGLAS:
 - NUNCA empezar con "En este artículo...", "Hoy te traemos..."
 - Keyword principal en el primer párrafo y en 2+ H2/H3
 - Los H2 deben contener la keyword principal o variantes semánticas LSI (sinónimos, términos relacionados), NUNCA títulos genéricos como "Introducción" o "Conclusión"
+- LÍMITE DE ENCABEZADOS (ESTRICTO): máximo 6 H2 en todo el artículo · máximo 3 H3 en todo el artículo (reservados para FAQ y Bibliografía) · NUNCA usar H4, H5, H6
+- Los bloques de contenido (Bloque 1–4) usan SOLO <p>, <ul>, <li>, <table>: PROHIBIDO añadir <h3> dentro del cuerpo de cada bloque
+- Cada H2 y H3 debe ser único: sin texto idéntico ni casi idéntico entre encabezados del mismo artículo
 - Densidad keyword: 1-1.5% (no más)
 - E-E-A-T OBLIGATORIO: mencionar al menos 3 marcas reales del sector (Wahl, BaByliss Pro, Andis, Dyson, L'Oréal Professionnel, Schwarzkopf, Revlon Professional), al menos 1 institución o estudio real (CNAE, Cosmoprof, Intercoiffure, BOE), e incluir al menos 1 precio orientativo en euros
 
@@ -231,6 +234,9 @@ WRITE THE COMPLETE ARTICLE in semantic HTML. RULES:
 - NEVER start with "In this article...", "Today we bring you..."
 - Primary keyword in first paragraph and in 2+ H2/H3
 - H2 headings must contain the primary keyword or LSI semantic variants (synonyms, related terms), NEVER generic titles like "Introduction" or "Conclusion"
+- HEADING LIMIT (STRICT): maximum 6 H2 in the entire article · maximum 3 H3 in the entire article (reserved for FAQ and Bibliography only) · NEVER use H4, H5, H6
+- Content blocks (Block 1–4) use ONLY <p>, <ul>, <li>, <table>: adding <h3> inside content block bodies is FORBIDDEN
+- Every H2 and H3 must be unique: no identical or near-identical text between headings in the same article
 - Keyword density: 1-1.5% (no more)
 - E-E-A-T MANDATORY: mention at least 3 real industry brands (Andis, Wahl Professional, Oster, StyleCraft, BaByliss Pro, Dyson, L'Oréal Professionnel), at least 1 real institution or study (Bureau of Labor Statistics, NAHA, CosmoProf, American Board of Certified Haircolorists), and include at least 1 price in USD
 
@@ -348,6 +354,34 @@ function deduplicateContent(html) {
   return deduped.replace(/\n{3,}/g, '\n\n').trim();
 }
 
+/**
+ * Valida la densidad de encabezados del HTML generado.
+ * Emite warnings si se supera el umbral de 15 H2+H3 en total o si hay duplicados.
+ * No bloquea el pipeline — solo informa para revisión manual.
+ *
+ * @param {string} html  - HTML del artículo
+ * @param {string} label - Identificador para el log (slug o topic)
+ */
+function validateHeadings(html, label) {
+  if (!html) return;
+
+  const h2count = (html.match(/<h2[^>]*>/gi) || []).length;
+  const h3count = (html.match(/<h3[^>]*>/gi) || []).length;
+  const total   = h2count + h3count;
+
+  if (total > 15) {
+    console.warn('     ⚠️  [' + label + '] Encabezados excesivos: ' + h2count + ' H2 + ' + h3count + ' H3 = ' + total + ' (límite recomendado: 15)');
+  }
+
+  // Detectar encabezados duplicados (texto normalizado)
+  const matches   = [...html.matchAll(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/gi)];
+  const texts     = matches.map(m => m[1].replace(/<[^>]+>/g, '').trim().toLowerCase());
+  const duplicates = [...new Set(texts.filter((t, i) => texts.indexOf(t) !== i))];
+  if (duplicates.length > 0) {
+    console.warn('     ⚠️  [' + label + '] Encabezados duplicados: ' + duplicates.map(d => '"' + d + '"').join(', '));
+  }
+}
+
 function callClaudeWithRetry(prompt, options = {}, maxRetries = 2) {
   let lastErr;
   for (let i = 0; i <= maxRetries; i++) {
@@ -408,6 +442,9 @@ Genera SOLO este JSON (sin texto adicional):
     { timeout: isUS ? 420_000 : 300_000 }, // 7 min para US (era 5 min), 5 min para ES
     isUS ? 3 : 2                            // 3 reintentos para US (era 2)
   );
+
+  // Validar proporción de encabezados antes de procesar
+  validateHeadings(mainContent, post.slug || post.topic.slice(0, 40));
 
   // 3. Para posts ES: traducir al inglés. Para posts US: ya está en inglés.
   let contentES, contentEN;
