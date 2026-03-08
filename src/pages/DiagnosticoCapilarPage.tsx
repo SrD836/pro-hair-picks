@@ -428,18 +428,6 @@ export default function DiagnosticoCapilarPage() {
               </div>
             </div>
 
-            <div className="bg-accent-orange/10 border border-accent-orange/30 rounded-xl p-6">
-              <div className="flex items-start gap-4">
-                <div className="p-2 rounded-lg bg-accent-orange/20 text-accent-orange shrink-0"><FlaskConical className="w-5 h-5" /></div>
-                <div>
-                  <p className="text-cream font-semibold text-sm mb-1">Guarda este informe en tu Pasaporte Capilar</p>
-                  <p className="text-cream/60 text-xs leading-relaxed mb-3">Cizura registra automáticamente el historial de cada cliente.</p>
-                  <a href="https://cizura.com" target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-accent-orange text-white font-semibold text-sm hover:bg-accent-orange-hover transition-colors">
-                    Conectar con mi salón →
-                  </a>
-                </div>
-              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
