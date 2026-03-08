@@ -944,22 +944,24 @@ function DiagnosticReport({
         >
           Nuevo diagnóstico
         </button>
-        <button
-          onClick={() => generateCaniciePDF({
-            canicieType: report.canicie_type,
-            onsetClassification: report.onset_classification,
-            geneticWeight: report.genetic_weight,
-            environmentalWeight: report.environmental_weight,
-            modifiableFactors: report.modifiable_factors,
-            nonModifiableFactors: report.non_modifiable_factors,
-            structuralCareNeeded: report.structural_care_needed,
-            recommendations: report.recommendations,
-            realisticExpectations: report.realistic_expectations,
-          })}
-          className="flex-1 py-3 bg-[#C4A97D] text-[#2D2218] font-bold uppercase tracking-widest rounded-xl hover:bg-[#b89868] transition-colors text-sm"
-        >
-          Descargar PDF
-        </button>
+        {!hideDownload && (
+          <button
+            onClick={() => generateCaniciePDF({
+              canicieType: report.canicie_type,
+              onsetClassification: report.onset_classification,
+              geneticWeight: report.genetic_weight,
+              environmentalWeight: report.environmental_weight,
+              modifiableFactors: report.modifiable_factors,
+              nonModifiableFactors: report.non_modifiable_factors,
+              structuralCareNeeded: report.structural_care_needed,
+              recommendations: report.recommendations,
+              realisticExpectations: report.realistic_expectations,
+            })}
+            className="flex-1 py-3 bg-[#C4A97D] text-[#2D2218] font-bold uppercase tracking-widest rounded-xl hover:bg-[#b89868] transition-colors text-sm"
+          >
+            Descargar PDF
+          </button>
+        )}
       </div>
     </motion.div>
   );
