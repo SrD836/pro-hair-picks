@@ -313,7 +313,7 @@ export default function DiagnosticoCapilarPage() {
             scoreColor={healthPct >= 70 ? 'text-damage-low' : healthPct >= 40 ? 'text-damage-med' : 'text-damage-high'}
           />
 
-          <div className="max-w-4xl mx-auto px-4 py-10 space-y-8">
+          <div className="max-w-3xl mx-auto px-6 py-14 space-y-10">
             {/* Dimension cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {modules.map((m) => (
