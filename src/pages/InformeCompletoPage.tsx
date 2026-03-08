@@ -1,5 +1,5 @@
-import { useMemo, useRef } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { motion } from 'framer-motion';
 import { Download, RotateCcw, ArrowLeft } from 'lucide-react';
