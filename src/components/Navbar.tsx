@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Search, Menu, X, Scissors } from "lucide-react";
 import { menGroups, womenGroups, mixedCategories, type CategoryGroup, type CategoryItem } from "@/data/categories";
@@ -12,16 +12,17 @@ import LanguageSelector from "@/components/LanguageSelector";
 // shadow: 0 4px 20px -2px rgba(45,34,24,0.12)
 
 /* ── Desktop: Grouped dropdown (Hombre / Mujer) ─────────────────────────── */
-function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
+function GroupedDropdown({ label, groups, isOpen, onToggle, onClose, onEnter }: {
   label: string;
   groups: CategoryGroup[];
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
+  onEnter: () => void;
 }) {
   const { t } = useLanguage();
   return (
-    <div className="relative" onMouseLeave={onClose}>
+    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
       <button
         onMouseEnter={() => !isOpen && onToggle()}
         onClick={onToggle}
@@ -76,16 +77,17 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
 }
 
 /* ── Desktop: Flat dropdown (Mixto) ─────────────────────────────────────── */
-function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
+function FlatDropdown({ label, items, isOpen, onToggle, onClose, onEnter }: {
   label: string;
   items: CategoryItem[];
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
+  onEnter: () => void;
 }) {
   const { t } = useLanguage();
   return (
-    <div className="relative" onMouseLeave={onClose}>
+    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
       <button
         onMouseEnter={() => !isOpen && onToggle()}
         onClick={onToggle}
@@ -131,10 +133,11 @@ function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
 }
 
 /* ── Desktop: Hair Tools dropdown ────────────────────────────────────────── */
-function HairToolsDropdown({ isOpen, onToggle, onClose }: {
+function HairToolsDropdown({ isOpen, onToggle, onClose, onEnter }: {
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
+  onEnter: () => void;
 }) {
   const { t, lang } = useLanguage();
 
@@ -151,7 +154,7 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
   ];
 
   return (
-    <div className="relative" onMouseLeave={onClose}>
+    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
       <button
         onMouseEnter={() => !isOpen && onToggle()}
         onClick={onToggle}
@@ -295,6 +298,20 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { t, lang } = useLanguage();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const scheduleClose = useCallback(() => {
+    closeTimer.current = setTimeout(() => setOpenDropdown(null), 150);
+  }, []);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
+
+  useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -330,22 +347,25 @@ const Navbar = () => {
               label={t("nav.men")}
               groups={menGroups}
               isOpen={openDropdown === "hombre"}
-              onToggle={() => setOpenDropdown(openDropdown === "hombre" ? null : "hombre")}
-              onClose={() => setOpenDropdown(null)}
+              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "hombre" ? null : "hombre"); }}
+              onClose={scheduleClose}
+              onEnter={() => { cancelClose(); setOpenDropdown("hombre"); }}
             />
             <GroupedDropdown
               label={t("nav.women")}
               groups={womenGroups}
               isOpen={openDropdown === "mujer"}
-              onToggle={() => setOpenDropdown(openDropdown === "mujer" ? null : "mujer")}
-              onClose={() => setOpenDropdown(null)}
+              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "mujer" ? null : "mujer"); }}
+              onClose={scheduleClose}
+              onEnter={() => { cancelClose(); setOpenDropdown("mujer"); }}
             />
             <FlatDropdown
               label={t("nav.mixed")}
               items={mixedCategories}
               isOpen={openDropdown === "mixto"}
-              onToggle={() => setOpenDropdown(openDropdown === "mixto" ? null : "mixto")}
-              onClose={() => setOpenDropdown(null)}
+              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "mixto" ? null : "mixto"); }}
+              onClose={scheduleClose}
+              onEnter={() => { cancelClose(); setOpenDropdown("mixto"); }}
             />
             <Link
               to="/blog"
@@ -355,8 +375,9 @@ const Navbar = () => {
             </Link>
             <HairToolsDropdown
               isOpen={openDropdown === "tools"}
-              onToggle={() => setOpenDropdown(openDropdown === "tools" ? null : "tools")}
-              onClose={() => setOpenDropdown(null)}
+              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "tools" ? null : "tools"); }}
+              onClose={scheduleClose}
+              onEnter={() => { cancelClose(); setOpenDropdown("tools"); }}
             />
             <Link
               to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"}
