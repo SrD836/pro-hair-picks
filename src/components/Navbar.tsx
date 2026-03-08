@@ -34,7 +34,7 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full left-0 pt-2 w-72 z-50"
+            className="absolute top-full left-0 pt-2 w-72 z-[70]"
           >
             <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
               <div className="p-3 space-y-3">
@@ -95,7 +95,7 @@ function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full left-0 pt-2 w-64 z-50"
+            className="absolute top-full left-0 pt-2 w-64 z-[70]"
           >
             <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
               <div className="p-3 grid grid-cols-2 gap-1">
@@ -158,7 +158,7 @@ function HairToolsDropdown({ isOpen, onToggle, onClose }: {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full left-0 pt-2 w-56 z-50"
+            className="absolute top-full left-0 pt-2 w-56 z-[70]"
           >
             <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
               <div className="p-2">
@@ -317,7 +317,7 @@ const Navbar = () => {
   return (
     <nav
       ref={navRef}
-      className={`sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border transition-all duration-300 ${
+      className={`sticky top-0 z-[60] bg-background/95 backdrop-blur-md border-b border-border transition-all duration-300 ${
         scrolled ? "shadow-[0_2px_20px_rgba(0,0,0,0.3)]" : ""
       }`}
     >
