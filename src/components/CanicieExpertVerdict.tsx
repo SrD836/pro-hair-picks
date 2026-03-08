@@ -137,87 +137,68 @@ export default function CanicieExpertVerdict() {
           </h3>
         </div>
 
-        {/* Body paragraphs */}
-        <div className="space-y-5 text-[#F5F0E8]/75 text-sm md:text-base leading-relaxed max-w-3xl">
-          <p>
-            La canicie es, en su mayor parte, una consecuencia irreversible del
-            agotamiento progresivo de las células madre melanocíticas (McSCs) del
-            folículo piloso. Cuando estas células madre se agotan —ya sea por
-            senescencia genéticamente programada, por la acumulación de H₂O₂
-            intracelular asociada al déficit de catalasa, o por la liberación de
-            norepinefrina derivada del estrés crónico que las expulsa prematuramente
-            de su nicho— el folículo pierde permanentemente su capacidad de
-            pigmentar el nuevo tallo capilar. Este mecanismo no es cosmético: es
-            celular e irreversible salvo en los escasos casos donde la causa es
-            puramente nutricional (déficit de B12 o de cobre, cuya corrección puede
-            restaurar la melanogénesis si el pool de McSCs aún está presente). La
-            industria cosmética comercializa activos «anti-canicie» aprovechando
-            esta ventana de incertidumbre, pero ninguno de ellos ha demostrado en
-            ensayos clínicos controlados la capacidad de repigmentar folículos
-            despigmentados con etiología genética. Las moléculas de interés real
-            —inhibidores de Wnt, análogos de SCF, moduladores de BCL2— están en
-            fases experimentales, sin aplicación clínica disponible en 2025.
-          </p>
+        {/* Body — collapsible */}
+        <details className="group/body" open={false}>
+          <summary className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-[#F5F0E8]/60 hover:text-[#F5F0E8]/90 transition-colors list-none [&::-webkit-details-marker]:hidden rounded-lg border border-[#C4A97D]/15 px-4 py-3 hover:border-[#C4A97D]/30">
+            <Microscope className="w-4 h-4 text-[#C4A97D]/60" />
+            Leer análisis científico completo
+            <ChevronDown className="w-4 h-4 ml-auto text-[#C4A97D]/40 transition-transform duration-300 group-open/body:rotate-180" />
+          </summary>
+          <div className="mt-6 space-y-5 text-[#F5F0E8]/75 text-sm md:text-base leading-relaxed max-w-3xl animate-fade-in">
+            <p>
+              La canicie es, en su mayor parte, una consecuencia irreversible del
+              agotamiento progresivo de las células madre melanocíticas (McSCs) del
+              folículo piloso. Cuando estas células madre se agotan —ya sea por
+              senescencia genéticamente programada, por la acumulación de H₂O₂
+              intracelular asociada al déficit de catalasa, o por la liberación de
+              norepinefrina derivada del estrés crónico que las expulsa prematuramente
+              de su nicho— el folículo pierde permanentemente su capacidad de
+              pigmentar el nuevo tallo capilar. Este mecanismo no es cosmético: es
+              celular e irreversible salvo en los escasos casos donde la causa es
+              puramente nutricional (déficit de B12 o de cobre, cuya corrección puede
+              restaurar la melanogénesis si el pool de McSCs aún está presente).
+            </p>
 
-          <p>
-            El estrés crónico merece una mención específica, porque es el factor
-            modificable más infradiagnosticado y a la vez el mejor estudiado
-            mecanisticamente. Zhang et al. (2020) demostraron en modelo murino que
-            la hiperactivación del sistema nervioso simpático bajo estrés libera
-            norepinefrina que activa receptores adrenérgicos en las McSCs,
-            provocando su proliferación no controlada y su diferenciación prematura
-            fuera del nicho: se «gastan» antes de tiempo. El resultado es un
-            agotamiento del reservorio de células madre melanocíticas que se
-            comporta biológicamente como un envejecimiento acelerado del folículo.
-            Este mecanismo explica la observación clínica de brotes de canicie
-            acelerada en periodos de estrés agudo intenso —un fenómeno que la
-            medicina popular atribuía erróneamente a un «blanqueamiento del pelo ya
-            formado», que es físicamente imposible en el tallo queratinizado. Las
-            técnicas de manejo del estrés (ejercicio aeróbico, técnicas
-            cognitivo-conductuales, calidad del sueño) tienen una base mecanística
-            sólida para preservar el pool de McSCs residual, aunque no
-            recuperarán el color de los cabellos ya despigmentados.
-          </p>
+            <p>
+              El estrés crónico merece una mención específica, porque es el factor
+              modificable más infradiagnosticado y a la vez el mejor estudiado
+              mecanisticamente. Zhang et al. (2020) demostraron en modelo murino que
+              la hiperactivación del sistema nervioso simpático bajo estrés libera
+              norepinefrina que activa receptores adrenérgicos en las McSCs,
+              provocando su proliferación no controlada y su diferenciación prematura
+              fuera del nicho: se «gastan» antes de tiempo.
+            </p>
 
-          <p>
-            El pelo canoso, en ausencia de melanina, presenta una estructura
-            distinta al pelo pigmentado: carece de la protección fotooxidativa que
-            la eumelanina ejerce sobre la corteza, y sus lípidos de superficie
-            —incluyendo el ácido 18-MEA (18-metileicosanoico), responsable de la
-            hidrofobicidad natural y el tacto liso del pelo sano— se oxidan con
-            mayor facilidad ante la radiación UV sin el paraguas que la melanina
-            proporcionaría. Esto no es un argumento de venta cosmética: es la razón
-            objetiva por la que el pelo canoso requiere protección UV activa y
-            reposición lipídica regular, mientras que el pelo pigmentado puede
-            prescindir de ellas durante más tiempo. Un diagnóstico honesto de la
-            canicie distingue entre lo que es modificable (nutrición, estrés,
-            tabaquismo), lo que es inevitable (agotamiento genético de McSCs), y lo
-            que puede mejorar la calidad del pelo ya existente (cuidado estructural)
-            —sin confundir ninguna de estas tres categorías con «tratamiento» de
-            la canicie establecida.
-          </p>
-        </div>
+            <p>
+              El pelo canoso, en ausencia de melanina, presenta una estructura
+              distinta al pelo pigmentado: carece de la protección fotooxidativa que
+              la eumelanina ejerce sobre la corteza. Esto es la razón
+              objetiva por la que el pelo canoso requiere protección UV activa y
+              reposición lipídica regular. Un diagnóstico honesto de la
+              canicie distingue entre lo que es modificable (nutrición, estrés,
+              tabaquismo), lo que es inevitable (agotamiento genético de McSCs), y lo
+              que puede mejorar la calidad del pelo ya existente (cuidado estructural).
+            </p>
+          </div>
 
-        {/* Cizura CTA box */}
-        <div className="mt-10 rounded-xl border border-[#C4A97D]/20 bg-[rgba(196,169,125,0.05)] p-6">
-          <p className="text-sm text-[#F5F0E8]/70 leading-relaxed">
-            Conocer el perfil de canicie de un cliente —su historial de estrés,
-            los tratamientos químicos recibidos, sus déficits nutricionales
-            conocidos— es tan clínico como saber el grado de daño de su fibra.{" "}
-            <a
-              href="https://cizura.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#C4A97D] font-semibold hover:underline inline-flex items-center gap-1"
-            >
-              Cizura <ExternalLink className="w-3 h-3" />
-            </a>{" "}
-            permite registrar y consultar este historial en cada visita, para que
-            tus recomendaciones de color, cuidado y suplementación estén respaldadas
-            por datos longitudinales del cliente, no por suposiciones de la primera
-            consulta.
-          </p>
-        </div>
+          {/* Cizura CTA box */}
+          <div className="mt-10 rounded-xl border border-[#C4A97D]/20 bg-[rgba(196,169,125,0.05)] p-6 animate-fade-in">
+            <p className="text-sm text-[#F5F0E8]/70 leading-relaxed">
+              Conocer el perfil de canicie de un cliente —su historial de estrés,
+              los tratamientos químicos recibidos, sus déficits nutricionales
+              conocidos— es tan clínico como saber el grado de daño de su fibra.{" "}
+              <a
+                href="https://cizura.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#C4A97D] font-semibold hover:underline inline-flex items-center gap-1"
+              >
+                Cizura <ExternalLink className="w-3 h-3" />
+              </a>{" "}
+              permite registrar y consultar este historial en cada visita.
+            </p>
+          </div>
+        </details>
 
         {/* Bibliography — collapsible */}
         <details className="mt-10 pt-8 border-t border-[#C4A97D]/15 group">
