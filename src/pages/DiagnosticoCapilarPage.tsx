@@ -183,24 +183,27 @@ export default function DiagnosticoCapilarPage() {
             startLabel={`${t("diagnostico.startBtn")} →`}
           />
 
-          {/* Module preview */}
-          <div className="max-w-4xl mx-auto px-4 py-12">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold mb-6">
-              4 módulos de análisis
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-              {([1, 2, 3, 4] as const).map((mod) => {
+          {/* Module preview — big visual cards */}
+          <div className="max-w-3xl mx-auto px-6 py-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
+              {([1, 2, 3, 4] as const).map((mod, i) => {
                 const Icon = MODULE_ICONS[mod];
                 return (
-                  <div key={mod} className="flex items-center gap-4 p-5 rounded-xl border border-gold/20 bg-espresso/50">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 text-gold shrink-0">
-                      <Icon className="w-5 h-5" />
+                  <motion.div
+                    key={mod}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.08 }}
+                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300"
+                  >
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10">
+                      <Icon className="w-7 h-7 text-gold" />
                     </div>
                     <div>
-                      <p className="font-semibold text-cream text-sm">{t(`diagnostico.${MODULE_LABELS[mod]}`)}</p>
-                      <p className="text-cream/50 text-xs mt-0.5">{t(`diagnostico.${MODULE_LABELS[mod]}Sub`)}</p>
+                      <p className="font-semibold text-cream text-base mb-1">{t(`diagnostico.${MODULE_LABELS[mod]}`)}</p>
+                      <p className="text-cream/40 text-sm">{t(`diagnostico.${MODULE_LABELS[mod]}Sub`)}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
