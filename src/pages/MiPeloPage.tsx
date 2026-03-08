@@ -30,6 +30,20 @@ export default function MiPeloPage() {
   const { data: diagnostics } = useUserDiagnostics(user?.id);
   const recent = diagnostics?.slice(0, 5) ?? [];
 
+  const { data: recentPosts } = useQuery({
+    queryKey: ['mi-pelo-recent-posts'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('blog_posts')
+        .select('id, title, slug, excerpt, cover_image_url, published_at, read_time_minutes, category')
+        .eq('is_published', true)
+        .eq('lang', 'es')
+        .order('published_at', { ascending: false })
+        .limit(4);
+      return data ?? [];
+    },
+  });
+
   return (
     <>
       <SEOHead
