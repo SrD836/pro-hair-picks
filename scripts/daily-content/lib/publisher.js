@@ -7,6 +7,45 @@ const fs = require('fs');
 const path = require('path');
 
 /**
+ * Obtiene hasta 3 posts relacionados por solapamiento de keywords.
+ * Usa el REST API público (anon key) para no necesitar el Management API.
+ *
+ * @param {object} post        — post actual con .keywords, .lang, .slug
+ * @param {string} supabaseUrl
+ * @param {string} anonKey
+ * @returns {Promise<Array<{slug, title, overlap}>>}
+ */
+async function getRelatedPostLinks(post, supabaseUrl, anonKey) {
+  if (!supabaseUrl || !anonKey) return [];
+  try {
+    const postKeywords = (post.keywords || []).slice(0, 3).map(k => k.toLowerCase());
+    if (postKeywords.length === 0) return [];
+
+    const lang = post.lang || 'es';
+    const url  = `${supabaseUrl}/rest/v1/blog_posts?select=slug,title,keywords&is_published=eq.true&lang=eq.${encodeURIComponent(lang)}&limit=20`;
+    const res  = await fetch(url, {
+      headers: { apikey: anonKey, Authorization: `Bearer ${anonKey}` },
+    });
+    if (!res.ok) return [];
+
+    const rows = await res.json();
+    return rows
+      .filter(r => r.slug !== post.slug)
+      .map(r => {
+        const rowKws = (r.keywords || []).map(k => k.toLowerCase());
+        const overlap = postKeywords.filter(k => rowKws.includes(k)).length;
+        return { slug: r.slug, title: r.title, overlap };
+      })
+      .filter(r => r.overlap > 0)
+      .sort((a, b) => b.overlap - a.overlap)
+      .slice(0, 3);
+  } catch (err) {
+    console.warn(`  ⚠️  getRelatedPostLinks falló: ${err.message}`);
+    return [];
+  }
+}
+
+/**
  * Ejecuta SQL en Supabase via Management API (bypassa RLS)
  */
 function supabaseQuery(sql, projectId, accessToken) {
@@ -83,7 +122,8 @@ INSERT INTO blog_posts (
   has_expert_verdict, has_data_viz,
   bridge_trend_topic, meta_description,
   internal_links, external_links,
-  schema_markup, market, lang
+  schema_markup, market, lang,
+  hreflang, canonical
 ) VALUES (
   ${sqlEscape(post.slug)},
   ${sqlEscape(post.title)},
@@ -110,7 +150,9 @@ INSERT INTO blog_posts (
   ${sqlArray(post.external_links)},
   ${sqlJsonb(post.schema_markup)},
   ${sqlEscape(post.market || 'es')},
-  ${sqlEscape(post.lang || 'es')}
+  ${sqlEscape(post.lang || 'es')},
+  ${sqlEscape(post.hreflang || (post.market === 'us' ? 'en-us' : 'es'))},
+  ${sqlEscape(post.canonical || `https://guiadelsalon.com/blog/${post.slug}`)}
 )
 RETURNING id, slug`;
 
@@ -147,8 +189,9 @@ function updateSitemap(posts, date) {
     const priority = priorities[post.type] || '0.8';
     const hreflang = isUS
       ? `\n    <xhtml:link rel="alternate" hreflang="en-us" href="${url}"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://guiadelsalon.com/blog"/>`
-      : '';
+    <xhtml:link rel="alternate" hreflang="x-default" href="${url}"/>`
+      : `\n    <xhtml:link rel="alternate" hreflang="es" href="${url}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${url}"/>`;
     const newEntry = `
   <url>
     <loc>${url}</loc>
@@ -242,4 +285,4 @@ async function publishAll(dailyPlan, config) {
   return results;
 }
 
-module.exports = { publishAll };
+module.exports = { publishAll, getRelatedPostLinks };

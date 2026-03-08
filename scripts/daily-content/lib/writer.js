@@ -92,6 +92,9 @@ function generateSchema(post, date) {
       '@id': `https://guiadelsalon.com/blog/${post.slug}`,
     },
   };
+  if (post.market === 'us') {
+    article.sameAs = `https://guiadelsalon.com/blog/${post.slug}`;
+  }
   const faqSchema = extractFAQSchema(post.content || '');
   return faqSchema ? [article, faqSchema] : article;
 }
@@ -192,6 +195,9 @@ AMAZON (máximo 3, solo si aplican al tema):
 - Anchor text: "Ver precio en Amazon" (NUNCA "Comprar")
 - Formato: <a href="https://amazon.es/dp/ASIN?tag=${AMAZON_TAG}" rel="nofollow" target="_blank">Ver precio en Amazon</a>
 ${post.type === 'negocio' ? `\nCIZURA: Menciona "software de gestión como Cizura" máximo 2 veces, solo como solución a un problema concreto del artículo.` : ''}
+${post.relatedPosts && post.relatedPosts.length > 0 ? `
+ENLACES INTERNOS OBLIGATORIOS a artículos relacionados del blog (integrar naturalmente dentro del cuerpo del artículo, no solo en bibliografía):
+${post.relatedPosts.map(p => `- <a href="/blog/${p.slug}">${p.title}</a>`).join('\n')}` : ''}
 
 RESPONDE SOLO con el HTML del artículo. Sin explicaciones previas ni posteriores.`;
 }
@@ -293,6 +299,9 @@ AMAZON (max 3, only if applicable to topic):
 - Tag: ${AMAZON_TAG}
 - Anchor text: "Check price on Amazon" (NEVER "Buy")
 - Format: <a href="https://amazon.com/dp/ASIN?tag=${AMAZON_TAG}" rel="nofollow" target="_blank">Check price on Amazon</a>
+${post.relatedPosts && post.relatedPosts.length > 0 ? `
+MANDATORY INTERNAL LINKS to related blog articles (integrate naturally within the article body, not just in bibliography):
+${post.relatedPosts.map(p => `- <a href="/blog/${p.slug}">${p.title}</a>`).join('\n')}` : ''}
 
 RESPOND ONLY with the article HTML. No explanations before or after.`;
 }
@@ -402,6 +411,8 @@ ${contentES}`;
     author:           isUS ? 'GuiaDelSalon Team' : 'Equipo GuiaDelSalon',
     lang:             post.lang || (isUS ? 'en' : 'es'),
     market:           post.market || (isUS ? 'us' : 'es'),
+    hreflang:         isUS ? 'en-us' : 'es',
+    canonical:        `https://guiadelsalon.com/blog/${post.slug}`,
     schema_markup:    generateSchema({ ...post, ...titleData, excerpt, content: contentES }, date),
   };
 }

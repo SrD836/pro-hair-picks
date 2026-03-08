@@ -97,8 +97,8 @@ const { planDay }          = require('./lib/planner');
 const { researchAllPosts } = require('./lib/researcher');
 const { writeAllPosts }    = require('./lib/writer');
 const { processImages }    = require('./lib/images');
-const { publishAll }       = require('./lib/publisher');
-const { getUsedKeywords }  = require('./keyword-loader');
+const { publishAll, getRelatedPostLinks } = require('./lib/publisher');
+const { getUsedKeywords }                 = require('./keyword-loader');
 
 // ── Argumentos CLI ──────────────────────────────────────────────────────────
 const args    = process.argv.slice(2);
@@ -159,6 +159,18 @@ async function run() {
 
   // FASE 2-4 — Redacción + visualización + enlazado
   console.log('\n✍️  FASE 2-4 — Redactando posts (puede tardar 15-25 min)...');
+
+  // Obtener enlaces internos relacionados para cada post antes de escribirlo
+  if (config.SUPABASE_URL && config.SUPABASE_ANON_KEY) {
+    console.log('  Buscando posts relacionados para enlazado interno...');
+    for (const post of researchedPlan.posts) {
+      post.relatedPosts = await getRelatedPostLinks(post, config.SUPABASE_URL, config.SUPABASE_ANON_KEY);
+      if (post.relatedPosts.length > 0) {
+        console.log(`    [slot ${post.slot}] ${post.relatedPosts.length} post(s) relacionado(s) encontrado(s)`);
+      }
+    }
+  }
+
   const writtenPlan = await writeAllPosts(researchedPlan);
 
   for (const post of writtenPlan.posts) {

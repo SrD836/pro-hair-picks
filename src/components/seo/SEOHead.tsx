@@ -71,6 +71,8 @@ interface SEOHeadProps {
   description?: string;
   ogImage?: string;
   noIndex?: boolean;
+  canonical?: string;
+  hreflang?: string;
 }
 
 export const SEOHead = ({
@@ -78,11 +80,13 @@ export const SEOHead = ({
   description,
   ogImage = "https://guiadelsalon.com/og-default.jpg",
   noIndex = false,
+  canonical: canonicalProp,
+  hreflang,
 }: SEOHeadProps) => {
   const { pathname } = useLocation();
 
-  const cleanPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
-  const canonical = `https://guiadelsalon.com${cleanPath}`;
+  const cleanPath    = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
+  const canonicalUrl = canonicalProp ?? `https://guiadelsalon.com${cleanPath}`;
 
   // Priority: explicit prop → static route → snapshot (bundled, synchronous) → default
   const staticEntry   = STATIC_ROUTE_META[cleanPath];
@@ -95,13 +99,15 @@ export const SEOHead = ({
     <Helmet>
       <title>{finalTitle}</title>
       <meta name="description" content={finalDescription} />
-      <link rel="canonical" href={canonical} />
+      <link rel="canonical" href={canonicalUrl} />
       {noIndex && <meta name="robots" content="noindex, nofollow" />}
       <meta property="og:title" content={finalTitle} />
       <meta property="og:description" content={finalDescription} />
-      <meta property="og:url" content={canonical} />
+      <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:type" content="website" />
+      {hreflang && <link rel="alternate" hreflang={hreflang} href={canonicalUrl} />}
+      {hreflang && <link rel="alternate" hreflang="x-default" href={canonicalUrl} />}
     </Helmet>
   );
 };
