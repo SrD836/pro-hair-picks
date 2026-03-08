@@ -90,6 +90,7 @@ function AnimatedRoutes() {
           <Route path="/mi-pelo" element={<MiPeloPage />} />
           <Route path="/mi-pelo/diagnostico-completo" element={<DiagnosticoCompletoPage />} />
           <Route path="/mi-pelo/mis-resultados" element={<MisResultadosPage />} />
+          <Route path="/mi-pelo/informe-completo" element={<InformeCompletoPage />} />
           <Route path="/pasaporte-capilar" element={
             <Suspense fallback={<ScissorsSpinner />}>
               <PasaporteCapilarPage />
