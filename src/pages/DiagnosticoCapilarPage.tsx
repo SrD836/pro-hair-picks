@@ -318,12 +318,13 @@ export default function DiagnosticoCapilarPage() {
                             : 'border border-espresso/10 hover:border-accent-orange/50'
                         }`}
                       >
-                        <div className="relative aspect-[4/3] w-full overflow-hidden bg-espresso/5">
+                        <div className="relative aspect-[4/3] w-full overflow-hidden bg-mocha">
                           <img
                             src={img}
                             alt={opt.label}
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            loading="lazy"
+                            loading="eager"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                           {selected && (
