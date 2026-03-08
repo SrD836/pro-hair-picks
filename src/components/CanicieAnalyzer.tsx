@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { generateCaniciePDF } from "@/lib/pdfGenerators";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
