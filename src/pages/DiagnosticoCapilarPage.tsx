@@ -15,7 +15,7 @@ import {
 import { useWizardReturn } from "@/hooks/useWizardReturn";
 import { ToolHeader } from "@/components/mi-pelo/shared/ToolHeader";
 import { DimensionCard } from "@/components/mi-pelo/shared/DimensionCard";
-import { ResultsHero } from "@/components/mi-pelo/shared/ResultsHero";
+
 import { BibliographyDrawer, type BibReference } from "@/components/mi-pelo/shared/BibliographyDrawer";
 import { MiniExpertTip } from "@/components/mi-pelo/shared/MiniExpertTip";
 import { WizardShell } from "@/components/mi-pelo/shared/WizardShell";
