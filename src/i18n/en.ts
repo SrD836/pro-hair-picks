@@ -119,7 +119,7 @@ export const en = {
     title: "Solutions",
     seeMore: "See More",
     software: "Software Integration",
-    softwareDesc: "Connect your workflow with Cizura, the salon management software built for professionals.",
+    softwareDesc: "Connect your workflow with salon management software built for professionals.",
     equipment: "Professional Equipment",
     equipmentDesc: "Curated furniture and equipment verified by industry professionals.",
     inventory: "Inventory Management",
