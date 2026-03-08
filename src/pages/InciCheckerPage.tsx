@@ -1,6 +1,5 @@
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
-import { useLanguage } from "@/i18n/LanguageContext";
 import { Search, Beaker, AlertTriangle, Shield } from "lucide-react";
 import InciChecker from "@/components/InciChecker";
 import InciExpertVerdict from "@/components/InciExpertVerdict";
@@ -15,8 +14,15 @@ const REFERENCES: BibReference[] = [
   { id: 4, text: "FDA (2024). Cosmetic Ingredient Review Reports." },
 ];
 
+const MODULES = [
+  { icon: Search, title: { es: "Búsqueda individual", en: "Individual search" }, desc: { es: "Busca un ingrediente por nombre INCI", en: "Search by INCI name" } },
+  { icon: Beaker, title: { es: "Escáner de lista INCI", en: "INCI list scanner" }, desc: { es: "Pega una lista completa para analizar", en: "Paste a full list to analyze" } },
+  { icon: AlertTriangle, title: { es: "Perfiles de riesgo", en: "Risk profiles" }, desc: { es: "Embarazo, alergias, cuero sensible", en: "Pregnancy, allergies, sensitive scalp" } },
+  { icon: Shield, title: { es: "Regulación UE", en: "EU regulation" }, desc: { es: "Restricciones y concentraciones máximas", en: "Restrictions and max concentrations" } },
+];
+
 export default function InciCheckerPage() {
-  const { lang } = useLanguage();
+  const { lang } = (await import("@/i18n/LanguageContext")).useLanguage();
   const [started, setStarted] = useState(false);
   const checkerRef = useRef<HTMLDivElement>(null);
 
@@ -46,33 +52,34 @@ export default function InciCheckerPage() {
           }
           subtitle={
             lang === "es"
-              ? "Escáner de seguridad de ingredientes cosméticos con datos verificados de SCCS, CIR, ECHA y FDA (2022–2026)."
-              : "Cosmetic ingredient safety scanner with verified data from SCCS, CIR, ECHA and FDA (2022–2026)."
+              ? "Escáner de seguridad de ingredientes cosméticos con datos verificados de SCCS, CIR, ECHA y FDA."
+              : "Cosmetic ingredient safety scanner with verified data from SCCS, CIR, ECHA and FDA."
           }
-          microTrust={`~2 min · Sin registro · ${lang === "es" ? "Datos de SCCS, CIR, ECHA y FDA" : "SCCS, CIR, ECHA & FDA data"}`}
+          microTrust={`~2 min · ${lang === "es" ? "Datos de SCCS, CIR, ECHA y FDA" : "SCCS, CIR, ECHA & FDA data"}`}
           onStart={handleStart}
           startLabel={lang === "es" ? "Analizar ingredientes →" : "Analyze ingredients →"}
         />
 
-        {/* Module preview */}
+        {/* Module preview — big visual cards */}
         {!started && (
-          <div className="max-w-4xl mx-auto px-4 py-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-              {[
-                { icon: Search, title: lang === "es" ? "Búsqueda individual" : "Individual search", desc: lang === "es" ? "Busca un ingrediente por nombre INCI" : "Search by INCI name" },
-                { icon: Beaker, title: lang === "es" ? "Escáner de lista INCI" : "INCI list scanner", desc: lang === "es" ? "Pega una lista completa para analizar" : "Paste a full list to analyze" },
-                { icon: AlertTriangle, title: lang === "es" ? "Perfiles de riesgo" : "Risk profiles", desc: lang === "es" ? "Embarazo, alergias, cuero sensible" : "Pregnancy, allergies, sensitive scalp" },
-                { icon: Shield, title: lang === "es" ? "Regulación UE" : "EU regulation", desc: lang === "es" ? "Restricciones y concentraciones máximas" : "Restrictions and max concentrations" },
-              ].map((m) => (
-                <div key={m.title} className="flex items-center gap-4 p-5 rounded-xl border border-gold/20 bg-espresso/50">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 text-gold shrink-0">
-                    <m.icon className="w-5 h-5" />
+          <div className="max-w-3xl mx-auto px-6 py-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
+              {MODULES.map((m, i) => (
+                <motion.div
+                  key={m.title.es}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + i * 0.08 }}
+                  className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300"
+                >
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10">
+                    <m.icon className="w-7 h-7 text-gold" />
                   </div>
                   <div>
-                    <p className="font-semibold text-cream text-sm">{m.title}</p>
-                    <p className="text-cream/50 text-xs mt-0.5">{m.desc}</p>
+                    <p className="font-semibold text-cream text-base mb-1">{m.title[lang as 'es' | 'en'] ?? m.title.es}</p>
+                    <p className="text-cream/40 text-sm">{m.desc[lang as 'es' | 'en'] ?? m.desc.es}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
             <BibliographyDrawer references={REFERENCES} />
@@ -81,19 +88,11 @@ export default function InciCheckerPage() {
 
         {/* Checker */}
         {started && (
-          <div ref={checkerRef} className="py-10 md:py-14" style={{ background: "linear-gradient(180deg, #2D2218 0%, #F5F0E8 120px)" }}>
-            <div className="container mx-auto px-4 md:px-8 max-w-4xl space-y-10">
+          <div ref={checkerRef} className="py-12 md:py-16" style={{ background: "linear-gradient(180deg, #2D2218 0%, #F5F0E8 120px)" }}>
+            <div className="container mx-auto px-6 md:px-8 max-w-3xl space-y-12">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}>
                 <InciChecker />
               </motion.div>
-
-              {/* Risk legend */}
-              <div className="flex flex-wrap gap-4 text-xs text-espresso/65">
-                <span className="font-semibold text-espresso/40 uppercase tracking-wider text-[10px]">Leyenda:</span>
-                {[["🔴", "Evitar — riesgo documentado"], ["🟡", "Precaución — condición específica"], ["🟢", "Sin restricción especial"]].map(([emoji, label]) => (
-                  <span key={label} className="flex items-center gap-1.5"><span>{emoji}</span><span>{label}</span></span>
-                ))}
-              </div>
 
               <InciExpertVerdict />
               <BibliographyDrawer references={REFERENCES} />
