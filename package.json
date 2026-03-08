@@ -15,6 +15,7 @@
     "content": "node scripts/daily-content/index.js",
     "content:dry": "node scripts/daily-content/index.js --dry-run",
     "pinterest:auth": "node scripts/pinterest/pinterest_auth.js",
+    "pinterest:refresh": "node scripts/pinterest/refresh_token.js",
     "pinterest:publish": "node scripts/pinterest/pin_publisher.js",
     "pinterest:generate": "node scripts/pinterest/generate_pin_queue.js",
     "pinterest:auto": "node scripts/pinterest/auto_publish.js",

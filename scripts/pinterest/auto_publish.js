@@ -5,14 +5,16 @@
  * Diseñado para Windows Task Scheduler. No requiere entrada interactiva.
  *
  * Flujo:
- *   1. Valida token de acceso contra la API de Pinterest (GET /v5/user_account)
- *   2. Comprueba límite diario (pin_log.json) → si ya hay 3, termina limpiamente
- *   3. Genera la cola del día (lógica de generate_pin_queue.js)
- *   4. Publica cada pin; los errores individuales no abortan la sesión
- *   5. Escribe resumen en daily_report.txt
+ *   1. Renueva el access_token automáticamente (refresh_token.js)
+ *   2. Valida token renovado contra la API de Pinterest (GET /v5/user_account)
+ *   3. Comprueba límite diario (pin_log.json) → si ya hay 3, termina limpiamente
+ *   4. Genera la cola del día (lógica de generate_pin_queue.js)
+ *   5. Publica cada pin; los errores individuales no abortan la sesión
+ *   6. Escribe resumen en daily_report.txt
  *
  * Requiere en .env.scripts:
  *   PINTEREST_ACCESS_TOKEN
+ *   PINTEREST_CLIENT_ID, PINTEREST_CLIENT_SECRET, PINTEREST_REFRESH_TOKEN
  *   SUPABASE_URL, SUPABASE_SERVICE_KEY
  *   PINTEREST_BOARD_ES, PINTEREST_BOARD_EN
  *   ANTHROPIC_API_KEY
@@ -23,10 +25,11 @@
  */
 
 'use strict';
-const https = require('https');
-const zlib  = require('zlib');
-const fs    = require('fs');
-const path  = require('path');
+const https           = require('https');
+const zlib            = require('zlib');
+const fs              = require('fs');
+const path            = require('path');
+const { refreshToken } = require('./refresh_token');
 
 // ── Rutas ──────────────────────────────────────────────────────────────────
 const DIR         = __dirname;
@@ -50,7 +53,7 @@ function loadEnv(filePath) {
 
 const envVars = loadEnv(ENV_PATH);
 
-const ACCESS_TOKEN  = process.env.PINTEREST_ACCESS_TOKEN || envVars.PINTEREST_ACCESS_TOKEN;
+let ACCESS_TOKEN    = process.env.PINTEREST_ACCESS_TOKEN || envVars.PINTEREST_ACCESS_TOKEN;
 const SUPABASE_URL  = process.env.SUPABASE_URL            || envVars.SUPABASE_URL;
 const SERVICE_KEY   = process.env.SUPABASE_SERVICE_KEY    || envVars.SUPABASE_SERVICE_KEY;
 const BOARD_ES      = process.env.PINTEREST_BOARD_ES      || envVars.PINTEREST_BOARD_ES;
@@ -517,18 +520,40 @@ async function main() {
   const startTime = ts();
   log('=== auto_publish.js — inicio ===');
 
-  // 1. Validar token
+  // 1. Renovar access_token automáticamente
+  log('Renovando access_token...');
+  try {
+    await refreshToken();
+    // Recargar ACCESS_TOKEN del .env.scripts actualizado por refreshToken()
+    const freshEnv = loadEnv(ENV_PATH);
+    ACCESS_TOKEN = process.env.PINTEREST_ACCESS_TOKEN || freshEnv.PINTEREST_ACCESS_TOKEN;
+    log('Token renovado ✓');
+  } catch (err) {
+    // Si el refresh falla por token expirado o credenciales inválidas, abortar con instrucción clara
+    const isAuthError = /HTTP 4\d\d|expirado|inválido|CLIENT_ID|CLIENT_SECRET|REFRESH_TOKEN/i.test(err.message);
+    if (isAuthError) {
+      const msg = 'No se pudo renovar el token: ' + err.message +
+                  ' — Ejecuta: npm run pinterest:auth';
+      log('❌ ' + msg);
+      writeReport({ startTime, published: [], errors: [], skippedReason: msg });
+      process.exit(1);
+    }
+    // Error de red transitorio: continuar con el token actual
+    log('⚠️  Refresh falló por error de red, se usará el token actual: ' + err.message);
+  }
+
+  // 2. Validar token (confirma que el token renovado funciona)
   log('Validando token de Pinterest...');
   const tokenOk = await validateToken();
   if (!tokenOk) {
-    const msg = 'Token de Pinterest expirado o inválido. Ejecuta: npm run pinterest:auth';
+    const msg = 'Token de Pinterest inválido tras el refresh. Ejecuta: npm run pinterest:auth';
     log('❌ ' + msg);
     writeReport({ startTime, published: [], errors: [], skippedReason: msg });
     process.exit(1);
   }
   log('Token válido ✓');
 
-  // 2. Comprobar límite diario
+  // 3. Comprobar límite diario
   const logData    = readLog();
   const todayCount = countTodayPublished(logData);
   const DAILY_LIMIT = 3;
