@@ -77,6 +77,7 @@ export default {
         // Bento 2026 palette
         cream: "#F5F0E8",
         espresso: "#2D2218",
+        "espresso-dark": "#1a1208",
         mocha: "#3E2D1F",
         cocoa: "#4A3B2C",
         gold: "#C4A97D",

@@ -5,8 +5,10 @@ import { Link, useLocation } from "react-router-dom";
 import {
   ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw,
   FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella,
-  BookOpen, Palette, ShirtIcon, ChevronRight, ChevronLeft, Check, Lightbulb, Download
+  BookOpen, Palette, ShirtIcon, ChevronRight, ChevronLeft, Check, Lightbulb, Download,
+  Calendar, ShieldAlert, CheckCircle, XCircle, Minus
 } from "lucide-react";
+import jsPDF from "jspdf";
 import { toast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -311,69 +313,121 @@ export default function ColorMatchPage() {
         ? { es: "Cálido", en: "Warm" }
         : { es: "Neutro", en: "Neutral" };
 
+    const skinLabels: Record<SkinTone, string> = { light: "Clara", medium: "Media", tan: "Bronceada", dark: "Oscura" };
+    const veinLabels: Record<VeinColor, string> = { blue: "Azules/Moradas", green: "Verdes", mixed: "Mezcla" };
+    const jewelryLabels: Record<JewelryPref, string> = { silver: "Plata", gold: "Oro", both: "Ambos" };
+    const colorReactionLabels: Record<ColorReaction, string> = { pink: "Rosa fucsia", orange: "Naranja", both: "Ambos" };
+    const eyeLabels: Record<EyeColor, string> = { blue_gray: "Azul/Gris", green: "Verde", hazel: "Miel", brown: "Marrón", black: "Negro" };
+
+    const avoidTones = seasonStyle.avoidColors.map(c => l(c.name));
+    const techniques = [
+      { name: "Balayage / Californianas", status: "ok", note: "Muy recomendado" },
+      { name: "Baño de color", status: "ok", note: "Excelente para mantenimiento" },
+      { name: "Decoloración", status: "warn", note: "Solo con tratamiento previo" },
+      { name: "Mechas de contraste fuerte", status: "bad", note: "No favorece tu colorimetría" },
+    ];
+
+    const handleDownloadPDF = () => {
+      const doc = new jsPDF();
+      doc.setFont("helvetica");
+      // Cover
+      doc.setFontSize(24); doc.setTextColor(44, 34, 24);
+      doc.text("GuiaDelSalon.com", 105, 40, { align: "center" });
+      doc.setFontSize(18);
+      doc.text("Tu Master Color Card", 105, 60, { align: "center" });
+      doc.setFontSize(11); doc.setTextColor(100, 100, 100);
+      doc.text("Diagnóstico de Colorimetría Profesional", 105, 72, { align: "center" });
+      doc.text(`Fecha: ${new Date().toLocaleDateString("es-ES")}`, 105, 82, { align: "center" });
+      doc.setDrawColor(196, 169, 125); doc.line(20, 90, 190, 90);
+      // Result
+      doc.setFontSize(14); doc.setTextColor(44, 34, 24);
+      doc.text("TONO RECOMENDADO", 20, 105);
+      doc.setFontSize(20); doc.setTextColor(232, 93, 4);
+      doc.text(`${result.name.es} (${result.code})`, 20, 118);
+      doc.setFontSize(11); doc.setTextColor(44, 34, 24);
+      doc.text(`Estación: ${SEASON_NAMES[result.season].es}`, 20, 130);
+      doc.text(`Subtono: ${undertoneLabel.es}`, 20, 138);
+      doc.line(20, 145, 190, 145);
+      // Profile
+      doc.setFontSize(14); doc.text("TU PERFIL", 20, 158);
+      doc.setFontSize(10); doc.setTextColor(80, 80, 80);
+      const profileLines = [
+        `Tono de piel: ${skinTone ? skinLabels[skinTone] : "-"}`,
+        `Test de venas: ${veinColor ? veinLabels[veinColor] : "-"}`,
+        `Metal favorito: ${jewelryPref ? jewelryLabels[jewelryPref] : "-"}`,
+        `Color iluminación: ${colorReaction ? colorReactionLabels[colorReaction] : "-"}`,
+        `Color de ojos: ${eyeColor ? eyeLabels[eyeColor] : "-"}`,
+        `Nivel natural: ${naturalLevel ?? "-"}`,
+        `Color actual: ${currentFantasy ?? (currentLevel ? LEVEL_LABELS[currentLevel]?.es : "-")}`,
+      ];
+      profileLines.forEach((line, i) => doc.text(line, 20, 168 + i * 8));
+      // Expert Analysis
+      doc.addPage();
+      doc.setFontSize(14); doc.setTextColor(44, 34, 24);
+      doc.text("ANÁLISIS DEL EXPERTO", 20, 25);
+      doc.setFontSize(10); doc.setTextColor(80, 80, 80);
+      const verdictLines = doc.splitTextToSize(result.verdict.es, 170);
+      doc.text(verdictLines, 20, 38);
+      // Palette
+      const paletteY = 38 + verdictLines.length * 6 + 15;
+      doc.setFontSize(14); doc.setTextColor(44, 34, 24);
+      doc.text("TU PALETA", 20, paletteY);
+      doc.setFontSize(10); doc.setTextColor(80, 80, 80);
+      doc.text("Moda & Ropa: " + seasonStyle.clothingColors.map(c => c.name.es).join(", "), 20, paletteY + 12);
+      doc.text("Maquillaje: " + result.complementary.map(c => c.name.es).join(", "), 20, paletteY + 22);
+      doc.text("Tonos a evitar: " + avoidTones.join(", "), 20, paletteY + 32);
+      // Footer
+      doc.setFontSize(9); doc.setTextColor(150, 150, 150);
+      doc.text("Para más información visita guiadelsalon.com", 105, 280, { align: "center" });
+      doc.save("master-color-card-guiadelsalon.pdf");
+    };
+
     return (
       <>
         <SEOHead title={metaTitle} description={metaDesc} />
-
-        {/* Full-page espresso background */}
         <div className="min-h-screen bg-espresso py-12 px-4">
-          {/* Central cream card */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-lg mx-auto bg-background-light rounded-2xl p-8 shadow-2xl"
           >
-            {/* 1. Icon */}
+            {/* Icon */}
             <div className="flex justify-center mb-4">
               <div className="w-14 h-14 rounded-full bg-espresso flex items-center justify-center">
                 <Sparkles className="w-6 h-6 text-gold" />
               </div>
             </div>
-
-            {/* 2. Title */}
+            {/* Title */}
             <h1 className="font-display text-3xl text-espresso text-center mb-1">
               {lang === "es" ? "Tu Master Color Card" : "Your Master Color Card"}
             </h1>
             <p className="text-espresso/50 text-sm text-center mb-8">
               {lang === "es" ? "Diagnóstico de Colorimetría Profesional" : "Professional Colorimetry Diagnosis"}
             </p>
-
-            {/* 3. Color circle + match badge */}
+            {/* Color circle + match badge */}
             <div className="flex flex-col items-center mb-8">
               <div className="relative">
                 <div className="w-40 h-40 rounded-full mx-auto" style={{ backgroundColor: result.hexPreview, boxShadow: `0 8px 32px ${result.hexPreview}40` }} />
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-accent-orange text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
-                  MATCH 98%
-                </div>
+                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-accent-orange text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">MATCH 98%</div>
               </div>
             </div>
-
-            {/* 4. Tone info */}
+            {/* Tone info */}
             <div className="text-center mb-6">
-              <p className="text-espresso/30 text-[10px] uppercase tracking-[0.2em] mb-2">
-                {lang === "es" ? "TONO RECOMENDADO" : "RECOMMENDED TONE"}
-              </p>
+              <p className="text-espresso/30 text-[10px] uppercase tracking-[0.2em] mb-2">{lang === "es" ? "TONO RECOMENDADO" : "RECOMMENDED TONE"}</p>
               <h2 className="font-display text-4xl text-espresso mb-3">{l(result.name)}</h2>
               <div className="flex justify-center gap-2">
                 <span className="bg-espresso/10 text-espresso text-xs rounded-full px-3 py-1">● {l(undertoneLabel)}</span>
                 <span className="bg-espresso/10 text-espresso text-xs rounded-full px-3 py-1">{result.code}</span>
               </div>
             </div>
-
-            {/* 5. Two-column cards */}
+            {/* Two-column cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              {/* Expert analysis */}
               <div className="bg-white rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Lightbulb className="w-4 h-4 text-gold" />
-                  <span className="text-[10px] text-espresso/40 uppercase tracking-wider font-bold">
-                    {lang === "es" ? "Análisis del Experto" : "Expert Analysis"}
-                  </span>
+                  <span className="text-[10px] text-espresso/40 uppercase tracking-wider font-bold">{lang === "es" ? "Análisis del Experto" : "Expert Analysis"}</span>
                 </div>
-                <p className="text-espresso/70 text-sm italic leading-relaxed mb-4 line-clamp-6">
-                  {l(result.verdict)}
-                </p>
+                <p className="text-espresso/70 text-sm italic leading-relaxed mb-4 line-clamp-6">{l(result.verdict)}</p>
                 <div className="flex items-center gap-2 pt-3 border-t border-espresso/5">
                   <div className="w-8 h-8 rounded-full bg-espresso/10 flex items-center justify-center text-[10px] font-bold text-espresso">AG</div>
                   <div>
@@ -382,19 +436,13 @@ export default function ColorMatchPage() {
                   </div>
                 </div>
               </div>
-
-              {/* Palette */}
               <div className="bg-white rounded-xl p-4 relative">
                 <div className="absolute top-3 right-3 bg-espresso text-cream text-[10px] font-bold px-2 py-0.5 rounded">
                   {l(SEASON_NAMES[result.season]).toUpperCase()}
                 </div>
-                <p className="text-[10px] text-espresso/40 uppercase tracking-wider font-bold mb-3">
-                  {lang === "es" ? "Tu Paleta" : "Your Palette"}
-                </p>
+                <p className="text-[10px] text-espresso/40 uppercase tracking-wider font-bold mb-3">{lang === "es" ? "Tu Paleta" : "Your Palette"}</p>
                 <div className="mb-3">
-                  <p className="text-[9px] text-espresso/30 uppercase tracking-wider mb-1.5">
-                    {lang === "es" ? "MODA & ROPA" : "FASHION"}
-                  </p>
+                  <p className="text-[9px] text-espresso/30 uppercase tracking-wider mb-1.5">{lang === "es" ? "MODA & ROPA" : "FASHION"}</p>
                   <div className="flex gap-2">
                     {seasonStyle.clothingColors.slice(0, 4).map((c, i) => (
                       <div key={i} className="w-9 h-9 rounded-lg border border-espresso/8" style={{ backgroundColor: c.hex }} title={l(c.name)} />
@@ -402,15 +450,75 @@ export default function ColorMatchPage() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-[9px] text-espresso/30 uppercase tracking-wider mb-1.5">
-                    {lang === "es" ? "MAQUILLAJE" : "MAKEUP"}
-                  </p>
+                  <p className="text-[9px] text-espresso/30 uppercase tracking-wider mb-1.5">{lang === "es" ? "MAQUILLAJE" : "MAKEUP"}</p>
                   <div className="flex gap-2">
                     {result.complementary.slice(0, 3).map((c, i) => (
                       <div key={i} className="w-9 h-9 rounded-lg border border-espresso/8" style={{ backgroundColor: c.hex }} title={l(c.name)} />
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Plan de Mantenimiento */}
+            <div className="bg-white/40 p-6 rounded-3xl border border-espresso/5 mb-4">
+              <h3 className="font-bold text-xl text-espresso mb-4 flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-accent-orange" /> Plan de Mantenimiento
+              </h3>
+              <div className="space-y-3">
+                {[
+                  { n: "1", t: "Retoque de raíces", d: "Cada 4-6 semanas para tonos claros, 6-8 semanas para oscuros" },
+                  { n: "2", t: "Mascarilla matizadora", d: "1 vez por semana para mantener el tono vibrante" },
+                  { n: "3", t: "Protección solar capilar", d: "Obligatoria en verano para preservar el tono" },
+                ].map(item => (
+                  <div key={item.n} className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-accent-orange text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">{item.n}</span>
+                    <div>
+                      <p className="font-semibold text-sm text-espresso">{item.t}</p>
+                      <p className="text-xs text-espresso/60">{item.d}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tonos a Evitar */}
+            <div className="bg-white/40 p-6 rounded-3xl border border-espresso/5 mb-4">
+              <h3 className="font-bold text-xl text-espresso mb-4 flex items-center gap-2">
+                <ShieldAlert className="w-5 h-5 text-accent-orange" /> Tonos a Evitar
+              </h3>
+              <p className="text-sm text-espresso/70 leading-relaxed mb-3">
+                Según tu colorimetría, estos tonos pueden apagar tu piel o crear contrastes poco favorecedores:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {avoidTones.map((tone, i) => (
+                  <span key={i} className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold border border-red-200">{tone}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Técnicas Compatibles */}
+            <div className="bg-white/40 p-6 rounded-3xl border border-espresso/5 mb-4">
+              <h3 className="font-bold text-xl text-espresso mb-4 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-accent-orange" /> Técnicas Compatibles
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                {techniques.map((t, i) => {
+                  const bgClass = t.status === "ok" ? "bg-green-50 border-green-200" : t.status === "warn" ? "bg-amber-50 border-amber-200" : "bg-red-50 border-red-200";
+                  const textClass = t.status === "ok" ? "text-green-800" : t.status === "warn" ? "text-amber-800" : "text-red-800";
+                  const subClass = t.status === "ok" ? "text-green-700" : t.status === "warn" ? "text-amber-700" : "text-red-700";
+                  const StatusIcon = t.status === "ok" ? CheckCircle : t.status === "warn" ? Minus : XCircle;
+                  const iconColor = t.status === "ok" ? "text-green-500" : t.status === "warn" ? "text-amber-500" : "text-red-500";
+                  return (
+                    <div key={i} className={`flex items-center gap-2 p-3 rounded-xl border ${bgClass}`}>
+                      <StatusIcon className={`w-4 h-4 shrink-0 ${iconColor}`} />
+                      <div>
+                        <p className={`text-xs font-bold ${textClass}`}>{t.name}</p>
+                        <p className={`text-[10px] ${subClass}`}>{t.note}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -424,27 +532,25 @@ export default function ColorMatchPage() {
             {result.requiresSalon && !result.requiresDecolor && (
               <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3 text-xs mb-4">
                 <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                <p className="text-espresso/60">
-                  {lang === "es" ? `Salto de ${result.levelJump} niveles — visita un salón` : `${result.levelJump}-level jump — visit a salon`}
-                </p>
+                <p className="text-espresso/60">{lang === "es" ? `Salto de ${result.levelJump} niveles — visita un salón` : `${result.levelJump}-level jump — visit a salon`}</p>
               </div>
             )}
 
-            {/* 6. CTAs inside card */}
+            {/* CTAs */}
             <button
-              onClick={() => toast({ title: lang === "es" ? "Próximamente" : "Coming soon", description: lang === "es" ? "La guía PDF estará disponible próximamente." : "The PDF guide will be available soon." })}
+              onClick={handleDownloadPDF}
               className="w-full py-3 rounded-xl bg-gold text-espresso font-semibold text-sm hover:bg-gold-light transition-colors mb-3 flex items-center justify-center gap-2"
             >
               <Download className="w-4 h-4" />
               {lang === "es" ? "Descargar Guía Completa PDF ↓" : "Download Full PDF Guide ↓"}
             </button>
 
-            <Link
-              to="/categorias/tintes"
+            <a
+              href="#productos-recomendados"
               className="w-full py-3 rounded-xl border border-espresso/15 text-espresso/60 font-semibold text-sm hover:border-espresso/30 transition-colors flex items-center justify-center gap-2"
             >
               {lang === "es" ? "Ver Productos Recomendados →" : "View Recommended Products →"}
-            </Link>
+            </a>
 
             {/* Amazon CTAs */}
             {!result.requiresDecolor && !result.requiresSalon && (() => {
@@ -467,7 +573,19 @@ export default function ColorMatchPage() {
               ) : null;
             })()}
 
-            {/* 7. Disclaimer */}
+            {/* CTA Cizura */}
+            <div className="mt-6 bg-espresso rounded-3xl p-6 flex flex-col md:flex-row items-center gap-4">
+              <div className="flex-1">
+                <p className="text-gold text-xs font-bold uppercase tracking-widest mb-1">Para profesionales</p>
+                <p className="text-cream font-bold text-lg leading-snug">¿Eres estilista? Gestiona citas, fichas de color y historial de clientes.</p>
+                <p className="text-cream/50 text-sm mt-1">Cizura — software de salón español, sin comisiones</p>
+              </div>
+              <Link to="/gestion-peluqueria" className="whitespace-nowrap bg-gold text-espresso px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-wide hover:bg-gold-light transition-colors">
+                Ver Cizura →
+              </Link>
+            </div>
+
+            {/* Disclaimer */}
             <p className="text-espresso/30 text-xs text-center mt-6">
               {lang === "es"
                 ? "El resultado puede variar según la calibración de tu pantalla. Consulta con tu colorista profesional."
@@ -475,13 +593,37 @@ export default function ColorMatchPage() {
             </p>
           </motion.div>
 
-          {/* Below card: Reset + educational */}
+          {/* Products section */}
+          <div id="productos-recomendados" className="max-w-3xl mx-auto mt-8 mb-12">
+            <h3 className="text-2xl font-bold text-cream mb-6 text-center">
+              {lang === "es" ? "Productos Recomendados para tu Diagnóstico" : "Recommended Products for Your Diagnosis"}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { name: "Tinte profesional sin amoníaco", desc: "Coloración permanente con cuidado", url: `https://www.amazon.es/s?k=tinte+sin+amoniaco&tag=guiadelsalo09-21` },
+                { name: "Mascarilla matizadora", desc: "Mantén el tono perfecto", url: `https://www.amazon.es/s?k=mascarilla+matizadora&tag=guiadelsalo09-21` },
+                { name: "Protector térmico capilar", desc: "Protección durante el secado", url: `https://www.amazon.es/s?k=protector+termico+capilar&tag=guiadelsalo09-21` },
+              ].map((p, i) => (
+                <a key={i} href={p.url} target="_blank" rel="noopener noreferrer"
+                  className="bg-mocha rounded-xl overflow-hidden border border-gold/10 hover:border-accent-orange/50 transition-all group p-5"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-accent-orange/10 flex items-center justify-center mb-3">
+                    <FlaskConical className="w-5 h-5 text-accent-orange" />
+                  </div>
+                  <p className="font-bold text-cream text-sm leading-tight mb-2 group-hover:text-accent-orange transition-colors">{p.name}</p>
+                  <p className="text-cream/50 text-xs mb-3">{p.desc}</p>
+                  <span className="text-accent-orange text-xs font-bold uppercase">Ver en Amazon →</span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Reset + educational */}
           <div className="max-w-lg mx-auto mt-6">
             <button onClick={reset} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border border-cream/15 text-cream/40 text-sm hover:text-cream transition-colors">
               <RotateCcw className="w-4 h-4" /> {lang === "es" ? "Empezar de nuevo" : "Start over"}
             </button>
           </div>
-
           <div className="max-w-3xl mx-auto mt-8">
             <div className="bg-background-light rounded-2xl p-6">
               <Colorimetry101 lang={lang} />
