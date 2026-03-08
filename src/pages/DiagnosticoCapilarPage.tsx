@@ -3,7 +3,7 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Layers, Droplets, Activity, ScanSearch, FlaskConical, ExternalLink,
-  RotateCcw, ArrowRight, Share2, Download, Check,
+  RotateCcw, ArrowRight, Download, Check,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,7 +15,7 @@ import {
 import { useWizardReturn } from "@/hooks/useWizardReturn";
 import { ToolHeader } from "@/components/mi-pelo/shared/ToolHeader";
 import { DimensionCard } from "@/components/mi-pelo/shared/DimensionCard";
-import { ResultsHero } from "@/components/mi-pelo/shared/ResultsHero";
+
 import { BibliographyDrawer, type BibReference } from "@/components/mi-pelo/shared/BibliographyDrawer";
 import { MiniExpertTip } from "@/components/mi-pelo/shared/MiniExpertTip";
 import { WizardShell } from "@/components/mi-pelo/shared/WizardShell";
@@ -86,9 +86,9 @@ const QUESTION_IMAGES: Record<string, Record<string, string>> = {
     D: "/images/diagnostico/dc_barrera_d.jpg",
   },
   q4_3: { // Productos y pH
-    A: "/images/diagnostico/dc_lavado_a.jpg",
-    B: "/images/diagnostico/dc_lavado_b.jpg",
-    C: "/images/diagnostico/dc_lavado_c.jpg",
+    A: "/images/diagnostico/dc_productos_a.jpg",
+    B: "/images/diagnostico/dc_productos_b.jpg",
+    C: "/images/diagnostico/dc_productos_c.jpg",
   },
   q4_4: { // Frecuencia de Lavado
     A: "/images/diagnostico/dc_lavado_a.jpg",
@@ -393,60 +393,175 @@ export default function DiagnosticoCapilarPage() {
 
       {/* ─── RESULTS ─── */}
       {screen === "results" && scores && riskLevel && (
-        <div className="min-h-screen bg-espresso">
-          <ResultsHero
-            badge="INFORME PERSONALIZADO"
-            title="Tu Pasaporte Capilar"
-            score={healthPct}
-            scoreLabel={t(`diagnostico.risk${capitalize(riskLevel)}Label`)}
-            scoreColor={healthPct >= 70 ? 'text-damage-low' : healthPct >= 40 ? 'text-damage-med' : 'text-damage-high'}
-          />
+        <div className="min-h-screen bg-espresso text-cream font-sans flex flex-col items-center py-12 px-6">
+          {/* Header */}
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold/10 mb-4 ring-1 ring-gold/20">
+              <ScanSearch className="w-6 h-6 text-gold" />
+            </div>
+            <h1 className="font-display text-4xl md:text-5xl font-bold mb-3 italic tracking-tight">
+              Tu Pasaporte Capilar
+            </h1>
+            <p className="text-lg text-cream/60">Diagnóstico Capilar Profesional</p>
+          </motion.div>
 
-          <div className="max-w-3xl mx-auto px-6 py-14 space-y-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {modules.map((m) => (
-                <DimensionCard key={m.labelKey} icon={m.icon} label={t(`diagnostico.${m.labelKey}`)} score={m.score} max={m.max} />
-              ))}
+          {/* Main Card */}
+          <motion.div
+            className="bg-cream rounded-[2rem] p-6 md:p-10 shadow-2xl text-espresso w-full max-w-3xl"
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {/* Score Circle */}
+            <div className="flex flex-col items-center text-center mb-8">
+              <div className="relative mb-6">
+                <svg className="w-44 h-44 md:w-56 md:h-56" viewBox="0 0 200 200">
+                  <circle cx="100" cy="100" r="85" fill="none" stroke="currentColor" className="text-espresso/5" strokeWidth="12" />
+                  <motion.circle
+                    cx="100" cy="100" r="85" fill="none"
+                    strokeWidth="12" strokeLinecap="round"
+                    className={healthPct >= 70 ? 'text-damage-low' : healthPct >= 40 ? 'text-damage-med' : 'text-damage-high'}
+                    stroke="currentColor"
+                    strokeDasharray={2 * Math.PI * 85}
+                    strokeDashoffset={2 * Math.PI * 85 * (1 - healthPct / 100)}
+                    transform="rotate(-90 100 100)"
+                    initial={{ strokeDashoffset: 2 * Math.PI * 85 }}
+                    animate={{ strokeDashoffset: 2 * Math.PI * 85 * (1 - healthPct / 100) }}
+                    transition={{ delay: 0.5, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                  <text x="100" y="95" textAnchor="middle" className="fill-espresso font-display font-bold" fontSize="48">
+                    {healthPct}
+                  </text>
+                  <text x="100" y="120" textAnchor="middle" className="fill-espresso/40 font-medium uppercase tracking-widest" fontSize="11">
+                    / 100
+                  </text>
+                </svg>
+                <div className={`absolute bottom-2 right-2 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-lg ${
+                  healthPct >= 70 ? 'bg-damage-low' : healthPct >= 40 ? 'bg-damage-med' : 'bg-damage-high'
+                }`}>
+                  {t(`diagnostico.risk${capitalize(riskLevel)}Label`)}
+                </div>
+              </div>
+              <span className="text-accent-orange font-bold tracking-[0.2em] text-xs uppercase mb-2">SALUD CAPILAR</span>
+              <h2 className="text-2xl md:text-3xl font-bold font-display">
+                {healthPct >= 70 ? 'Cabello Saludable' : healthPct >= 40 ? 'Cabello Comprometido' : 'Cabello en Riesgo'}
+              </h2>
             </div>
 
-            <div className="bg-espresso border border-gold/8 rounded-2xl p-7">
-              <h2 className="font-display text-xl text-cream font-bold mb-4">{t("diagnostico.actionProtocol")}</h2>
-              <p className="text-cream/50 text-sm leading-relaxed">{t(`diagnostico.risk${capitalize(riskLevel)}Protocol`)}</p>
+            {/* Dimension Scores Grid */}
+            <div className="grid grid-cols-2 gap-3 mb-8">
+              {modules.map((m, i) => {
+                const pct = Math.round((m.score / m.max) * 100);
+                const Icon = m.icon;
+                return (
+                  <motion.div
+                    key={m.labelKey}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + i * 0.1 }}
+                    className="bg-white/40 p-4 md:p-5 rounded-2xl border border-espresso/5"
+                  >
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div className="w-9 h-9 rounded-lg bg-accent-orange/10 flex items-center justify-center">
+                        <Icon className="w-4 h-4 text-accent-orange" />
+                      </div>
+                      <span className="text-sm font-semibold flex-1">{t(`diagnostico.${m.labelKey}`)}</span>
+                      <span className={`text-lg font-bold font-display tabular-nums ${
+                        pct >= 70 ? 'text-damage-low' : pct >= 40 ? 'text-damage-med' : 'text-damage-high'
+                      }`}>
+                        {m.score}<span className="text-espresso/20 text-xs font-normal">/{m.max}</span>
+                      </span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-espresso/5 overflow-hidden">
+                      <motion.div
+                        className={`h-full rounded-full ${
+                          pct >= 70 ? 'bg-damage-low' : pct >= 40 ? 'bg-damage-med' : 'bg-damage-high'
+                        }`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${pct}%` }}
+                        transition={{ delay: 0.6 + i * 0.1, duration: 0.8 }}
+                      />
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
 
-            <div>
-              <h2 className="font-display text-lg text-cream font-bold mb-4">{t("diagnostico.productsTitle")}</h2>
-              <div className="space-y-3">
-                {products.map((product, i) => (
+            {/* Expert Analysis + Protocol */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white/40 p-6 rounded-3xl border border-espresso/5">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                  <Activity className="text-accent-orange w-5 h-5" /> Protocolo de Acción
+                </h3>
+                <p className="text-sm leading-relaxed opacity-80">
+                  {t(`diagnostico.risk${capitalize(riskLevel)}Protocol`)}
+                </p>
+              </div>
+
+              <div className="bg-white/40 p-6 rounded-3xl border border-espresso/5">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                  <FlaskConical className="text-accent-orange w-5 h-5" /> {t("diagnostico.productsTitle")}
+                </h3>
+                <div className="space-y-3">
+                  {products.slice(0, 3).map((product) => (
+                    <a
+                      key={product.asin}
+                      href={lang === "en" ? product.urlEN : product.urlES}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      className="flex items-start gap-3 group"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent-orange shrink-0 mt-2" />
+                      <div>
+                        <p className="text-sm font-semibold group-hover:text-accent-orange transition-colors">{product.name}</p>
+                        <p className="text-xs opacity-50 mt-0.5 line-clamp-1">{product.description}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Extra products */}
+            {products.length > 3 && (
+              <div className="space-y-3 mb-8">
+                {products.slice(3).map((product, i) => (
                   <motion.a key={product.asin} href={lang === "en" ? product.urlEN : product.urlES}
                     target="_blank" rel="nofollow noopener noreferrer"
                     initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + i * 0.08 }}
-                    className="flex items-start gap-4 p-4 rounded-xl border border-gold/10 bg-espresso hover:border-gold/40 transition-all group">
+                    className="flex items-start gap-4 p-4 rounded-xl border border-espresso/5 bg-white/30 hover:border-accent-orange/30 transition-all group">
                     <div className="p-2 rounded-lg bg-accent-orange/10 text-accent-orange shrink-0 mt-0.5"><FlaskConical className="w-4 h-4" /></div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-cream group-hover:text-accent-orange transition-colors">{product.name}</p>
-                      <p className="text-xs text-cream/50 mt-0.5 leading-relaxed line-clamp-2">{product.description}</p>
+                      <p className="text-sm font-semibold group-hover:text-accent-orange transition-colors">{product.name}</p>
+                      <p className="text-xs opacity-50 mt-0.5 leading-relaxed line-clamp-2">{product.description}</p>
                       <span className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-accent-orange">{t("diagnostico.amazonCta")} <ExternalLink className="w-3 h-3" /></span>
                     </div>
                   </motion.a>
                 ))}
               </div>
-            </div>
+            )}
 
-
-
-            <div className="flex flex-col sm:flex-row gap-3">
+            {/* CTA Buttons */}
+            <div className="flex flex-col gap-4">
               <button onClick={() => window.print()}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gold/20 text-cream/70 text-sm font-medium hover:text-cream hover:border-gold/40 transition-colors">
-                <Download className="w-4 h-4" /> Descargar PDF
+                className="w-full bg-accent-orange hover:bg-accent-orange-hover text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 text-lg">
+                Descargar Informe PDF <Download className="w-5 h-5" />
               </button>
               <button onClick={reset}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gold/20 text-cream/40 text-sm hover:text-cream/70 transition-colors">
+                className="w-full bg-transparent text-accent-orange border-2 border-accent-orange/30 hover:bg-accent-orange/5 font-bold py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3">
                 <RotateCcw className="w-4 h-4" /> {t("diagnostico.resetBtn")}
               </button>
             </div>
+          </motion.div>
 
+          {/* Below card: wizard continue + bibliography */}
+          <div className="w-full max-w-3xl mt-10 space-y-6">
             {isWizardMode && (
               <button
                 onClick={() => completeWizardModule({ summary: `${riskLevel} — ${scores.total} pts`, score: scores.total, rawResult: { scores, riskLevel } })}
@@ -454,7 +569,6 @@ export default function DiagnosticoCapilarPage() {
                 Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
               </button>
             )}
-
             <BibliographyDrawer references={REFERENCES} />
           </div>
         </div>
