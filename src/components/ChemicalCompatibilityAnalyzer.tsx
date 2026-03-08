@@ -252,7 +252,11 @@ function buildCompatConfig(t: (k: string) => string) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function ChemicalCompatibilityAnalyzer() {
+interface ChemicalCompatibilityProps {
+  wizardContinue?: (summary: string) => void;
+}
+
+export default function ChemicalCompatibilityAnalyzer({ wizardContinue }: ChemicalCompatibilityProps = {}) {
   const { t } = useLanguage();
   const [treatmentDone, setTreatmentDone] = useState<TreatmentId | "">("");
   const [treatmentDesired, setTreatmentDesired] = useState<TreatmentId | "">("");
