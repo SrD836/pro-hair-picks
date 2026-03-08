@@ -231,7 +231,7 @@ export default function DiagnosticoCapilarPage() {
             badge="CIENTÍFICO"
             title={<>Diagnóstico <span className="text-accent-orange">Capilar</span></>}
             subtitle={t("diagnostico.subtitle")}
-            microTrust={`~8 min · Sin registro · ${t("diagnostico.timeNote")}`}
+            microTrust="~8 min · Sin registro · Protocolo clínico aplicado"
             onStart={() => setScreen("quiz")}
             startLabel={`${t("diagnostico.startBtn")} →`}
           />
