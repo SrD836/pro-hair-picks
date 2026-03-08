@@ -19,6 +19,7 @@ const STEPS = [
 export default function AsesorColorPage() {
   const [step, setStep] = useState(1);
   const [selections, setSelections] = useState<Record<number, unknown>>({});
+  const { isWizardMode, completeWizardModule } = useWizardReturn('asesor-color');
 
   const handleSelect = (stepId: number, value: unknown) => {
     setSelections(prev => ({ ...prev, [stepId]: value }));
