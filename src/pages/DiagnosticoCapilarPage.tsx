@@ -21,7 +21,7 @@ import { BibliographyDrawer, type BibReference } from "@/components/mi-pelo/shar
 import { MiniExpertTip } from "@/components/mi-pelo/shared/MiniExpertTip";
 import { WizardShell } from "@/components/mi-pelo/shared/WizardShell";
 import { NavigationBar } from "@/components/mi-pelo/shared/NavigationBar";
-import { CizuraCTA } from "@/components/mi-pelo/shared/CizuraCTA";
+
 
 /* ── Image map per question ─────────────────────── */
 const QUESTION_IMAGES: Record<string, Record<string, string>> = {

@@ -20,26 +20,6 @@ interface Software {
 const softwares: Software[] = [
   {
     position: 1,
-    name: "Cizura",
-    description: "Software de gestión integral para barberías y peluquerías en España. Agenda, facturación con VeriFactu, TPV, gestión de clientes y marketing automatizado.",
-    price: "Desde 29€/mes (prueba gratis 30 días)",
-    pros: [
-      "Compatible con VeriFactu (obligatorio en España 2026)",
-      "TPV integrado con datáfono",
-      "Agenda online con recordatorios automáticos",
-      "Marketing por WhatsApp y SMS incluido",
-      "Soporte en español 24/7",
-    ],
-    cons: [
-      "Menos conocido internacionalmente",
-      "Sin marketplace de clientes propio",
-    ],
-    url: "https://cizura.com",
-    badge: "🇪🇸 Mejor para España",
-    rating: 4.8,
-  },
-  {
-    position: 2,
     name: "Treatwell",
     description: "Plataforma europea de reservas con marketplace integrado. Ideal para atraer nuevos clientes a través de su red de usuarios.",
     price: "Comisión por reserva (variable) + suscripción desde 49€/mes",

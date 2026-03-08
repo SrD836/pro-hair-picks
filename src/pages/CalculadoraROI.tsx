@@ -14,7 +14,7 @@ const CalculadoraROI = () => (
           ¿Cómo funciona el cálculo?
         </h2>
         <p>
-          La calculadora estima el retorno de inversión de Cizura basándose en tu número
+          La calculadora estima el retorno de inversión de tu equipamiento basándose en tu número
           de clientes activos, servicios medios por visita y tiempo de gestión actual.
           Los parámetros están calibrados con datos reales de salones españoles en 2024–2025.
         </p>
