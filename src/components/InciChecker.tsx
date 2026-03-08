@@ -609,21 +609,77 @@ export default function InciChecker() {
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <p className="text-[#2D2218]/55 text-sm mb-4">
+              <p className="text-[#2D2218]/55 text-sm mb-3">
                 Pega la lista de ingredientes de un producto (separados por comas, tal como aparecen en el envase).
                 El escáner los cruza contra la base de datos y los ordena de mayor a menor riesgo.
               </p>
 
-              <textarea
-                value={scanInput}
-                onChange={(e) => {
-                  setScanInput(e.target.value);
-                  setScanDone(false);
-                }}
-                rows={5}
-                placeholder="Ej: Aqua, Sodium Lauryl Sulfate, Methylparaben, Propylparaben, Dimethicone, p-Phenylenediamine…"
-                className="w-full px-4 py-3 rounded-xl bg-white border border-[#2D2218]/15 text-sm text-[#2D2218] placeholder:text-[#2D2218]/35 focus:outline-none focus:border-[#C4A97D] focus:ring-2 focus:ring-[#C4A97D]/20 transition-all resize-none mb-4 leading-relaxed"
-              />
+              {/* Quick access pills */}
+              <div className="mb-3">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#C4A97D] mb-2">Ingredientes frecuentes</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {POPULAR_INGREDIENTS.map((name) => {
+                    const isAdded = scanInput.toLowerCase().includes(name.toLowerCase());
+                    return (
+                      <button
+                        key={name}
+                        onClick={() => handleQuickAdd(name)}
+                        disabled={isAdded}
+                        className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                          isAdded
+                            ? "bg-[#2D2218]/10 text-[#2D2218]/30 border-[#2D2218]/05 cursor-default"
+                            : "bg-white text-[#2D2218]/70 border-[#2D2218]/15 hover:border-[#C4A97D] hover:text-[#C4A97D] hover:bg-[#C4A97D]/5"
+                        }`}
+                      >
+                        + {name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div ref={scanRef} className="relative">
+                <textarea
+                  value={scanInput}
+                  onChange={(e) => {
+                    setScanInput(e.target.value);
+                    setScanDone(false);
+                  }}
+                  rows={5}
+                  placeholder="Ej: Aqua, Sodium Lauryl Sulfate, Methylparaben, Propylparaben, Dimethicone, p-Phenylenediamine…"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#2D2218]/15 text-sm text-[#2D2218] placeholder:text-[#2D2218]/35 focus:outline-none focus:border-[#C4A97D] focus:ring-2 focus:ring-[#C4A97D]/20 transition-all resize-none leading-relaxed"
+                />
+
+                {/* Live suggestions dropdown */}
+                <AnimatePresence>
+                  {showScanSuggestions && scanSuggestions.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.12 }}
+                      className="absolute z-20 bottom-full left-0 right-0 mb-1 bg-white rounded-xl border border-[#2D2218]/12 shadow-lg overflow-hidden"
+                    >
+                      <p className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#C4A97D] border-b border-[#2D2218]/05">
+                        Quizás te refieres a…
+                      </p>
+                      {scanSuggestions.map((ing) => (
+                        <button
+                          key={ing.id}
+                          onClick={() => handleScanSuggestionClick(ing)}
+                          className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-[#F5F0E8] transition-colors"
+                        >
+                          <div>
+                            <span className="text-sm font-semibold text-[#2D2218]">{ing.inci_name}</span>
+                            <span className="text-xs text-[#2D2218]/50 ml-2">{ing.common_name}</span>
+                          </div>
+                          <span className="text-xs shrink-0 ml-2">{LEVEL_EMOJI[getWorstLevel(ing)]}</span>
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               <button
                 onClick={handleScan}
