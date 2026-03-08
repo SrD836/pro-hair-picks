@@ -23,6 +23,11 @@ const MODULES = [
 
 export default function RecoveryTimelinePage() {
   const [started, setStarted] = useState(false);
+  const { isWizardMode, completeWizardModule } = useWizardReturn('recuperacion-capilar');
+
+  const handleWizardComplete = (summary: string, score?: number) => {
+    completeWizardModule({ summary, score, rawResult: { summary } });
+  };
 
   return (
     <>
