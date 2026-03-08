@@ -1229,9 +1229,11 @@ const TREATMENT_TYPE_LABELS: Record<string, string> = {
 function RiskReport({
   report,
   onReset,
+  hideDownload,
 }: {
   report: AlopeciaReport;
   onReset: () => void;
+  hideDownload?: boolean;
 }) {
   const isUrgent = report.recommended_action === "dermatologo_urgente";
   const riskCfg = RISK_LEVEL_CONFIG[report.risk_level];
