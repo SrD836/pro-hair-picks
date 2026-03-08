@@ -51,6 +51,7 @@ const AlopeciaAnalyzerPage = lazy(() => import('./pages/AlopeciaAnalyzerPage'));
 const MiPeloPage = lazy(() => import('./pages/MiPeloPage'));
 const DiagnosticoCompletoPage = lazy(() => import('./pages/DiagnosticoCompletoPage'));
 const MisResultadosPage = lazy(() => import('./pages/MisResultadosPage'));
+const InformeCompletoPage = lazy(() => import('./pages/InformeCompletoPage'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
 
 const queryClient = new QueryClient();
