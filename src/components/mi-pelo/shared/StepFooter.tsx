@@ -33,7 +33,7 @@ export function StepFooter({
           'disabled:opacity-40 disabled:cursor-not-allowed'
         )}
       >
-        ← {prevLabel}
+        <span aria-hidden="true">←</span> {prevLabel}
       </button>
 
       {/* Solid espresso next button */}
@@ -48,7 +48,7 @@ export function StepFooter({
           'disabled:opacity-40 disabled:cursor-not-allowed'
         )}
       >
-        {nextLabel} →
+        {nextLabel} <span aria-hidden="true">→</span>
       </button>
     </div>
   );

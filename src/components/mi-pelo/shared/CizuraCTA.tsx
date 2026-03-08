@@ -27,7 +27,7 @@ export function CizuraCTA({ className }: CizuraCTAProps) {
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-espresso'
           )}
         >
-          Reservar consulta →
+          Reservar consulta <span aria-hidden="true">→</span>
         </a>
       </div>
     </div>

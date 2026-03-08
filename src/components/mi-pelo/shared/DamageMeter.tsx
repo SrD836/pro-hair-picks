@@ -42,6 +42,7 @@ export function DamageMeter({ score, className }: DamageMeterProps) {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={`Daño capilar: ${clampedScore}/100 — ${label}`}
+        aria-valuetext={`${clampedScore}/100 — ${label}`}
       >
         <div
           className={cn('h-full rounded-full transition-all duration-700 ease-out', barColor)}
