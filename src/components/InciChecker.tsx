@@ -372,6 +372,74 @@ export default function InciChecker() {
     setShowDropdown(false);
   };
 
+  // Scanner — live suggestions as user types
+  const [scanSuggestions, setScanSuggestions] = useState<InciIngredient[]>([]);
+  const [showScanSuggestions, setShowScanSuggestions] = useState(false);
+  const scanRef = useRef<HTMLDivElement>(null);
+
+  // Popular ingredients for quick access
+  const POPULAR_INGREDIENTS = [
+    "Sodium Lauryl Sulfate", "PPD", "Ammonia", "Resorcinol",
+    "Methylparaben", "SLES", "Dimethicone", "Formaldehyde",
+  ];
+
+  // Close scan suggestions on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (scanRef.current && !scanRef.current.contains(e.target as Node)) {
+        setShowScanSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // Live suggestions for scanner textarea
+  useEffect(() => {
+    if (!scanInput || allIngredients.length === 0) {
+      setScanSuggestions([]);
+      setShowScanSuggestions(false);
+      return;
+    }
+    // Get the last token being typed (after last comma)
+    const parts = scanInput.split(",");
+    const lastToken = parts[parts.length - 1].trim().toLowerCase();
+    if (lastToken.length < 2) {
+      setScanSuggestions([]);
+      setShowScanSuggestions(false);
+      return;
+    }
+    // Already-added names (before last comma)
+    const alreadyAdded = new Set(
+      parts.slice(0, -1).map(p => p.trim().toLowerCase()).filter(Boolean)
+    );
+    const matches = allIngredients
+      .filter(ing =>
+        !alreadyAdded.has(ing.inci_name.toLowerCase()) &&
+        !alreadyAdded.has(ing.common_name.toLowerCase()) &&
+        (ing.inci_name.toLowerCase().includes(lastToken) ||
+         ing.common_name.toLowerCase().includes(lastToken))
+      )
+      .slice(0, 5);
+    setScanSuggestions(matches);
+    setShowScanSuggestions(matches.length > 0);
+  }, [scanInput, allIngredients]);
+
+  const handleScanSuggestionClick = (ing: InciIngredient) => {
+    const parts = scanInput.split(",");
+    parts[parts.length - 1] = ` ${ing.inci_name}`;
+    setScanInput(parts.join(",") + ", ");
+    setShowScanSuggestions(false);
+    setScanDone(false);
+  };
+
+  const handleQuickAdd = (name: string) => {
+    const current = scanInput.trim();
+    if (current.toLowerCase().includes(name.toLowerCase())) return;
+    setScanInput(current ? `${current}, ${name}` : name);
+    setScanDone(false);
+  };
+
   // Scanner
   const handleScan = async () => {
     const tokens = scanInput
