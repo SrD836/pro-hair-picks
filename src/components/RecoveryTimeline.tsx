@@ -745,7 +745,21 @@ export default function RecoveryTimeline() {
                   Nuevo diagnóstico
                 </button>
                 <button
-                  onClick={() => window.print()}
+                  onClick={() => calendar && generateRecoveryPDF({
+                    totalWeeks: calendar.total_weeks,
+                    nextSafeDate: calendar.next_safe_treatment_date,
+                    primaryConcern: PHASE_CONFIG[calendar.weeks[0]?.phase]?.label ?? '',
+                    weeks: calendar.weeks.map(w => ({
+                      week: w.week,
+                      label: PHASE_CONFIG[w.phase]?.label ?? w.phase,
+                      focus: w.focus_simple || w.focus,
+                      treatments: w.treatments,
+                    })),
+                    maintenance: calendar.maintenance ? {
+                      label: 'Mantenimiento',
+                      focus: calendar.maintenance.focus_simple || calendar.maintenance.focus,
+                    } : undefined,
+                  })}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#C4A97D]/15 border border-[#C4A97D]/30 text-[#C4A97D] text-sm font-semibold hover:bg-[#C4A97D]/25 transition-colors"
                 >
                   <Download className="w-4 h-4" />
