@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { FooterBlogPreview } from "@/components/FooterBlogPreview";
 import { CoursesPreviewSection } from "@/components/CoursesPreview";
 
 const Footer = () => {
@@ -9,6 +10,7 @@ const Footer = () => {
 
   return (
     <footer className="relative overflow-hidden">
+      <FooterBlogPreview />
       <CoursesPreviewSection />
 
       {/* ── Mega Footer ── */}
