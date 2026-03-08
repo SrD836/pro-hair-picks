@@ -268,7 +268,7 @@ export default function DiagnosticoCapilarPage() {
           onClose={() => setScreen("intro")}
           stepLabel={STEP_LABELS[currentQ]}
         >
-          {currentQ === 3 && <CizuraCTA className="max-w-2xl mx-auto px-6 pt-8" />}
+          
 
           <div className="max-w-2xl mx-auto px-6 py-10">
             <AnimatePresence mode="wait" custom={direction}>
