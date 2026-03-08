@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, ExternalLink } from "lucide-react";
+import { BookOpen, ChevronDown, ExternalLink } from "lucide-react";
 
 const BIBLIOGRAPHY = [
   {
