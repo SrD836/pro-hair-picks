@@ -269,8 +269,10 @@ export type Database = {
           affiliate_products: string[] | null
           author: string | null
           bridge_trend_topic: string | null
+          canonical: string | null
           category: string | null
           category_en: string | null
+          cluster: string | null
           content: string | null
           content_en: string | null
           cover_image_url: string | null
@@ -280,6 +282,7 @@ export type Database = {
           external_links: string[] | null
           has_data_viz: boolean | null
           has_expert_verdict: boolean | null
+          hreflang: string | null
           id: string
           internal_links: string[] | null
           is_published: boolean | null
@@ -301,8 +304,10 @@ export type Database = {
           affiliate_products?: string[] | null
           author?: string | null
           bridge_trend_topic?: string | null
+          canonical?: string | null
           category?: string | null
           category_en?: string | null
+          cluster?: string | null
           content?: string | null
           content_en?: string | null
           cover_image_url?: string | null
@@ -312,6 +317,7 @@ export type Database = {
           external_links?: string[] | null
           has_data_viz?: boolean | null
           has_expert_verdict?: boolean | null
+          hreflang?: string | null
           id?: string
           internal_links?: string[] | null
           is_published?: boolean | null
@@ -333,8 +339,10 @@ export type Database = {
           affiliate_products?: string[] | null
           author?: string | null
           bridge_trend_topic?: string | null
+          canonical?: string | null
           category?: string | null
           category_en?: string | null
+          cluster?: string | null
           content?: string | null
           content_en?: string | null
           cover_image_url?: string | null
@@ -344,6 +352,7 @@ export type Database = {
           external_links?: string[] | null
           has_data_viz?: boolean | null
           has_expert_verdict?: boolean | null
+          hreflang?: string | null
           id?: string
           internal_links?: string[] | null
           is_published?: boolean | null
