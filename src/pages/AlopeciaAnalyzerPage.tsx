@@ -5,6 +5,7 @@ import AlopeciaAnalyzer from "@/components/AlopeciaAnalyzer";
 import AlopeciaExpertVerdict from "@/components/AlopeciaExpertVerdict";
 import { ToolHeader } from "@/components/mi-pelo/shared/ToolHeader";
 import { BibliographyDrawer, type BibReference } from "@/components/mi-pelo/shared/BibliographyDrawer";
+import { useWizardReturn } from "@/hooks/useWizardReturn";
 import { useState } from "react";
 
 const REFERENCES: BibReference[] = [
