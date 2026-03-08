@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { motion } from 'framer-motion';
-import { ArrowRight, Clock, User, Microscope, Palette, FlaskConical, RefreshCw, Sparkles, Activity } from 'lucide-react';
+import { ArrowRight, Clock, User, Microscope, Palette, FlaskConical, RefreshCw, Sparkles, Activity, BookOpen } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserDiagnostics } from '@/hooks/useUserDiagnostics';
