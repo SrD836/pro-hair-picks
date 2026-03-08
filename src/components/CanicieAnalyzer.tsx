@@ -767,9 +767,11 @@ const PRIORITY_COLORS = {
 function DiagnosticReport({
   report,
   onReset,
+  hideDownload,
 }: {
   report: CanicieReport;
   onReset: () => void;
+  hideDownload?: boolean;
 }) {
   return (
     <motion.div
@@ -942,22 +944,24 @@ function DiagnosticReport({
         >
           Nuevo diagnóstico
         </button>
-        <button
-          onClick={() => generateCaniciePDF({
-            canicieType: report.canicie_type,
-            onsetClassification: report.onset_classification,
-            geneticWeight: report.genetic_weight,
-            environmentalWeight: report.environmental_weight,
-            modifiableFactors: report.modifiable_factors,
-            nonModifiableFactors: report.non_modifiable_factors,
-            structuralCareNeeded: report.structural_care_needed,
-            recommendations: report.recommendations,
-            realisticExpectations: report.realistic_expectations,
-          })}
-          className="flex-1 py-3 bg-[#C4A97D] text-[#2D2218] font-bold uppercase tracking-widest rounded-xl hover:bg-[#b89868] transition-colors text-sm"
-        >
-          Descargar PDF
-        </button>
+        {!hideDownload && (
+          <button
+            onClick={() => generateCaniciePDF({
+              canicieType: report.canicie_type,
+              onsetClassification: report.onset_classification,
+              geneticWeight: report.genetic_weight,
+              environmentalWeight: report.environmental_weight,
+              modifiableFactors: report.modifiable_factors,
+              nonModifiableFactors: report.non_modifiable_factors,
+              structuralCareNeeded: report.structural_care_needed,
+              recommendations: report.recommendations,
+              realisticExpectations: report.realistic_expectations,
+            })}
+            className="flex-1 py-3 bg-[#C4A97D] text-[#2D2218] font-bold uppercase tracking-widest rounded-xl hover:bg-[#b89868] transition-colors text-sm"
+          >
+            Descargar PDF
+          </button>
+        )}
       </div>
     </motion.div>
   );
@@ -1117,7 +1121,7 @@ export default function CanicieAnalyzer({ wizardContinue }: CanicieAnalyzerProps
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3 }}
           >
-            <DiagnosticReport report={report} onReset={handleReset} />
+            <DiagnosticReport report={report} onReset={handleReset} hideDownload={!!wizardContinue} />
             {wizardContinue && (
               <div className="flex justify-center mt-6">
                 <Button

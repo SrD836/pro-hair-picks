@@ -1229,9 +1229,11 @@ const TREATMENT_TYPE_LABELS: Record<string, string> = {
 function RiskReport({
   report,
   onReset,
+  hideDownload,
 }: {
   report: AlopeciaReport;
   onReset: () => void;
+  hideDownload?: boolean;
 }) {
   const isUrgent = report.recommended_action === "dermatologo_urgente";
   const riskCfg = RISK_LEVEL_CONFIG[report.risk_level];
@@ -1474,23 +1476,25 @@ function RiskReport({
         >
           Nuevo análisis
         </button>
-        <button
-          onClick={() => generateAlopeciaPDF({
-            riskLevel: report.risk_level,
-            riskScore: report.risk_score,
-            riskType: report.risk_type,
-            estimatedProgression: report.estimated_progression,
-            modifiableFactors: report.modifiable_factors,
-            nonModifiableFactors: report.non_modifiable_factors,
-            recommendedAction: report.recommended_action,
-            evidenceOptions: report.evidence_based_options.map(o => ({ name: o.name, realistic_expectation: o.realistic_expectation })),
-            realisticExpectations: report.realistic_expectations,
-            mythAlerts: report.myth_alerts,
-          })}
-          className="flex-1 py-3 bg-[#C4A97D] text-[#2D2218] font-bold uppercase tracking-widest rounded-xl hover:bg-[#b89868] transition-colors text-sm"
-        >
-          Descargar Informe PDF
-        </button>
+        {!hideDownload && (
+          <button
+            onClick={() => generateAlopeciaPDF({
+              riskLevel: report.risk_level,
+              riskScore: report.risk_score,
+              riskType: report.risk_type,
+              estimatedProgression: report.estimated_progression,
+              modifiableFactors: report.modifiable_factors,
+              nonModifiableFactors: report.non_modifiable_factors,
+              recommendedAction: report.recommended_action,
+              evidenceOptions: report.evidence_based_options.map(o => ({ name: o.name, realistic_expectation: o.realistic_expectation })),
+              realisticExpectations: report.realistic_expectations,
+              mythAlerts: report.myth_alerts,
+            })}
+            className="flex-1 py-3 bg-[#C4A97D] text-[#2D2218] font-bold uppercase tracking-widest rounded-xl hover:bg-[#b89868] transition-colors text-sm"
+          >
+            Descargar Informe PDF
+          </button>
+        )}
       </div>
     </motion.div>
   );
@@ -1672,7 +1676,7 @@ export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerPro
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3 }}
           >
-            <RiskReport report={report} onReset={handleReset} />
+            <RiskReport report={report} onReset={handleReset} hideDownload={!!wizardContinue} />
             {wizardContinue && (
               <div className="flex justify-center mt-6">
                 <button
