@@ -1505,7 +1505,7 @@ function RiskReport({
 type MainView = "library" | "form" | "report";
 
 interface AlopeciaAnalyzerProps {
-  wizardContinue?: (summary: string, score?: number) => void;
+  wizardContinue?: (summary: string, score?: number, rawData?: Record<string, unknown>) => void;
 }
 
 export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerProps = {}) {

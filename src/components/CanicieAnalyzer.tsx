@@ -1127,7 +1127,18 @@ export default function CanicieAnalyzer({ wizardContinue }: CanicieAnalyzerProps
                 <Button
                   onClick={() => wizardContinue(
                     `Canicie ${report.canicie_type} — G:${report.genetic_weight}/10 A:${report.environmental_weight}/10`,
-                    report.genetic_weight
+                    report.genetic_weight,
+                    {
+                      canicieType: report.canicie_type,
+                      onsetClassification: report.onset_classification,
+                      geneticWeight: report.genetic_weight,
+                      environmentalWeight: report.environmental_weight,
+                      modifiableFactors: report.modifiable_factors,
+                      nonModifiableFactors: report.non_modifiable_factors,
+                      structuralCareNeeded: report.structural_care_needed,
+                      recommendations: report.recommendations,
+                      realisticExpectations: report.realistic_expectations,
+                    }
                   )}
                   className="gap-2"
                 >
