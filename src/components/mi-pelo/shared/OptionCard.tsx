@@ -23,7 +23,7 @@ export function OptionCard({ name, value, label, icon, checked, onChange, classN
     >
       {/* Icon */}
       {icon && (
-        <span className="flex-shrink-0 text-espresso/60 has-checked:text-gold w-5 h-5">
+        <span className="flex-shrink-0 text-espresso/60 w-5 h-5">
           {icon}
         </span>
       )}
