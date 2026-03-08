@@ -5,6 +5,7 @@ import RecoveryTimeline from "@/components/RecoveryTimeline";
 import RecoveryExpertVerdict from "@/components/RecoveryExpertVerdict";
 import { ToolHeader } from "@/components/mi-pelo/shared/ToolHeader";
 import { BibliographyDrawer, type BibReference } from "@/components/mi-pelo/shared/BibliographyDrawer";
+import { useWizardReturn } from "@/hooks/useWizardReturn";
 import { useState } from "react";
 
 const REFERENCES: BibReference[] = [
@@ -22,6 +23,11 @@ const MODULES = [
 
 export default function RecoveryTimelinePage() {
   const [started, setStarted] = useState(false);
+  const { isWizardMode, completeWizardModule } = useWizardReturn('recuperacion-capilar');
+
+  const handleWizardComplete = (summary: string, score?: number) => {
+    completeWizardModule({ summary, score, rawResult: { summary } });
+  };
 
   return (
     <>
@@ -76,8 +82,8 @@ export default function RecoveryTimelinePage() {
               >
                 ← Volver
               </motion.button>
-              <RecoveryTimeline />
-              <RecoveryExpertVerdict />
+              <RecoveryTimeline wizardContinue={isWizardMode ? handleWizardComplete : undefined} />
+              {!isWizardMode && <RecoveryExpertVerdict />}
               <BibliographyDrawer references={REFERENCES} />
             </div>
           </div>

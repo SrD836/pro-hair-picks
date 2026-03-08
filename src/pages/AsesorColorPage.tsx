@@ -2,8 +2,9 @@
 // Diseño: Google AI Studio — Expert Color Matcher wizard
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Palette, X, ArrowRight, ArrowLeft, CheckCircle2, Check, AlertTriangle, Download, ShieldCheck, Sparkles } from 'lucide-react';
+import { useWizardReturn } from '@/hooks/useWizardReturn';
 
 const STEPS = [
   { id: 1, title: 'Tono de piel' },
@@ -18,6 +19,7 @@ const STEPS = [
 export default function AsesorColorPage() {
   const [step, setStep] = useState(1);
   const [selections, setSelections] = useState<Record<number, unknown>>({});
+  const { isWizardMode, completeWizardModule } = useWizardReturn('asesor-color');
 
   const handleSelect = (stepId: number, value: unknown) => {
     setSelections(prev => ({ ...prev, [stepId]: value }));
@@ -29,7 +31,7 @@ export default function AsesorColorPage() {
   const progress = ((step - 1) / 7) * 100;
 
   if (step === 8) {
-    return <ResultsPage />;
+    return <ResultsPage isWizardMode={isWizardMode} onWizardContinue={() => completeWizardModule({ summary: 'Colorimetría completada', score: 98, rawResult: { selections } })} />;
   }
 
   return (
@@ -491,7 +493,7 @@ function Step7({ selection, onSelect }: { selection: unknown; onSelect: (v: stri
   );
 }
 
-function ResultsPage() {
+function ResultsPage({ isWizardMode, onWizardContinue }: { isWizardMode?: boolean; onWizardContinue?: () => void }) {
   return (
     <div className="min-h-screen bg-[#2D2218] text-[#F5F0E8] font-sans flex flex-col items-center py-12 px-6">
       <div className="text-center mb-10">
@@ -575,11 +577,26 @@ function ResultsPage() {
           <button className="w-full bg-[#E85D04] hover:bg-[#E85D04]/90 text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 text-lg">
             Descargar Guía Completa PDF <Download className="w-5 h-5" />
           </button>
-          <button className="w-full bg-transparent text-[#E85D04] border-2 border-[#E85D04]/30 hover:bg-[#E85D04]/5 font-bold py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3">
+          <Link
+            to="/categorias/tintes"
+            className="w-full bg-transparent text-[#E85D04] border-2 border-[#E85D04]/30 hover:bg-[#E85D04]/5 font-bold py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3"
+          >
             Ver Productos Recomendados <ArrowRight className="w-5 h-5" />
-          </button>
+          </Link>
         </div>
       </div>
+
+      {/* Wizard continue */}
+      {isWizardMode && onWizardContinue && (
+        <div className="w-full max-w-3xl mt-8">
+          <button
+            onClick={onWizardContinue}
+            className="w-full flex items-center justify-center gap-2 h-14 rounded-xl bg-[#E85D04] text-white font-bold hover:bg-[#E85D04]/90 transition-all"
+          >
+            Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

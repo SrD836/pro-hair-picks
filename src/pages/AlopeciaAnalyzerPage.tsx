@@ -5,6 +5,7 @@ import AlopeciaAnalyzer from "@/components/AlopeciaAnalyzer";
 import AlopeciaExpertVerdict from "@/components/AlopeciaExpertVerdict";
 import { ToolHeader } from "@/components/mi-pelo/shared/ToolHeader";
 import { BibliographyDrawer, type BibReference } from "@/components/mi-pelo/shared/BibliographyDrawer";
+import { useWizardReturn } from "@/hooks/useWizardReturn";
 import { useState } from "react";
 
 const REFERENCES: BibReference[] = [
@@ -23,6 +24,11 @@ const MODULES = [
 
 export default function AlopeciaAnalyzerPage() {
   const [started, setStarted] = useState(false);
+  const { isWizardMode, completeWizardModule } = useWizardReturn('analizador-alopecia');
+
+  const handleWizardComplete = (summary: string, score?: number) => {
+    completeWizardModule({ summary, score, rawResult: { summary } });
+  };
 
   return (
     <>
@@ -77,8 +83,8 @@ export default function AlopeciaAnalyzerPage() {
               >
                 ← Volver
               </motion.button>
-              <AlopeciaAnalyzer />
-              <AlopeciaExpertVerdict />
+              <AlopeciaAnalyzer wizardContinue={isWizardMode ? handleWizardComplete : undefined} />
+              {!isWizardMode && <AlopeciaExpertVerdict />}
               <BibliographyDrawer references={REFERENCES} />
             </div>
           </div>

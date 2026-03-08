@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { generateAlopeciaPDF } from "@/lib/pdfGenerators";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { AlopeciaInput, AlopeciaReport } from "@/lib/generateAlopeciaReport";
@@ -1499,7 +1500,11 @@ function RiskReport({
 
 type MainView = "library" | "form" | "report";
 
-export default function AlopeciaAnalyzer() {
+interface AlopeciaAnalyzerProps {
+  wizardContinue?: (summary: string, score?: number) => void;
+}
+
+export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerProps = {}) {
   const [view, setView] = useState<MainView>("library");
   const [report, setReport] = useState<AlopeciaReport | null>(null);
   const reportRef = useRef<HTMLDivElement>(null);
@@ -1668,6 +1673,19 @@ export default function AlopeciaAnalyzer() {
             transition={{ duration: 0.3 }}
           >
             <RiskReport report={report} onReset={handleReset} />
+            {wizardContinue && (
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={() => wizardContinue(
+                    `Riesgo ${report.risk_level} — ${report.risk_score}/100`,
+                    report.risk_score
+                  )}
+                  className="px-8 py-4 bg-accent-orange text-white font-bold uppercase tracking-widest rounded-xl hover:bg-accent-orange-hover transition-colors text-sm flex items-center gap-2"
+                >
+                  Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

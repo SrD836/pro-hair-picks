@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/i18n/LanguageContext";
 import {
   AlertTriangle,
+  ArrowRight,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -252,7 +253,11 @@ function buildCompatConfig(t: (k: string) => string) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function ChemicalCompatibilityAnalyzer() {
+interface ChemicalCompatibilityProps {
+  wizardContinue?: (summary: string) => void;
+}
+
+export default function ChemicalCompatibilityAnalyzer({ wizardContinue }: ChemicalCompatibilityProps = {}) {
   const { t } = useLanguage();
   const [treatmentDone, setTreatmentDone] = useState<TreatmentId | "">("");
   const [treatmentDesired, setTreatmentDesired] = useState<TreatmentId | "">("");
@@ -396,10 +401,26 @@ export default function ChemicalCompatibilityAnalyzer() {
         )}
       </AnimatePresence>
 
+      {/* Wizard continue */}
+      {wizardContinue && data && (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => wizardContinue(
+              `${treatmentDone} + ${treatmentDesired}: ${data.compatibility}`
+            )}
+            className="px-8 py-4 bg-accent-orange text-white font-bold uppercase tracking-widest rounded-xl hover:bg-accent-orange-hover transition-colors text-sm flex items-center gap-2"
+          >
+            Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* ── Expert Verdict ─────────────────────────────────────── */}
-      <div className="mt-16">
-        <ExpertVerdict />
-      </div>
+      {!wizardContinue && (
+        <div className="mt-16">
+          <ExpertVerdict />
+        </div>
+      )}
     </section>
   );
 }

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   AlertTriangle,
+  ArrowRight,
   Calendar,
   ChevronRight,
   Download,
@@ -367,7 +368,11 @@ function MaintenanceCard({ maintenance, onClick }: MaintenanceCardProps) {
 
 type ViewState = "form" | "blocked" | "calendar";
 
-export default function RecoveryTimeline() {
+interface RecoveryTimelineProps {
+  wizardContinue?: (summary: string, score?: number) => void;
+}
+
+export default function RecoveryTimeline({ wizardContinue }: RecoveryTimelineProps = {}) {
   // ── Form state
   const [damageLevel, setDamageLevel] = useState<number>(5);
   const [lastTreatment, setLastTreatment] = useState<LastTreatment | "">("");
@@ -820,7 +825,7 @@ export default function RecoveryTimeline() {
             )}
 
             {/* Download CTA (bottom) */}
-            <div className="no-print flex justify-center pt-2">
+            <div className="no-print flex flex-col items-center gap-3 pt-2">
               <button
                 onClick={() => calendar && generateRecoveryPDF({
                   totalWeeks: calendar.total_weeks,
@@ -842,6 +847,17 @@ export default function RecoveryTimeline() {
                 <Download className="w-4 h-4" />
                 Descargar mi calendario
               </button>
+              {wizardContinue && calendar && (
+                <button
+                  onClick={() => wizardContinue(
+                    `${calendar.total_weeks} semanas · Daño ${damageLevel}/10`,
+                    Math.round(100 - (damageLevel * 10))
+                  )}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-accent-orange text-white font-bold hover:bg-accent-orange-hover transition-colors text-sm"
+                >
+                  Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+                </button>
+              )}
             </div>
           </motion.div>
         </AnimatePresence>
