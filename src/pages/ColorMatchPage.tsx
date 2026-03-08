@@ -2,27 +2,21 @@ import { useState, useCallback } from "react";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella, BookOpen, Gem, Palette, ShirtIcon, ChevronRight, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw,
+  FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella,
+  BookOpen, Palette, ShirtIcon, ChevronRight, ChevronLeft, Check, Lightbulb, Download
+} from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { WizardShell } from "@/components/mi-pelo/shared/WizardShell";
 import { NavigationBar } from "@/components/mi-pelo/shared/NavigationBar";
 import {
-  type SkinTone,
-  type EyeColor,
-  type FantasyColor,
-  type VeinColor,
-  type JewelryPref,
-  type ColorReaction,
-  type Season,
-  type UserProfile,
-  type ColorRecommendation,
-  getRecommendation,
-  computeUndertone,
-  FANTASY_COLORS,
-  SEASON_STYLES,
+  type SkinTone, type EyeColor, type FantasyColor, type VeinColor,
+  type JewelryPref, type ColorReaction, type Season, type UserProfile,
+  type ColorRecommendation, getRecommendation, computeUndertone,
+  FANTASY_COLORS, SEASON_STYLES,
 } from "@/lib/colorMatchEngine";
 
 /* ── Step option type ──────────────────────────── */
@@ -32,6 +26,7 @@ interface StepOption<T extends string> {
   desc?: { es: string; en: string };
   color?: string;
   emoji?: string;
+  image?: string;
 }
 
 /* ── Steps config ──────────────────────────────── */
@@ -49,23 +44,23 @@ const VEIN_OPTIONS: StepOption<VeinColor>[] = [
 ];
 
 const JEWELRY_OPTIONS: StepOption<JewelryPref>[] = [
-  { value: "silver", label: { es: "Plata", en: "Silver" }, emoji: "🪙", desc: { es: "Los plateados te favorecen más", en: "Silver flatters you more" } },
-  { value: "gold", label: { es: "Oro", en: "Gold" }, emoji: "✨", desc: { es: "Los dorados te favorecen más", en: "Gold flatters you more" } },
-  { value: "both", label: { es: "Ambos por igual", en: "Both equally" }, emoji: "💫", desc: { es: "Ambos metales te quedan bien", en: "Both metals look good" } },
+  { value: "silver", label: { es: "Plata", en: "Silver" }, image: "/images/wizard/jewelry-silver.webp" },
+  { value: "gold", label: { es: "Oro", en: "Gold" }, image: "/images/wizard/jewelry-gold.webp" },
+  { value: "both", label: { es: "Ambos por igual", en: "Both equally" }, image: "/images/wizard/jewelry-both.webp" },
 ];
 
 const COLOR_REACTION_OPTIONS: StepOption<ColorReaction>[] = [
-  { value: "pink", label: { es: "Rosa fucsia", en: "Fuchsia pink" }, color: "#e91e8c", desc: { es: "Te ilumina más el rostro", en: "Brightens your face more" } },
-  { value: "orange", label: { es: "Naranja", en: "Orange" }, color: "#f39c12", desc: { es: "Te ilumina más el rostro", en: "Brightens your face more" } },
+  { value: "pink", label: { es: "Rosa fucsia", en: "Fuchsia pink" }, image: "/images/wizard/color-pink.webp", desc: { es: "Te ilumina más el rostro", en: "Brightens your face more" } },
+  { value: "orange", label: { es: "Naranja", en: "Orange" }, image: "/images/wizard/color-orange.webp", desc: { es: "Te ilumina más el rostro", en: "Brightens your face more" } },
   { value: "both", label: { es: "Ambos", en: "Both" }, emoji: "🎨", desc: { es: "Ambos te favorecen", en: "Both flatter you" } },
 ];
 
 const EYE_OPTIONS: StepOption<EyeColor>[] = [
-  { value: "blue_gray", label: { es: "Azul / Gris", en: "Blue / Gray" }, color: "#7a9cc6" },
-  { value: "green", label: { es: "Verde", en: "Green" }, color: "#6a9a5a" },
-  { value: "hazel", label: { es: "Miel / Avellana", en: "Hazel" }, color: "#b8863a" },
-  { value: "brown", label: { es: "Marrón", en: "Brown" }, color: "#6a4a2a" },
-  { value: "black", label: { es: "Negro", en: "Black" }, color: "#2a2018" },
+  { value: "blue_gray", label: { es: "Azul / Gris", en: "Blue / Gray" }, color: "#7a9cc6", image: "/images/wizard/eye-blue.webp" },
+  { value: "green", label: { es: "Verde", en: "Green" }, color: "#6a9a5a", image: "/images/wizard/eye-green.webp" },
+  { value: "hazel", label: { es: "Miel / Avellana", en: "Hazel" }, color: "#b8863a", image: "/images/wizard/eye-hazel.webp" },
+  { value: "brown", label: { es: "Marrón", en: "Brown" }, color: "#6a4a2a", image: "/images/wizard/eye-brown.webp" },
+  { value: "black", label: { es: "Negro", en: "Black" }, color: "#2a2018", image: "/images/wizard/eye-black.webp" },
 ];
 
 const LEVEL_LABELS: { es: string; en: string }[] = [
@@ -83,6 +78,9 @@ const LEVEL_LABELS: { es: string; en: string }[] = [
 ];
 
 const LEVEL_COLORS = ["", "#0a0a0a", "#1e120a", "#3a2a1e", "#5a4a38", "#7a6a50", "#8a7a60", "#a09070", "#baa880", "#d0c0a0", "#e8dcc8"];
+
+const STEP_LABELS_ES = ["Tono de piel", "Test de venas", "Test de metales", "Reacción al color", "Color de ojos", "Nivel natural", "Color actual"];
+const STEP_LABELS_EN = ["Skin tone", "Vein test", "Metal test", "Color reaction", "Eye color", "Natural level", "Current color"];
 
 const LOADING_MSGS = [
   { es: "Analizando pigmentación...", en: "Analyzing pigmentation..." },
@@ -136,9 +134,7 @@ function isRedheadResult(code: string): boolean {
 }
 
 function getDyeLink(linksMap: Record<AffiliateKey, Record<UndertoneKey, { code: string; url: string }>>, skinTone: SkinTone, undertone: UndertoneKey, resultCode: string, level: number): string | null {
-  if (isRedheadResult(resultCode)) {
-    return linksMap.redhead[undertone]?.url || null;
-  }
+  if (isRedheadResult(resultCode)) return linksMap.redhead[undertone]?.url || null;
   const key = getAffiliateKey(skinTone, level);
   return linksMap[key]?.[undertone]?.url || null;
 }
@@ -154,13 +150,35 @@ const SEASON_NAMES: Record<Season, { es: string; en: string }> = {
   spring: { es: "Primavera", en: "Spring" },
 };
 
-/* ── Shared card button for wizard ─────────────── */
-function WizardCard({ selected, onClick, children, className = '' }: { selected: boolean; onClick: () => void; children: React.ReactNode; className?: string }) {
+/* ── Image card for wizard steps ────────────────── */
+function ImageCard({ selected, onClick, image, label, className = '' }: {
+  selected: boolean; onClick: () => void; image: string; label: string; className?: string;
+}) {
+  return (
+    <button onClick={onClick} className={`group relative block overflow-hidden rounded-2xl cursor-pointer transition-all duration-300 border-3 ${
+      selected ? 'border-accent-orange shadow-lg ring-4 ring-accent-orange/20' : 'border-transparent hover:border-accent-orange/30'
+    } ${className}`}>
+      <img src={image} alt={label} className="w-full h-40 object-cover" loading="lazy" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      <span className="absolute bottom-3 left-3 text-white text-sm font-semibold drop-shadow-md">{label}</span>
+      {selected && (
+        <span className="absolute top-3 right-3 w-6 h-6 rounded-full bg-accent-orange flex items-center justify-center shadow-md">
+          <Check className="w-3.5 h-3.5 text-white" />
+        </span>
+      )}
+    </button>
+  );
+}
+
+/* ── Standard card for wizard steps ────────────── */
+function WizardCard({ selected, onClick, children, className = '' }: {
+  selected: boolean; onClick: () => void; children: React.ReactNode; className?: string;
+}) {
   return (
     <button
       onClick={onClick}
-      className={`relative flex flex-col items-center text-center gap-3 p-5 rounded-2xl border-2 transition-all duration-300 bg-white ${
-        selected ? 'border-accent-orange shadow-bento' : 'border-espresso/8 hover:border-accent-orange/30 hover:shadow-bento'
+      className={`relative flex flex-col items-center text-center gap-3 p-5 rounded-2xl border transition-all duration-300 bg-white ${
+        selected ? 'border-accent-orange border-2 shadow-bento ring-4 ring-accent-orange/20' : 'border-[#E8E0D4] hover:border-accent-orange/30 hover:shadow-bento'
       } ${className}`}
     >
       {selected && (
@@ -195,6 +213,8 @@ export default function ColorMatchPage() {
   const [loadingMsg, setLoadingMsg] = useState(0);
   const [result, setResult] = useState<ColorRecommendation | null>(null);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const [showAllLevels, setShowAllLevels] = useState(false);
+  const [landingScroll, setLandingScroll] = useState(0);
 
   const titles = [
     { es: "¿Cuál es tu tono de piel?", en: "What is your skin tone?" },
@@ -206,6 +226,7 @@ export default function ColorMatchPage() {
     { es: "¿Cuál es tu color actual de cabello?", en: "What is your current hair color?" },
   ];
 
+  const stepLabels = lang === "es" ? STEP_LABELS_ES : STEP_LABELS_EN;
   const totalSteps = 7;
   const step6Selected = currentLevel !== null || currentFantasy !== null;
   const selections = [skinTone, veinColor, jewelryPref, colorReaction, eyeColor, naturalLevel, step6Selected];
@@ -219,9 +240,8 @@ export default function ColorMatchPage() {
     let i = 0;
     const interval = setInterval(() => {
       i++;
-      if (i < LOADING_MSGS.length) {
-        setLoadingMsg(i);
-      } else {
+      if (i < LOADING_MSGS.length) setLoadingMsg(i);
+      else {
         clearInterval(interval);
         const profile: UserProfile = {
           skinTone, undertone, eyeColor, naturalLevel,
@@ -248,7 +268,7 @@ export default function ColorMatchPage() {
     setStep(0); setSkinTone(null); setVeinColor(null); setJewelryPref(null);
     setColorReaction(null); setEyeColor(null); setNaturalLevel(null);
     setCurrentLevel(null); setCurrentFantasy(null); setResult(null);
-    setLoading(false); setStarted(false);
+    setLoading(false); setStarted(false); setShowAllLevels(false);
   };
 
   const computedUndertone = veinColor && jewelryPref && colorReaction
@@ -291,197 +311,191 @@ export default function ColorMatchPage() {
         ? { es: "Cálido", en: "Warm" }
         : { es: "Neutro", en: "Neutral" };
 
-    const paletteSwatches = [
-      result.hexPreview,
-      ...result.complementary.slice(0, 5).map((c) => c.hex),
-    ];
-
     return (
       <>
         <SEOHead title={metaTitle} description={metaDesc} />
 
-        {/* Hero */}
-        <div className="bg-espresso py-16 text-center">
-          <div className="container mx-auto px-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent-orange mb-4">
-              {lang === "es" ? "Tu Análisis Cromático" : "Your Color Analysis"}
-            </p>
-            <h1 className="font-display text-4xl md:text-5xl font-bold italic text-cream mb-4">
+        {/* Full-page espresso background */}
+        <div className="min-h-screen bg-espresso py-12 px-4">
+          {/* Central cream card */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-lg mx-auto bg-background-light rounded-2xl p-8 shadow-2xl"
+          >
+            {/* 1. Icon */}
+            <div className="flex justify-center mb-4">
+              <div className="w-14 h-14 rounded-full bg-espresso flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-gold" />
+              </div>
+            </div>
+
+            {/* 2. Title */}
+            <h1 className="font-display text-3xl text-espresso text-center mb-1">
               {lang === "es" ? "Tu Master Color Card" : "Your Master Color Card"}
             </h1>
-            <p className="text-gold text-lg font-display">
-              {SEASON_STYLES[result.season].icon} {l(SEASON_NAMES[result.season])}
+            <p className="text-espresso/50 text-sm text-center mb-8">
+              {lang === "es" ? "Diagnóstico de Colorimetría Profesional" : "Professional Colorimetry Diagnosis"}
             </p>
-          </div>
-        </div>
 
-        <section className="bg-background-light py-12">
-          <div className="container mx-auto px-4 max-w-5xl">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-              {/* Bento grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Expert analysis */}
-                <div className="bg-white border border-espresso/8 rounded-2xl p-6 flex flex-col gap-4 shadow-bento">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-accent-orange/10 border-2 border-accent-orange/30 flex items-center justify-center shrink-0">
-                      <SeasonIcon className="w-6 h-6 text-accent-orange" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-espresso/40 uppercase tracking-wider">
-                        {lang === "es" ? "Análisis Experto" : "Expert Analysis"}
-                      </p>
-                      <p className="font-display text-sm text-espresso font-bold">
-                        {lang === "es" ? "Colorista Senior" : "Senior Colorist"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-orange/10 border border-accent-orange/20 w-fit">
-                    <span className="text-sm">{SEASON_STYLES[result.season].icon}</span>
-                    <span className="text-xs font-bold text-accent-orange uppercase tracking-wider">{l(SEASON_NAMES[result.season])}</span>
-                  </div>
-                  <blockquote className="italic text-sm text-espresso/50 leading-relaxed border-l-2 border-accent-orange/40 pl-4 flex-1">
-                    {l(result.verdict)}
-                  </blockquote>
-                  <div className="pt-4 border-t border-espresso/8">
-                    <p className="text-[10px] text-espresso/40 uppercase tracking-wider mb-1">
-                      {lang === "es" ? "Subtono" : "Undertone"}
-                    </p>
-                    <p className="text-sm font-bold text-espresso">{l(undertoneLabel)}</p>
-                    <p className="text-xs text-espresso/40 mt-1">{l(seasonStyle.contrast)}</p>
+            {/* 3. Color circle + match badge */}
+            <div className="flex flex-col items-center mb-8">
+              <div className="relative">
+                <div className="w-40 h-40 rounded-full mx-auto" style={{ backgroundColor: result.hexPreview, boxShadow: `0 8px 32px ${result.hexPreview}40` }} />
+                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-accent-orange text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                  MATCH 98%
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Tone info */}
+            <div className="text-center mb-6">
+              <p className="text-espresso/30 text-[10px] uppercase tracking-[0.2em] mb-2">
+                {lang === "es" ? "TONO RECOMENDADO" : "RECOMMENDED TONE"}
+              </p>
+              <h2 className="font-display text-4xl text-espresso mb-3">{l(result.name)}</h2>
+              <div className="flex justify-center gap-2">
+                <span className="bg-espresso/10 text-espresso text-xs rounded-full px-3 py-1">● {l(undertoneLabel)}</span>
+                <span className="bg-espresso/10 text-espresso text-xs rounded-full px-3 py-1">{result.code}</span>
+              </div>
+            </div>
+
+            {/* 5. Two-column cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              {/* Expert analysis */}
+              <div className="bg-white rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Lightbulb className="w-4 h-4 text-gold" />
+                  <span className="text-[10px] text-espresso/40 uppercase tracking-wider font-bold">
+                    {lang === "es" ? "Análisis del Experto" : "Expert Analysis"}
+                  </span>
+                </div>
+                <p className="text-espresso/70 text-sm italic leading-relaxed mb-4 line-clamp-6">
+                  {l(result.verdict)}
+                </p>
+                <div className="flex items-center gap-2 pt-3 border-t border-espresso/5">
+                  <div className="w-8 h-8 rounded-full bg-espresso/10 flex items-center justify-center text-[10px] font-bold text-espresso">AG</div>
+                  <div>
+                    <p className="text-xs font-bold text-espresso">Ana García</p>
+                    <p className="text-[10px] text-espresso/40">{lang === "es" ? "Directora Técnica" : "Technical Director"}</p>
                   </div>
                 </div>
+              </div>
 
-                {/* Center: Color circle */}
-                <div className="bg-white border border-espresso/8 rounded-2xl p-6 flex flex-col items-center justify-center gap-4 shadow-bento">
-                  <svg width="160" height="160" viewBox="0 0 160 160">
-                    <circle cx="80" cy="80" r="72" fill={result.hexPreview} />
-                    <circle cx="80" cy="80" r="72" fill="none" stroke="rgba(236,91,19,0.5)" strokeWidth="3" />
-                  </svg>
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent-orange/10 border border-accent-orange/30">
-                    <Sparkles className="w-4 h-4 text-accent-orange" />
-                    <span className="text-sm font-bold text-accent-orange">98% MATCH</span>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-display text-2xl font-bold text-espresso">{result.code}</p>
-                    <p className="text-sm text-espresso/50">{l(result.name)}</p>
-                  </div>
-                  <div className="w-full bg-espresso/[0.03] rounded-xl p-4 border border-espresso/5 text-xs text-espresso/50 leading-relaxed text-center">
-                    {l(result.description)}
-                  </div>
+              {/* Palette */}
+              <div className="bg-white rounded-xl p-4 relative">
+                <div className="absolute top-3 right-3 bg-espresso text-cream text-[10px] font-bold px-2 py-0.5 rounded">
+                  {l(SEASON_NAMES[result.season]).toUpperCase()}
                 </div>
-
-                {/* Right: Palette */}
-                <div className="bg-white border border-espresso/8 rounded-2xl p-6 flex flex-col gap-4 shadow-bento">
-                  <p className="text-[10px] font-bold text-espresso/40 uppercase tracking-wider">
-                    {lang === "es" ? "Tu Paleta Cromática" : "Your Color Palette"}
+                <p className="text-[10px] text-espresso/40 uppercase tracking-wider font-bold mb-3">
+                  {lang === "es" ? "Tu Paleta" : "Your Palette"}
+                </p>
+                <div className="mb-3">
+                  <p className="text-[9px] text-espresso/30 uppercase tracking-wider mb-1.5">
+                    {lang === "es" ? "MODA & ROPA" : "FASHION"}
                   </p>
-                  <div className="grid grid-cols-3 gap-3">
-                    {paletteSwatches.slice(0, 6).map((hex, i) => (
-                      <div key={i} className="flex flex-col items-center gap-1.5">
-                        <div className="w-14 h-14 rounded-xl border border-espresso/8 shadow-sm" style={{ backgroundColor: hex }} />
-                        {i === 0 && <span className="text-[10px] text-accent-orange font-bold">{lang === "es" ? "Principal" : "Main"}</span>}
-                      </div>
+                  <div className="flex gap-2">
+                    {seasonStyle.clothingColors.slice(0, 4).map((c, i) => (
+                      <div key={i} className="w-9 h-9 rounded-lg border border-espresso/8" style={{ backgroundColor: c.hex }} title={l(c.name)} />
                     ))}
                   </div>
-                  {result.requiresDecolor && (
-                    <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3 text-xs">
-                      <FlaskConical className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                      <p className="text-espresso/60">{lang === "es" ? "Requiere decoloración profesional" : "Requires professional bleaching"}</p>
-                    </div>
+                </div>
+                <div>
+                  <p className="text-[9px] text-espresso/30 uppercase tracking-wider mb-1.5">
+                    {lang === "es" ? "MAQUILLAJE" : "MAKEUP"}
+                  </p>
+                  <div className="flex gap-2">
+                    {result.complementary.slice(0, 3).map((c, i) => (
+                      <div key={i} className="w-9 h-9 rounded-lg border border-espresso/8" style={{ backgroundColor: c.hex }} title={l(c.name)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Warnings */}
+            {result.requiresDecolor && (
+              <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3 text-xs mb-4">
+                <FlaskConical className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                <p className="text-espresso/60">{lang === "es" ? "Requiere decoloración profesional" : "Requires professional bleaching"}</p>
+              </div>
+            )}
+            {result.requiresSalon && !result.requiresDecolor && (
+              <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3 text-xs mb-4">
+                <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                <p className="text-espresso/60">
+                  {lang === "es" ? `Salto de ${result.levelJump} niveles — visita un salón` : `${result.levelJump}-level jump — visit a salon`}
+                </p>
+              </div>
+            )}
+
+            {/* 6. CTAs inside card */}
+            <button
+              onClick={() => toast({ title: lang === "es" ? "Próximamente" : "Coming soon", description: lang === "es" ? "La guía PDF estará disponible próximamente." : "The PDF guide will be available soon." })}
+              className="w-full py-3 rounded-xl bg-gold text-espresso font-semibold text-sm hover:bg-gold-light transition-colors mb-3 flex items-center justify-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              {lang === "es" ? "Descargar Guía Completa PDF ↓" : "Download Full PDF Guide ↓"}
+            </button>
+
+            <Link
+              to="/categorias/tintes"
+              className="w-full py-3 rounded-xl border border-espresso/15 text-espresso/60 font-semibold text-sm hover:border-espresso/30 transition-colors flex items-center justify-center gap-2"
+            >
+              {lang === "es" ? "Ver Productos Recomendados →" : "View Recommended Products →"}
+            </Link>
+
+            {/* Amazon CTAs */}
+            {!result.requiresDecolor && !result.requiresSalon && (() => {
+              const dyeUrlES = skinTone ? getDyeLink(DYE_LINKS_ES, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
+              const dyeUrlUS = skinTone ? getDyeLink(DYE_LINKS_US, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
+              const hasAny = dyeUrlES || dyeUrlUS;
+              return hasAny ? (
+                <div className="flex flex-col sm:flex-row gap-2 mt-3">
+                  {dyeUrlES && (
+                    <a href={dyeUrlES} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-accent-orange text-white font-semibold text-sm hover:bg-accent-orange-hover transition-all">
+                      🇪🇸 Amazon España <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
                   )}
-                  {result.requiresSalon && !result.requiresDecolor && (
-                    <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3 text-xs">
-                      <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                      <p className="text-espresso/60">
-                        {lang === "es" ? `Salto de ${result.levelJump} niveles — visita un salón` : `${result.levelJump}-level jump — visit a salon`}
-                      </p>
-                    </div>
+                  {dyeUrlUS && (
+                    <a href={dyeUrlUS} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-accent-orange text-white font-semibold text-sm hover:bg-accent-orange-hover transition-all">
+                      🇺🇸 Amazon USA <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
                   )}
                 </div>
-              </div>
+              ) : null;
+            })()}
 
-              {/* Clothing + avoid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white border border-espresso/8 rounded-2xl p-6 shadow-bento">
-                  <h3 className="font-display text-sm text-espresso/50 mb-3 flex items-center gap-2">
-                    <ShirtIcon className="w-4 h-4" />
-                    {lang === "es" ? "Tus colores ideales para vestir" : "Your ideal clothing colors"}
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {seasonStyle.clothingColors.map((c, i) => (
-                      <div key={i} className="flex flex-col items-center gap-1">
-                        <div className="w-10 h-10 rounded-lg border-2 border-espresso/8 shadow-sm" style={{ backgroundColor: c.hex }} />
-                        <span className="text-[10px] text-espresso/40 text-center max-w-[60px]">{l(c.name)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="bg-white border border-espresso/8 rounded-2xl p-6 shadow-bento">
-                  <h3 className="font-display text-sm text-red-400 mb-3">
-                    {lang === "es" ? "🚫 Colores a evitar" : "🚫 Colors to avoid"}
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {seasonStyle.avoidColors.map((c, i) => (
-                      <div key={i} className="flex flex-col items-center gap-1 opacity-70">
-                        <div className="w-10 h-10 rounded-lg border-2 border-red-200 shadow-sm relative" style={{ backgroundColor: c.hex }}>
-                          <div className="absolute inset-0 flex items-center justify-center text-white text-lg font-bold">✕</div>
-                        </div>
-                        <span className="text-[10px] text-espresso/40 text-center max-w-[60px]">{l(c.name)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            {/* 7. Disclaimer */}
+            <p className="text-espresso/30 text-xs text-center mt-6">
+              {lang === "es"
+                ? "El resultado puede variar según la calibración de tu pantalla. Consulta con tu colorista profesional."
+                : "Results may vary based on screen calibration. Consult your professional colorist."}
+            </p>
+          </motion.div>
 
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  onClick={() => toast({ title: lang === "es" ? "Próximamente" : "Coming soon", description: lang === "es" ? "La guía PDF estará disponible próximamente." : "The PDF guide will be available soon." })}
-                  className="flex-1 px-6 py-4 rounded-2xl bg-accent-orange text-white font-bold text-sm hover:bg-accent-orange-hover transition-all"
-                >
-                  {lang === "es" ? "Descargar Guía PDF" : "Download PDF Guide"}
-                </button>
-                <Link to="/categorias/tintes" className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl border-2 border-espresso/10 text-espresso font-bold text-sm hover:border-accent-orange transition-all">
-                  {lang === "es" ? "Ver Productos" : "View Products"} <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+          {/* Below card: Reset + educational */}
+          <div className="max-w-lg mx-auto mt-6">
+            <button onClick={reset} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border border-cream/15 text-cream/40 text-sm hover:text-cream transition-colors">
+              <RotateCcw className="w-4 h-4" /> {lang === "es" ? "Empezar de nuevo" : "Start over"}
+            </button>
+          </div>
 
-              {/* Amazon CTAs */}
-              {!result.requiresDecolor && !result.requiresSalon && (() => {
-                const dyeUrlES = skinTone ? getDyeLink(DYE_LINKS_ES, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
-                const dyeUrlUS = skinTone ? getDyeLink(DYE_LINKS_US, skinTone, effectiveUndertone, result.code, naturalLevel ?? 5) : null;
-                const hasAny = dyeUrlES || dyeUrlUS;
-                return hasAny ? (
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    {dyeUrlES && (
-                      <a href={dyeUrlES} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-accent-orange text-white font-bold text-sm hover:bg-accent-orange-hover transition-all">
-                        🇪🇸 Amazon España <ExternalLink className="w-4 h-4" />
-                      </a>
-                    )}
-                    {dyeUrlUS && (
-                      <a href={dyeUrlUS} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-accent-orange text-white font-bold text-sm hover:bg-accent-orange-hover transition-all">
-                        🇺🇸 Amazon USA <ExternalLink className="w-4 h-4" />
-                      </a>
-                    )}
-                  </div>
-                ) : null;
-              })()}
-
-              <button onClick={reset} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border border-espresso/10 text-espresso/40 text-sm hover:text-espresso transition-colors">
-                <RotateCcw className="w-4 h-4" /> {lang === "es" ? "Empezar de nuevo" : "Start over"}
-              </button>
-
+          <div className="max-w-3xl mx-auto mt-8">
+            <div className="bg-background-light rounded-2xl p-6">
               <Colorimetry101 lang={lang} />
               <ColorMatchFAQ lang={lang} onReset={reset} />
-            </motion.div>
+            </div>
           </div>
-        </section>
+        </div>
       </>
     );
   }
 
   // ── Landing ──
   if (!started) {
+    const visibleLevels = [1, 3, 5, 7, 10];
     return (
       <>
         <SEOHead title={metaTitle} description={metaDesc} />
@@ -507,7 +521,7 @@ export default function ColorMatchPage() {
                 COLORIMETRÍA
               </span>
 
-              <h1 className="font-display text-[2.5rem] md:text-5xl font-bold italic text-cream mb-5 leading-[1.1] tracking-tight">
+              <h1 className="font-display text-[2.5rem] md:text-5xl font-bold text-cream mb-5 leading-[1.1] tracking-tight">
                 Expert Color <span className="text-accent-orange">Matcher</span>
               </h1>
 
@@ -521,19 +535,33 @@ export default function ColorMatchPage() {
                 ~3 min · {lang === "es" ? "Sin registro · 7 pasos" : "No registration · 7 steps"}
               </p>
 
-              {/* Color swatches preview — hair levels carousel */}
-              <div className="flex justify-center gap-2.5 mb-10 overflow-x-auto scrollbar-hide py-2">
-                {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
-                  <div key={lv} className="flex flex-col items-center gap-1.5 shrink-0">
-                    <div className="w-11 h-11 rounded-full border-2 border-cream/15" style={{ backgroundColor: LEVEL_COLORS[lv] }} />
-                    <span className="text-[9px] text-cream/40 whitespace-nowrap">{lv}.0</span>
-                  </div>
-                ))}
+              {/* Color swatches carousel with arrows */}
+              <div className="relative mb-10">
+                <button
+                  onClick={() => setLandingScroll(Math.max(0, landingScroll - 1))}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-cream/10 flex items-center justify-center hover:bg-cream/20 transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4 text-cream/60" />
+                </button>
+                <div className="flex justify-center gap-3 overflow-hidden py-2 mx-10">
+                  {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
+                    <div key={lv} className="flex flex-col items-center gap-1.5 shrink-0">
+                      <div className="w-12 h-12 rounded-full border-2 border-cream/15 shadow-lg" style={{ backgroundColor: LEVEL_COLORS[lv] }} />
+                      <span className="text-[9px] text-cream/40 whitespace-nowrap">{lv}.0</span>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setLandingScroll(Math.min(9, landingScroll + 1))}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-cream/10 flex items-center justify-center hover:bg-cream/20 transition-colors"
+                >
+                  <ChevronRight className="w-4 h-4 text-cream/60" />
+                </button>
               </div>
 
               <button
                 onClick={() => setStarted(true)}
-                className="px-10 py-4 rounded-2xl bg-accent-orange text-white font-bold text-lg hover:bg-accent-orange-hover transition-all duration-300"
+                className="px-10 py-4 rounded-full border-2 border-gold text-gold font-bold text-lg hover:bg-gold hover:text-espresso transition-all duration-300"
               >
                 {lang === "es" ? "Iniciar Asesoría →" : "Start Analysis →"}
               </button>
@@ -552,7 +580,7 @@ export default function ColorMatchPage() {
     <>
       <SEOHead title={metaTitle} description={metaDesc} />
 
-      <WizardShell toolName="EXPERT COLOR MATCHER" currentStep={step} totalSteps={totalSteps} onClose={reset}>
+      <WizardShell toolName="EXPERT COLOR MATCHER" currentStep={step} totalSteps={totalSteps} onClose={reset} stepLabel={stepLabels[step]}>
         <div className="max-w-2xl mx-auto px-6 py-10">
           {/* Question text */}
           <AnimatePresence mode="wait" custom={direction}>
@@ -583,7 +611,7 @@ export default function ColorMatchPage() {
                 <div className="grid grid-cols-2 gap-4">
                   {SKIN_OPTIONS.map((o) => (
                     <WizardCard key={o.value} selected={skinTone === o.value} onClick={() => setSkinTone(o.value)}>
-                      <div className={`w-14 h-14 rounded-full border-2 transition-all ${skinTone === o.value ? 'border-accent-orange shadow-lg' : 'border-espresso/10'}`} style={{ backgroundColor: o.color }} />
+                      <div className={`w-14 h-14 rounded-full border-2 transition-all ${skinTone === o.value ? 'border-accent-orange shadow-lg' : 'border-[#E8E0D4]'}`} style={{ backgroundColor: o.color }} />
                       <span className="text-sm font-semibold text-espresso">{l(o.label)}</span>
                       {o.desc && <span className="text-xs text-espresso/40">{l(o.desc)}</span>}
                     </WizardCard>
@@ -609,34 +637,42 @@ export default function ColorMatchPage() {
                 </div>
               )}
 
-              {/* Step 2: Jewelry */}
+              {/* Step 2: Jewelry — IMAGE CARDS */}
               {step === 2 && (
-                <div className="grid gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   {JEWELRY_OPTIONS.map((o) => (
-                    <WizardCard key={o.value} selected={jewelryPref === o.value} onClick={() => setJewelryPref(o.value)} className="!flex-row !text-left !items-center gap-4 !p-5">
-                      <span className="text-3xl">{o.emoji}</span>
-                      <div>
-                        <span className="font-bold text-espresso text-sm">{l(o.label)}</span>
-                        {o.desc && <p className="text-xs text-espresso/40 mt-0.5">{l(o.desc)}</p>}
-                      </div>
-                    </WizardCard>
+                    <ImageCard
+                      key={o.value}
+                      selected={jewelryPref === o.value}
+                      onClick={() => setJewelryPref(o.value)}
+                      image={o.image!}
+                      label={l(o.label)}
+                    />
                   ))}
                 </div>
               )}
 
-              {/* Step 3: Color reaction */}
+              {/* Step 3: Color reaction — IMAGE CARDS + icon fallback */}
               {step === 3 && (
-                <div className="grid gap-3">
+                <div className="grid gap-4">
                   <p className="text-xs text-espresso/40 text-center mb-2">
                     {lang === "es" ? "Imagina que acercas una tela de cada color a tu rostro." : "Imagine holding a fabric of each color near your face."}
                   </p>
-                  {COLOR_REACTION_OPTIONS.map((o) => (
+                  <div className="grid grid-cols-2 gap-4">
+                    {COLOR_REACTION_OPTIONS.filter(o => o.image).map((o) => (
+                      <ImageCard
+                        key={o.value}
+                        selected={colorReaction === o.value}
+                        onClick={() => setColorReaction(o.value)}
+                        image={o.image!}
+                        label={l(o.label)}
+                      />
+                    ))}
+                  </div>
+                  {/* "Both" option as standard card */}
+                  {COLOR_REACTION_OPTIONS.filter(o => !o.image).map((o) => (
                     <WizardCard key={o.value} selected={colorReaction === o.value} onClick={() => setColorReaction(o.value)} className="!flex-row !text-left !items-center gap-4 !p-5">
-                      {o.color ? (
-                        <div className={`w-12 h-12 rounded-full border-2 shrink-0 ${colorReaction === o.value ? 'border-accent-orange' : 'border-espresso/10'}`} style={{ backgroundColor: o.color }} />
-                      ) : (
-                        <span className="text-3xl">{o.emoji}</span>
-                      )}
+                      <Palette className="w-8 h-8 text-espresso/40" />
                       <div>
                         <span className="font-bold text-espresso text-sm">{l(o.label)}</span>
                         {o.desc && <p className="text-xs text-espresso/40 mt-0.5">{l(o.desc)}</p>}
@@ -646,27 +682,56 @@ export default function ColorMatchPage() {
                 </div>
               )}
 
-              {/* Step 4: Eye color */}
+              {/* Step 4: Eye color — SQUARE IMAGE CARDS in a row */}
               {step === 4 && (
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                   {EYE_OPTIONS.map((o) => (
-                    <WizardCard key={o.value} selected={eyeColor === o.value} onClick={() => setEyeColor(o.value)}>
-                      <div className={`w-12 h-12 rounded-full border-2 ${eyeColor === o.value ? 'border-accent-orange shadow-lg' : 'border-espresso/10'}`} style={{ backgroundColor: o.color }} />
-                      <span className="text-xs font-bold text-espresso text-center">{l(o.label)}</span>
-                    </WizardCard>
+                    <button
+                      key={o.value}
+                      onClick={() => setEyeColor(o.value)}
+                      className="flex flex-col items-center gap-2 shrink-0"
+                    >
+                      <div className={`relative w-16 h-16 rounded-lg overflow-hidden transition-all duration-300 ${
+                        eyeColor === o.value ? 'ring-2 ring-accent-orange ring-offset-2' : 'ring-1 ring-espresso/10'
+                      }`}>
+                        <img src={o.image} alt={l(o.label)} className="w-full h-full object-cover" loading="lazy" />
+                        {eyeColor === o.value && (
+                          <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-accent-orange flex items-center justify-center">
+                            <Check className="w-2.5 h-2.5 text-white" />
+                          </span>
+                        )}
+                      </div>
+                      <span className={`text-xs text-center leading-tight ${eyeColor === o.value ? 'text-accent-orange font-bold' : 'text-espresso/50'}`}>
+                        {l(o.label)}
+                      </span>
+                    </button>
                   ))}
                 </div>
               )}
 
-              {/* Step 5: Natural level */}
+              {/* Step 5: Natural level — horizontal scrollable with labels at extremes */}
               {step === 5 && (
-                <div className="grid grid-cols-5 gap-3">
-                  {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
-                    <WizardCard key={lv} selected={naturalLevel === lv} onClick={() => setNaturalLevel(lv)} className="!p-3">
-                      <div className={`w-10 h-10 rounded-full border ${naturalLevel === lv ? 'border-accent-orange' : 'border-espresso/10'}`} style={{ backgroundColor: LEVEL_COLORS[lv] }} />
-                      <span className="text-[9px] text-espresso/50 text-center leading-tight">{l(LEVEL_LABELS[lv])}</span>
-                    </WizardCard>
-                  ))}
+                <div>
+                  <div className="flex justify-between text-[10px] text-espresso/30 uppercase tracking-wider mb-4 px-1">
+                    <span>{lang === "es" ? "MÁS OSCURO (1)" : "DARKER (1)"}</span>
+                    <span>{lang === "es" ? "MÁS CLARO (10)" : "LIGHTER (10)"}</span>
+                  </div>
+                  <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+                    {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
+                      <button
+                        key={lv}
+                        onClick={() => setNaturalLevel(lv)}
+                        className="flex flex-col items-center gap-1.5 shrink-0"
+                      >
+                        <div className={`w-12 h-12 rounded-full border-2 transition-all ${
+                          naturalLevel === lv ? 'border-gold shadow-gold scale-110' : 'border-[#E8E0D4]'
+                        }`} style={{ backgroundColor: LEVEL_COLORS[lv] }} />
+                        <span className={`text-[9px] text-center leading-tight ${naturalLevel === lv ? 'text-espresso font-bold' : 'text-espresso/40'}`}>
+                          {l(LEVEL_LABELS[lv])}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
@@ -677,34 +742,76 @@ export default function ColorMatchPage() {
                     <p className="text-[10px] font-bold text-espresso/40 uppercase tracking-wider mb-3">
                       {lang === "es" ? "Color natural / teñido convencional" : "Natural / conventional dyed color"}
                     </p>
+                    {/* Show 5 main levels by default */}
                     <div className="grid grid-cols-5 gap-3">
-                      {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
-                        <WizardCard key={lv} selected={currentLevel === lv && !currentFantasy} onClick={() => { setCurrentLevel(lv); setCurrentFantasy(null); }} className="!p-3">
-                          <div className="w-10 h-10 rounded-full border border-espresso/10" style={{ backgroundColor: LEVEL_COLORS[lv] }} />
+                      {[1, 3, 5, 7, 10].map((lv) => (
+                        <button
+                          key={lv}
+                          onClick={() => { setCurrentLevel(lv); setCurrentFantasy(null); }}
+                          className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all ${
+                            currentLevel === lv && !currentFantasy
+                              ? 'border-accent-orange border-2 bg-white shadow-bento'
+                              : 'border-[#E8E0D4] bg-white hover:border-accent-orange/30'
+                          }`}
+                        >
+                          <div className="w-12 h-12 rounded-lg" style={{ backgroundColor: LEVEL_COLORS[lv] }} />
                           <span className="text-[9px] text-espresso/50 text-center leading-tight">{l(LEVEL_LABELS[lv])}</span>
-                        </WizardCard>
+                        </button>
                       ))}
                     </div>
+                    {/* Expand to see all levels */}
+                    {!showAllLevels ? (
+                      <button
+                        onClick={() => setShowAllLevels(true)}
+                        className="text-accent-orange text-xs font-semibold mt-3 hover:underline"
+                      >
+                        {lang === "es" ? "Ver todos los niveles ↓" : "Show all levels ↓"}
+                      </button>
+                    ) : (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        className="mt-3 grid grid-cols-5 gap-3"
+                      >
+                        {Array.from({ length: 10 }, (_, i) => i + 1).filter(lv => ![1, 3, 5, 7, 10].includes(lv)).map((lv) => (
+                          <button
+                            key={lv}
+                            onClick={() => { setCurrentLevel(lv); setCurrentFantasy(null); }}
+                            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all ${
+                              currentLevel === lv && !currentFantasy
+                                ? 'border-accent-orange border-2 bg-white shadow-bento'
+                                : 'border-[#E8E0D4] bg-white hover:border-accent-orange/30'
+                            }`}
+                          >
+                            <div className="w-10 h-10 rounded-lg" style={{ backgroundColor: LEVEL_COLORS[lv] }} />
+                            <span className="text-[9px] text-espresso/50 text-center leading-tight">{l(LEVEL_LABELS[lv])}</span>
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
                   </div>
+
                   <div className="mt-6">
                     <p className="text-[10px] font-bold text-espresso/40 uppercase tracking-wider mb-3">
                       {lang === "es" ? "Color fantasía / teñido especial" : "Fantasy / special dyed color"}
                     </p>
+                    {/* Fantasy alert */}
+                    <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs mb-3">
+                      <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                      <span className="text-amber-700">
+                        {lang === "es" ? "Los colores fantasía requieren decoloración previa" : "Fantasy colors require prior bleaching"}
+                      </span>
+                    </div>
                     <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                       {FANTASY_COLORS.map((fc) => (
                         <WizardCard key={fc.value} selected={currentFantasy === fc.value} onClick={() => { setCurrentFantasy(fc.value); setCurrentLevel(null); }} className="!p-3">
-                          <div className="w-10 h-10 rounded-full border border-espresso/10" style={{ backgroundColor: fc.hex }} />
+                          <div className="w-10 h-10 rounded-full border border-[#E8E0D4]" style={{ backgroundColor: fc.hex }} />
                           <span className="text-[9px] text-espresso/50 text-center leading-tight">{l(fc.label)}</span>
                         </WizardCard>
                       ))}
                     </div>
                   </div>
-                  {currentFantasy && (
-                    <div className="flex items-start gap-2 text-xs text-red-600 bg-red-50 rounded-xl p-3 border border-red-200 mt-4">
-                      <FlaskConical className="w-4 h-4 shrink-0 mt-0.5" />
-                      <span>{lang === "es" ? "Los colores fantasía requieren un proceso de decoloración profesional." : "Fantasy colors require professional bleaching."}</span>
-                    </div>
-                  )}
+
                   {!currentFantasy && naturalLevel && currentLevel && Math.abs(naturalLevel - currentLevel) > 3 && (
                     <div className="flex items-start gap-2 text-xs text-red-600 bg-red-50 rounded-xl p-3 border border-red-200 mt-4">
                       <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -722,7 +829,7 @@ export default function ColorMatchPage() {
           onNext={handleNext}
           disableNext={!canProceed}
           prevLabel={lang === "es" ? "← Anterior" : "← Back"}
-          nextLabel={step === totalSteps - 1 ? (lang === "es" ? "ANALIZAR →" : "ANALYZE →") : (lang === "es" ? `CONTINUAR AL PASO ${step + 2} →` : `CONTINUE TO STEP ${step + 2} →`)}
+          nextLabel={step === totalSteps - 1 ? (lang === "es" ? "ANALIZAR →" : "ANALYZE →") : (lang === "es" ? "CONTINUAR →" : "CONTINUE →")}
         />
       </WizardShell>
     </>
