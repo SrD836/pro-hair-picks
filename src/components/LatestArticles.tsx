@@ -125,46 +125,6 @@ function FeaturedCard({ article }: { article: Article }) {
   );
 }
 
-/* ── Cizura interrupt banner ─────────────────────────────────────────────── */
-function CizuraBanner() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: 0.2, duration: 0.4, ease: "easeOut" }}
-    >
-      <div className="bg-[#2D2218] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(45,34,24,0.12)] flex flex-col justify-between h-full min-h-[180px]">
-        {/* Tag */}
-        <span className="inline-block px-2.5 py-0.5 bg-[#C4A97D]/15 border border-[#C4A97D]/25 text-[#C4A97D] text-[9px] font-bold uppercase tracking-[0.15em] rounded-full w-fit">
-          Gestión · Cizura SaaS
-        </span>
-
-        {/* Copy */}
-        <div className="space-y-1.5 my-4">
-          <p className="text-[#F5F0E8] font-display font-bold text-base leading-tight">
-            Convierte 5 min de corte en dinero real.
-          </p>
-          <p className="text-[#F5F0E8]/55 text-xs leading-relaxed">
-            Cizura llena tu agenda automáticamente mientras tú trabajas.
-          </p>
-        </div>
-
-        {/* CTA */}
-        <a
-          href="https://cizura.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#C4A97D] text-[#2D2218] rounded-full text-xs font-bold hover:bg-[#D4C0A1] transition-colors group w-fit"
-        >
-          Probar gratis
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-        </a>
-      </div>
-    </motion.div>
-  );
-}
-
 /* ── Main component ──────────────────────────────────────────────────────── */
 export default function LatestArticles({ articles, title }: LatestArticlesProps) {
   const { t } = useLanguage();
@@ -201,13 +161,13 @@ export default function LatestArticles({ articles, title }: LatestArticlesProps)
 
         {/* ── Desktop: Bento grid ── */}
         <div className="hidden md:grid grid-cols-3 gap-4">
-          {/* Row 1: featured (2/3) + Cizura banner (1/3) */}
+          {/* Row 1: featured (2/3) */}
           <FeaturedCard article={featured} />
-          <CizuraBanner />
+          {rest.length > 0 && <ArticleCard article={rest[0]} index={0} />}
 
-          {/* Row 2: up to 3 regular cards */}
-          {rest.slice(0, 3).map((article, i) => (
-            <ArticleCard key={article.slug} article={article} index={i} />
+          {/* Row 2: remaining cards */}
+          {rest.slice(1, 4).map((article, i) => (
+            <ArticleCard key={article.slug} article={article} index={i + 1} />
           ))}
         </div>
 
@@ -225,15 +185,11 @@ export default function LatestArticles({ articles, title }: LatestArticlesProps)
                 <ArticleCard article={article} index={i} />
               </div>
             ))}
-            {/* Cizura card inline in mobile scroll */}
-            <div className="snap-start shrink-0 w-[72vw] max-w-[280px]">
-              <CizuraBanner />
-            </div>
           </div>
 
           {/* Scroll dots indicator */}
           <div className="flex justify-center gap-1.5 mt-4">
-            {Array.from({ length: Math.min(rest.length + 1, 4) }).map((_, i) => (
+            {Array.from({ length: Math.min(rest.length, 4) }).map((_, i) => (
               <div
                 key={i}
                 className={`rounded-full transition-all ${i === 0 ? "w-4 h-1.5 bg-[#C4A97D]" : "w-1.5 h-1.5 bg-[#2D2218]/20"}`}

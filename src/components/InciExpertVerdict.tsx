@@ -113,18 +113,6 @@ export default function InciExpertVerdict() {
               peer-reviewed son las únicas fuentes fiables.
             </p>
           </div>
-          <div className="mt-10 rounded-2xl p-6 md:p-8 animate-fade-in"
-            style={{ background: "rgba(196,169,125,0.10)", border: "1px solid rgba(196,169,125,0.25)" }}>
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#C4A97D] mb-3">
-              Historial químico de cliente · Cizura
-            </p>
-            <p className="text-[#F5F0E8]/85 text-sm md:text-base leading-relaxed">
-              Conocer los ingredientes que aplicas es solo la mitad.{" "}
-              <span className="text-[#F5F0E8] font-semibold">
-                Cizura registra qué tratamientos y productos has usado en cada cliente.
-              </span>
-            </p>
-          </div>
         </details>
 
         {/* Bibliography — collapsible */}

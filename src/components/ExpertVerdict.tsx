@@ -193,16 +193,6 @@ export default function ExpertVerdict() {
               </p>
             </div>
           </div>
-          <div className="mt-10 rounded-xl border border-[#C4A97D]/20 bg-[rgba(196,169,125,0.05)] p-6 animate-fade-in">
-            <p className="text-sm text-[#F5F0E8]/70 leading-relaxed">
-              Un profesional que conoce la química merece herramientas a su altura.{" "}
-              <a href="https://cizura.com" target="_blank" rel="noopener noreferrer"
-                className="text-[#C4A97D] font-semibold hover:underline inline-flex items-center gap-1">
-                Cizura <ExternalLink className="w-3 h-3" />
-              </a>{" "}
-              registra el historial completo de tratamientos de cada cliente.
-            </p>
-          </div>
         </details>
 
         {/* References — collapsible */}

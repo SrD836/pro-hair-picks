@@ -181,23 +181,6 @@ export default function CanicieExpertVerdict() {
             </p>
           </div>
 
-          {/* Cizura CTA box */}
-          <div className="mt-10 rounded-xl border border-[#C4A97D]/20 bg-[rgba(196,169,125,0.05)] p-6 animate-fade-in">
-            <p className="text-sm text-[#F5F0E8]/70 leading-relaxed">
-              Conocer el perfil de canicie de un cliente —su historial de estrés,
-              los tratamientos químicos recibidos, sus déficits nutricionales
-              conocidos— es tan clínico como saber el grado de daño de su fibra.{" "}
-              <a
-                href="https://cizura.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#C4A97D] font-semibold hover:underline inline-flex items-center gap-1"
-              >
-                Cizura <ExternalLink className="w-3 h-3" />
-              </a>{" "}
-              permite registrar y consultar este historial en cada visita.
-            </p>
-          </div>
         </details>
 
         {/* Bibliography — collapsible */}
