@@ -208,17 +208,27 @@ function getRecentUrls(logData) {
   return urls;
 }
 
-// ── Rotación de idioma basada en fecha UTC (ciclo 2 días) ─────────────────
-// Día par   → { blog:'es', tool:'en', product:'es' }
-// Día impar → { blog:'en', tool:'es', product:'en' }
+// ── Rotación de idioma basada en fecha UTC (ciclo 3 días) ─────────────────
+// Día 1 (index 0) → Blog ES · Tool EN · Product ES
+// Día 2 (index 1) → Blog EN · Tool ES · Product EN
+// Día 3 (index 2) → Blog ES · Tool EN · Product ES  (repite patrón día 1)
+function getCycleDay() {
+  return (Math.floor(Date.now() / 86400000) % 3) + 1; // 1 | 2 | 3
+}
+
 function getDayCycleLangs() {
-  const dayIndex = Math.floor(Date.now() / 86400000) % 2;
-  return dayIndex === 0
-    ? { blog: 'es', tool: 'en', product: 'es' }
-    : { blog: 'en', tool: 'es', product: 'en' };
+  const idx = Math.floor(Date.now() / 86400000) % 3;
+  return idx === 1
+    ? { blog: 'en', tool: 'es', product: 'en' }
+    : { blog: 'es', tool: 'en', product: 'es' };
 }
 
 // ── Hashtags por tipo e idioma ─────────────────────────────────────────────
+// Devuelve array de strings (cada uno con su '#')
+function getHashtagsArray(type, lang, data) {
+  return getHashtags(type, lang, data).split(' ').filter(h => h.startsWith('#'));
+}
+
 function getHashtags(type, lang, data) {
   if (type === 'blog') {
     return lang === 'es'
@@ -360,10 +370,10 @@ function assemblePinTexts(type, data, lang, translatedBlog) {
 async function main() {
   console.log('🔄 Generando cola de Pines — GuiaDelSalon.com\n');
 
-  // 1. Idiomas del día (ciclo par/impar)
-  const langs = getDayCycleLangs();
-  const dayIndex = Math.floor(Date.now() / 86400000) % 2;
-  console.log('📅 Ciclo del día: ' + (dayIndex === 0 ? 'par' : 'impar') +
+  // 1. Idiomas del día (ciclo 3 días)
+  const langs        = getDayCycleLangs();
+  const rotationDay  = getCycleDay();
+  console.log('📅 Día de ciclo: ' + rotationDay + '/3' +
               ' → Blog ' + langs.blog.toUpperCase() +
               ' · Tool ' + langs.tool.toUpperCase() +
               ' · Product ' + langs.product.toUpperCase());
@@ -488,6 +498,7 @@ async function main() {
     const { title, description } = assemblePinTexts(
       slot.type, slot.data, lang, translatedBlog
     );
+    const hashtagsArr = getHashtagsArray(slot.type, lang, slot.data);
 
     pins.push({
       title,
@@ -497,28 +508,33 @@ async function main() {
       image_url:    imageUrl,
       lang,
       content_type: slot.type,
+      hashtags:     hashtagsArr,
+      rotation_day: rotationDay,
     });
-
-    console.log('   ✅ [' + slot.type.toUpperCase() + '/' + lang.toUpperCase() + '] ' + title.slice(0, 70));
   }
 
   // 8. Guardar pin_queue.json
   fs.writeFileSync(QUEUE_PATH, JSON.stringify(pins, null, 2), 'utf8');
 
-  // 9. Resumen
-  const bar = '─'.repeat(60);
-  console.log('\n' + bar);
-  console.log('✅ ' + pins.length + ' pin(s) generado(s) → ' + path.relative(process.cwd(), QUEUE_PATH));
-  console.log(bar);
+  // 9. Preview enriquecida por pin
+  const sep = '═'.repeat(62);
+  const div = '─'.repeat(62);
+  console.log('\n' + sep);
+  console.log('  COLA GENERADA — ' + pins.length + ' pins · Día de ciclo: ' + rotationDay);
+  console.log(sep);
   pins.forEach((pin, i) => {
-    console.log('\n  Pin #' + (i + 1) + ' [' + pin.lang.toUpperCase() + '] [' + pin.content_type + ']');
-    console.log('  Título:      ' + pin.title);
-    console.log('  Descripción: ' + pin.description.slice(0, 80) + '…');
-    console.log('  Link:        ' + pin.link);
-    console.log('  Tablero:     ' + pin.board_id);
+    console.log('\n  ┌─ Pin #' + (i + 1) + ' [' + pin.content_type.toUpperCase() + '] [' + pin.lang.toUpperCase() + '] ─');
+    console.log('  │ Título:    ' + pin.title);
+    console.log('  │ Desc:      ' + pin.description.replace(/\n/g, ' ').slice(0, 100) + '…');
+    console.log('  │ Imagen:    ' + pin.image_url.slice(0, 70));
+    console.log('  │ Tablero:   ' + pin.board_id);
+    console.log('  │ Hashtags:  ' + pin.hashtags.slice(0, 4).join(' '));
+    console.log('  └─ Link:     ' + pin.link);
   });
-  console.log('\n▸ Revisar y publicar:');
-  console.log('  npm run pinterest:publish -- --queue=scripts/pinterest/pin_queue.json\n');
+  console.log('\n' + div);
+  console.log('  Guardado en: ' + path.relative(process.cwd(), QUEUE_PATH));
+  console.log(div);
+  console.log('  ▸ npm run pinterest:publish -- --queue=scripts/pinterest/pin_queue.json\n');
 }
 
 // ── Exportar función core para auto_publish.js ────────────────────────────
@@ -529,8 +545,9 @@ async function main() {
  * @returns {Promise<Array>}
  */
 async function generateQueue(logData) {
-  const langs     = getDayCycleLangs();
-  const recentUrls = getRecentUrls(logData);
+  const langs        = getDayCycleLangs();
+  const rotationDay  = getCycleDay();
+  const recentUrls   = getRecentUrls(logData);
   const h48ago    = Date.now() - 48 * 60 * 60 * 1000;
 
   let blogPosts = [];
@@ -617,6 +634,7 @@ async function generateQueue(logData) {
     const { title, description } = assemblePinTexts(
       slot.type, slot.data, lang, translatedBlog
     );
+    const hashtagsArr = getHashtagsArray(slot.type, lang, slot.data);
 
     pins.push({
       title,
@@ -626,6 +644,8 @@ async function generateQueue(logData) {
       image_url:    imageUrl,
       lang,
       content_type: slot.type,
+      hashtags:     hashtagsArr,
+      rotation_day: rotationDay,
     });
   }
   return pins;
