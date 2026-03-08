@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, ExternalLink } from "lucide-react";
+import { BookOpen, ChevronDown, ExternalLink } from "lucide-react";
 
 const BIBLIOGRAPHY = [
   {
@@ -137,12 +137,14 @@ export default function InciExpertVerdict() {
           </p>
         </div>
 
-        {/* Bibliography */}
-        <div className="mt-10">
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#C4A97D] mb-4">
-            Bibliografía (APA 7ª edición)
-          </p>
-          <ol className="space-y-2.5">
+        {/* Bibliography — collapsible */}
+        <details className="mt-10 group">
+          <summary className="flex items-center gap-2 cursor-pointer text-[10px] font-bold uppercase tracking-[0.22em] text-[#C4A97D] hover:text-[#C4A97D]/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
+            <BookOpen className="w-3.5 h-3.5" />
+            Bibliografía (APA 7ª edición) — {BIBLIOGRAPHY.length} fuentes
+            <ChevronDown className="w-3.5 h-3.5 ml-auto transition-transform duration-300 group-open:rotate-180" />
+          </summary>
+          <ol className="space-y-2.5 mt-4 animate-fade-in">
             {BIBLIOGRAPHY.map((ref, i) => (
               <li key={i} className="flex gap-3 text-xs text-[#F5F0E8]/45 leading-relaxed">
                 <span className="shrink-0 text-[#C4A97D]/60 font-semibold w-5 text-right">{i + 1}.</span>
@@ -163,7 +165,7 @@ export default function InciExpertVerdict() {
               </li>
             ))}
           </ol>
-        </div>
+        </details>
       </div>
 
       {/* Bottom gold line */}
