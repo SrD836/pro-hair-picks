@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella, BookOpen, Gem, Palette, ShirtIcon, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, AlertTriangle, ExternalLink, RotateCcw, FlaskConical, HelpCircle, Snowflake, Sun, Leaf, Umbrella, BookOpen, Gem, Palette, ShirtIcon, ChevronRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -154,6 +154,25 @@ const SEASON_NAMES: Record<Season, { es: string; en: string }> = {
   spring: { es: "Primavera", en: "Spring" },
 };
 
+/* ── Shared card button for wizard ─────────────── */
+function WizardCard({ selected, onClick, children, className = '' }: { selected: boolean; onClick: () => void; children: React.ReactNode; className?: string }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`relative flex flex-col items-center text-center gap-3 p-5 rounded-2xl border-2 transition-all duration-300 bg-white ${
+        selected ? 'border-accent-orange shadow-bento' : 'border-espresso/8 hover:border-accent-orange/30 hover:shadow-bento'
+      } ${className}`}
+    >
+      {selected && (
+        <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-accent-orange flex items-center justify-center">
+          <Check className="w-3 h-3 text-white" />
+        </span>
+      )}
+      {children}
+    </button>
+  );
+}
+
 /* ── Component ─────────────────────────────────── */
 export default function ColorMatchPage() {
   const { lang } = useLanguage();
@@ -250,7 +269,7 @@ export default function ColorMatchPage() {
         <SEOHead title={metaTitle} description={metaDesc} />
         <div className="min-h-screen bg-background-light flex items-center justify-center">
           <motion.div className="text-center space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <motion.div className="w-20 h-20 mx-auto rounded-full border-4 border-gold border-t-transparent" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} />
+            <motion.div className="w-20 h-20 mx-auto rounded-full border-4 border-accent-orange border-t-transparent" animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} />
             <AnimatePresence mode="wait">
               <motion.p key={loadingMsg} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="text-espresso/60 font-display text-lg">
                 {l(LOADING_MSGS[loadingMsg])}
@@ -284,7 +303,7 @@ export default function ColorMatchPage() {
         {/* Hero */}
         <div className="bg-espresso py-16 text-center">
           <div className="container mx-auto px-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold mb-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent-orange mb-4">
               {lang === "es" ? "Tu Análisis Cromático" : "Your Color Analysis"}
             </p>
             <h1 className="font-display text-4xl md:text-5xl font-bold italic text-cream mb-4">
@@ -304,8 +323,8 @@ export default function ColorMatchPage() {
                 {/* Expert analysis */}
                 <div className="bg-white border border-espresso/8 rounded-2xl p-6 flex flex-col gap-4 shadow-bento">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gold/10 border-2 border-gold/30 flex items-center justify-center shrink-0">
-                      <SeasonIcon className="w-6 h-6 text-gold" />
+                    <div className="w-12 h-12 rounded-full bg-accent-orange/10 border-2 border-accent-orange/30 flex items-center justify-center shrink-0">
+                      <SeasonIcon className="w-6 h-6 text-accent-orange" />
                     </div>
                     <div>
                       <p className="text-[10px] text-espresso/40 uppercase tracking-wider">
@@ -316,11 +335,11 @@ export default function ColorMatchPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold/10 border border-gold/20 w-fit">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-orange/10 border border-accent-orange/20 w-fit">
                     <span className="text-sm">{SEASON_STYLES[result.season].icon}</span>
-                    <span className="text-xs font-bold text-gold uppercase tracking-wider">{l(SEASON_NAMES[result.season])}</span>
+                    <span className="text-xs font-bold text-accent-orange uppercase tracking-wider">{l(SEASON_NAMES[result.season])}</span>
                   </div>
-                  <blockquote className="italic text-sm text-espresso/50 leading-relaxed border-l-2 border-gold/40 pl-4 flex-1">
+                  <blockquote className="italic text-sm text-espresso/50 leading-relaxed border-l-2 border-accent-orange/40 pl-4 flex-1">
                     {l(result.verdict)}
                   </blockquote>
                   <div className="pt-4 border-t border-espresso/8">
@@ -336,11 +355,11 @@ export default function ColorMatchPage() {
                 <div className="bg-white border border-espresso/8 rounded-2xl p-6 flex flex-col items-center justify-center gap-4 shadow-bento">
                   <svg width="160" height="160" viewBox="0 0 160 160">
                     <circle cx="80" cy="80" r="72" fill={result.hexPreview} />
-                    <circle cx="80" cy="80" r="72" fill="none" stroke="rgba(196,169,125,0.5)" strokeWidth="3" />
+                    <circle cx="80" cy="80" r="72" fill="none" stroke="rgba(236,91,19,0.5)" strokeWidth="3" />
                   </svg>
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/30">
-                    <Sparkles className="w-4 h-4 text-gold" />
-                    <span className="text-sm font-bold text-gold">98% MATCH</span>
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent-orange/10 border border-accent-orange/30">
+                    <Sparkles className="w-4 h-4 text-accent-orange" />
+                    <span className="text-sm font-bold text-accent-orange">98% MATCH</span>
                   </div>
                   <div className="text-center">
                     <p className="font-display text-2xl font-bold text-espresso">{result.code}</p>
@@ -360,7 +379,7 @@ export default function ColorMatchPage() {
                     {paletteSwatches.slice(0, 6).map((hex, i) => (
                       <div key={i} className="flex flex-col items-center gap-1.5">
                         <div className="w-14 h-14 rounded-xl border border-espresso/8 shadow-sm" style={{ backgroundColor: hex }} />
-                        {i === 0 && <span className="text-[10px] text-gold font-bold">{lang === "es" ? "Principal" : "Main"}</span>}
+                        {i === 0 && <span className="text-[10px] text-accent-orange font-bold">{lang === "es" ? "Principal" : "Main"}</span>}
                       </div>
                     ))}
                   </div>
@@ -418,11 +437,11 @@ export default function ColorMatchPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={() => toast({ title: lang === "es" ? "Próximamente" : "Coming soon", description: lang === "es" ? "La guía PDF estará disponible próximamente." : "The PDF guide will be available soon." })}
-                  className="flex-1 px-6 py-4 rounded-2xl bg-gold text-white font-bold text-sm hover:bg-gold-light transition-all shadow-gold"
+                  className="flex-1 px-6 py-4 rounded-2xl bg-accent-orange text-white font-bold text-sm hover:bg-accent-orange-hover transition-all"
                 >
                   {lang === "es" ? "Descargar Guía PDF" : "Download PDF Guide"}
                 </button>
-                <Link to="/categorias/tintes" className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl border-2 border-espresso/10 text-espresso font-bold text-sm hover:border-gold transition-all">
+                <Link to="/categorias/tintes" className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl border-2 border-espresso/10 text-espresso font-bold text-sm hover:border-accent-orange transition-all">
                   {lang === "es" ? "Ver Productos" : "View Products"} <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -435,12 +454,12 @@ export default function ColorMatchPage() {
                 return hasAny ? (
                   <div className="flex flex-col sm:flex-row gap-3">
                     {dyeUrlES && (
-                      <a href={dyeUrlES} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-gold text-white font-bold text-sm hover:bg-gold-light transition-all">
+                      <a href={dyeUrlES} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-accent-orange text-white font-bold text-sm hover:bg-accent-orange-hover transition-all">
                         🇪🇸 Amazon España <ExternalLink className="w-4 h-4" />
                       </a>
                     )}
                     {dyeUrlUS && (
-                      <a href={dyeUrlUS} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-gold text-white font-bold text-sm hover:bg-gold-light transition-all">
+                      <a href={dyeUrlUS} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-accent-orange text-white font-bold text-sm hover:bg-accent-orange-hover transition-all">
                         🇺🇸 Amazon USA <ExternalLink className="w-4 h-4" />
                       </a>
                     )}
@@ -466,46 +485,55 @@ export default function ColorMatchPage() {
     return (
       <>
         <SEOHead title={metaTitle} description={metaDesc} />
-        <div className="min-h-screen bg-espresso">
+        <div className="min-h-screen bg-background-light">
           {/* Breadcrumb */}
           <div className="max-w-3xl mx-auto px-6 pt-8 pb-2">
-            <nav className="flex items-center gap-1.5 text-xs text-cream/40">
-              <Link to="/mi-pelo" className="hover:text-cream/70 transition-colors">Mi Pelo</Link>
+            <nav className="flex items-center gap-1.5 text-xs text-espresso/40">
+              <Link to="/mi-pelo" className="hover:text-espresso/70 transition-colors">Mi Pelo</Link>
               <ChevronRight className="w-3 h-3" />
-              <span className="text-cream/60">Expert Color Matcher</span>
+              <span className="text-espresso/60">Expert Color Matcher</span>
             </nav>
           </div>
 
-          <div className="max-w-3xl mx-auto px-6 pb-16 pt-6 text-center">
-            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.25em] px-3.5 py-1.5 rounded-full mb-6 border border-gold/20 bg-gold/5 text-gold">
+          {/* Hero card */}
+          <div className="max-w-3xl mx-auto px-6 py-8">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="bg-espresso rounded-3xl p-8 md:p-12 text-center"
+            >
+              <span className="inline-block text-[10px] font-bold uppercase tracking-[0.25em] px-3.5 py-1.5 rounded-full mb-6 border border-accent-orange/30 bg-accent-orange/10 text-accent-orange">
                 COLORIMETRÍA
               </span>
 
-              <h1 className="font-display text-[2.5rem] md:text-6xl font-bold italic text-cream mb-5 leading-[1.1] tracking-tight">
-                Expert Color <span className="text-gold">Matcher</span>
+              <h1 className="font-display text-[2.5rem] md:text-5xl font-bold italic text-cream mb-5 leading-[1.1] tracking-tight">
+                Expert Color <span className="text-accent-orange">Matcher</span>
               </h1>
 
-              <p className="text-cream/60 text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-4">
+              <p className="text-cream/60 text-base md:text-lg max-w-md mx-auto leading-relaxed mb-4">
                 {lang === "es"
-                  ? "Descubre tu color ideal con nuestro algoritmo de visagismo profesional. Para todo tipo de cabello."
-                  : "Discover your ideal color with our professional visagism algorithm. For all hair types."}
+                  ? "Descubre tu color ideal con nuestro algoritmo de visagismo profesional."
+                  : "Discover your ideal color with our professional visagism algorithm."}
               </p>
 
               <p className="text-cream/30 text-sm mb-8">
                 ~3 min · {lang === "es" ? "Sin registro · 7 pasos" : "No registration · 7 steps"}
               </p>
 
-              {/* Color swatches preview */}
-              <div className="flex justify-center gap-3 mb-10">
-                {SKIN_OPTIONS.map((o) => (
-                  <div key={o.value} className="w-12 h-12 rounded-full border-2 border-cream/10" style={{ backgroundColor: o.color }} />
+              {/* Color swatches preview — hair levels carousel */}
+              <div className="flex justify-center gap-2.5 mb-10 overflow-x-auto scrollbar-hide py-2">
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
+                  <div key={lv} className="flex flex-col items-center gap-1.5 shrink-0">
+                    <div className="w-11 h-11 rounded-full border-2 border-cream/15" style={{ backgroundColor: LEVEL_COLORS[lv] }} />
+                    <span className="text-[9px] text-cream/40 whitespace-nowrap">{lv}.0</span>
+                  </div>
                 ))}
               </div>
 
               <button
                 onClick={() => setStarted(true)}
-                className="px-10 py-4.5 rounded-2xl bg-gold text-espresso font-bold text-lg hover:bg-gold-light transition-all duration-300 hover:shadow-[0_8px_30px_-8px_rgba(196,169,125,0.4)]"
+                className="px-10 py-4 rounded-2xl bg-accent-orange text-white font-bold text-lg hover:bg-accent-orange-hover transition-all duration-300"
               >
                 {lang === "es" ? "Iniciar Asesoría →" : "Start Analysis →"}
               </button>
@@ -554,14 +582,11 @@ export default function ColorMatchPage() {
               {step === 0 && (
                 <div className="grid grid-cols-2 gap-4">
                   {SKIN_OPTIONS.map((o) => (
-                    <button key={o.value} onClick={() => setSkinTone(o.value)}
-                      className={`flex flex-col items-center text-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 ${
-                        skinTone === o.value ? 'border-gold bg-gold/5 shadow-bento' : 'border-espresso/8 bg-white hover:border-gold/40 hover:shadow-bento'
-                      }`}>
-                      <div className={`w-14 h-14 rounded-full border-2 transition-all ${skinTone === o.value ? 'border-gold shadow-gold' : 'border-espresso/10'}`} style={{ backgroundColor: o.color }} />
+                    <WizardCard key={o.value} selected={skinTone === o.value} onClick={() => setSkinTone(o.value)}>
+                      <div className={`w-14 h-14 rounded-full border-2 transition-all ${skinTone === o.value ? 'border-accent-orange shadow-lg' : 'border-espresso/10'}`} style={{ backgroundColor: o.color }} />
                       <span className="text-sm font-semibold text-espresso">{l(o.label)}</span>
                       {o.desc && <span className="text-xs text-espresso/40">{l(o.desc)}</span>}
-                    </button>
+                    </WizardCard>
                   ))}
                 </div>
               )}
@@ -573,16 +598,13 @@ export default function ColorMatchPage() {
                     {lang === "es" ? "Mira la parte interior de tu muñeca bajo luz natural." : "Look at the inside of your wrist under natural light."}
                   </p>
                   {VEIN_OPTIONS.map((o) => (
-                    <button key={o.value} onClick={() => setVeinColor(o.value)}
-                      className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all text-left ${
-                        veinColor === o.value ? 'border-gold bg-gold/5 shadow-bento' : 'border-espresso/8 bg-white hover:border-gold/40'
-                      }`}>
+                    <WizardCard key={o.value} selected={veinColor === o.value} onClick={() => setVeinColor(o.value)} className="!flex-row !text-left !items-center gap-4 !p-5">
                       <span className="text-3xl">{o.emoji}</span>
                       <div>
                         <span className="font-bold text-espresso text-sm">{l(o.label)}</span>
                         {o.desc && <p className="text-xs text-espresso/40 mt-0.5">{l(o.desc)}</p>}
                       </div>
-                    </button>
+                    </WizardCard>
                   ))}
                 </div>
               )}
@@ -591,16 +613,13 @@ export default function ColorMatchPage() {
               {step === 2 && (
                 <div className="grid gap-3">
                   {JEWELRY_OPTIONS.map((o) => (
-                    <button key={o.value} onClick={() => setJewelryPref(o.value)}
-                      className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all text-left ${
-                        jewelryPref === o.value ? 'border-gold bg-gold/5 shadow-bento' : 'border-espresso/8 bg-white hover:border-gold/40'
-                      }`}>
+                    <WizardCard key={o.value} selected={jewelryPref === o.value} onClick={() => setJewelryPref(o.value)} className="!flex-row !text-left !items-center gap-4 !p-5">
                       <span className="text-3xl">{o.emoji}</span>
                       <div>
                         <span className="font-bold text-espresso text-sm">{l(o.label)}</span>
                         {o.desc && <p className="text-xs text-espresso/40 mt-0.5">{l(o.desc)}</p>}
                       </div>
-                    </button>
+                    </WizardCard>
                   ))}
                 </div>
               )}
@@ -612,12 +631,9 @@ export default function ColorMatchPage() {
                     {lang === "es" ? "Imagina que acercas una tela de cada color a tu rostro." : "Imagine holding a fabric of each color near your face."}
                   </p>
                   {COLOR_REACTION_OPTIONS.map((o) => (
-                    <button key={o.value} onClick={() => setColorReaction(o.value)}
-                      className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all text-left ${
-                        colorReaction === o.value ? 'border-gold bg-gold/5 shadow-bento' : 'border-espresso/8 bg-white hover:border-gold/40'
-                      }`}>
+                    <WizardCard key={o.value} selected={colorReaction === o.value} onClick={() => setColorReaction(o.value)} className="!flex-row !text-left !items-center gap-4 !p-5">
                       {o.color ? (
-                        <div className={`w-12 h-12 rounded-full border-2 shrink-0 ${colorReaction === o.value ? 'border-gold' : 'border-espresso/10'}`} style={{ backgroundColor: o.color }} />
+                        <div className={`w-12 h-12 rounded-full border-2 shrink-0 ${colorReaction === o.value ? 'border-accent-orange' : 'border-espresso/10'}`} style={{ backgroundColor: o.color }} />
                       ) : (
                         <span className="text-3xl">{o.emoji}</span>
                       )}
@@ -625,7 +641,7 @@ export default function ColorMatchPage() {
                         <span className="font-bold text-espresso text-sm">{l(o.label)}</span>
                         {o.desc && <p className="text-xs text-espresso/40 mt-0.5">{l(o.desc)}</p>}
                       </div>
-                    </button>
+                    </WizardCard>
                   ))}
                 </div>
               )}
@@ -634,13 +650,10 @@ export default function ColorMatchPage() {
               {step === 4 && (
                 <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
                   {EYE_OPTIONS.map((o) => (
-                    <button key={o.value} onClick={() => setEyeColor(o.value)}
-                      className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
-                        eyeColor === o.value ? 'border-gold bg-gold/5 shadow-bento' : 'border-espresso/8 bg-white hover:border-gold/40'
-                      }`}>
-                      <div className={`w-12 h-12 rounded-full border-2 ${eyeColor === o.value ? 'border-gold shadow-gold' : 'border-espresso/10'}`} style={{ backgroundColor: o.color }} />
+                    <WizardCard key={o.value} selected={eyeColor === o.value} onClick={() => setEyeColor(o.value)}>
+                      <div className={`w-12 h-12 rounded-full border-2 ${eyeColor === o.value ? 'border-accent-orange shadow-lg' : 'border-espresso/10'}`} style={{ backgroundColor: o.color }} />
                       <span className="text-xs font-bold text-espresso text-center">{l(o.label)}</span>
-                    </button>
+                    </WizardCard>
                   ))}
                 </div>
               )}
@@ -649,13 +662,10 @@ export default function ColorMatchPage() {
               {step === 5 && (
                 <div className="grid grid-cols-5 gap-3">
                   {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
-                    <button key={lv} onClick={() => setNaturalLevel(lv)}
-                      className={`flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all ${
-                        naturalLevel === lv ? 'border-gold bg-gold/5 shadow-bento' : 'border-espresso/8 bg-white hover:border-gold/40'
-                      }`}>
-                      <div className={`w-10 h-10 rounded-full border ${naturalLevel === lv ? 'border-gold' : 'border-espresso/10'}`} style={{ backgroundColor: LEVEL_COLORS[lv] }} />
+                    <WizardCard key={lv} selected={naturalLevel === lv} onClick={() => setNaturalLevel(lv)} className="!p-3">
+                      <div className={`w-10 h-10 rounded-full border ${naturalLevel === lv ? 'border-accent-orange' : 'border-espresso/10'}`} style={{ backgroundColor: LEVEL_COLORS[lv] }} />
                       <span className="text-[9px] text-espresso/50 text-center leading-tight">{l(LEVEL_LABELS[lv])}</span>
-                    </button>
+                    </WizardCard>
                   ))}
                 </div>
               )}
@@ -669,13 +679,10 @@ export default function ColorMatchPage() {
                     </p>
                     <div className="grid grid-cols-5 gap-3">
                       {Array.from({ length: 10 }, (_, i) => i + 1).map((lv) => (
-                        <button key={lv} onClick={() => { setCurrentLevel(lv); setCurrentFantasy(null); }}
-                          className={`flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all ${
-                            currentLevel === lv && !currentFantasy ? 'border-gold bg-gold/5 shadow-bento' : 'border-espresso/8 bg-white hover:border-gold/40'
-                          }`}>
+                        <WizardCard key={lv} selected={currentLevel === lv && !currentFantasy} onClick={() => { setCurrentLevel(lv); setCurrentFantasy(null); }} className="!p-3">
                           <div className="w-10 h-10 rounded-full border border-espresso/10" style={{ backgroundColor: LEVEL_COLORS[lv] }} />
                           <span className="text-[9px] text-espresso/50 text-center leading-tight">{l(LEVEL_LABELS[lv])}</span>
-                        </button>
+                        </WizardCard>
                       ))}
                     </div>
                   </div>
@@ -685,13 +692,10 @@ export default function ColorMatchPage() {
                     </p>
                     <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                       {FANTASY_COLORS.map((fc) => (
-                        <button key={fc.value} onClick={() => { setCurrentFantasy(fc.value); setCurrentLevel(null); }}
-                          className={`flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all ${
-                            currentFantasy === fc.value ? 'border-gold bg-gold/5 shadow-bento' : 'border-espresso/8 bg-white hover:border-gold/40'
-                          }`}>
+                        <WizardCard key={fc.value} selected={currentFantasy === fc.value} onClick={() => { setCurrentFantasy(fc.value); setCurrentLevel(null); }} className="!p-3">
                           <div className="w-10 h-10 rounded-full border border-espresso/10" style={{ backgroundColor: fc.hex }} />
                           <span className="text-[9px] text-espresso/50 text-center leading-tight">{l(fc.label)}</span>
-                        </button>
+                        </WizardCard>
                       ))}
                     </div>
                   </div>
@@ -718,7 +722,7 @@ export default function ColorMatchPage() {
           onNext={handleNext}
           disableNext={!canProceed}
           prevLabel={lang === "es" ? "← Anterior" : "← Back"}
-          nextLabel={step === totalSteps - 1 ? (lang === "es" ? "ANALIZAR →" : "ANALYZE →") : (lang === "es" ? "CONTINUAR →" : "CONTINUE →")}
+          nextLabel={step === totalSteps - 1 ? (lang === "es" ? "ANALIZAR →" : "ANALYZE →") : (lang === "es" ? `CONTINUAR AL PASO ${step + 2} →` : `CONTINUE TO STEP ${step + 2} →`)}
         />
       </WizardShell>
     </>
@@ -730,26 +734,26 @@ function Colorimetry101({ lang }: { lang: "es" | "en" }) {
   return (
     <section className="max-w-3xl mx-auto px-6 py-12 space-y-4">
       <div className="flex items-center gap-2">
-        <BookOpen className="w-5 h-5 text-gold" />
-        <h3 className="font-display text-xl text-cream">
+        <BookOpen className="w-5 h-5 text-accent-orange" />
+        <h3 className="font-display text-xl text-espresso">
           {lang === "es" ? "Colorimetría 101" : "Colorimetry 101"}
         </h3>
       </div>
       <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="what" className="border-gold/10">
-          <AccordionTrigger className="text-left text-sm font-medium text-cream/80 hover:text-gold transition-colors">
+        <AccordionItem value="what" className="border-espresso/10">
+          <AccordionTrigger className="text-left text-sm font-medium text-espresso/70 hover:text-accent-orange transition-colors">
             {lang === "es" ? "¿Qué es la colorimetría?" : "What is colorimetry?"}
           </AccordionTrigger>
-          <AccordionContent className="text-sm text-cream/50 leading-relaxed space-y-2">
+          <AccordionContent className="text-sm text-espresso/50 leading-relaxed space-y-2">
             <p>{lang === "es" ? "La colorimetría es la ciencia que estudia los colores que mejor armonizan con tu tono de piel, ojos y cabello natural. Se basa en la teoría de las 4 estaciones y en el análisis de tu subtono cutáneo." : "Colorimetry is the science that studies which colors best harmonize with your skin tone, eyes, and natural hair."}</p>
             <p>{lang === "es" ? "Conocer tu paleta personal te permite potenciar tu belleza natural, comprar de forma más inteligente y aumentar tu confianza." : "Knowing your personal palette lets you enhance your natural beauty and shop smarter."}</p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="methods" className="border-gold/10">
-          <AccordionTrigger className="text-left text-sm font-medium text-cream/80 hover:text-gold transition-colors">
+        <AccordionItem value="methods" className="border-espresso/10">
+          <AccordionTrigger className="text-left text-sm font-medium text-espresso/70 hover:text-accent-orange transition-colors">
             {lang === "es" ? "4 métodos caseros para conocer tu subtono" : "4 home methods to find your undertone"}
           </AccordionTrigger>
-          <AccordionContent className="text-sm text-cream/50 leading-relaxed">
+          <AccordionContent className="text-sm text-espresso/50 leading-relaxed">
             <ol className="list-decimal list-inside space-y-3">
               <li><strong>{lang === "es" ? "Test de las venas:" : "Vein test:"}</strong> {lang === "es" ? "Venas azules/moradas = frío; verdes = cálido; mezcla = neutro." : "Blue/purple veins = cool; green = warm; mixed = neutral."}</li>
               <li><strong>{lang === "es" ? "Test de la tela:" : "Fabric test:"}</strong> {lang === "es" ? "Naranja te ilumina = cálido; fucsia = frío." : "Orange brightens = warm; fuchsia = cool."}</li>
@@ -758,11 +762,11 @@ function Colorimetry101({ lang }: { lang: "es" | "en" }) {
             </ol>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="why" className="border-gold/10">
-          <AccordionTrigger className="text-left text-sm font-medium text-cream/80 hover:text-gold transition-colors">
+        <AccordionItem value="why" className="border-espresso/10">
+          <AccordionTrigger className="text-left text-sm font-medium text-espresso/70 hover:text-accent-orange transition-colors">
             {lang === "es" ? "¿Por qué es importante para elegir tu tinte?" : "Why does it matter for choosing your dye?"}
           </AccordionTrigger>
-          <AccordionContent className="text-sm text-cream/50 leading-relaxed">
+          <AccordionContent className="text-sm text-espresso/50 leading-relaxed">
             <p>{lang === "es" ? "Un tinte que respete tu subtono natural hará que tu piel luzca más luminosa. La colorimetría profesional elimina las dudas." : "A dye that respects your natural undertone will make your skin glow. Professional colorimetry removes the guesswork."}</p>
           </AccordionContent>
         </AccordionItem>
@@ -783,19 +787,19 @@ function ColorMatchFAQ({ lang, onReset, showResetButton = true }: { lang: "es" |
   return (
     <section className="max-w-3xl mx-auto px-6 py-12 space-y-6">
       <div className="flex items-center gap-2">
-        <HelpCircle className="w-5 h-5 text-gold" />
-        <h3 className="font-display text-xl text-cream">{lang === "es" ? "Preguntas frecuentes" : "FAQ"}</h3>
+        <HelpCircle className="w-5 h-5 text-accent-orange" />
+        <h3 className="font-display text-xl text-espresso">{lang === "es" ? "Preguntas frecuentes" : "FAQ"}</h3>
       </div>
       <Accordion type="single" collapsible className="w-full">
         {FAQ_DATA.map((item, i) => (
-          <AccordionItem key={i} value={`faq-${i}`} className="border-gold/10">
-            <AccordionTrigger className="text-left text-sm font-medium text-cream/80 hover:text-gold transition-colors">{l(item.q)}</AccordionTrigger>
-            <AccordionContent className="text-sm text-cream/50 leading-relaxed">{l(item.a)}</AccordionContent>
+          <AccordionItem key={i} value={`faq-${i}`} className="border-espresso/10">
+            <AccordionTrigger className="text-left text-sm font-medium text-espresso/70 hover:text-accent-orange transition-colors">{l(item.q)}</AccordionTrigger>
+            <AccordionContent className="text-sm text-espresso/50 leading-relaxed">{l(item.a)}</AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
       {showResetButton && (
-        <button onClick={onReset} className="flex items-center gap-2 text-gold/60 hover:text-gold text-sm transition-colors">
+        <button onClick={onReset} className="flex items-center gap-2 text-accent-orange/60 hover:text-accent-orange text-sm transition-colors">
           <RotateCcw className="w-3.5 h-3.5" /> {lang === "es" ? "Volver a realizar el test" : "Take the test again"}
         </button>
       )}

@@ -1,6 +1,6 @@
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
-import { Search, Beaker, AlertTriangle, Shield, ArrowRight } from "lucide-react";
+import { Search, Beaker, AlertTriangle, Shield } from "lucide-react";
 import InciChecker from "@/components/InciChecker";
 import InciExpertVerdict from "@/components/InciExpertVerdict";
 import { BibliographyDrawer, type BibReference } from "@/components/mi-pelo/shared/BibliographyDrawer";
@@ -41,12 +41,12 @@ export default function InciCheckerPage() {
     <>
       <SEOHead title={`${title} | GuiaDelSalon.com`} description={desc} />
 
-      <div className="min-h-screen bg-espresso">
+      <div className="min-h-screen bg-background-light">
         {!started ? (
           <>
             <ToolHeader
               badge={lang === "es" ? "SEGURIDAD COSMÉTICA" : "COSMETIC SAFETY"}
-              title={<>INCI-Check <span className="text-gold">{lang === "es" ? "Profesional" : "Professional"}</span></>}
+              title={<>INCI-Check <span className="text-accent-orange">{lang === "es" ? "Profesional" : "Professional"}</span></>}
               subtitle={lang === "es"
                 ? "Escáner de seguridad de ingredientes cosméticos con datos verificados de fuentes científicas."
                 : "Cosmetic ingredient safety scanner with verified scientific data."}
@@ -55,7 +55,7 @@ export default function InciCheckerPage() {
               startLabel={lang === "es" ? "Analizar ingredientes →" : "Analyze ingredients →"}
             />
 
-            <div className="max-w-3xl mx-auto px-6 py-16">
+            <div className="max-w-3xl mx-auto px-6 py-12">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
                 {MODULES.map((m, i) => (
                   <motion.div
@@ -63,16 +63,16 @@ export default function InciCheckerPage() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 + i * 0.08 }}
-                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300"
+                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-espresso/8 bg-white hover:shadow-bento transition-all duration-300"
                   >
-                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10">
-                      <m.icon className="w-7 h-7 text-gold" />
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-orange/10">
+                      <m.icon className="w-7 h-7 text-accent-orange" />
                     </div>
                     <div>
-                      <p className="font-semibold text-cream text-base mb-1">
+                      <p className="font-semibold text-espresso text-base mb-1">
                         {m.title[lang as 'es' | 'en'] ?? m.title.es}
                       </p>
-                      <p className="text-cream/40 text-sm">
+                      <p className="text-espresso/40 text-sm">
                         {m.desc[lang as 'es' | 'en'] ?? m.desc.es}
                       </p>
                     </div>

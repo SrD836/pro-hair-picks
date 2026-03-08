@@ -84,6 +84,9 @@ export default {
         // Mi Pelo semantic aliases
         "background-light": "#F5F0E8",
         "background-dark":  "#2D2218",
+        // Accent orange for wizard UI
+        "accent-orange": "#ec5b13",
+        "accent-orange-hover": "#d94f0e",
         // Damage level tokens
         "damage-low":  "#4CAF7C",
         "damage-med":  "#E4B84A",

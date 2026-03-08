@@ -3,7 +3,7 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Layers, Droplets, Activity, ScanSearch, FlaskConical, ExternalLink,
-  RotateCcw, ArrowRight, Share2, Download,
+  RotateCcw, ArrowRight, Share2, Download, Check,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -144,29 +144,29 @@ export default function DiagnosticoCapilarPage() {
 
       {/* ─── INTRO ─── */}
       {screen === "intro" && (
-        <div className="min-h-screen bg-espresso">
+        <div className="min-h-screen bg-background-light">
           <ToolHeader
             badge="CIENTÍFICO"
-            title={<>Diagnóstico <span className="text-gold">Capilar</span></>}
+            title={<>Diagnóstico <span className="text-accent-orange">Capilar</span></>}
             subtitle={t("diagnostico.subtitle")}
             microTrust={`~8 min · Sin registro · ${t("diagnostico.timeNote")}`}
             onStart={() => setScreen("quiz")}
             startLabel={`${t("diagnostico.startBtn")} →`}
           />
-          <div className="max-w-3xl mx-auto px-6 py-16">
+          <div className="max-w-3xl mx-auto px-6 py-12">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
               {([1, 2, 3, 4] as const).map((mod, i) => {
                 const Icon = MODULE_ICONS[mod];
                 return (
                   <motion.div key={mod} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 + i * 0.08 }}
-                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10">
-                      <Icon className="w-7 h-7 text-gold" />
+                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-espresso/8 bg-white hover:shadow-bento transition-all duration-300">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-orange/10">
+                      <Icon className="w-7 h-7 text-accent-orange" />
                     </div>
                     <div>
-                      <p className="font-semibold text-cream text-base mb-1">{t(`diagnostico.${MODULE_LABELS[mod]}`)}</p>
-                      <p className="text-cream/40 text-sm">{t(`diagnostico.${MODULE_LABELS[mod]}Sub`)}</p>
+                      <p className="font-semibold text-espresso text-base mb-1">{t(`diagnostico.${MODULE_LABELS[mod]}`)}</p>
+                      <p className="text-espresso/40 text-sm">{t(`diagnostico.${MODULE_LABELS[mod]}Sub`)}</p>
                     </div>
                   </motion.div>
                 );
@@ -198,7 +198,7 @@ export default function DiagnosticoCapilarPage() {
             </AnimatePresence>
 
             {localizedQ.protocol && (
-              <div className="flex gap-3 p-4 rounded-xl border border-gold/20 bg-gold/5 text-sm text-espresso/60 mb-8">
+              <div className="flex gap-3 p-4 rounded-xl border border-accent-orange/20 bg-accent-orange/5 text-sm text-espresso/60 mb-8">
                 <span className="shrink-0">🧪</span>
                 <p>{localizedQ.protocol}</p>
               </div>
@@ -218,16 +218,21 @@ export default function DiagnosticoCapilarPage() {
                   <button
                     key={opt.value}
                     onClick={() => handleSelect(opt.value)}
-                    className={`flex flex-col items-center text-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
+                    className={`relative flex flex-col items-center text-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer bg-white ${
                       selectedValue === opt.value
-                        ? 'border-gold bg-gold/5 shadow-bento'
-                        : 'border-espresso/8 bg-white hover:border-gold/40 hover:shadow-bento'
+                        ? 'border-accent-orange shadow-bento'
+                        : 'border-espresso/8 hover:border-accent-orange/30 hover:shadow-bento'
                     }`}
                   >
+                    {selectedValue === opt.value && (
+                      <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-accent-orange flex items-center justify-center">
+                        <Check className="w-3 h-3 text-white" />
+                      </span>
+                    )}
                     <div className={`flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
-                      selectedValue === opt.value ? 'bg-gold/15' : 'bg-espresso/5'
+                      selectedValue === opt.value ? 'bg-accent-orange/15' : 'bg-espresso/5'
                     }`}>
-                      <QuizIcon className={`w-7 h-7 ${selectedValue === opt.value ? 'text-gold' : 'text-espresso/30'}`} />
+                      <QuizIcon className={`w-7 h-7 ${selectedValue === opt.value ? 'text-accent-orange' : 'text-espresso/30'}`} />
                     </div>
                     <span className="text-espresso font-semibold text-sm">{opt.label}</span>
                   </button>
@@ -241,7 +246,7 @@ export default function DiagnosticoCapilarPage() {
               <div className="mt-6 flex items-center gap-4">
                 <span className="text-espresso/30 text-xs">Salud</span>
                 <div className="flex-1 h-2 bg-espresso/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-gold rounded-full transition-all duration-700" style={{ width: `${damageScore}%` }} />
+                  <div className="h-full bg-accent-orange rounded-full transition-all duration-700" style={{ width: `${damageScore}%` }} />
                 </div>
                 <span className="text-espresso/50 font-mono text-xs tabular-nums">{damageScore}%</span>
               </div>
@@ -253,7 +258,7 @@ export default function DiagnosticoCapilarPage() {
             onNext={goNext}
             disableNext={!hasAnswer}
             prevLabel={t("diagnostico.backBtn")}
-            nextLabel={isLastQ ? t("diagnostico.finishBtn") : "CONTINUAR →"}
+            nextLabel={isLastQ ? t("diagnostico.finishBtn") : `CONTINUAR AL PASO ${currentQ + 2} →`}
           />
         </WizardShell>
       )}
@@ -290,25 +295,25 @@ export default function DiagnosticoCapilarPage() {
                     initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + i * 0.08 }}
                     className="flex items-start gap-4 p-4 rounded-xl border border-gold/10 bg-espresso hover:border-gold/40 transition-all group">
-                    <div className="p-2 rounded-lg bg-gold/10 text-gold shrink-0 mt-0.5"><FlaskConical className="w-4 h-4" /></div>
+                    <div className="p-2 rounded-lg bg-accent-orange/10 text-accent-orange shrink-0 mt-0.5"><FlaskConical className="w-4 h-4" /></div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-cream group-hover:text-gold transition-colors">{product.name}</p>
+                      <p className="text-sm font-semibold text-cream group-hover:text-accent-orange transition-colors">{product.name}</p>
                       <p className="text-xs text-cream/50 mt-0.5 leading-relaxed line-clamp-2">{product.description}</p>
-                      <span className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-gold">{t("diagnostico.amazonCta")} <ExternalLink className="w-3 h-3" /></span>
+                      <span className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-accent-orange">{t("diagnostico.amazonCta")} <ExternalLink className="w-3 h-3" /></span>
                     </div>
                   </motion.a>
                 ))}
               </div>
             </div>
 
-            <div className="bg-gold/10 border border-gold/30 rounded-xl p-6">
+            <div className="bg-accent-orange/10 border border-accent-orange/30 rounded-xl p-6">
               <div className="flex items-start gap-4">
-                <div className="p-2 rounded-lg bg-gold/20 text-gold shrink-0"><FlaskConical className="w-5 h-5" /></div>
+                <div className="p-2 rounded-lg bg-accent-orange/20 text-accent-orange shrink-0"><FlaskConical className="w-5 h-5" /></div>
                 <div>
                   <p className="text-cream font-semibold text-sm mb-1">Guarda este informe en tu Pasaporte Capilar</p>
                   <p className="text-cream/60 text-xs leading-relaxed mb-3">Cizura registra automáticamente el historial de cada cliente.</p>
                   <a href="https://cizura.com" target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-gold text-espresso font-semibold text-sm hover:bg-gold-light transition-colors">
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-accent-orange text-white font-semibold text-sm hover:bg-accent-orange-hover transition-colors">
                     Conectar con mi salón →
                   </a>
                 </div>
@@ -329,7 +334,7 @@ export default function DiagnosticoCapilarPage() {
             {isWizardMode && (
               <button
                 onClick={() => completeWizardModule({ summary: `${riskLevel} — ${scores.total} pts`, score: scores.total, rawResult: { scores, riskLevel } })}
-                className="w-full flex items-center justify-center gap-2 h-14 rounded-xl bg-gold text-espresso font-bold hover:bg-gold-light transition-all">
+                className="w-full flex items-center justify-center gap-2 h-14 rounded-xl bg-accent-orange text-white font-bold hover:bg-accent-orange-hover transition-all">
                 Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
               </button>
             )}
