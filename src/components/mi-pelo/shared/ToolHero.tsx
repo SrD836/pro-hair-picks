@@ -9,9 +9,10 @@ interface ToolHeroProps {
 
 export function ToolHero({ title, subtitle, imageUrl, className }: ToolHeroProps) {
   return (
-    <div
+    <section
+      aria-label={title}
       className={cn(
-        'relative w-full aspect-[21/9] rounded-2xl overflow-hidden bg-espresso flex items-end',
+        'relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden bg-espresso flex items-end',
         className
       )}
     >
@@ -39,6 +40,6 @@ export function ToolHero({ title, subtitle, imageUrl, className }: ToolHeroProps
           </p>
         )}
       </div>
-    </div>
+    </section>
   );
 }

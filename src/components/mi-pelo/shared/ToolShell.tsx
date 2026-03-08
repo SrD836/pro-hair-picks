@@ -1,9 +1,10 @@
+import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ToolShellProps {
   title: string;
   subtitle?: string;
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
