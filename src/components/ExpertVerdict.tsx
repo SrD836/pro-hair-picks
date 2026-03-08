@@ -160,99 +160,50 @@ export default function ExpertVerdict() {
           </h3>
         </div>
 
-        {/* Body paragraphs */}
-        <div className="space-y-5 text-[#F5F0E8]/75 text-sm md:text-base leading-relaxed max-w-3xl">
-          <p>
-            La fibra capilar humana es uno de los biomateriales más complejos del
-            organismo: una arquitectura de queratina en hélice-alfa mantenida por
-            puentes disulfuro, interacciones electrostáticas y una capa hidrófoba
-            exterior de ácido 18-metileicosanoico (18-MEA) que actúa como barrera
-            química. Esta estructura, fruto de millones de años de evolución, puede
-            ser comprometida de forma irreversible en literalmente minutos por la
-            combinación equivocada de agentes químicos.
-          </p>
-
-          <p>
-            La evidencia científica acumulada entre 2018 y 2026 ha demostrado con
-            metodología cuantitativa lo que los profesionales experimentados
-            siempre intuyeron: los tratamientos capilares no son módulos
-            independientes que se pueden combinar libremente. La decoloración con
-            H₂O₂ al 6–12% convierte los puentes disulfuro en ácido cisteico de
-            forma irreversible; el hidróxido sódico forma lantionina permanente;
-            el ácido glioxílico crea adductos en los mismos sitios nucleófilos que
-            los relajantes necesitan. Cada uno de estos procesos modifica la
-            arquitectura molecular del pelo de una forma que determina cómo
-            responderá ante el siguiente tratamiento.
-          </p>
-
-          <p>
-            La interacción más documentada y potencialmente más peligrosa en el
-            entorno de un salón es la de los tintes metálicos (sales de cobre,
-            plomo o plata de la henna compuesta) con cualquier fuente de H₂O₂.
-            Los iones Cu²⁺ depositados en la corteza capilar actúan como
-            catalizadores Fenton: descomponen el peróxido de hidrógeno en una
-            cascada de radicales hidroxilo altamente exotérmica que literalmente
-            disuelve la proteína capilar en cuestión de minutos, generando calor,
-            vapores de H₂S y, en casos graves, quemaduras en el cuero cabelludo
-            del cliente. La prevención requiere un simple test diagnóstico de
-            mechón —observable a simple vista— que ningún profesional debería
-            omitir antes de un servicio oxidativo sobre un cliente desconocido.
-          </p>
-
-          <p>
-            La incompatibilidad NaOH–tioglicolato merece mención especial por su
-            carácter de ley química absoluta: la lantionina formada por el
-            hidróxido es un tioéter estructuralmente irreducible por el
-            tioglicolato. No existe intervalo de tiempo que haga compatible esta
-            combinación en el mismo cabello. Toda la formación profesional de
-            cosmetología (Milady, SCS, SCCS) la categoriza unánimemente como
-            prohibición sin excepciones. Y sin embargo, según estudios de práctica
-            clínica, continúa siendo una de las causas más frecuentes de rotura
-            capilar por error profesional en entornos europeos.
-          </p>
-
-          {/* Pull quote */}
-          <div className="relative my-8 pl-6 border-l-2 border-[#C4A97D]">
-            <Quote className="w-5 h-5 text-[#C4A97D]/40 absolute -left-2.5 -top-1" />
-            <p className="text-[#F5F0E8]/90 text-base md:text-lg font-display italic leading-relaxed">
-              La compatibilidad química no es una recomendación cosmética; es
-              bioquímica aplicada. Conocer las restricciones moleculares de los
-              tratamientos que ofreces es tan fundamental como la técnica de
-              aplicación.
+        {/* Body — collapsible */}
+        <details className="group/body">
+          <summary className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-[#F5F0E8]/60 hover:text-[#F5F0E8]/90 transition-colors list-none [&::-webkit-details-marker]:hidden rounded-lg border border-[#C4A97D]/15 px-4 py-3 hover:border-[#C4A97D]/30">
+            <Quote className="w-4 h-4 text-[#C4A97D]/60" />
+            Leer análisis científico completo
+            <ChevronDown className="w-4 h-4 ml-auto text-[#C4A97D]/40 transition-transform duration-300 group-open/body:rotate-180" />
+          </summary>
+          <div className="mt-6 space-y-5 text-[#F5F0E8]/75 text-sm md:text-base leading-relaxed max-w-3xl animate-fade-in">
+            <p>
+              La fibra capilar humana es uno de los biomateriales más complejos:
+              una arquitectura de queratina mantenida por puentes disulfuro que
+              puede ser comprometida de forma irreversible en minutos por la
+              combinación equivocada de agentes químicos.
+            </p>
+            <p>
+              La decoloración con H₂O₂ convierte los puentes disulfuro en ácido
+              cisteico irreversiblemente; el hidróxido sódico forma lantionina
+              permanente. Cada proceso modifica la arquitectura molecular del pelo
+              determinando cómo responderá ante el siguiente tratamiento.
+            </p>
+            <p>
+              La interacción más peligrosa es la de tintes metálicos con H₂O₂.
+              Los iones Cu²⁺ actúan como catalizadores Fenton que disuelven la
+              proteína capilar. La prevención requiere un simple test de mechón.
+            </p>
+            <div className="relative my-8 pl-6 border-l-2 border-[#C4A97D]">
+              <Quote className="w-5 h-5 text-[#C4A97D]/40 absolute -left-2.5 -top-1" />
+              <p className="text-[#F5F0E8]/90 text-base md:text-lg font-display italic leading-relaxed">
+                La compatibilidad química no es una recomendación cosmética; es
+                bioquímica aplicada.
+              </p>
+            </div>
+          </div>
+          <div className="mt-10 rounded-xl border border-[#C4A97D]/20 bg-[rgba(196,169,125,0.05)] p-6 animate-fade-in">
+            <p className="text-sm text-[#F5F0E8]/70 leading-relaxed">
+              Un profesional que conoce la química merece herramientas a su altura.{" "}
+              <a href="https://cizura.com" target="_blank" rel="noopener noreferrer"
+                className="text-[#C4A97D] font-semibold hover:underline inline-flex items-center gap-1">
+                Cizura <ExternalLink className="w-3 h-3" />
+              </a>{" "}
+              registra el historial completo de tratamientos de cada cliente.
             </p>
           </div>
-
-          <p>
-            El conocimiento de estas interacciones no es patrimonio exclusivo de
-            los laboratorios de investigación. Pertenece a la consulta de cada
-            profesional, a la formación de cada estilista y, en última instancia,
-            a la protección de cada cliente que confía su cabello a manos expertas.
-            Un profesional que domina la química de su trabajo no solo evita
-            errores costosos: aporta el rigor que convierte un servicio en una
-            experiencia segura, predecible y de calidad certificada.
-          </p>
-        </div>
-
-        {/* Cizura cross-promo — subtle, premium tone */}
-        <div className="mt-10 rounded-xl border border-[#C4A97D]/20 bg-[rgba(196,169,125,0.05)] p-6">
-          <p className="text-sm text-[#F5F0E8]/70 leading-relaxed">
-            Un profesional que conoce la química de su trabajo también merece
-            herramientas de gestión a su altura.{" "}
-            <a
-              href="https://cizura.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#C4A97D] font-semibold hover:underline inline-flex items-center gap-1"
-            >
-              Cizura <ExternalLink className="w-3 h-3" />
-            </a>{" "}
-            registra el historial completo de tratamientos de cada cliente —
-            decoloración, relajantes, henna, queratina — para que nunca tengas
-            que adivinar qué se aplicó la última vez. Porque la compatibilidad
-            química empieza por saber exactamente qué tiene ese cabello antes de
-            aplicar nada nuevo.
-          </p>
-        </div>
+        </details>
 
         {/* References — collapsible */}
         <details className="mt-10 pt-8 border-t border-[#C4A97D]/15 group">
