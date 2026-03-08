@@ -972,7 +972,7 @@ function DiagnosticReport({
 type MainView = "library" | "form" | "report";
 
 interface CanicieAnalyzerProps {
-  wizardContinue?: (summary: string, score?: number) => void;
+  wizardContinue?: (summary: string, score?: number, rawData?: Record<string, unknown>) => void;
 }
 
 export default function CanicieAnalyzer({ wizardContinue }: CanicieAnalyzerProps = {}) {

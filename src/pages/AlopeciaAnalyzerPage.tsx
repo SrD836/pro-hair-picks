@@ -26,8 +26,8 @@ export default function AlopeciaAnalyzerPage() {
   const [started, setStarted] = useState(false);
   const { isWizardMode, completeWizardModule } = useWizardReturn('analizador-alopecia');
 
-  const handleWizardComplete = (summary: string, score?: number) => {
-    completeWizardModule({ summary, score, rawResult: { summary } });
+  const handleWizardComplete = (summary: string, score?: number, rawData?: Record<string, unknown>) => {
+    completeWizardModule({ summary, score, rawResult: rawData ?? { summary } });
   };
 
   return (
