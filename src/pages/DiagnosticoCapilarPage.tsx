@@ -2,28 +2,15 @@ import { useState, useCallback, useMemo } from "react";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Layers,
-  Droplets,
-  Activity,
-  ScanSearch,
-  FlaskConical,
-  ExternalLink,
-  RotateCcw,
-  ArrowRight,
-  Share2,
-  Download,
+  Layers, Droplets, Activity, ScanSearch, FlaskConical, ExternalLink,
+  RotateCcw, ArrowRight, Share2, Download,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/i18n/LanguageContext";
 import {
-  QUESTIONS,
-  calculateScores,
-  getRiskLevel,
-  getProductRecommendations,
-  type RiskLevel,
-  type ScoreBreakdown,
-  type Product,
+  QUESTIONS, calculateScores, getRiskLevel, getProductRecommendations,
+  type RiskLevel, type ScoreBreakdown, type Product,
 } from "@/lib/diagnosticoCapilarEngine";
 import { useWizardReturn } from "@/hooks/useWizardReturn";
 import { ToolHeader } from "@/components/mi-pelo/shared/ToolHeader";
@@ -35,26 +22,18 @@ import { WizardShell } from "@/components/mi-pelo/shared/WizardShell";
 import { NavigationBar } from "@/components/mi-pelo/shared/NavigationBar";
 import { CizuraCTA } from "@/components/mi-pelo/shared/CizuraCTA";
 
-// ── Session ID helper ──────────────────────────────────
 function getSessionId(): string {
   const key = "diag_session_id";
   let id = localStorage.getItem(key);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(key, id);
-  }
+  if (!id) { id = crypto.randomUUID(); localStorage.setItem(key, id); }
   return id;
 }
 
 type Screen = "intro" | "quiz" | "results";
 const TOTAL_SCORE_MAX = 65;
 
-const MODULE_ICONS: Record<1 | 2 | 3 | 4, LucideIcon> = {
-  1: Layers, 2: Droplets, 3: Activity, 4: ScanSearch,
-};
-const MODULE_LABELS: Record<1 | 2 | 3 | 4, string> = {
-  1: "cuticleModule", 2: "porosityModule", 3: "elasticityModule", 4: "scalpModule",
-};
+const MODULE_ICONS: Record<1 | 2 | 3 | 4, LucideIcon> = { 1: Layers, 2: Droplets, 3: Activity, 4: ScanSearch };
+const MODULE_LABELS: Record<1 | 2 | 3 | 4, string> = { 1: "cuticleModule", 2: "porosityModule", 3: "elasticityModule", 4: "scalpModule" };
 const MODULE_QUOTES: Record<1 | 2 | 3 | 4, string> = {
   1: "La cutícula es la primera línea de defensa del cabello.",
   2: "La porosidad determina cómo el cabello absorbe y retiene los productos.",
@@ -87,17 +66,12 @@ export default function DiagnosticoCapilarPage() {
   const isLastQ = currentQ === QUESTIONS.length - 1;
   const moduleOfQ = q?.module as 1 | 2 | 3 | 4 | undefined;
 
-  const localizedQ = q
-    ? {
-        ...q,
-        text: t(`diagnostico.${q.id}Text`),
-        protocol: q.protocol ? t(`diagnostico.${q.id}Protocol`) : undefined,
-        options: q.options.map((opt) => ({
-          ...opt,
-          label: t(`diagnostico.${q.id}${opt.value}`),
-        })),
-      }
-    : q;
+  const localizedQ = q ? {
+    ...q,
+    text: t(`diagnostico.${q.id}Text`),
+    protocol: q.protocol ? t(`diagnostico.${q.id}Protocol`) : undefined,
+    options: q.options.map((opt) => ({ ...opt, label: t(`diagnostico.${q.id}${opt.value}`) })),
+  } : q;
 
   const expertQuote = moduleOfQ !== undefined ? MODULE_QUOTES[moduleOfQ] : MODULE_QUOTES[1];
 
@@ -110,12 +84,10 @@ export default function DiagnosticoCapilarPage() {
     return { damageScore: score };
   }, [answers]);
 
-  // ── Save to Supabase
   const saveSession = useCallback(
     async (fa: Record<string, string>, fs: ScoreBreakdown, fr: RiskLevel, fp: Product[]) => {
       const sessionId = getSessionId();
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await (supabase.from as any)("hair_diagnostic_sessions").insert({
           user_session_id: sessionId,
           cuticle_score: fs.cuticle, porosity_score: fs.porosity,
@@ -138,8 +110,7 @@ export default function DiagnosticoCapilarPage() {
       await saveSession(fa, fs, fr, fp);
       setScreen("results");
     } else {
-      setDirection(1);
-      setCurrentQ((n) => n + 1);
+      setDirection(1); setCurrentQ((n) => n + 1);
     }
   }, [hasAnswer, isLastQ, answers, saveSession]);
 
@@ -182,20 +153,14 @@ export default function DiagnosticoCapilarPage() {
             onStart={() => setScreen("quiz")}
             startLabel={`${t("diagnostico.startBtn")} →`}
           />
-
-          {/* Module preview — big visual cards */}
           <div className="max-w-3xl mx-auto px-6 py-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
               {([1, 2, 3, 4] as const).map((mod, i) => {
                 const Icon = MODULE_ICONS[mod];
                 return (
-                  <motion.div
-                    key={mod}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
+                  <motion.div key={mod} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 + i * 0.08 }}
-                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300"
-                  >
+                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300">
                     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10">
                       <Icon className="w-7 h-7 text-gold" />
                     </div>
@@ -207,7 +172,6 @@ export default function DiagnosticoCapilarPage() {
                 );
               })}
             </div>
-
             <BibliographyDrawer references={REFERENCES} />
           </div>
         </div>
@@ -215,16 +179,10 @@ export default function DiagnosticoCapilarPage() {
 
       {/* ─── QUIZ ─── */}
       {screen === "quiz" && (
-        <WizardShell toolName="Diagnóstico Capilar" currentStep={currentQ} totalSteps={QUESTIONS.length}>
+        <WizardShell toolName="DIAGNÓSTICO CAPILAR" currentStep={currentQ} totalSteps={QUESTIONS.length} onClose={() => setScreen("intro")}>
           {currentQ === 3 && <CizuraCTA className="max-w-2xl mx-auto px-6 pt-8" />}
 
           <div className="max-w-2xl mx-auto px-6 py-10">
-            {/* Question number */}
-            <p className="text-gold/30 text-[11px] font-mono mb-3 uppercase tracking-[0.2em]">
-              {String(currentQ + 1).padStart(2, '0')} / {String(QUESTIONS.length).padStart(2, '0')}
-            </p>
-
-            {/* Question text */}
             <AnimatePresence mode="wait" custom={direction}>
               <motion.h2
                 key={q.id}
@@ -233,20 +191,19 @@ export default function DiagnosticoCapilarPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: direction * -30 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="font-display text-2xl md:text-[2rem] text-cream mb-10 leading-snug tracking-tight"
+                className="font-display text-2xl md:text-[2rem] text-espresso mb-10 leading-snug tracking-tight text-center"
               >
                 {localizedQ.text}
               </motion.h2>
             </AnimatePresence>
 
             {localizedQ.protocol && (
-              <div className="flex gap-3 p-4 rounded-xl border border-gold/10 bg-gold/5 text-sm text-cream/60 mb-8">
+              <div className="flex gap-3 p-4 rounded-xl border border-gold/20 bg-gold/5 text-sm text-espresso/60 mb-8">
                 <span className="shrink-0">🧪</span>
                 <p>{localizedQ.protocol}</p>
               </div>
             )}
 
-            {/* Options — bigger cards */}
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={q.id + '-opts'}
@@ -263,16 +220,16 @@ export default function DiagnosticoCapilarPage() {
                     onClick={() => handleSelect(opt.value)}
                     className={`flex flex-col items-center text-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
                       selectedValue === opt.value
-                        ? 'border-gold bg-gold/10 ring-1 ring-gold/30'
-                        : 'border-gold/10 bg-espresso/40 hover:border-gold/40 hover:bg-gold/5'
+                        ? 'border-gold bg-gold/5 shadow-bento'
+                        : 'border-espresso/8 bg-white hover:border-gold/40 hover:shadow-bento'
                     }`}
                   >
                     <div className={`flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
-                      selectedValue === opt.value ? 'bg-gold/20' : 'bg-gold/10'
+                      selectedValue === opt.value ? 'bg-gold/15' : 'bg-espresso/5'
                     }`}>
-                      <QuizIcon className={`w-7 h-7 ${selectedValue === opt.value ? 'text-gold' : 'text-gold/50'}`} />
+                      <QuizIcon className={`w-7 h-7 ${selectedValue === opt.value ? 'text-gold' : 'text-espresso/30'}`} />
                     </div>
-                    <span className="text-cream font-semibold text-sm">{opt.label}</span>
+                    <span className="text-espresso font-semibold text-sm">{opt.label}</span>
                   </button>
                 ))}
               </motion.div>
@@ -280,14 +237,13 @@ export default function DiagnosticoCapilarPage() {
 
             <MiniExpertTip tip={expertQuote} className="mb-6" />
 
-            {/* Damage indicator — minimal */}
             {currentQ >= 2 && (
               <div className="mt-6 flex items-center gap-4">
-                <span className="text-cream/30 text-xs">Salud</span>
-                <div className="flex-1 h-1 bg-cream/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-gold/60 rounded-full transition-all duration-700" style={{ width: `${damageScore}%` }} />
+                <span className="text-espresso/30 text-xs">Salud</span>
+                <div className="flex-1 h-2 bg-espresso/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-gold rounded-full transition-all duration-700" style={{ width: `${damageScore}%` }} />
                 </div>
-                <span className="text-gold/70 font-mono text-xs tabular-nums">{damageScore}%</span>
+                <span className="text-espresso/50 font-mono text-xs tabular-nums">{damageScore}%</span>
               </div>
             )}
           </div>
@@ -297,7 +253,7 @@ export default function DiagnosticoCapilarPage() {
             onNext={goNext}
             disableNext={!hasAnswer}
             prevLabel={t("diagnostico.backBtn")}
-            nextLabel={isLastQ ? t("diagnostico.finishBtn") : t("diagnostico.nextBtn")}
+            nextLabel={isLastQ ? t("diagnostico.finishBtn") : "CONTINUAR →"}
           />
         </WizardShell>
       )}
@@ -314,115 +270,66 @@ export default function DiagnosticoCapilarPage() {
           />
 
           <div className="max-w-3xl mx-auto px-6 py-14 space-y-10">
-            {/* Dimension cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {modules.map((m) => (
-                <DimensionCard
-                  key={m.labelKey}
-                  icon={m.icon}
-                  label={t(`diagnostico.${m.labelKey}`)}
-                  score={m.score}
-                  max={m.max}
-                />
+                <DimensionCard key={m.labelKey} icon={m.icon} label={t(`diagnostico.${m.labelKey}`)} score={m.score} max={m.max} />
               ))}
             </div>
 
-            {/* Protocol */}
             <div className="bg-espresso border border-gold/8 rounded-2xl p-7">
-              <h2 className="font-display text-xl text-cream font-bold mb-4">
-                {t("diagnostico.actionProtocol")}
-              </h2>
-              <p className="text-cream/50 text-sm leading-relaxed">
-                {t(`diagnostico.risk${capitalize(riskLevel)}Protocol`)}
-              </p>
+              <h2 className="font-display text-xl text-cream font-bold mb-4">{t("diagnostico.actionProtocol")}</h2>
+              <p className="text-cream/50 text-sm leading-relaxed">{t(`diagnostico.risk${capitalize(riskLevel)}Protocol`)}</p>
             </div>
 
-            {/* Products */}
             <div>
-              <h2 className="font-display text-lg text-cream font-bold mb-4">
-                {t("diagnostico.productsTitle")}
-              </h2>
+              <h2 className="font-display text-lg text-cream font-bold mb-4">{t("diagnostico.productsTitle")}</h2>
               <div className="space-y-3">
                 {products.map((product, i) => (
-                  <motion.a
-                    key={product.asin}
-                    href={lang === "en" ? product.urlEN : product.urlES}
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
+                  <motion.a key={product.asin} href={lang === "en" ? product.urlEN : product.urlES}
+                    target="_blank" rel="nofollow noopener noreferrer"
+                    initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + i * 0.08 }}
-                    className="flex items-start gap-4 p-4 rounded-xl border border-gold/10 bg-espresso hover:border-gold/40 transition-all group"
-                  >
-                    <div className="p-2 rounded-lg bg-gold/10 text-gold shrink-0 mt-0.5">
-                      <FlaskConical className="w-4 h-4" />
-                    </div>
+                    className="flex items-start gap-4 p-4 rounded-xl border border-gold/10 bg-espresso hover:border-gold/40 transition-all group">
+                    <div className="p-2 rounded-lg bg-gold/10 text-gold shrink-0 mt-0.5"><FlaskConical className="w-4 h-4" /></div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-cream group-hover:text-gold transition-colors">
-                        {product.name}
-                      </p>
-                      <p className="text-xs text-cream/50 mt-0.5 leading-relaxed line-clamp-2">
-                        {product.description}
-                      </p>
-                      <span className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-gold">
-                        {t("diagnostico.amazonCta")} <ExternalLink className="w-3 h-3" />
-                      </span>
+                      <p className="text-sm font-semibold text-cream group-hover:text-gold transition-colors">{product.name}</p>
+                      <p className="text-xs text-cream/50 mt-0.5 leading-relaxed line-clamp-2">{product.description}</p>
+                      <span className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-gold">{t("diagnostico.amazonCta")} <ExternalLink className="w-3 h-3" /></span>
                     </div>
                   </motion.a>
                 ))}
               </div>
             </div>
 
-            {/* Cizura Banner */}
             <div className="bg-gold/10 border border-gold/30 rounded-xl p-6">
               <div className="flex items-start gap-4">
-                <div className="p-2 rounded-lg bg-gold/20 text-gold shrink-0">
-                  <FlaskConical className="w-5 h-5" />
-                </div>
+                <div className="p-2 rounded-lg bg-gold/20 text-gold shrink-0"><FlaskConical className="w-5 h-5" /></div>
                 <div>
-                  <p className="text-cream font-semibold text-sm mb-1">
-                    Guarda este informe en tu Pasaporte Capilar
-                  </p>
-                  <p className="text-cream/60 text-xs leading-relaxed mb-3">
-                    Cizura registra automáticamente el historial de cada cliente. Tu peluquero accede a este diagnóstico en cada visita.
-                  </p>
-                  <a
-                    href="https://cizura.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-gold text-espresso font-semibold text-sm hover:bg-gold-light transition-colors"
-                  >
+                  <p className="text-cream font-semibold text-sm mb-1">Guarda este informe en tu Pasaporte Capilar</p>
+                  <p className="text-cream/60 text-xs leading-relaxed mb-3">Cizura registra automáticamente el historial de cada cliente.</p>
+                  <a href="https://cizura.com" target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-gold text-espresso font-semibold text-sm hover:bg-gold-light transition-colors">
                     Conectar con mi salón →
                   </a>
                 </div>
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => window.print()}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gold/20 text-cream/70 text-sm font-medium hover:text-cream hover:border-gold/40 transition-colors"
-              >
+              <button onClick={() => window.print()}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gold/20 text-cream/70 text-sm font-medium hover:text-cream hover:border-gold/40 transition-colors">
                 <Download className="w-4 h-4" /> Descargar PDF
               </button>
-              <button
-                onClick={reset}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gold/20 text-cream/40 text-sm hover:text-cream/70 transition-colors"
-              >
+              <button onClick={reset}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-gold/20 text-cream/40 text-sm hover:text-cream/70 transition-colors">
                 <RotateCcw className="w-4 h-4" /> {t("diagnostico.resetBtn")}
               </button>
             </div>
 
             {isWizardMode && (
               <button
-                onClick={() => completeWizardModule({
-                  summary: `${riskLevel} — ${scores.total} pts`,
-                  score: scores.total,
-                  rawResult: { scores, riskLevel },
-                })}
-                className="w-full flex items-center justify-center gap-2 h-14 rounded-xl bg-gold text-espresso font-bold hover:bg-gold-light transition-all"
-              >
+                onClick={() => completeWizardModule({ summary: `${riskLevel} — ${scores.total} pts`, score: scores.total, rawResult: { scores, riskLevel } })}
+                className="w-full flex items-center justify-center gap-2 h-14 rounded-xl bg-gold text-espresso font-bold hover:bg-gold-light transition-all">
                 Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
               </button>
             )}
