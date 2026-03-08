@@ -55,7 +55,7 @@ export default function MiPeloPage() {
       <div className="relative min-h-[300px] w-full overflow-hidden bg-espresso">
         <div className="absolute inset-0 bg-gradient-to-t from-espresso via-espresso/60 to-transparent" />
         <div className="relative z-10 flex flex-col items-center justify-center min-h-[300px] text-center px-6 py-16">
-          <span className="text-accent-orange text-xs font-bold uppercase tracking-[0.3em] mb-4">
+          <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] mb-4">
             Diagnóstico Profesional Gratuito
           </span>
           <h1 className="text-4xl md:text-6xl font-bold text-cream mb-4 font-display">
@@ -72,34 +72,34 @@ export default function MiPeloPage() {
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Featured: Diagnóstico Capilar */}
           <Link to="/mi-pelo/diagnostico-capilar"
-            className="md:col-span-2 group bg-mocha rounded-2xl p-6 border border-cocoa hover:border-accent-orange/50 transition-all flex items-center gap-6"
+            className="md:col-span-2 group bg-mocha rounded-2xl p-6 border border-cocoa hover:border-gold/50 transition-all flex items-center gap-6"
           >
-            <div className="w-16 h-16 rounded-2xl bg-accent-orange/10 flex items-center justify-center shrink-0">
-              <Microscope className="text-accent-orange w-8 h-8" />
+            <div className="w-16 h-16 rounded-2xl bg-gold/10 flex items-center justify-center shrink-0">
+              <Microscope className="text-gold w-8 h-8" />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-cream font-bold text-xl">Diagnóstico Capilar</h3>
-                <span className="bg-accent-orange text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+                <span className="bg-gold text-espresso text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
                   Más completo
                 </span>
               </div>
               <p className="text-cream/60 text-sm">Análisis completo de 12 factores. Tu Pasaporte Capilar personalizado.</p>
-              <p className="text-accent-orange text-xs font-bold mt-2 uppercase tracking-wider">~8 min → Iniciar →</p>
+              <p className="text-gold text-xs font-bold mt-2 uppercase tracking-wider">~8 min → Iniciar →</p>
             </div>
           </Link>
 
           {/* Rest of tools */}
           {TOOLS.map((tool) => (
             <Link key={tool.to} to={tool.to}
-              className="group bg-mocha rounded-2xl p-6 border border-cocoa hover:border-accent-orange/50 transition-all"
+              className="group bg-mocha rounded-2xl p-6 border border-cocoa hover:border-gold/50 transition-all"
             >
-              <div className="w-12 h-12 rounded-xl bg-accent-orange/10 flex items-center justify-center mb-4">
-                <tool.icon className="text-accent-orange w-6 h-6" />
+              <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center mb-4">
+                <tool.icon className="text-gold w-6 h-6" />
               </div>
               <h3 className="text-cream font-bold text-lg mb-2">{tool.title}</h3>
               <p className="text-cream/60 text-sm mb-3">{tool.desc}</p>
-              <p className="text-accent-orange text-xs font-bold uppercase tracking-wider">{tool.time} → Iniciar →</p>
+              <p className="text-gold text-xs font-bold uppercase tracking-wider">{tool.time} → Iniciar →</p>
             </Link>
           ))}
         </div>
@@ -171,12 +171,12 @@ export default function MiPeloPage() {
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-accent-orange/10 flex items-center justify-center">
-                  <BookOpen className="text-accent-orange w-5 h-5" />
+                <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
+                  <BookOpen className="text-gold w-5 h-5" />
                 </div>
                 <h2 className="text-cream font-bold text-xl font-display">Últimos artículos</h2>
               </div>
-              <Link to="/blog" className="text-accent-orange text-sm font-bold hover:underline flex items-center gap-1">
+              <Link to="/blog" className="text-gold text-sm font-bold hover:underline flex items-center gap-1">
                 Ver todos <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -185,7 +185,7 @@ export default function MiPeloPage() {
                 <Link
                   key={post.id}
                   to={`/blog/${post.slug}`}
-                  className="group bg-mocha rounded-2xl overflow-hidden border border-cocoa hover:border-accent-orange/50 transition-all"
+                  className="group bg-mocha rounded-2xl overflow-hidden border border-cocoa hover:border-gold/50 transition-all"
                 >
                   <div className="aspect-[16/10] overflow-hidden bg-espresso-dark">
                     <img
@@ -197,9 +197,9 @@ export default function MiPeloPage() {
                   </div>
                   <div className="p-4">
                     {post.category && (
-                      <span className="text-accent-orange text-[10px] font-bold uppercase tracking-wider">{post.category}</span>
+                      <span className="text-gold text-[10px] font-bold uppercase tracking-wider">{post.category}</span>
                     )}
-                    <h3 className="text-cream font-semibold text-sm leading-snug mt-1 line-clamp-2 group-hover:text-accent-orange transition-colors">
+                    <h3 className="text-cream font-semibold text-sm leading-snug mt-1 line-clamp-2 group-hover:text-gold transition-colors">
                       {post.title}
                     </h3>
                     <div className="flex items-center gap-2 mt-2 text-cream/40 text-xs">
