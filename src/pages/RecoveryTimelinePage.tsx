@@ -27,7 +27,7 @@ export default function RecoveryTimelinePage() {
     <>
       <SEOHead
         title="Calculadora de Recuperación Capilar — GuiaDelSalon"
-        description="Genera tu calendario personalizado de recuperación capilar. Basado en nivel de daño, porosidad y último tratamiento."
+        description="Genera tu calendario personalizado de recuperación capilar."
       />
 
       <div className="min-h-screen bg-espresso">
@@ -66,10 +66,20 @@ export default function RecoveryTimelinePage() {
             </div>
           </>
         ) : (
-          <div className="max-w-3xl mx-auto px-6 py-16 space-y-12">
-            <RecoveryTimeline />
-            <RecoveryExpertVerdict />
-            <BibliographyDrawer references={REFERENCES} />
+          <div className="bg-background-light min-h-screen">
+            <div className="max-w-3xl mx-auto px-6 py-12 space-y-12">
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={() => setStarted(false)}
+                className="text-espresso/40 hover:text-espresso text-sm transition-colors"
+              >
+                ← Volver
+              </motion.button>
+              <RecoveryTimeline />
+              <RecoveryExpertVerdict />
+              <BibliographyDrawer references={REFERENCES} />
+            </div>
           </div>
         )}
       </div>

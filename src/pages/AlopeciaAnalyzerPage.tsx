@@ -68,11 +68,17 @@ export default function AlopeciaAnalyzerPage() {
           </>
         ) : (
           <div className="bg-background-light min-h-screen">
-            <div className="container mx-auto px-6 py-16">
+            <div className="container mx-auto px-6 py-12 max-w-3xl space-y-12">
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={() => setStarted(false)}
+                className="text-espresso/40 hover:text-espresso text-sm transition-colors"
+              >
+                ← Volver
+              </motion.button>
               <AlopeciaAnalyzer />
-            </div>
-            <AlopeciaExpertVerdict />
-            <div className="container mx-auto px-6 pb-16">
+              <AlopeciaExpertVerdict />
               <BibliographyDrawer references={REFERENCES} />
             </div>
           </div>

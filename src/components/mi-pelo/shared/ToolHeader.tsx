@@ -11,6 +11,7 @@ interface ToolHeaderProps {
   onStart: () => void;
   startLabel?: string;
   secondaryAction?: { label: string; onClick: () => void };
+  swatches?: ReactNode;
 }
 
 export function ToolHeader({
@@ -21,6 +22,7 @@ export function ToolHeader({
   onStart,
   startLabel = 'Comenzar →',
   secondaryAction,
+  swatches,
 }: ToolHeaderProps) {
   return (
     <div className="bg-espresso">
@@ -35,7 +37,7 @@ export function ToolHeader({
         </nav>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 pb-16 pt-6">
+      <div className="max-w-3xl mx-auto px-6 pb-16 pt-6 text-center">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -46,31 +48,34 @@ export function ToolHeader({
             {badge}
           </span>
 
-          {/* Title — larger, more presence */}
+          {/* Title */}
           <h1 className="font-display text-[2.5rem] md:text-6xl font-bold italic text-cream mb-5 leading-[1.1] tracking-tight">
             {title}
           </h1>
 
-          {/* Subtitle — more breathing room */}
-          <p className="text-cream/60 text-lg md:text-xl max-w-xl leading-relaxed mb-4">
+          {/* Subtitle */}
+          <p className="text-cream/60 text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-4">
             {subtitle}
           </p>
 
           {/* Micro-trust */}
-          <p className="text-cream/30 text-sm mb-10">{microTrust}</p>
+          <p className="text-cream/30 text-sm mb-8">{microTrust}</p>
 
-          {/* CTAs — larger, more prominent */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          {/* Optional swatches */}
+          {swatches && <div className="mb-10">{swatches}</div>}
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={onStart}
-              className="w-full sm:w-auto px-10 py-4.5 rounded-2xl bg-gold text-espresso font-bold text-lg hover:bg-gold-light transition-all duration-300 hover:shadow-[0_8px_30px_-8px_rgba(196,169,125,0.4)]"
+              className="px-10 py-4.5 rounded-2xl bg-gold text-espresso font-bold text-lg hover:bg-gold-light transition-all duration-300 hover:shadow-[0_8px_30px_-8px_rgba(196,169,125,0.4)]"
             >
               {startLabel}
             </button>
             {secondaryAction && (
               <button
                 onClick={secondaryAction.onClick}
-                className="w-full sm:w-auto px-10 py-4.5 rounded-2xl border border-gold/30 text-cream/60 font-medium hover:text-cream hover:border-gold/60 transition-all duration-300"
+                className="px-10 py-4.5 rounded-2xl border border-gold/30 text-cream/60 font-medium hover:text-cream hover:border-gold/60 transition-all duration-300"
               >
                 {secondaryAction.label}
               </button>

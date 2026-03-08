@@ -33,7 +33,7 @@ export default function CanicieAnalyzerPage() {
     <>
       <SEOHead
         title="Analizador de Canicie — GuiaDelSalon"
-        description="Descubre si tu canicie tiene origen genético, ambiental o mixto. Diagnóstico basado en biología del melanocito."
+        description="Descubre si tu canicie tiene origen genético, ambiental o mixto."
       />
 
       <div className="min-h-screen bg-espresso">
@@ -73,7 +73,15 @@ export default function CanicieAnalyzerPage() {
           </>
         ) : (
           <div className="bg-background-light min-h-screen">
-            <div className="container mx-auto px-6 py-16 max-w-3xl space-y-12">
+            <div className="container mx-auto px-6 py-12 max-w-3xl space-y-12">
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={() => setStarted(false)}
+                className="text-espresso/40 hover:text-espresso text-sm transition-colors"
+              >
+                ← Volver
+              </motion.button>
               <CanicieAnalyzer wizardContinue={isWizardMode ? handleWizardComplete : undefined} />
               {!isWizardMode && <CanicieExpertVerdict />}
               <BibliographyDrawer references={REFERENCES} />
