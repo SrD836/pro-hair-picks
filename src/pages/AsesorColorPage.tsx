@@ -2,8 +2,9 @@
 // Diseño: Google AI Studio — Expert Color Matcher wizard
 
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Palette, X, ArrowRight, ArrowLeft, CheckCircle2, Check, AlertTriangle, Download, ShieldCheck, Sparkles } from 'lucide-react';
+import jsPDF from 'jspdf';
 import { useWizardReturn } from '@/hooks/useWizardReturn';
 
 const STEPS = [
@@ -31,7 +32,7 @@ export default function AsesorColorPage() {
   const progress = ((step - 1) / 7) * 100;
 
   if (step === 8) {
-    return <ResultsPage isWizardMode={isWizardMode} onWizardContinue={() => completeWizardModule({ summary: 'Colorimetría completada', score: 98, rawResult: { selections } })} />;
+    return <ResultsPage isWizardMode={isWizardMode} selections={selections} onWizardContinue={() => completeWizardModule({ summary: 'Colorimetría completada', score: 98, rawResult: { selections } })} />;
   }
 
   return (
@@ -493,7 +494,118 @@ function Step7({ selection, onSelect }: { selection: unknown; onSelect: (v: stri
   );
 }
 
-function ResultsPage({ isWizardMode, onWizardContinue }: { isWizardMode?: boolean; onWizardContinue?: () => void }) {
+// ── Local PDF generator for Master Color Card ────────────────────────────────
+
+function generateMasterColorCardPDF(selections: Record<number, unknown>) {
+  const ESPRESSO: [number, number, number] = [45, 34, 24];
+  const GOLD: [number, number, number] = [196, 169, 125];
+  const ORANGE: [number, number, number] = [236, 91, 19];
+  const GRAY: [number, number, number] = [120, 120, 120];
+  const CREAM: [number, number, number] = [245, 240, 232];
+
+  const doc = new jsPDF();
+  const pw = 210;
+
+  // Background
+  doc.setFillColor(...ESPRESSO);
+  doc.rect(0, 0, pw, 297, 'F');
+
+  // Header
+  doc.setFontSize(8);
+  doc.setTextColor(...GOLD);
+  doc.text('DIAGNÓSTICO DE COLORIMETRÍA', pw / 2, 16, { align: 'center' });
+  doc.setFontSize(22);
+  doc.setTextColor(...CREAM);
+  doc.text('Master Color Card', pw / 2, 28, { align: 'center' });
+  doc.setFontSize(9);
+  doc.setTextColor(245, 240, 232);
+  doc.text('Expert Color Matcher — GuiaDelSalon.com', pw / 2, 36, { align: 'center' });
+
+  // Cream card
+  const cardX = 15, cardY = 44, cardW = pw - 30, cardH = 228;
+  doc.setFillColor(...CREAM);
+  doc.roundedRect(cardX, cardY, cardW, cardH, 6, 6, 'F');
+
+  // Match badge
+  doc.setFillColor(...ORANGE);
+  doc.roundedRect(cardX + cardW / 2 - 20, cardY + 10, 40, 10, 5, 5, 'F');
+  doc.setFontSize(8);
+  doc.setTextColor(255, 255, 255);
+  doc.text('MATCH 98%', pw / 2, cardY + 17, { align: 'center' });
+
+  // Tono recomendado
+  doc.setFontSize(8);
+  doc.setTextColor(...ORANGE);
+  doc.text('TONO RECOMENDADO', pw / 2, cardY + 34, { align: 'center' });
+  doc.setFontSize(20);
+  doc.setTextColor(...ESPRESSO);
+  doc.text('10.1 Rubio Platino', pw / 2, cardY + 46, { align: 'center' });
+
+  // Tags
+  doc.setFontSize(8);
+  doc.setTextColor(GRAY[0], GRAY[1], GRAY[2]);
+  doc.text('Estación: Invierno  ·  Subtono: Frío / Ceniza', pw / 2, cardY + 56, { align: 'center' });
+
+  // Divider
+  doc.setDrawColor(...GOLD);
+  doc.setLineWidth(0.4);
+  doc.line(cardX + 10, cardY + 62, cardX + cardW - 10, cardY + 62);
+
+  // Expert analysis
+  let y = cardY + 72;
+  doc.setFontSize(11);
+  doc.setTextColor(...ESPRESSO);
+  doc.text('Análisis del Experto', cardX + 10, y);
+  y += 7;
+  doc.setFontSize(8.5);
+  doc.setTextColor(80, 80, 80);
+  const analysisText = '"Al tener venas azuladas y piel clara, los tonos dorados excesivos pueden apagar tu luminosidad natural. El matiz ceniza es tu mejor aliado para resaltar la profundidad de tus ojos y definir suavemente tus facciones."';
+  const analysisLines = doc.splitTextToSize(analysisText, cardW - 20);
+  doc.text(analysisLines, cardX + 10, y);
+  y += analysisLines.length * 4.5 + 8;
+
+  // Divider
+  doc.setDrawColor(...GOLD);
+  doc.line(cardX + 10, y, cardX + cardW - 10, y);
+  y += 8;
+
+  // Answers summary
+  doc.setFontSize(11);
+  doc.setTextColor(...ESPRESSO);
+  doc.text('Resumen de Respuestas', cardX + 10, y);
+  y += 7;
+
+  const stepLabels: Record<number, string> = {
+    1: 'Tono de piel',
+    2: 'Test de venas',
+    3: 'Metal favorito',
+    4: 'Color iluminación',
+    5: 'Color de ojos',
+    6: 'Nivel natural',
+    7: 'Color actual',
+  };
+
+  doc.setFontSize(8);
+  for (let i = 1; i <= 7; i++) {
+    const val = selections[i];
+    if (val !== undefined && y < cardY + cardH - 10) {
+      doc.setTextColor(...ESPRESSO);
+      doc.text(`${stepLabels[i]}:`, cardX + 10, y);
+      doc.setTextColor(80, 80, 80);
+      doc.text(String(val), cardX + 55, y);
+      y += 6;
+    }
+  }
+
+  // Footer
+  doc.setFontSize(7);
+  doc.setTextColor(...GOLD);
+  doc.text(`guiadelsalon.com · ${new Date().toLocaleDateString('es-ES')}`, pw / 2, 290, { align: 'center' });
+
+  doc.save('master-color-card-guiadelsalon.pdf');
+}
+
+function ResultsPage({ isWizardMode, onWizardContinue, selections }: { isWizardMode?: boolean; onWizardContinue?: () => void; selections?: Record<number, unknown> }) {
   return (
     <div className="min-h-screen bg-[#2D2218] text-[#F5F0E8] font-sans flex flex-col items-center py-12 px-6">
       <div className="text-center mb-10">
@@ -574,7 +686,10 @@ function ResultsPage({ isWizardMode, onWizardContinue }: { isWizardMode?: boolea
         </div>
 
         <div className="mt-8 flex flex-col gap-4">
-          <button className="w-full bg-[#E85D04] hover:bg-[#E85D04]/90 text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 text-lg">
+          <button
+            onClick={() => generateMasterColorCardPDF(selections ?? {})}
+            className="w-full bg-[#E85D04] hover:bg-[#E85D04]/90 text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 text-lg"
+          >
             Descargar Guía Completa PDF <Download className="w-5 h-5" />
           </button>
           <Link
