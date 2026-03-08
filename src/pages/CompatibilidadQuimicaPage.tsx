@@ -10,6 +10,11 @@ export default function CompatibilidadQuimicaPage() {
   const { t } = useLanguage();
   const [started, setStarted] = useState(false);
   const analyzerRef = useRef<HTMLDivElement>(null);
+  const { isWizardMode, completeWizardModule } = useWizardReturn('compatibilidad-quimica');
+
+  const handleWizardComplete = (summary: string) => {
+    completeWizardModule({ summary, rawResult: { summary } });
+  };
 
   const handleStart = () => {
     setStarted(true);
