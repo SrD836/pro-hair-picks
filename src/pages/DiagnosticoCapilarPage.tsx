@@ -458,6 +458,7 @@ export default function DiagnosticoCapilarPage() {
             <div className="grid grid-cols-2 gap-3 mb-8">
               {modules.map((m, i) => {
                 const pct = Math.round((m.score / m.max) * 100);
+                const healthColor = pct <= 30 ? 'damage-low' : pct <= 60 ? 'damage-med' : 'damage-high';
                 const Icon = m.icon;
                 return (
                   <motion.div
@@ -472,17 +473,13 @@ export default function DiagnosticoCapilarPage() {
                         <Icon className="w-4 h-4 text-accent-orange" />
                       </div>
                       <span className="text-sm font-semibold flex-1">{t(`diagnostico.${m.labelKey}`)}</span>
-                      <span className={`text-lg font-bold font-display tabular-nums ${
-                        pct >= 70 ? 'text-damage-low' : pct >= 40 ? 'text-damage-med' : 'text-damage-high'
-                      }`}>
+                      <span className={`text-lg font-bold font-display tabular-nums text-${healthColor}`}>
                         {m.score}<span className="text-espresso/20 text-xs font-normal">/{m.max}</span>
                       </span>
                     </div>
                     <div className="h-1.5 rounded-full bg-espresso/5 overflow-hidden">
                       <motion.div
-                        className={`h-full rounded-full ${
-                          pct >= 70 ? 'bg-damage-low' : pct >= 40 ? 'bg-damage-med' : 'bg-damage-high'
-                        }`}
+                        className={`h-full rounded-full bg-${healthColor}`}
                         initial={{ width: 0 }}
                         animate={{ width: `${pct}%` }}
                         transition={{ delay: 0.6 + i * 0.1, duration: 0.8 }}
