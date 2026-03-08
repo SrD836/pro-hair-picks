@@ -213,7 +213,7 @@ export default function DiagnosticoCapilarPage() {
   }, []);
 
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-  const healthPct = scores ? Math.round((scores.total / TOTAL_SCORE_MAX) * 100) : 0;
+  const healthPct = scores ? Math.round(100 - (scores.total / TOTAL_SCORE_MAX) * 100) : 0;
   const modules = scores ? [
     { labelKey: "cuticleModule", score: scores.cuticle, max: 12, icon: Layers },
     { labelKey: "porosityModule", score: scores.porosity, max: 20, icon: Droplets },
