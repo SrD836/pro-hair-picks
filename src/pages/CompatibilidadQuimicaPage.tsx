@@ -2,6 +2,7 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { ToolHeader } from "@/components/mi-pelo/shared/ToolHeader";
 import ChemicalCompatibilityAnalyzer from "@/components/ChemicalCompatibilityAnalyzer";
+import { useWizardReturn } from "@/hooks/useWizardReturn";
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 
