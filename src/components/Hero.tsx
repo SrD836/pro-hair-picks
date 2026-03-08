@@ -13,7 +13,7 @@ const Hero = () => {
         src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1920&q=80&auto=format&fit=crop"
         srcSet="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=75&auto=format&fit=crop 800w, https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1920&q=80&auto=format&fit=crop 1920w"
         sizes="100vw"
-        alt=""
+        alt="Peluquero profesional trabajando en un salón de peluquería"
         fetchPriority="high"
         loading="eager"
         decoding="sync"

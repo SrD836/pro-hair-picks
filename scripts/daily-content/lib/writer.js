@@ -120,7 +120,8 @@ ${post.research_context || 'Usa tu conocimiento del sector.'}
 ESCRIBE EL ARTÍCULO COMPLETO en HTML semántico. REGLAS:
 - Extensión: mínimo 1.200 palabras, objetivo 1.500. Sin los 4 elementos obligatorios (lista ≥5 items, tabla comparativa, FAQ, veredicto experto) el artículo es incompleto.
 - Sin etiquetas <html>, <head>, <body>
-- Etiquetas: <h2>, <h3>, <p>, <strong>, <ul>, <li>, <table>
+- Etiquetas permitidas: <h2>, <h3>, <p>, <strong>, <ul>, <li>, <table> — NUNCA usar <img>: las imágenes las gestiona el pipeline externamente
+- Si por algún motivo incluyes un <img>, DEBE llevar alt descriptivo basado en la keyword objetivo (ej: alt="[keyword] — técnica profesional de peluquería")
 - Párrafos máximo 4 líneas (legibilidad mobile)
 - Negritas SOLO en conceptos técnicos clave
 - NUNCA empezar con "En este artículo...", "Hoy te traemos..."
@@ -229,7 +230,8 @@ ${post.research_context || 'Use your knowledge of the US professional hair indus
 WRITE THE COMPLETE ARTICLE in semantic HTML. RULES:
 - Length: minimum 1,200 words, target 1,500. Without all 4 mandatory elements (list ≥5 items, comparison table, FAQ, expert verdict) the article is incomplete.
 - No <html>, <head>, <body> tags
-- Tags: <h2>, <h3>, <p>, <strong>, <ul>, <li>, <table>
+- Allowed tags: <h2>, <h3>, <p>, <strong>, <ul>, <li>, <table> — NEVER use <img>: images are managed externally by the pipeline
+- If you ever include an <img>, it MUST have a descriptive alt based on the target keyword (e.g., alt="[keyword] — professional hairdressing technique")
 - Paragraphs max 4 lines (mobile readability)
 - Bold ONLY on key technical concepts
 - NEVER start with "In this article...", "Today we bring you..."

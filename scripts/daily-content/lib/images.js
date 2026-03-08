@@ -240,7 +240,14 @@ async function processImages(dailyPlan, config) {
       coverImageUrl = '/images/hero-barbershop.webp';
     }
 
-    posts.push({ ...post, cover_image_url: coverImageUrl });
+    // Alt text descriptivo para la imagen de portada, basado en título y keyword objetivo.
+    // Usado por el frontend (BlogPostPage) y almacenado en Supabase para accesibilidad y SEO.
+    const altBase   = post.title || post.topic || post.target_keyword || 'Peluquería profesional';
+    const coverImageAlt = altBase.length > 100
+      ? altBase.slice(0, 97) + '…'
+      : altBase;
+
+    posts.push({ ...post, cover_image_url: coverImageUrl, cover_image_alt: coverImageAlt });
   }
 
   return { ...dailyPlan, posts };
