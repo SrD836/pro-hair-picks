@@ -81,6 +81,13 @@ export default {
         cocoa: "#4A3B2C",
         gold: "#C4A97D",
         "gold-light": "#D4C0A1",
+        // Mi Pelo semantic aliases
+        "background-light": "#F5F0E8",
+        "background-dark":  "#2D2218",
+        // Damage level tokens
+        "damage-low":  "#4CAF7C",
+        "damage-med":  "#E4B84A",
+        "damage-high": "#E06B52",
       },
       borderRadius: {
         lg: "6px",

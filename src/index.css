@@ -331,3 +331,34 @@
     background-clip: text;
   }
 }
+
+/* ── Mi Pelo — Custom radio button ─────────────────────────── */
+.radio-custom {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid rgba(196, 169, 125, 0.3);
+  border-radius: 9999px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.radio-custom:checked {
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-color: #C4A97D;
+  border-color: #C4A97D;
+}
+.radio-custom:focus-visible {
+  outline: 2px solid #C4A97D;
+  outline-offset: 2px;
+}
+
+/* ── Mi Pelo — Bento card hover lift ───────────────────────── */
+.bento-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(26, 15, 10, 0.10);
+}
