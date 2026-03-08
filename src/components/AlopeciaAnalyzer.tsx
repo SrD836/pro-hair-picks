@@ -1499,7 +1499,11 @@ function RiskReport({
 
 type MainView = "library" | "form" | "report";
 
-export default function AlopeciaAnalyzer() {
+interface AlopeciaAnalyzerProps {
+  wizardContinue?: (summary: string, score?: number) => void;
+}
+
+export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerProps = {}) {
   const [view, setView] = useState<MainView>("library");
   const [report, setReport] = useState<AlopeciaReport | null>(null);
   const reportRef = useRef<HTMLDivElement>(null);
