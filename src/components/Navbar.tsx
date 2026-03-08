@@ -77,16 +77,17 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose, onEnter }: 
 }
 
 /* ── Desktop: Flat dropdown (Mixto) ─────────────────────────────────────── */
-function FlatDropdown({ label, items, isOpen, onToggle, onClose }: {
+function FlatDropdown({ label, items, isOpen, onToggle, onClose, onEnter }: {
   label: string;
   items: CategoryItem[];
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
+  onEnter: () => void;
 }) {
   const { t } = useLanguage();
   return (
-    <div className="relative" onMouseLeave={onClose}>
+    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
       <button
         onMouseEnter={() => !isOpen && onToggle()}
         onClick={onToggle}
