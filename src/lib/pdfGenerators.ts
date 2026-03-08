@@ -200,7 +200,7 @@ export function generateDiagnosticoPDF(data: DiagnosticoPDFData) {
     const dx = gridX + col * (cellW + gap);
     const dy = gridY + row * (cellH + gap);
     const pct = Math.min(1, dim.score / dim.max);
-    const dimColor: [number, number, number] = pct >= 0.7 ? GREEN : pct >= 0.4 ? AMBER : RED;
+    const dimColor: [number, number, number] = pct <= 0.3 ? GREEN : pct <= 0.6 ? AMBER : RED;
 
     // Card bg
     doc.setFillColor(255, 255, 255);
