@@ -126,6 +126,7 @@ export function FooterBlogPreview() {
                 <Link
                   to={`/blog/${post.slug}`}
                   className="group rounded-2xl overflow-hidden flex flex-col h-full"
+                  aria-label={isEN ? `Read: ${title}` : `Leer: ${title}`}
                   style={{
                     background:
                       "linear-gradient(145deg, #3a2a1a 0%, #2d2015 60%, #241a0e 100%)",
@@ -187,7 +188,7 @@ export function FooterBlogPreview() {
                         </span>
                       </div>
                       <span className="text-[10px] font-semibold text-[#C4A97D] uppercase tracking-wider group-hover:translate-x-0.5 transition-transform">
-                        {isEN ? "Read" : "Leer"} →
+                        {isEN ? "Read article" : "Leer artículo"} →
                       </span>
                     </div>
                   </div>

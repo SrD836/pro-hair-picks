@@ -200,7 +200,8 @@ AMAZON (máximo 3, solo si aplican al tema):
 ${post.type === 'negocio' ? `\nCIZURA: Menciona "software de gestión como Cizura" máximo 2 veces, solo como solución a un problema concreto del artículo.` : ''}
 ${post.relatedPosts && post.relatedPosts.length > 0 ? `
 ENLACES INTERNOS OBLIGATORIOS a artículos relacionados del blog (integrar naturalmente dentro del cuerpo del artículo, no solo en bibliografía):
-${post.relatedPosts.map(p => `- <a href="/blog/${p.slug}">${p.title}</a>`).join('\n')}` : ''}
+REGLA DE TEXTO ANCLA: el texto visible de cada enlace debe incluir la keyword principal del artículo destino, NO frases genéricas como "ver más", "leer más", "este artículo" o "aquí". Máximo 60 caracteres.
+${post.relatedPosts.map(p => `- Destino: /blog/${p.slug} | Keyword destino: "${p.title}" → usa ese texto o una variante descriptiva como texto ancla`).join('\n')}` : ''}
 
 RESPONDE SOLO con el HTML del artículo. Sin explicaciones previas ni posteriores.`;
 }
@@ -307,7 +308,8 @@ AMAZON (max 3, only if applicable to topic):
 - Format: <a href="https://amazon.com/dp/ASIN?tag=${AMAZON_TAG}" rel="nofollow" target="_blank">Check price on Amazon</a>
 ${post.relatedPosts && post.relatedPosts.length > 0 ? `
 MANDATORY INTERNAL LINKS to related blog articles (integrate naturally within the article body, not just in bibliography):
-${post.relatedPosts.map(p => `- <a href="/blog/${p.slug}">${p.title}</a>`).join('\n')}` : ''}
+ANCHOR TEXT RULE: the visible link text must include the destination article's primary keyword — NEVER generic phrases like "read more", "see more", "this article", or "here". Maximum 60 characters.
+${post.relatedPosts.map(p => `- Destination: /blog/${p.slug} | Target keyword: "${p.title}" → use that text or a descriptive variant as anchor text`).join('\n')}` : ''}
 
 RESPOND ONLY with the article HTML. No explanations before or after.`;
 }

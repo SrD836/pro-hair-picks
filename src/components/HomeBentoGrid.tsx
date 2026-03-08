@@ -15,6 +15,8 @@ const tools = [
     bgPattern: "radial-gradient(circle at 80% 20%, rgba(196,169,125,0.12) 0%, transparent 60%)",
     tag: "Científico",
     external: false,
+    cta: "Abrir Diagnóstico Capilar",
+    ctaEN: "Open Hair Diagnosis",
   },
   {
     icon: Palette,
@@ -27,6 +29,8 @@ const tools = [
     bgPattern: "radial-gradient(circle at 20% 80%, rgba(212,149,106,0.10) 0%, transparent 60%)",
     tag: "IA",
     external: false,
+    cta: "Usar Asesor de Color",
+    ctaEN: "Use Color Advisor",
   },
   {
     icon: Dna,
@@ -39,6 +43,8 @@ const tools = [
     bgPattern: "radial-gradient(circle at 80% 80%, rgba(168,197,160,0.08) 0%, transparent 60%)",
     tag: "Científico",
     external: false,
+    cta: "Analizar mis Canas",
+    ctaEN: "Analyze my Gray Hair",
   },
   {
     icon: FlaskConical,
@@ -51,11 +57,13 @@ const tools = [
     bgPattern: "radial-gradient(circle at 20% 20%, rgba(123,158,199,0.08) 0%, transparent 60%)",
     tag: "Técnico",
     external: false,
+    cta: "Verificar Compatibilidad",
+    ctaEN: "Check Compatibility",
   },
 ];
 
 const HomeBentoGrid = () => {
-  const { t } = useLanguage();
+  const { t, isEN } = useLanguage();
 
   return (
     <section
@@ -121,7 +129,7 @@ const HomeBentoGrid = () => {
                 transition={{ duration: 0.55, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -6, boxShadow: "0 12px 40px rgba(0,0,0,0.5), 0 0 30px rgba(196,169,125,0.08)", transition: { duration: 0.2 } }}
               >
-                <Link to={tool.href} className="block h-full">
+                <Link to={tool.href} className="block h-full" aria-label={isEN ? tool.ctaEN : tool.cta}>
                   <div
                     className="relative rounded-2xl overflow-hidden p-6 md:p-8 flex flex-col justify-between min-h-[220px] cursor-pointer group h-full"
                     style={{
@@ -177,7 +185,7 @@ const HomeBentoGrid = () => {
                     {/* CTA */}
                     <div className="mt-6 flex items-center gap-1.5">
                       <span className="text-sm font-semibold" style={{ color: tool.accentColor }}>
-                        Ver más
+                        {isEN ? tool.ctaEN : tool.cta}
                       </span>
                       <ArrowRight
                         className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300"

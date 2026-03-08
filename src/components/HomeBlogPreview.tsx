@@ -105,7 +105,11 @@ const HomeBlogPreview = () => {
                   border: "1px solid rgba(255,255,255,0.07)",
                 }}
               >
-                <Link to={`/blog/${post.slug}`} className="flex flex-col h-full">
+                <Link
+                  to={`/blog/${post.slug}`}
+                  className="flex flex-col h-full"
+                  aria-label={isEN ? `Read: ${title}` : `Leer: ${title}`}
+                >
                   {/* Cover image */}
                   {post.cover_image_url && (
                     <div className="relative aspect-[16/9] overflow-hidden">
