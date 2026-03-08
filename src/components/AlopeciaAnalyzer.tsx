@@ -1676,7 +1676,7 @@ export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerPro
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3 }}
           >
-            <RiskReport report={report} onReset={handleReset} />
+            <RiskReport report={report} onReset={handleReset} hideDownload={!!wizardContinue} />
             {wizardContinue && (
               <div className="flex justify-center mt-6">
                 <button

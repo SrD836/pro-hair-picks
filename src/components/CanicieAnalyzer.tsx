@@ -1121,7 +1121,7 @@ export default function CanicieAnalyzer({ wizardContinue }: CanicieAnalyzerProps
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3 }}
           >
-            <DiagnosticReport report={report} onReset={handleReset} />
+            <DiagnosticReport report={report} onReset={handleReset} hideDownload={!!wizardContinue} />
             {wizardContinue && (
               <div className="flex justify-center mt-6">
                 <Button
