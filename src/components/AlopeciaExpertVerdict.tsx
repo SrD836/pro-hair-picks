@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, ExternalLink, Microscope } from "lucide-react";
+import { BookOpen, ChevronDown, ExternalLink, Microscope } from "lucide-react";
 
 // ─── Sources (APA 7th ed.) ────────────────────────────────────────────────────
 
