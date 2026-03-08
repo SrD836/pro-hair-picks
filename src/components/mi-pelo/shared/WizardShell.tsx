@@ -20,33 +20,36 @@ export function WizardShell({ toolName, currentStep, totalSteps, children, onClo
   };
 
   return (
-    <div className="min-h-screen bg-background-light pb-24">
-      {/* Sticky header */}
-      <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-espresso/5">
+    <div className="min-h-screen bg-background-light pb-28">
+      {/* Sticky header — dark espresso */}
+      <div className="sticky top-0 z-30 bg-espresso">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
-          <span className="text-espresso/50 text-xs font-bold uppercase tracking-[0.15em]">{toolName}</span>
+          <div className="flex items-center gap-2.5">
+            <span className="w-2 h-2 rounded-full bg-accent-orange" />
+            <span className="text-cream/80 text-xs font-bold uppercase tracking-[0.15em]">{toolName}</span>
+          </div>
           <button
             onClick={handleClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-espresso/5 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-cream/10 transition-colors"
             aria-label="Cerrar"
           >
-            <X className="w-4 h-4 text-espresso/40" />
+            <X className="w-4 h-4 text-cream/50" />
           </button>
         </div>
 
         {/* Progress */}
         <div className="max-w-2xl mx-auto px-6 pb-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-espresso/40 text-[10px] font-bold uppercase tracking-[0.2em]">
+            <span className="text-cream/40 text-[10px] font-bold uppercase tracking-[0.2em]">
               Paso {currentStep + 1} de {totalSteps}
             </span>
-            <span className="text-espresso/30 text-[10px] font-mono tabular-nums">
+            <span className="text-accent-orange text-[10px] font-bold tabular-nums">
               {pct}%
             </span>
           </div>
-          <div className="h-2 bg-espresso/5 rounded-full overflow-hidden">
+          <div className="h-2 bg-cream/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gold rounded-full transition-all duration-700 ease-out"
+              className="h-full bg-accent-orange rounded-full transition-all duration-700 ease-out"
               style={{ width: `${pct}%` }}
             />
           </div>
