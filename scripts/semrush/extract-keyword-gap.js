@@ -17,13 +17,6 @@ const JSON_BACKUP_FILE = path.join(OUTPUT_DIR, 'keyword_gap_es.json');
 const XLSX_FILE        = path.join(OUTPUT_DIR, 'keyword_gap_es.xlsx');
 const CHECKPOINT_EVERY = 50;
 
-const TARGET_URL = 'https://www.semrush.com/gap/keyword/?db=es' +
-  '&domains%5B0%5D=guiadelsalon.com' +
-  '&domains%5B1%5D=treatwell.es' +
-  '&domains%5B2%5D=booksy.com' +
-  '&domains%5B3%5D=mipelu.com' +
-  '&type=organic&filter=missing';
-
 // ── Checkpoint helpers ────────────────────────────────────────────────────────
 function loadCheckpoint() {
   if (!fs.existsSync(CHECKPOINT_FILE)) return null;
@@ -225,11 +218,10 @@ async function main() {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page    = await context.newPage();
   try {
-  await page.goto(TARGET_URL, { waitUntil: 'domcontentloaded' });
+  await page.goto('https://www.semrush.com', { waitUntil: 'domcontentloaded' });
 
-  console.log('[browser] Chromium abierto con la URL del Keyword Gap.');
-  console.log('[info]    Si no estas logueado, hazlo ahora en el navegador.');
-  console.log('[info]    Espera a que la tabla de keywords sea visible.');
+  console.log('[browser] Chromium abierto en semrush.com.');
+  console.log('[info]    Navega manualmente al Keyword Gap y espera a que la tabla cargue.');
   await waitForEnter('\nPulsa ENTER cuando la tabla sea visible y estes listo para empezar: ');
 
   // ── Detectar total de paginas ─────────────────────────────────────────────
