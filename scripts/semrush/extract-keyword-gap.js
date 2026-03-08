@@ -1,5 +1,6 @@
 // extract-keyword-gap.js — Semrush Keyword Gap extractor
-// Usa Playwright (Chromium visible) + intercepcion XHR
+// Endpoint: https://www.semrush.com/spectrum/v1/Gap/KeywordsList
+// Usa Playwright (Chromium visible) + intercepcion XHR persistente con cola
 // Compatible con Node.js 18+ CommonJS
 
 'use strict';
@@ -16,6 +17,7 @@ const CHECKPOINT_FILE  = path.join(OUTPUT_DIR, 'keyword_gap_checkpoint.json');
 const JSON_BACKUP_FILE = path.join(OUTPUT_DIR, 'keyword_gap_es.json');
 const XLSX_FILE        = path.join(OUTPUT_DIR, 'keyword_gap_es.xlsx');
 const CHECKPOINT_EVERY = 50;
+const ENDPOINT         = 'spectrum/v1/Gap/KeywordsList';
 
 // ── Checkpoint helpers ────────────────────────────────────────────────────────
 function loadCheckpoint() {
@@ -33,7 +35,7 @@ function saveCheckpoint(lastPage, totalPages, rows) {
     JSON.stringify({ lastPage, totalPages, extracted: rows.length }, null, 2)
   );
   fs.writeFileSync(JSON_BACKUP_FILE, JSON.stringify(rows, null, 2));
-  console.log(`  [checkpoint] Guardado en pagina ${lastPage} — ${rows.length} keywords`);
+  console.log(`  [checkpoint] Guardado en página ${lastPage} — ${rows.length} keywords`);
 }
 
 // ── XLSX export ───────────────────────────────────────────────────────────────
@@ -52,111 +54,101 @@ function exportXlsx(rows, filePath) {
 }
 
 // ── XHR row mapper ────────────────────────────────────────────────────────────
-// Los nombres de campo del API de Semrush son desconocidos hasta la primera
-// ejecucion. El script logueara la primera fila raw para verificacion.
-// Ajustar claves aqui si Semrush cambia su API.
-let _rawResponseLogged = false;
-
+// mapRow se actualiza una vez vista la estructura real del primer response.
+// Los campos actuales son estimaciones — ajustar según el [DEBUG] de la primera ejecución.
 function mapRow(raw) {
   return {
-    keyword:       raw.Ph   || raw.keyword  || (Array.isArray(raw) ? raw[0]  : '') || '',
-    volume:        raw.Nq   ?? raw.volume   ?? (Array.isArray(raw) ? raw[1]  : 0)  ?? 0,
-    kd:            raw.Kd   ?? raw.kd       ?? (Array.isArray(raw) ? raw[2]  : 0)  ?? 0,
-    cpc:           raw.Cp   ?? raw.cpc      ?? (Array.isArray(raw) ? raw[3]  : 0)  ?? 0,
-    intent:        raw.In   || raw.intent   || (Array.isArray(raw) ? raw[4]  : '') || '',
-    pos_treatwell: raw.Po1  || raw.pos1     || (Array.isArray(raw) ? raw[5]  : '-') || '-',
-    pos_booksy:    raw.Po2  || raw.pos2     || (Array.isArray(raw) ? raw[6]  : '-') || '-',
-    pos_mipelu:    raw.Po3  || raw.pos3     || (Array.isArray(raw) ? raw[7]  : '-') || '-',
+    keyword:       raw.Ph   || raw.keyword  || raw.phrase      || (Array.isArray(raw) ? raw[0]  : '') || '',
+    volume:        raw.Nq   ?? raw.volume   ?? raw.search_volume ?? (Array.isArray(raw) ? raw[1]  : 0)  ?? 0,
+    kd:            raw.Kd   ?? raw.kd       ?? raw.difficulty  ?? (Array.isArray(raw) ? raw[2]  : 0)  ?? 0,
+    cpc:           raw.Cp   ?? raw.cpc      ?? raw.cpc_usd     ?? (Array.isArray(raw) ? raw[3]  : 0)  ?? 0,
+    intent:        raw.In   || raw.intent   || raw.intents     || (Array.isArray(raw) ? raw[4]  : '') || '',
+    pos_treatwell: raw.Po1  || raw.pos1     || raw.position_1  || (Array.isArray(raw) ? raw[5]  : '-') || '-',
+    pos_booksy:    raw.Po2  || raw.pos2     || raw.position_2  || (Array.isArray(raw) ? raw[6]  : '-') || '-',
+    pos_mipelu:    raw.Po3  || raw.pos3     || raw.position_3  || (Array.isArray(raw) ? raw[7]  : '-') || '-',
   };
 }
 
-function logRawResponseOnce(rows) {
-  if (!_rawResponseLogged && rows.length > 0) {
-    console.log('\n[DEBUG] Primera fila raw del API (para verificar mapping):');
-    console.log(JSON.stringify(rows[0], null, 2));
-    console.log('[DEBUG] Si los campos son incorrectos, ajusta mapRow() en extract-keyword-gap.js\n');
-    _rawResponseLogged = true;
-  }
-}
+// ── Interceptor persistente con cola ─────────────────────────────────────────
+// Registra un listener permanente que encola TODAS las respuestas del endpoint.
+// Así no hay race condition entre el clic y el listener — nada se pierde.
+const responseQueue = [];
+let _firstResponseLogged = false;
 
-// ── Utilidades de interaccion ─────────────────────────────────────────────────
-function waitForEnter(prompt) {
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  return new Promise(resolve => rl.question(prompt, ans => { rl.close(); resolve(ans.trim()); }));
-}
+function setupInterceptor(page) {
+  page.on('response', async (response) => {
+    if (!response.url().includes(ENDPOINT)) return;
+    try {
+      const json = await response.json();
 
-function randomDelay(minMs = 2000, maxMs = 4000) {
-  const ms = minMs + Math.random() * (maxMs - minMs);
-  return new Promise(r => setTimeout(r, ms));
-}
-
-// ── Extraccion via XHR ────────────────────────────────────────────────────────
-// Escucha UNA respuesta que contenga datos de keywords en la URL.
-// Semrush carga la tabla via POST/GET a un endpoint interno.
-function extractPageViaXHR(page, timeoutMs = 15000) {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      page.off('response', handler);
-      reject(new Error('XHR timeout: no se recibio respuesta de keywords'));
-    }, timeoutMs);
-
-    const handler = async (response) => {
-      const url = response.url();
-      // Filtrar solo endpoints relacionados con keyword gap
-      if (!url.includes('gap') && !url.includes('keyword') && !url.includes('/api/')) return;
-      // Solo respuestas exitosas con JSON
-      const ct = response.headers()['content-type'] || '';
-      if (!ct.includes('json')) return;
-
-      try {
-        const json = await response.json();
-        // Semrush puede devolver datos en distintas estructuras
-        const rows =
-          json.data     ||
-          json.results  ||
-          json.keywords ||
-          json.rows     ||
-          (Array.isArray(json) ? json : null);
-
-        if (!rows || !Array.isArray(rows) || rows.length === 0) return;
-
-        clearTimeout(timer);
-        page.off('response', handler); // limpiar listener
-        logRawResponseOnce(rows);
-        resolve(rows.map(mapRow));
-      } catch {
-        // Respuesta no parseable como JSON util — ignorar
+      // Loguear el primer response completo para verificar estructura de campos
+      if (!_firstResponseLogged) {
+        console.log(`\n[DEBUG] Primer response de ${ENDPOINT}:`);
+        const preview = JSON.stringify(json, null, 2);
+        console.log(preview.length > 3000 ? preview.slice(0, 3000) + '\n...(truncado)' : preview);
+        console.log('[DEBUG] Usa esta estructura para actualizar mapRow() si los campos son incorrectos.\n');
+        _firstResponseLogged = true;
       }
-    };
 
-    page.on('response', handler);
+      responseQueue.push(json);
+    } catch {
+      // Respuesta no parseable — ignorar
+    }
   });
 }
 
-// ── Detectar total de paginas ─────────────────────────────────────────────────
-async function getTotalPages(page) {
+// Espera a que llegue un nuevo item a la cola (tras el índice `fromIndex`)
+function waitForQueueItem(fromIndex, timeoutMs = 20000) {
+  return new Promise((resolve, reject) => {
+    const interval = setInterval(() => {
+      if (responseQueue.length > fromIndex) {
+        clearInterval(interval);
+        clearTimeout(timer);
+        resolve(responseQueue[fromIndex]);
+      }
+    }, 150);
+    const timer = setTimeout(() => {
+      clearInterval(interval);
+      reject(new Error(`Timeout (${timeoutMs / 1000}s) esperando respuesta de ${ENDPOINT}`));
+    }, timeoutMs);
+  });
+}
+
+// ── Detectar total de páginas desde el JSON ───────────────────────────────────
+function getTotalPagesFromJson(json) {
+  // Probar campos comunes de paginación
+  const candidates = [
+    json.totalPages, json.total_pages, json.pages,
+    json.pageCount,  json.page_count,
+  ];
+  for (const v of candidates) {
+    if (typeof v === 'number' && v > 0 && v < 100000) return v;
+  }
+  // Fallback: total de keywords / tamaño de página
+  const totalItems = json.totalCount ?? json.total_count ?? json.total ?? json.count ?? null;
+  const pageSize   = json.pageSize ?? json.page_size ?? json.limit ?? 100;
+  if (totalItems && totalItems > 0) return Math.ceil(totalItems / pageSize);
+  return null;
+}
+
+// ── Detectar total de páginas desde el DOM (fallback) ────────────────────────
+async function getTotalPagesFromDom(page) {
   try {
     return await page.evaluate(() => {
-      // Semrush usa distintos selectores segun la version del UI
       const selectors = [
         '[class*="pagination"] button',
         '[class*="Pagination"] button',
         '[class*="pager"] button',
-        'nav button',
       ];
       for (const sel of selectors) {
         const buttons = [...document.querySelectorAll(sel)];
         const nums = buttons.map(b => parseInt(b.textContent, 10)).filter(n => !isNaN(n));
         if (nums.length) return Math.max(...nums);
       }
-      // Fallback: buscar texto "of N" o "de N" en el paginador
-      const text = document.body.innerText;
-      const match = text.match(/of\s+(\d[\d,]+)|de\s+(\d[\d,]+)/i);
+      const match = document.body.innerText.match(/of\s+([\d,]+)|de\s+([\d,]+)/i);
       if (match) {
-        const raw = (match[1] || match[2]).replace(/,/g, '');
-        const total = parseInt(raw, 10);
-        // Si es numero de keywords (no paginas), dividir entre 100
-        return total > 5000 ? Math.ceil(total / 100) : total;
+        const n = parseInt((match[1] || match[2]).replace(/,/g, ''), 10);
+        return n > 5000 ? Math.ceil(n / 100) : n;
       }
       return null;
     });
@@ -165,9 +157,8 @@ async function getTotalPages(page) {
   }
 }
 
-// ── Click siguiente pagina ────────────────────────────────────────────────────
+// ── Click siguiente página ────────────────────────────────────────────────────
 async function clickNextPage(page) {
-  // Intentar distintos selectores para el boton "siguiente"
   const selectors = [
     '[aria-label="Next page"]',
     '[aria-label="Next"]',
@@ -183,7 +174,17 @@ async function clickNextPage(page) {
       return;
     }
   }
-  throw new Error('No se encontro el boton de siguiente pagina');
+  throw new Error('No se encontró el botón de siguiente página');
+}
+
+// ── Utilidades ────────────────────────────────────────────────────────────────
+function waitForEnter(prompt) {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  return new Promise(resolve => rl.question(prompt, ans => { rl.close(); resolve(ans.trim()); }));
+}
+
+function randomDelay(minMs = 2000, maxMs = 3000) {
+  return new Promise(r => setTimeout(r, minMs + Math.random() * (maxMs - minMs)));
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -197,9 +198,9 @@ async function main() {
   const checkpoint = loadCheckpoint();
   if (checkpoint) {
     const ans = await waitForEnter(
-      `\n[checkpoint] Encontrado: pagina ${checkpoint.lastPage}/${checkpoint.totalPages}, ` +
+      `\n[checkpoint] Encontrado: página ${checkpoint.lastPage}/${checkpoint.totalPages}, ` +
       `${checkpoint.extracted} keywords.\n` +
-      `Continuar desde pagina ${checkpoint.lastPage + 1}? [S/n]: `
+      `¿Continuar desde página ${checkpoint.lastPage + 1}? [S/n]: `
     );
     if (ans.toLowerCase() !== 'n') {
       startPage = checkpoint.lastPage + 1;
@@ -217,118 +218,151 @@ async function main() {
   const browser = await chromium.launch({ headless: false, slowMo: 50 });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page    = await context.newPage();
+
+  // Interceptor registrado ANTES de que el usuario navegue — no se pierde nada
+  setupInterceptor(page);
+
   try {
-  await page.goto('https://www.semrush.com', { waitUntil: 'domcontentloaded' });
+    await page.goto('https://www.semrush.com', { waitUntil: 'domcontentloaded' });
 
-  console.log('[browser] Chromium abierto en semrush.com.');
-  console.log('[info]    Navega manualmente al Keyword Gap y espera a que la tabla cargue.');
-  // ── DEBUG: capturar JSON API responses en tiempo real ────────────────────
-  // Registrado ANTES del ENTER para no perder ninguna request.
-  const DEBUG_KEYWORDS = ['api', 'keyword', 'gap', 'analytics', 'data', 'export', 'rank'];
-  const debugHandler = async (response) => {
-    if (response.status() !== 200) return;
-    const ct = response.headers()['content-type'] || '';
-    if (!ct.includes('application/json')) return;
-    const url = response.url();
-    if (!DEBUG_KEYWORDS.some(k => url.toLowerCase().includes(k))) return;
-    let size = '?';
-    try {
-      const body = await response.body();
-      size = body.length;
-    } catch { /* ignore */ }
-    console.log(`[JSON] ${size}b  ${url}`);
-  };
-  page.on('response', debugHandler);
+    console.log('[browser] Chromium abierto en semrush.com.');
+    console.log(`[info]    Navega al Keyword Gap. El interceptor de ${ENDPOINT} ya está activo.`);
+    console.log('[info]    Cuando la tabla cargue (página 1 visible), pulsa ENTER.\n');
+    await waitForEnter('Pulsa ENTER cuando la tabla esté visible: ');
 
-  await waitForEnter('\nPulsa ENTER cuando la tabla sea visible — el interceptor ya esta activo.\nHaz scroll, cambia filtros o ve a pagina 2 para generar requests: ');
+    // ── Capturar página 1 ─────────────────────────────────────────────────
+    // Si el usuario navegó al Keyword Gap mientras el interceptor estaba activo,
+    // la respuesta ya estará en la cola. Si no, pedimos un clic para re-triggerla.
+    if (startPage === 1) {
+      let firstJson = responseQueue.length > 0 ? responseQueue[0] : null;
 
-  console.log('\n[DEBUG] Interceptor activo. Interactua con la tabla en el navegador.');
-  console.log('[DEBUG] Pulsa Ctrl+C cuando hayas identificado el endpoint.\n');
-  await new Promise(() => {}); // esperar indefinidamente hasta Ctrl+C
-  // ── FIN DEBUG ─────────────────────────────────────────────────────────────
-
-  // ── Detectar total de paginas ─────────────────────────────────────────────
-  let totalPages = await getTotalPages(page);
-  if (!totalPages) {
-    console.log('[warn] No se detecto el paginador automaticamente.');
-    const ans = await waitForEnter('Introduce el numero total de paginas (default 1348): ');
-    totalPages = parseInt(ans, 10) || 1348;
-  }
-  console.log(`\n[info] Total paginas: ${totalPages} | Inicio: pagina ${startPage}\n`);
-
-  // ── Pagina 1: captura via interaccion manual ──────────────────────────────
-  if (startPage === 1) {
-    console.log('[info] Para capturar pagina 1, haz clic en cualquier cabecera de columna');
-    console.log('       de la tabla (p.ej. "Volume") para re-ordenar y forzar nueva XHR.');
-    let firstPageRows = null;
-    let attempts = 0;
-    while (attempts < 3 && !firstPageRows) {
-      try {
-        firstPageRows = await extractPageViaXHR(page, 30000);
-      } catch (err) {
-        attempts++;
-        console.warn(`  [warn] Pagina 1 intento ${attempts}/3: ${err.message}`);
-        if (attempts < 3) {
-          await waitForEnter('  Haz clic en una cabecera de columna y pulsa ENTER: ');
-        }
+      if (!firstJson) {
+        console.log('[info] No se capturó la carga inicial — haz clic en cualquier cabecera');
+        console.log('       de columna (ej. "Volume") para re-disparar la petición.');
+        firstJson = await waitForQueueItem(0, 30000);
       }
-    }
-    if (firstPageRows) {
-      allRows.push(...firstPageRows);
+
+      // Detectar total de páginas desde el JSON de página 1
+      let totalPages = getTotalPagesFromJson(firstJson);
+      if (!totalPages) {
+        totalPages = await getTotalPagesFromDom(page);
+      }
+      if (!totalPages) {
+        const ans = await waitForEnter('[warn] No se detectó el total de páginas. Introduce el número (default 1348): ');
+        totalPages = parseInt(ans, 10) || 1348;
+      }
+      console.log(`\n[info] Total páginas: ${totalPages}\n`);
+
+      // Extraer filas de página 1
+      const rows1 = (firstJson.data || firstJson.results || firstJson.keywords ||
+                     firstJson.rows || (Array.isArray(firstJson) ? firstJson : []));
+      allRows.push(...rows1.map(mapRow));
       console.log(`Página 1/${totalPages} — ${allRows.length} keywords extraídas`);
+
+      // ── Loop desde página 2 ──────────────────────────────────────────────
+      for (let p = 2; p <= totalPages; p++) {
+        const queueIndexBefore = responseQueue.length;
+        let pageJson  = null;
+        let attempts  = 0;
+
+        while (attempts < 3 && !pageJson) {
+          try {
+            await clickNextPage(page);
+            pageJson = await waitForQueueItem(queueIndexBefore, 20000);
+          } catch (err) {
+            attempts++;
+            console.warn(`  [warn] Página ${p} intento ${attempts}/3: ${err.message}`);
+            if (attempts < 3) await randomDelay(3000, 5000);
+          }
+        }
+
+        if (!pageJson) {
+          console.error(`  [error] Página ${p} falló tras 3 intentos — saltando.`);
+        } else {
+          const rows = pageJson.data || pageJson.results || pageJson.keywords ||
+                       pageJson.rows || (Array.isArray(pageJson) ? pageJson : []);
+          allRows.push(...rows.map(mapRow));
+        }
+
+        console.log(`Página ${p}/${totalPages} — ${allRows.length} keywords extraídas`);
+
+        if (p % CHECKPOINT_EVERY === 0) saveCheckpoint(p, totalPages, allRows);
+        if (p < totalPages) await randomDelay(2000, 3000);
+      }
+
+      // ── Export final ─────────────────────────────────────────────────────
+      console.log('\n[done] Extracción completada. Exportando...');
+      saveCheckpoint(totalPages, totalPages, allRows);
+      exportXlsx(allRows, XLSX_FILE);
+      fs.writeFileSync(JSON_BACKUP_FILE, JSON.stringify(allRows, null, 2));
+
+      console.log(`\n[resultado] ${allRows.length} keywords exportadas a:`);
+      console.log(`  XLSX: ${XLSX_FILE}`);
+      console.log(`  JSON: ${JSON_BACKUP_FILE}`);
+
     } else {
-      console.error('  [error] No se pudo capturar pagina 1 — continuando desde pagina 2');
-    }
-    startPage = 2;
-  }
+      // ── Reanudando desde checkpoint ──────────────────────────────────────
+      console.log(`[info] Reanudando desde página ${startPage}. Navega a esa página manualmente`);
+      console.log('       y pulsa ENTER cuando sea visible.\n');
+      await waitForEnter('Pulsa ENTER cuando estés en la página correcta: ');
 
-  // ── Loop de extraccion ────────────────────────────────────────────────────
-  for (let p = startPage; p <= totalPages; p++) {
-    let pageRows = null;
-    let attempts = 0;
-
-    while (attempts < 3 && !pageRows) {
-      try {
-        // Registrar listener ANTES de hacer clic para no perder la respuesta
-        const xhrPromise = extractPageViaXHR(page);
-        await clickNextPage(page);
-        pageRows = await xhrPromise;
-      } catch (err) {
-        attempts++;
-        console.warn(`  [warn] Pagina ${p} intento ${attempts}/3: ${err.message}`);
-        if (attempts < 3) {
-          console.warn(`  [retry] Esperando antes de reintentar...`);
-          await randomDelay(3000, 5000);
+      // Detectar total de páginas
+      let totalPages = checkpoint ? checkpoint.totalPages : null;
+      if (!totalPages) {
+        totalPages = await getTotalPagesFromDom(page);
+        if (!totalPages) {
+          const ans = await waitForEnter('Introduce el número total de páginas: ');
+          totalPages = parseInt(ans, 10) || 1348;
         }
       }
+
+      for (let p = startPage; p <= totalPages; p++) {
+        const queueIndexBefore = responseQueue.length;
+        let pageJson  = null;
+        let attempts  = 0;
+
+        // En la primera página del resume, esperar que llegue sin hacer clic
+        // (el usuario ya navegó a ella manualmente)
+        if (p === startPage) {
+          pageJson = responseQueue.length > 0 ? responseQueue[0] : null;
+          if (!pageJson) pageJson = await waitForQueueItem(0, 30000);
+        } else {
+          while (attempts < 3 && !pageJson) {
+            try {
+              await clickNextPage(page);
+              pageJson = await waitForQueueItem(queueIndexBefore, 20000);
+            } catch (err) {
+              attempts++;
+              console.warn(`  [warn] Página ${p} intento ${attempts}/3: ${err.message}`);
+              if (attempts < 3) await randomDelay(3000, 5000);
+            }
+          }
+        }
+
+        if (!pageJson) {
+          console.error(`  [error] Página ${p} falló tras 3 intentos — saltando.`);
+        } else {
+          const rows = pageJson.data || pageJson.results || pageJson.keywords ||
+                       pageJson.rows || (Array.isArray(pageJson) ? pageJson : []);
+          allRows.push(...rows.map(mapRow));
+        }
+
+        console.log(`Página ${p}/${totalPages} — ${allRows.length} keywords extraídas`);
+
+        if (p % CHECKPOINT_EVERY === 0) saveCheckpoint(p, totalPages, allRows);
+        if (p < totalPages) await randomDelay(2000, 3000);
+      }
+
+      console.log('\n[done] Extracción completada. Exportando...');
+      saveCheckpoint(totalPages, totalPages, allRows);
+      exportXlsx(allRows, XLSX_FILE);
+      fs.writeFileSync(JSON_BACKUP_FILE, JSON.stringify(allRows, null, 2));
+
+      console.log(`\n[resultado] ${allRows.length} keywords exportadas a:`);
+      console.log(`  XLSX: ${XLSX_FILE}`);
+      console.log(`  JSON: ${JSON_BACKUP_FILE}`);
     }
 
-    if (!pageRows) {
-      console.error(`  [error] Pagina ${p} fallo tras 3 intentos — saltando.`);
-    } else {
-      allRows.push(...pageRows);
-    }
-
-    console.log(`Página ${p}/${totalPages} — ${allRows.length} keywords extraídas`);
-
-    // Checkpoint cada N paginas
-    if (p % CHECKPOINT_EVERY === 0) {
-      saveCheckpoint(p, totalPages, allRows);
-    }
-
-    // Delay anti-rate-limit (excepto en la ultima pagina)
-    if (p < totalPages) await randomDelay(2000, 3000);
-  }
-
-  // ── Export final ──────────────────────────────────────────────────────────
-  console.log('\n[done] Extraccion completada. Exportando...');
-  saveCheckpoint(totalPages, totalPages, allRows);
-  exportXlsx(allRows, XLSX_FILE);
-  fs.writeFileSync(JSON_BACKUP_FILE, JSON.stringify(allRows, null, 2));
-
-  console.log(`\n[resultado] ${allRows.length} keywords exportadas a:`);
-  console.log(`  XLSX: ${XLSX_FILE}`);
-  console.log(`  JSON: ${JSON_BACKUP_FILE}`);
   } finally {
     await browser.close();
   }
