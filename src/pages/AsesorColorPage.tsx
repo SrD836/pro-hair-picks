@@ -493,7 +493,7 @@ function Step7({ selection, onSelect }: { selection: unknown; onSelect: (v: stri
   );
 }
 
-function ResultsPage() {
+function ResultsPage({ isWizardMode, onWizardContinue }: { isWizardMode?: boolean; onWizardContinue?: () => void }) {
   return (
     <div className="min-h-screen bg-[#2D2218] text-[#F5F0E8] font-sans flex flex-col items-center py-12 px-6">
       <div className="text-center mb-10">
