@@ -155,6 +155,7 @@ function generateCompletePDF(session: WizardSession) {
 
 // ── Component ───────────────────────────────────────────────────────────────
 export default function InformeCompletoPage() {
+  const navigate = useNavigate();
   const session = loadSession();
 
   const orderedTools = useMemo(
@@ -163,15 +164,18 @@ export default function InformeCompletoPage() {
   );
 
   const completedIds = session
-    ? (Object.keys(session.completedModules) as ToolId[])
+    ? WIZARD_TOOL_ORDER.filter((id) => Boolean(session.completedModules[id]))
     : [];
 
-  const isAllDone = orderedTools.every((t) => completedIds.includes(t.id));
+  const isAllDone = orderedTools.every((t) => Boolean(session?.completedModules[t.id]));
 
-  // If not all done, redirect back to wizard
-  if (!session || !isAllDone) {
-    return <Navigate to="/mi-pelo/diagnostico-completo" replace />;
-  }
+  useEffect(() => {
+    if (!session || !isAllDone) {
+      navigate('/mi-pelo/diagnostico-completo', { replace: true });
+    }
+  }, [session, isAllDone, navigate]);
+
+  if (!session || !isAllDone) return null;
 
   const handleDownloadPDF = () => {
     generateCompletePDF(session);
