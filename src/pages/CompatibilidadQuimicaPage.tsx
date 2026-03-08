@@ -49,7 +49,7 @@ export default function CompatibilidadQuimicaPage() {
               >
                 ← Volver
               </motion.button>
-              <ChemicalCompatibilityAnalyzer />
+              <ChemicalCompatibilityAnalyzer wizardContinue={isWizardMode ? handleWizardComplete : undefined} />
             </div>
           </div>
         )}

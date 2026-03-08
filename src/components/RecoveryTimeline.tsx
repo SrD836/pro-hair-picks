@@ -824,7 +824,7 @@ export default function RecoveryTimeline({ wizardContinue }: RecoveryTimelinePro
             )}
 
             {/* Download CTA (bottom) */}
-            <div className="no-print flex justify-center pt-2">
+            <div className="no-print flex flex-col items-center gap-3 pt-2">
               <button
                 onClick={() => calendar && generateRecoveryPDF({
                   totalWeeks: calendar.total_weeks,
@@ -846,6 +846,17 @@ export default function RecoveryTimeline({ wizardContinue }: RecoveryTimelinePro
                 <Download className="w-4 h-4" />
                 Descargar mi calendario
               </button>
+              {wizardContinue && calendar && (
+                <button
+                  onClick={() => wizardContinue(
+                    `${calendar.total_weeks} semanas · Daño ${damageLevel}/10`,
+                    Math.round(100 - (damageLevel * 10))
+                  )}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-accent-orange text-white font-bold hover:bg-accent-orange-hover transition-colors text-sm"
+                >
+                  Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+                </button>
+              )}
             </div>
           </motion.div>
         </AnimatePresence>

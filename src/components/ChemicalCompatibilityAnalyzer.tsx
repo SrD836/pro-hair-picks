@@ -400,10 +400,26 @@ export default function ChemicalCompatibilityAnalyzer({ wizardContinue }: Chemic
         )}
       </AnimatePresence>
 
+      {/* Wizard continue */}
+      {wizardContinue && data && (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => wizardContinue(
+              `${treatmentDone} + ${treatmentDesired}: ${data.compatibility}`
+            )}
+            className="px-8 py-4 bg-accent-orange text-white font-bold uppercase tracking-widest rounded-xl hover:bg-accent-orange-hover transition-colors text-sm flex items-center gap-2"
+          >
+            Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* ── Expert Verdict ─────────────────────────────────────── */}
-      <div className="mt-16">
-        <ExpertVerdict />
-      </div>
+      {!wizardContinue && (
+        <div className="mt-16">
+          <ExpertVerdict />
+        </div>
+      )}
     </section>
   );
 }

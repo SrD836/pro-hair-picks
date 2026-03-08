@@ -82,8 +82,8 @@ export default function RecoveryTimelinePage() {
               >
                 ← Volver
               </motion.button>
-              <RecoveryTimeline />
-              <RecoveryExpertVerdict />
+              <RecoveryTimeline wizardContinue={isWizardMode ? handleWizardComplete : undefined} />
+              {!isWizardMode && <RecoveryExpertVerdict />}
               <BibliographyDrawer references={REFERENCES} />
             </div>
           </div>

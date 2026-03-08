@@ -83,8 +83,8 @@ export default function AlopeciaAnalyzerPage() {
               >
                 ← Volver
               </motion.button>
-              <AlopeciaAnalyzer />
-              <AlopeciaExpertVerdict />
+              <AlopeciaAnalyzer wizardContinue={isWizardMode ? handleWizardComplete : undefined} />
+              {!isWizardMode && <AlopeciaExpertVerdict />}
               <BibliographyDrawer references={REFERENCES} />
             </div>
           </div>

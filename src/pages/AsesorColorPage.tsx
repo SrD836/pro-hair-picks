@@ -577,11 +577,26 @@ function ResultsPage({ isWizardMode, onWizardContinue }: { isWizardMode?: boolea
           <button className="w-full bg-[#E85D04] hover:bg-[#E85D04]/90 text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 text-lg">
             Descargar Guía Completa PDF <Download className="w-5 h-5" />
           </button>
-          <button className="w-full bg-transparent text-[#E85D04] border-2 border-[#E85D04]/30 hover:bg-[#E85D04]/5 font-bold py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3">
+          <Link
+            to="/categorias/tintes"
+            className="w-full bg-transparent text-[#E85D04] border-2 border-[#E85D04]/30 hover:bg-[#E85D04]/5 font-bold py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3"
+          >
             Ver Productos Recomendados <ArrowRight className="w-5 h-5" />
-          </button>
+          </Link>
         </div>
       </div>
+
+      {/* Wizard continue */}
+      {isWizardMode && onWizardContinue && (
+        <div className="w-full max-w-3xl mt-8">
+          <button
+            onClick={onWizardContinue}
+            className="w-full flex items-center justify-center gap-2 h-14 rounded-xl bg-[#E85D04] text-white font-bold hover:bg-[#E85D04]/90 transition-all"
+          >
+            Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
