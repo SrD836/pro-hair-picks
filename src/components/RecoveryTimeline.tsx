@@ -822,7 +822,21 @@ export default function RecoveryTimeline() {
             {/* Download CTA (bottom) */}
             <div className="no-print flex justify-center pt-2">
               <button
-                onClick={() => window.print()}
+                onClick={() => calendar && generateRecoveryPDF({
+                  totalWeeks: calendar.total_weeks,
+                  nextSafeDate: calendar.next_safe_treatment_date,
+                  primaryConcern: PHASE_CONFIG[calendar.weeks[0]?.phase]?.label ?? '',
+                  weeks: calendar.weeks.map(w => ({
+                    week: w.week,
+                    label: PHASE_CONFIG[w.phase]?.label ?? w.phase,
+                    focus: w.focus_simple || w.focus,
+                    treatments: w.treatments,
+                  })),
+                  maintenance: calendar.maintenance ? {
+                    label: 'Mantenimiento',
+                    focus: calendar.maintenance.focus_simple || calendar.maintenance.focus,
+                  } : undefined,
+                })}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#C4A97D] text-[#2D2218] font-semibold hover:bg-[#d4b98d] transition-colors shadow-md"
               >
                 <Download className="w-4 h-4" />
