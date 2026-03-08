@@ -25,6 +25,42 @@ const fs    = require('fs');
 const path  = require('path');
 const { spawnSync } = require('child_process');
 
+// ── Directorio de output global (existe antes que OUTPUT_DIR por fecha) ───────
+const GLOBAL_OUTPUT_DIR = path.join(__dirname, 'output');
+if (!fs.existsSync(GLOBAL_OUTPUT_DIR)) fs.mkdirSync(GLOBAL_OUTPUT_DIR, { recursive: true });
+
+const PIPELINE_LOG = path.join(GLOBAL_OUTPUT_DIR, 'pipeline.log');
+
+/**
+ * Escribe un mensaje de error en pipeline.log y en stderr.
+ * Usado por los handlers globales y por el catch principal.
+ */
+function logError(err, context = 'ERROR') {
+  const ts  = new Date().toISOString();
+  const msg = `[${ts}] ${context}: ${err && err.stack ? err.stack : String(err)}\n`;
+  process.stderr.write(msg);
+  try { fs.appendFileSync(PIPELINE_LOG, msg); } catch (_) {}
+}
+
+// ── Handlers de errores no capturados ────────────────────────────────────────
+process.on('uncaughtException', (err) => {
+  logError(err, 'UNCAUGHT_EXCEPTION');
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason) => {
+  logError(reason instanceof Error ? reason : new Error(String(reason)), 'UNHANDLED_REJECTION');
+  process.exit(1);
+});
+
+// ── Timeout global: 90 minutos ────────────────────────────────────────────────
+const GLOBAL_TIMEOUT = setTimeout(() => {
+  logError(new Error('Pipeline excedió el límite de 90 minutos'), 'TIMEOUT');
+  process.exit(1);
+}, 90 * 60 * 1000);
+// No bloquear el event loop si el pipeline termina antes
+GLOBAL_TIMEOUT.unref();
+
 // ── Cargar .env.scripts ─────────────────────────────────────────────────────
 const envPath = path.join(process.cwd(), '.env.scripts');
 if (fs.existsSync(envPath)) {
@@ -38,14 +74,14 @@ if (fs.existsSync(envPath)) {
     if (key && !process.env[key]) process.env[key] = val;
   });
 } else {
-  console.error('❌ .env.scripts no encontrado. Copia .env.scripts.example y rellénalo.');
+  logError(new Error('.env.scripts no encontrado'), 'STARTUP');
   process.exit(1);
 }
 
 // ── Verificar variables críticas ────────────────────────────────────────────
 for (const key of ['SUPABASE_ACCESS_TOKEN', 'SUPABASE_PROJECT_ID']) {
   if (!process.env[key]) {
-    console.error(`❌ Variable requerida no encontrada en .env.scripts: ${key}`);
+    logError(new Error(`Variable requerida no encontrada: ${key}`), 'STARTUP');
     process.exit(1);
   }
 }
@@ -53,8 +89,7 @@ for (const key of ['SUPABASE_ACCESS_TOKEN', 'SUPABASE_PROJECT_ID']) {
 // ── Verificar que claude CLI está disponible ────────────────────────────────
 const versionCheck = spawnSync('claude', ['--version'], { encoding: 'utf8' });
 if (versionCheck.error || versionCheck.status !== 0) {
-  console.error('❌ El comando `claude` no está disponible.');
-  console.error('   Instala Claude Code CLI: https://claude.ai/download');
+  logError(new Error('El comando `claude` no está disponible'), 'STARTUP');
   process.exit(1);
 }
 
@@ -71,7 +106,7 @@ const dateArg = args.find(a => a.startsWith('--date='))?.split('=')[1];
 const dryRun  = args.includes('--dry-run');
 const TODAY   = dateArg || new Date().toISOString().slice(0, 10);
 
-const OUTPUT_DIR = path.join(__dirname, 'output', TODAY);
+const OUTPUT_DIR = path.join(GLOBAL_OUTPUT_DIR, TODAY);
 if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
 const config = {
@@ -85,11 +120,17 @@ const config = {
 
 // ── Pipeline principal ───────────────────────────────────────────────────────
 async function run() {
-  const start = Date.now();
+  const start    = Date.now();
+  const startISO = new Date().toISOString();
+
+  console.log(`[${startISO}] Pipeline iniciado`);
   console.log(`\n🚀 GuiaDelSalon — Pipeline de contenido diario`);
   console.log(`📅 Fecha: ${TODAY} | Modo: ${dryRun ? 'DRY RUN' : 'PRODUCCIÓN'}`);
   console.log(`🤖 Motor: Claude Code CLI (claude -p) — suscripción actual`);
   console.log('─'.repeat(58));
+
+  // Registrar inicio en pipeline.log
+  fs.appendFileSync(PIPELINE_LOG, `[${startISO}] START date=${TODAY} dryRun=${dryRun}\n`);
 
   // FASE 0 — Planificación
   console.log('\n📋 FASE 0 — Planificando 5 posts del día...');
@@ -159,14 +200,29 @@ async function run() {
 
   fs.writeFileSync(path.join(OUTPUT_DIR, 'daily_plan_final.json'), JSON.stringify(finalPlan, null, 2));
 
-  const elapsed = Math.round((Date.now() - start) / 1000);
+  // ── Finalización ─────────────────────────────────────────────────────────
+  const elapsed    = Math.round((Date.now() - start) / 1000);
+  const finishISO  = new Date().toISOString();
+
   console.log('\n' + '─'.repeat(58));
-  console.log(`✅ Completado en ${elapsed}s — ${finalPlan.posts.length} posts generados`);
+  console.log(`[${finishISO}] Pipeline completado en ${elapsed}s — ${finalPlan.posts.length} posts generados`);
   console.log(`📁 ${OUTPUT_DIR}`);
   if (!dryRun) console.log(`\nRevisar drafts en Supabase → ejecutar SQL de daily_report.md\n`);
+
+  // Registrar éxito en pipeline.log
+  fs.appendFileSync(PIPELINE_LOG, `[${finishISO}] SUCCESS date=${TODAY} duration=${elapsed}s posts=${finalPlan.posts.length}\n`);
+
+  // Health check: marcar última ejecución exitosa
+  fs.writeFileSync(
+    path.join(GLOBAL_OUTPUT_DIR, 'last_success.txt'),
+    `${finishISO}\n`
+  );
+
+  clearTimeout(GLOBAL_TIMEOUT);
+  process.exit(0);
 }
 
 run().catch(err => {
-  console.error('\n❌ Error fatal:', err.message);
+  logError(err, 'FATAL');
   process.exit(1);
 });
