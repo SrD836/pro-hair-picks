@@ -58,14 +58,14 @@ function exportXlsx(rows, filePath) {
 // Los campos actuales son estimaciones — ajustar según el [DEBUG] de la primera ejecución.
 function mapRow(raw) {
   return {
-    keyword:       raw.Ph   || raw.keyword  || raw.phrase      || (Array.isArray(raw) ? raw[0]  : '') || '',
-    volume:        raw.Nq   ?? raw.volume   ?? raw.search_volume ?? (Array.isArray(raw) ? raw[1]  : 0)  ?? 0,
-    kd:            raw.Kd   ?? raw.kd       ?? raw.difficulty  ?? (Array.isArray(raw) ? raw[2]  : 0)  ?? 0,
-    cpc:           raw.Cp   ?? raw.cpc      ?? raw.cpc_usd     ?? (Array.isArray(raw) ? raw[3]  : 0)  ?? 0,
-    intent:        raw.In   || raw.intent   || raw.intents     || (Array.isArray(raw) ? raw[4]  : '') || '',
-    pos_treatwell: raw.Po1  || raw.pos1     || raw.position_1  || (Array.isArray(raw) ? raw[5]  : '-') || '-',
-    pos_booksy:    raw.Po2  || raw.pos2     || raw.position_2  || (Array.isArray(raw) ? raw[6]  : '-') || '-',
-    pos_mipelu:    raw.Po3  || raw.pos3     || raw.position_3  || (Array.isArray(raw) ? raw[7]  : '-') || '-',
+    keyword:       raw.keyword                          || '',
+    volume:        raw.volume                           ?? 0,
+    kd:            raw.keywordDifficulty                ?? 0,
+    cpc:           raw.cpc                              ?? 0,
+    intent:        Array.isArray(raw.intents) ? raw.intents[0] || '' : '',
+    pos_treatwell: '-',
+    pos_booksy:    '-',
+    pos_mipelu:    '-',
   };
 }
 
