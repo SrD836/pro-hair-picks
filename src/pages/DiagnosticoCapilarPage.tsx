@@ -183,24 +183,27 @@ export default function DiagnosticoCapilarPage() {
             startLabel={`${t("diagnostico.startBtn")} →`}
           />
 
-          {/* Module preview */}
-          <div className="max-w-4xl mx-auto px-4 py-12">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold mb-6">
-              4 módulos de análisis
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-              {([1, 2, 3, 4] as const).map((mod) => {
+          {/* Module preview — big visual cards */}
+          <div className="max-w-3xl mx-auto px-6 py-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
+              {([1, 2, 3, 4] as const).map((mod, i) => {
                 const Icon = MODULE_ICONS[mod];
                 return (
-                  <div key={mod} className="flex items-center gap-4 p-5 rounded-xl border border-gold/20 bg-espresso/50">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 text-gold shrink-0">
-                      <Icon className="w-5 h-5" />
+                  <motion.div
+                    key={mod}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.08 }}
+                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300"
+                  >
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10">
+                      <Icon className="w-7 h-7 text-gold" />
                     </div>
                     <div>
-                      <p className="font-semibold text-cream text-sm">{t(`diagnostico.${MODULE_LABELS[mod]}`)}</p>
-                      <p className="text-cream/50 text-xs mt-0.5">{t(`diagnostico.${MODULE_LABELS[mod]}Sub`)}</p>
+                      <p className="font-semibold text-cream text-base mb-1">{t(`diagnostico.${MODULE_LABELS[mod]}`)}</p>
+                      <p className="text-cream/40 text-sm">{t(`diagnostico.${MODULE_LABELS[mod]}Sub`)}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -213,12 +216,12 @@ export default function DiagnosticoCapilarPage() {
       {/* ─── QUIZ ─── */}
       {screen === "quiz" && (
         <WizardShell toolName="Diagnóstico Capilar" currentStep={currentQ} totalSteps={QUESTIONS.length}>
-          {currentQ === 3 && <CizuraCTA className="max-w-2xl mx-auto px-4 pt-6" />}
+          {currentQ === 3 && <CizuraCTA className="max-w-2xl mx-auto px-6 pt-8" />}
 
-          <div className="max-w-2xl mx-auto px-4 py-8">
+          <div className="max-w-2xl mx-auto px-6 py-10">
             {/* Question number */}
-            <p className="text-gold/40 text-xs font-mono mb-2 uppercase tracking-widest">
-              PREGUNTA {String(currentQ + 1).padStart(2, '0')} / {String(QUESTIONS.length).padStart(2, '0')}
+            <p className="text-gold/30 text-[11px] font-mono mb-3 uppercase tracking-[0.2em]">
+              {String(currentQ + 1).padStart(2, '0')} / {String(QUESTIONS.length).padStart(2, '0')}
             </p>
 
             {/* Question text */}
@@ -226,63 +229,65 @@ export default function DiagnosticoCapilarPage() {
               <motion.h2
                 key={q.id}
                 custom={direction}
-                initial={{ opacity: 0, x: direction * 40 }}
+                initial={{ opacity: 0, x: direction * 30 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: direction * -40 }}
-                transition={{ duration: 0.2 }}
-                className="font-display text-2xl md:text-3xl text-cream mb-4 leading-snug"
+                exit={{ opacity: 0, x: direction * -30 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="font-display text-2xl md:text-[2rem] text-cream mb-10 leading-snug tracking-tight"
               >
                 {localizedQ.text}
               </motion.h2>
             </AnimatePresence>
 
             {localizedQ.protocol && (
-              <div className="flex gap-3 p-4 rounded-xl border border-gold/20 bg-gold/5 text-sm text-cream/70 mb-6">
+              <div className="flex gap-3 p-4 rounded-xl border border-gold/10 bg-gold/5 text-sm text-cream/60 mb-8">
                 <span className="shrink-0">🧪</span>
                 <p>{localizedQ.protocol}</p>
               </div>
             )}
 
-            {/* Options */}
+            {/* Options — bigger cards */}
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={q.id + '-opts'}
                 custom={direction}
-                initial={{ opacity: 0, x: direction * 60 }}
+                initial={{ opacity: 0, x: direction * 40 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: direction * -60 }}
-                transition={{ duration: 0.25 }}
-                className="grid grid-cols-2 gap-3 mb-6"
+                exit={{ opacity: 0, x: direction * -40 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="grid grid-cols-2 gap-4 mb-8"
               >
                 {localizedQ.options.map((opt) => (
                   <button
                     key={opt.value}
                     onClick={() => handleSelect(opt.value)}
-                    className={`p-5 rounded-xl border text-left transition-all cursor-pointer ${
+                    className={`flex flex-col items-center text-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
                       selectedValue === opt.value
-                        ? 'border-gold bg-gold/10 ring-2 ring-gold/40'
-                        : 'border-gold/20 bg-espresso hover:border-gold/50 hover:bg-gold/5'
+                        ? 'border-gold bg-gold/10 ring-1 ring-gold/30'
+                        : 'border-gold/10 bg-espresso/40 hover:border-gold/40 hover:bg-gold/5'
                     }`}
                   >
-                    <QuizIcon className={`w-8 h-8 mb-2 ${selectedValue === opt.value ? 'text-gold' : 'text-gold/60'}`} />
-                    <span className="text-cream font-semibold text-sm block">{opt.label}</span>
+                    <div className={`flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300 ${
+                      selectedValue === opt.value ? 'bg-gold/20' : 'bg-gold/10'
+                    }`}>
+                      <QuizIcon className={`w-7 h-7 ${selectedValue === opt.value ? 'text-gold' : 'text-gold/50'}`} />
+                    </div>
+                    <span className="text-cream font-semibold text-sm">{opt.label}</span>
                   </button>
                 ))}
               </motion.div>
             </AnimatePresence>
 
-            <MiniExpertTip tip={expertQuote} className="mb-4" />
+            <MiniExpertTip tip={expertQuote} className="mb-6" />
 
-            {/* Damage indicator */}
+            {/* Damage indicator — minimal */}
             {currentQ >= 2 && (
-              <div className="mt-4 p-4 rounded-xl bg-cream/5 border border-gold/10">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-cream/50 text-xs">Nivel de salud estimado</span>
-                  <span className="text-gold font-mono text-sm font-bold">{damageScore}%</span>
+              <div className="mt-6 flex items-center gap-4">
+                <span className="text-cream/30 text-xs">Salud</span>
+                <div className="flex-1 h-1 bg-cream/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-gold/60 rounded-full transition-all duration-700" style={{ width: `${damageScore}%` }} />
                 </div>
-                <div className="h-1.5 bg-cream/10 rounded-full overflow-hidden">
-                  <div className="h-full bg-gold rounded-full transition-all duration-500" style={{ width: `${damageScore}%` }} />
-                </div>
+                <span className="text-gold/70 font-mono text-xs tabular-nums">{damageScore}%</span>
               </div>
             )}
           </div>
@@ -308,9 +313,9 @@ export default function DiagnosticoCapilarPage() {
             scoreColor={healthPct >= 70 ? 'text-damage-low' : healthPct >= 40 ? 'text-damage-med' : 'text-damage-high'}
           />
 
-          <div className="max-w-4xl mx-auto px-4 py-10 space-y-8">
+          <div className="max-w-3xl mx-auto px-6 py-14 space-y-10">
             {/* Dimension cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {modules.map((m) => (
                 <DimensionCard
                   key={m.labelKey}
@@ -323,11 +328,11 @@ export default function DiagnosticoCapilarPage() {
             </div>
 
             {/* Protocol */}
-            <div className="bg-espresso border border-gold/10 rounded-xl p-6">
-              <h2 className="font-display text-lg text-cream font-bold mb-3">
+            <div className="bg-espresso border border-gold/8 rounded-2xl p-7">
+              <h2 className="font-display text-xl text-cream font-bold mb-4">
                 {t("diagnostico.actionProtocol")}
               </h2>
-              <p className="text-cream/70 text-sm leading-relaxed">
+              <p className="text-cream/50 text-sm leading-relaxed">
                 {t(`diagnostico.risk${capitalize(riskLevel)}Protocol`)}
               </p>
             </div>

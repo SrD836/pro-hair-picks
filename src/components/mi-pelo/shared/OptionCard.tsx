@@ -2,36 +2,44 @@ import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface OptionCardProps {
-  name: string;          // radio group name
-  value: string;         // radio value
-  label: string;         // display text
-  icon?: ReactNode;      // optional Lucide icon on the left
+  name: string;
+  value: string;
+  label: string;
+  description?: string;
+  icon?: ReactNode;
   checked?: boolean;
   onChange: (value: string) => void;
   className?: string;
 }
 
-export function OptionCard({ name, value, label, icon, checked = false, onChange, className }: OptionCardProps) {
+export function OptionCard({ name, value, label, description, icon, checked = false, onChange, className }: OptionCardProps) {
   return (
     <label
       className={cn(
-        'flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200',
-        'border-espresso/15 bg-white hover:border-gold/50 hover:bg-gold/5',
-        'has-[:checked]:border-gold has-[:checked]:bg-gold/10',
+        'group relative flex flex-col items-center text-center gap-3 p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300',
+        'border-gold/10 bg-espresso/40 hover:border-gold/40 hover:bg-gold/5',
+        checked && 'border-gold bg-gold/10 ring-1 ring-gold/30',
         className
       )}
     >
-      {/* Icon */}
+      {/* Icon — large and prominent */}
       {icon && (
-        <span className="flex-shrink-0 text-espresso/60 w-5 h-5">
+        <span className={cn(
+          'flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300',
+          checked ? 'bg-gold/20 text-gold' : 'bg-gold/10 text-gold/60 group-hover:text-gold group-hover:bg-gold/15'
+        )}>
           {icon}
         </span>
       )}
 
-      {/* Label text */}
-      <span className="flex-1 text-sm font-medium text-espresso">{label}</span>
+      {/* Label */}
+      <span className="text-sm font-semibold text-cream leading-snug">{label}</span>
 
-      {/* Hidden radio input + custom styled radio */}
+      {/* Description */}
+      {description && (
+        <span className="text-xs text-cream/40 leading-relaxed">{description}</span>
+      )}
+
       <input
         type="radio"
         name={name}
@@ -40,7 +48,6 @@ export function OptionCard({ name, value, label, icon, checked = false, onChange
         onChange={() => onChange(value)}
         className="sr-only"
       />
-      <span className="radio-custom flex-shrink-0" aria-hidden="true" />
     </label>
   );
 }

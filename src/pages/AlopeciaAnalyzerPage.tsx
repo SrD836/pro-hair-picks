@@ -14,6 +14,13 @@ const REFERENCES: BibReference[] = [
   { id: 4, text: "Cranwell, W. & Sinclair, R. (2023). Male and female pattern hair loss. Endotext." },
 ];
 
+const MODULES = [
+  { icon: Dna, title: "Genética familiar", desc: "Herencia paterna y materna" },
+  { icon: Activity, title: "Biología capilar", desc: "DHT, folículo y ciclo de crecimiento" },
+  { icon: Stethoscope, title: "Hábitos de salud", desc: "Estrés, dieta, cuero cabelludo" },
+  { icon: Pill, title: "Tratamientos", desc: "Minoxidil, finasterida, PRP y más" },
+];
+
 export default function AlopeciaAnalyzerPage() {
   const [started, setStarted] = useState(false);
 
@@ -30,29 +37,30 @@ export default function AlopeciaAnalyzerPage() {
             <ToolHeader
               badge="TRICOLOGÍA"
               title={<>Analizador de Riesgo <span className="text-gold">de Alopecia</span></>}
-              subtitle="¿Perderé el pelo? La genética, la biología y los factores modificables de tu calvicie — explicados sin rodeos."
+              subtitle="¿Perderé el pelo? La genética, la biología y los factores modificables — explicados sin rodeos."
               microTrust="~6 min · Sin registro · Tricología · Genética · Evidencia"
               onStart={() => setStarted(true)}
               startLabel="Analizar mi riesgo →"
             />
 
-            <div className="max-w-4xl mx-auto px-4 py-12">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                {[
-                  { icon: Dna, title: "Genética familiar", desc: "Herencia paterna y materna" },
-                  { icon: Activity, title: "Biología capilar", desc: "DHT, folículo y ciclo de crecimiento" },
-                  { icon: Stethoscope, title: "Hábitos de salud", desc: "Estrés, dieta, cuero cabelludo" },
-                  { icon: Pill, title: "Tratamientos", desc: "Minoxidil, finasterida, PRP y más" },
-                ].map((m) => (
-                  <div key={m.title} className="flex items-center gap-4 p-5 rounded-xl border border-gold/20 bg-espresso/50">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 text-gold shrink-0">
-                      <m.icon className="w-5 h-5" />
+            <div className="max-w-3xl mx-auto px-6 py-16">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
+                {MODULES.map((m, i) => (
+                  <motion.div
+                    key={m.title}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.08 }}
+                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300"
+                  >
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10">
+                      <m.icon className="w-7 h-7 text-gold" />
                     </div>
                     <div>
-                      <p className="font-semibold text-cream text-sm">{m.title}</p>
-                      <p className="text-cream/50 text-xs mt-0.5">{m.desc}</p>
+                      <p className="font-semibold text-cream text-base mb-1">{m.title}</p>
+                      <p className="text-cream/40 text-sm">{m.desc}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
               <BibliographyDrawer references={REFERENCES} />
@@ -60,11 +68,11 @@ export default function AlopeciaAnalyzerPage() {
           </>
         ) : (
           <div className="bg-background-light min-h-screen">
-            <div className="container mx-auto px-4 py-12">
+            <div className="container mx-auto px-6 py-16">
               <AlopeciaAnalyzer />
             </div>
             <AlopeciaExpertVerdict />
-            <div className="container mx-auto px-4 pb-12">
+            <div className="container mx-auto px-6 pb-16">
               <BibliographyDrawer references={REFERENCES} />
             </div>
           </div>

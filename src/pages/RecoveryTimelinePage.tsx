@@ -13,6 +13,13 @@ const REFERENCES: BibReference[] = [
   { id: 3, text: "Gavazzoni Dias, M.F.R. (2015). Hair Cosmetics: An Overview. Int. J. Trichology, 7(1), 2–15." },
 ];
 
+const MODULES = [
+  { icon: Droplets, title: "Hidratación", desc: "Recupera la humedad perdida" },
+  { icon: Shield, title: "Reconstrucción", desc: "Repara la estructura interna" },
+  { icon: Leaf, title: "Sellado", desc: "Cierra la cutícula dañada" },
+  { icon: Calendar, title: "Mantenimiento", desc: "Protocolo a largo plazo" },
+];
+
 export default function RecoveryTimelinePage() {
   const [started, setStarted] = useState(false);
 
@@ -35,33 +42,31 @@ export default function RecoveryTimelinePage() {
               startLabel="Generar mi calendario →"
             />
 
-            {/* Module preview */}
-            <div className="max-w-4xl mx-auto px-4 py-12">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  { icon: Droplets, title: "Hidratación", desc: "Recupera la humedad perdida" },
-                  { icon: Shield, title: "Reconstrucción", desc: "Repara la estructura interna" },
-                  { icon: Leaf, title: "Sellado", desc: "Cierra la cutícula dañada" },
-                  { icon: Calendar, title: "Mantenimiento", desc: "Protocolo a largo plazo" },
-                ].map((m) => (
-                  <div key={m.title} className="flex items-center gap-4 p-5 rounded-xl border border-gold/20 bg-espresso/50">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 text-gold shrink-0">
-                      <m.icon className="w-5 h-5" />
+            <div className="max-w-3xl mx-auto px-6 py-16">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
+                {MODULES.map((m, i) => (
+                  <motion.div
+                    key={m.title}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.08 }}
+                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300"
+                  >
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10">
+                      <m.icon className="w-7 h-7 text-gold" />
                     </div>
                     <div>
-                      <p className="font-semibold text-cream text-sm">{m.title}</p>
-                      <p className="text-cream/50 text-xs mt-0.5">{m.desc}</p>
+                      <p className="font-semibold text-cream text-base mb-1">{m.title}</p>
+                      <p className="text-cream/40 text-sm">{m.desc}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-              <div className="mt-8">
-                <BibliographyDrawer references={REFERENCES} />
-              </div>
+              <BibliographyDrawer references={REFERENCES} />
             </div>
           </>
         ) : (
-          <div className="max-w-4xl mx-auto px-4 py-12 space-y-12">
+          <div className="max-w-3xl mx-auto px-6 py-16 space-y-12">
             <RecoveryTimeline />
             <RecoveryExpertVerdict />
             <BibliographyDrawer references={REFERENCES} />

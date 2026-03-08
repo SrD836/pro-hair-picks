@@ -14,6 +14,13 @@ const REFERENCES: BibReference[] = [
   { id: 3, text: "Shi, Y. et al. (2021). Oxidative stress, melanocyte stem cells, and canities. J. Invest. Dermatol., 141(4), 767–770." },
 ];
 
+const MODULES = [
+  { icon: Dna, title: "Factores genéticos", desc: "Historial familiar y predisposición" },
+  { icon: Brain, title: "Factores biológicos", desc: "Estrés oxidativo y melanocitos" },
+  { icon: Sun, title: "Factores externos", desc: "UV, tabaco, contaminación" },
+  { icon: Utensils, title: "Nutrición", desc: "Déficits de B12, hierro, cobre, zinc" },
+];
+
 export default function CanicieAnalyzerPage() {
   const { isWizardMode, completeWizardModule } = useWizardReturn('analizador-canicie');
   const [started, setStarted] = useState(false);
@@ -35,29 +42,30 @@ export default function CanicieAnalyzerPage() {
             <ToolHeader
               badge="CIENTÍFICO"
               title={<>Analizador de <span className="text-gold">Salud del Melanocito</span></>}
-              subtitle="Diagnóstico basado en biología real. Sin promesas de inversión de la canicie establecida. Solo honestidad científica y recomendaciones que puedes actuar hoy."
-              microTrust="~5 min · Sin registro · Basado en evidencia A/B/C"
+              subtitle="Diagnóstico basado en biología real. Sin promesas de inversión de la canicie establecida. Solo honestidad científica."
+              microTrust="~5 min · Sin registro · Evidencia A/B/C"
               onStart={() => setStarted(true)}
               startLabel="Comenzar análisis →"
             />
 
-            <div className="max-w-4xl mx-auto px-4 py-12">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                {[
-                  { icon: Dna, title: "Factores genéticos", desc: "Historial familiar y predisposición" },
-                  { icon: Brain, title: "Factores biológicos", desc: "Estrés oxidativo y melanocitos" },
-                  { icon: Sun, title: "Factores externos", desc: "UV, tabaco, contaminación" },
-                  { icon: Utensils, title: "Nutrición", desc: "Déficits de B12, hierro, cobre, zinc" },
-                ].map((m) => (
-                  <div key={m.title} className="flex items-center gap-4 p-5 rounded-xl border border-gold/20 bg-espresso/50">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10 text-gold shrink-0">
-                      <m.icon className="w-5 h-5" />
+            <div className="max-w-3xl mx-auto px-6 py-16">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
+                {MODULES.map((m, i) => (
+                  <motion.div
+                    key={m.title}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.08 }}
+                    className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gold/10 bg-gold/[0.03] hover:bg-gold/[0.06] transition-colors duration-300"
+                  >
+                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gold/10">
+                      <m.icon className="w-7 h-7 text-gold" />
                     </div>
                     <div>
-                      <p className="font-semibold text-cream text-sm">{m.title}</p>
-                      <p className="text-cream/50 text-xs mt-0.5">{m.desc}</p>
+                      <p className="font-semibold text-cream text-base mb-1">{m.title}</p>
+                      <p className="text-cream/40 text-sm">{m.desc}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
               <BibliographyDrawer references={REFERENCES} />
@@ -65,7 +73,7 @@ export default function CanicieAnalyzerPage() {
           </>
         ) : (
           <div className="bg-background-light min-h-screen">
-            <div className="container mx-auto px-4 py-12 max-w-4xl space-y-12">
+            <div className="container mx-auto px-6 py-16 max-w-3xl space-y-12">
               <CanicieAnalyzer wizardContinue={isWizardMode ? handleWizardComplete : undefined} />
               {!isWizardMode && <CanicieExpertVerdict />}
               <BibliographyDrawer references={REFERENCES} />
