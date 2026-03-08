@@ -442,7 +442,7 @@ export const es = {
     actionProtocol: 'Protocolo de acción',
     productsTitle: 'Productos recomendados para tu diagnóstico',
     amazonCta: 'Ver precio en Amazon',
-    // removed cizuraBtn
+    
     bibliographyTitle: 'Bibliografía científica',
     bibliographySee: 'Ver fuentes',
     bibliographyHide: 'Ocultar',
