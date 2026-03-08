@@ -178,6 +178,7 @@ export const en = {
     privacy: "Privacy",
     cookies: "Cookies",
     terms: "Terms",
+    aiPolicy: "AI Policy",
     ctaTitle: "Ready to take your salon to the next level?",
     ctaSubtitle: "Explore honest comparisons, free tools, and resources designed for professionals like you.",
     ctaButton: "Explore Catalog",

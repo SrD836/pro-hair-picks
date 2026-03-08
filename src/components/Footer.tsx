@@ -71,6 +71,7 @@ const Footer = () => {
                 <li><Link to="/contacto" className="hover:text-[#F5F0E8] transition-colors">{t("footer.contact")}</Link></li>
                 <li><Link to="/politica-privacidad" className="hover:text-[#F5F0E8] transition-colors">{t("footer.privacy")}</Link></li>
                 <li><Link to="/terminos" className="hover:text-[#F5F0E8] transition-colors">{t("footer.terms")}</Link></li>
+                <li><Link to="/politica-ia" className="hover:text-[#F5F0E8] transition-colors">{t("footer.aiPolicy")}</Link></li>
               </ul>
             </div>
           </div>

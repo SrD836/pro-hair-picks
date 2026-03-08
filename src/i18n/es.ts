@@ -178,6 +178,7 @@ export const es = {
     privacy: "Privacidad",
     cookies: "Cookies",
     terms: "Términos",
+    aiPolicy: "Política de IA",
     ctaTitle: "¿Listo para elevar tu salón al siguiente nivel?",
     ctaSubtitle: "Explora comparativas honestas, herramientas gratuitas y recursos pensados para profesionales como tú.",
     ctaButton: "Explorar Catálogo",

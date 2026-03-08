@@ -38,6 +38,10 @@ const STATIC_ROUTE_META: Record<string, { title: string; description: string }> 
     title: "Términos y Condiciones — GuiaDelSalon.com",
     description: "Términos de uso del sitio web e información sobre enlaces de afiliados.",
   },
+  "/politica-ia": {
+    title: "Política de Inteligencia Artificial — GuiaDelSalon.com",
+    description: "Cómo utilizamos la IA de forma responsable y con supervisión humana en GuiaDelSalon.com.",
+  },
   "/sobre-nosotros": {
     title: "Sobre Nosotros — GuiaDelSalon.com",
     description: "Conoce nuestra misión: ayudar a profesionales de peluquería a elegir los mejores productos.",
