@@ -3,7 +3,7 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Layers, Droplets, Activity, ScanSearch, FlaskConical, ExternalLink,
-  RotateCcw, ArrowRight, Share2, Download, Check,
+  RotateCcw, ArrowRight, Download, Check,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
