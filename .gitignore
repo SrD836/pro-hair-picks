@@ -26,3 +26,9 @@ dist-ssr
 # Daily content pipeline
 .env.scripts
 scripts/daily-content/output/
+
+# Semrush scraper
+scripts/semrush/node_modules/
+scripts/semrush/output/keyword_gap_es.xlsx
+scripts/semrush/output/keyword_gap_es.json
+scripts/semrush/output/keyword_gap_checkpoint.json
