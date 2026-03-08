@@ -40,11 +40,11 @@ export default function DiagnosticoCompletoPage() {
   );
 
   const completedIds = session
-    ? (Object.keys(session.completedModules) as ToolId[])
+    ? WIZARD_TOOL_ORDER.filter((id) => Boolean(session.completedModules[id]))
     : [];
 
   const currentIndex = orderedTools.findIndex((t) => !completedIds.includes(t.id));
-  const isAllDone = completedIds.length === orderedTools.length;
+  const isAllDone = orderedTools.every((t) => Boolean(session?.completedModules[t.id]));
   const nextTool = currentIndex >= 0 ? orderedTools[currentIndex] : null;
 
   // Initialize session on first visit
