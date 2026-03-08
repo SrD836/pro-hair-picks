@@ -347,22 +347,25 @@ const Navbar = () => {
               label={t("nav.men")}
               groups={menGroups}
               isOpen={openDropdown === "hombre"}
-              onToggle={() => setOpenDropdown(openDropdown === "hombre" ? null : "hombre")}
-              onClose={() => setOpenDropdown(null)}
+              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "hombre" ? null : "hombre"); }}
+              onClose={scheduleClose}
+              onEnter={() => { cancelClose(); setOpenDropdown("hombre"); }}
             />
             <GroupedDropdown
               label={t("nav.women")}
               groups={womenGroups}
               isOpen={openDropdown === "mujer"}
-              onToggle={() => setOpenDropdown(openDropdown === "mujer" ? null : "mujer")}
-              onClose={() => setOpenDropdown(null)}
+              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "mujer" ? null : "mujer"); }}
+              onClose={scheduleClose}
+              onEnter={() => { cancelClose(); setOpenDropdown("mujer"); }}
             />
             <FlatDropdown
               label={t("nav.mixed")}
               items={mixedCategories}
               isOpen={openDropdown === "mixto"}
-              onToggle={() => setOpenDropdown(openDropdown === "mixto" ? null : "mixto")}
-              onClose={() => setOpenDropdown(null)}
+              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "mixto" ? null : "mixto"); }}
+              onClose={scheduleClose}
+              onEnter={() => { cancelClose(); setOpenDropdown("mixto"); }}
             />
             <Link
               to="/blog"
@@ -372,8 +375,9 @@ const Navbar = () => {
             </Link>
             <HairToolsDropdown
               isOpen={openDropdown === "tools"}
-              onToggle={() => setOpenDropdown(openDropdown === "tools" ? null : "tools")}
-              onClose={() => setOpenDropdown(null)}
+              onToggle={() => { cancelClose(); setOpenDropdown(openDropdown === "tools" ? null : "tools"); }}
+              onClose={scheduleClose}
+              onEnter={() => { cancelClose(); setOpenDropdown("tools"); }}
             />
             <Link
               to={lang === "es" ? "/cursos-peluqueria" : "/hairdressing-courses"}
