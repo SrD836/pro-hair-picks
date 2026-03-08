@@ -119,7 +119,7 @@ export const es = {
     title: "Soluciones",
     seeMore: "Ver Más",
     software: "Integración de Software",
-    softwareDesc: "Conecta tu flujo de trabajo con Cizura, el software de gestión diseñado para salones españoles.",
+    softwareDesc: "Conecta tu flujo de trabajo con software de gestión diseñado para salones.",
     equipment: "Equipamiento Profesional",
     equipmentDesc: "Selección de mobiliario y equipos verificados por profesionales del sector.",
     inventory: "Gestión de Inventario",
