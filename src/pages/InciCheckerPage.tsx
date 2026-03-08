@@ -23,7 +23,7 @@ const MODULES = [
 ];
 
 export default function InciCheckerPage() {
-  const { lang } = (await import("@/i18n/LanguageContext")).useLanguage();
+  const { lang } = useLanguage();
   const [started, setStarted] = useState(false);
   const checkerRef = useRef<HTMLDivElement>(null);
 
