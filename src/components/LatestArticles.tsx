@@ -185,10 +185,6 @@ export default function LatestArticles({ articles, title }: LatestArticlesProps)
                 <ArticleCard article={article} index={i} />
               </div>
             ))}
-            {/* Cizura card inline in mobile scroll */}
-            <div className="snap-start shrink-0 w-[72vw] max-w-[280px]">
-              <CizuraBanner />
-            </div>
           </div>
 
           {/* Scroll dots indicator */}
