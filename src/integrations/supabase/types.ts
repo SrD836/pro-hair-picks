@@ -676,6 +676,39 @@ export type Database = {
         }
         Relationships: []
       }
+      diagnostico_completo: {
+        Row: {
+          id: string
+          user_id: string | null
+          user_session_id: string | null
+          capilar_data: Json | null
+          canicie_data: Json | null
+          alopecia_data: Json | null
+          overall_score: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          user_session_id?: string | null
+          capilar_data?: Json | null
+          canicie_data?: Json | null
+          alopecia_data?: Json | null
+          overall_score?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          user_session_id?: string | null
+          capilar_data?: Json | null
+          canicie_data?: Json | null
+          alopecia_data?: Json | null
+          overall_score?: number | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       hair_diagnostic_sessions: {
         Row: {
           answers: Json

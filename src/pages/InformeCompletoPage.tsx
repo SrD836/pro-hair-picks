@@ -106,7 +106,7 @@ export default function InformeCompletoPage() {
 
   const handleReset = () => {
     localStorage.removeItem(WIZARD_KEY);
-    window.location.href = '/mi-pelo/diagnostico-completo';
+    navigate('/mi-pelo/diagnostico-completo', { replace: true });
   };
 
   const getScoreColor = (score: number | undefined) => {
