@@ -199,7 +199,7 @@ async function planDay(date, { usedKeywords = null, supabaseUrl = null, anonKey 
   const hasTrendUS = trends.us && trends.us.length > 0;
 
   // ── Obtener topics: 2 ES + 3 US ───────────────────────────────────────────
-  let topicES0, topicNegocio, topicUS0, topicUS1, topicBridgeUS;
+  let topicES0, topicNegocio, topicUS0, topicUS1, topicBridgeUS, topicBridgeFallback;
   let topCluster = 'cortes';
   try {
     // Slot 1 — cluster de mayor oportunidad del día
@@ -223,6 +223,9 @@ async function planDay(date, { usedKeywords = null, supabaseUrl = null, anonKey 
       ? trends.us[1]
       : getKeywordForDay('us', date, 2, usedKeywords);
 
+    // Fallback para slot 5 si el bridge falla: keyword US sólida (offset 3)
+    topicBridgeFallback = getKeywordForDay('us', date, 3, usedKeywords);
+
     console.log('  ✓ Keywords cargadas desde Semrush Excel');
     if (hasTrendUS) console.log(`  ✓ Slot 3 → tendencia US: "${topicUS0}"`);
     if (hasTrendUS && trends.us[1]) console.log(`  ✓ Slot 5 bridge_us → tendencia US: "${topicBridgeUS}"`);
@@ -234,8 +237,9 @@ async function planDay(date, { usedKeywords = null, supabaseUrl = null, anonKey 
     topicES0      = pick(TOPICS_POOL.core, 0);
     topicNegocio  = pick(TOPICS_POOL.negocio, 0);
     topicUS0      = hasTrendUS ? trends.us[0] : pick(TOPICS_POOL.core_us, 0);
-    topicUS1      = pick(TOPICS_POOL.core_us, 3);
-    topicBridgeUS = (hasTrendUS && trends.us[1]) ? trends.us[1] : pick(TOPICS_POOL.bridge, 0);
+    topicUS1            = pick(TOPICS_POOL.core_us, 3);
+    topicBridgeUS       = (hasTrendUS && trends.us[1]) ? trends.us[1] : pick(TOPICS_POOL.bridge, 0);
+    topicBridgeFallback = pick(TOPICS_POOL.core_us, 4);
   }
 
   // ── Slots: 2 ES + 3 US ───────────────────────────────────────────────────
@@ -249,7 +253,7 @@ async function planDay(date, { usedKeywords = null, supabaseUrl = null, anonKey 
     { slot: 2, type: 'negocio',   lang: 'es', market: 'es', topic: topicNegocio,  cluster: 'gestion' },
     { slot: 3, type: 'core_us',   lang: 'en', market: 'us', topic: topicUS0 },
     { slot: 4, type: 'core_us',   lang: 'en', market: 'us', topic: topicUS1 },
-    { slot: 5, type: 'bridge_us', lang: 'en', market: 'us', topic: topicBridgeUS },
+    { slot: 5, type: 'bridge_us', lang: 'en', market: 'us', topic: topicBridgeUS, bridge_fallback_topic: topicBridgeFallback || topicUS1 },
   ];
 
   // ── VALIDACIÓN DE KEYWORDS ES ─────────────────────────────────────────────

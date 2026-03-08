@@ -48,7 +48,7 @@ Provide:
 Respond as research notes for the writer. Direct, no introduction.`;
 
   try {
-    const response = callClaude(prompt, { timeout: 90_000 });
+    const response = callClaude(prompt, { timeout: 120_000 }); // 2 min para US (era 90s)
     return { ...post, research_context: response };
   } catch (err) {
     console.warn(`  ⚠️  Error en research US: ${err.message}`);

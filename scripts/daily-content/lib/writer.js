@@ -357,13 +357,14 @@ Genera SOLO este JSON (sin texto adicional):
     };
   }
 
-  // 2. Generar contenido principal (la llamada más larga — hasta 5 min)
-  console.log(`     Generando contenido (puede tardar 2-4 min)...`);
+  // 2. Generar contenido principal (la llamada más larga — hasta 7 min para US)
+  console.log(`     Generando contenido (puede tardar ${isUS ? '3-6 min' : '2-4 min'})...`);
   const mainContent = callClaudeWithRetry(
     isUS
       ? buildContentPromptUS({ ...post, ...titleData }, internalLinks)
       : buildContentPrompt({ ...post, ...titleData }, internalLinks),
-    { timeout: 300_000 }
+    { timeout: isUS ? 420_000 : 300_000 }, // 7 min para US (era 5 min), 5 min para ES
+    isUS ? 3 : 2                            // 3 reintentos para US (era 2)
   );
 
   // 3. Para posts ES: traducir al inglés. Para posts US: ya está en inglés.
@@ -420,12 +421,12 @@ ${contentES}`;
 async function writeAllPosts(dailyPlan) {
   const posts = [];
   for (const post of dailyPlan.posts) {
-    if (post.type === 'bridge' && post.bridge_test === 'failed') {
-      console.log(`  ⚠️  Bridge test fallido → convirtiendo slot ${post.slot} a post CORE ES`);
-      post.type = 'core';
-      post.lang = 'es';
-      post.market = 'es';
-      post.topic = 'técnicas de coloración sin amoniaco: guía profesional definitiva';
+    if ((post.type === 'bridge' || post.type === 'bridge_us') && post.bridge_test === 'failed') {
+      const isUS = post.market === 'us';
+      post.type  = isUS ? 'core_us' : 'core';
+      // Usar bridge_fallback_topic si existe (definido en planner), si no mantener el topic original
+      post.topic = post.bridge_fallback_topic || post.topic;
+      console.log(`  ↳ Bridge fallido → convirtiendo a ${post.type}: "${post.topic.slice(0, 50)}"`);
     }
     try {
       const written = await writePost(post, dailyPlan.date);
@@ -435,30 +436,107 @@ async function writeAllPosts(dailyPlan) {
       console.error(`  ❌ Error escribiendo slot ${post.slot} (${post.type}): ${err.message}`);
       console.error(`     El pipeline continuará con los posts restantes.`);
       // Guardar post de emergencia para no perder el slot
+      const kw = post.target_keyword || post.topic;
+      const isUSFallback = post.market === 'us';
       posts.push({
         ...post,
         title: post.topic,
         title_en: post.topic,
-        meta_description: `${post.target_keyword || post.topic}: guía para profesionales de peluquería. Técnicas, productos y consejos de aplicación en salón.`.slice(0, 155),
-        category: 'Peluquería',
+        meta_description: `${kw}: guía para profesionales de peluquería. Técnicas, productos y consejos de aplicación en salón.`.slice(0, 155),
+        category: isUSFallback ? 'Technique' : 'Peluquería',
         category_en: 'Hairdressing',
         excerpt: `Artículo sobre ${post.topic}.`,
         excerpt_en: `Article about ${post.topic}.`,
-        content: `<p>${post.topic} es un tema clave para profesionales de peluquería y barbería en España. En esta guía analizamos los aspectos fundamentales que todo profesional del salón debe conocer sobre ${post.target_keyword || post.topic}, incluyendo técnicas actuales, productos recomendados y consejos de aplicación profesional.</p>
-<h2>¿Por qué es importante ${post.target_keyword || post.topic}?</h2>
-<p>Los profesionales del sector valoran especialmente el dominio de ${post.target_keyword || post.topic} por su impacto directo en la satisfacción del cliente y la rentabilidad del servicio. Mantenemos esta guía en actualización continua con las últimas novedades del sector.</p>
-<p>Consulta nuestras <a href="/blog">guías completas del salón</a> y las <a href="/categorias/clippers">comparativas de productos profesionales</a> para más recursos.</p>`,
-        content_en: `<p>${post.topic} is a key topic for professional hairdressers and barbers. This guide covers the essential aspects of ${post.target_keyword || post.topic} for salon professionals, including current techniques, recommended products and professional application tips.</p>
-<h2>Why does ${post.target_keyword || post.topic} matter?</h2>
-<p>Salon professionals value expertise in ${post.target_keyword || post.topic} for its direct impact on client satisfaction and service profitability. We keep this guide updated with the latest industry developments.</p>
-<p>Browse our <a href="/blog">complete salon guides</a> for more professional resources.</p>`,
-        read_time_minutes: 2,
-        has_expert_verdict: false,
-        has_data_viz: false,
+        content: `<p>${kw} es una de las técnicas más buscadas por profesionales de peluquería y barbería en España. En esta guía analizamos los aspectos esenciales que todo profesional del salón debe dominar.</p>
+
+<h2>Por qué dominar ${kw} marca la diferencia</h2>
+<p>Los profesionales que dominan ${kw} reportan mayor satisfacción del cliente y servicios mejor valorados. Marcas como Wahl, BaByliss Pro y L'Oréal Professionnel han desarrollado productos específicos para optimizar este servicio.</p>
+
+<h2>Técnica profesional paso a paso</h2>
+<p>La correcta aplicación de ${kw} requiere preparación del cabello, elección del producto adecuado y seguimiento del protocolo recomendado por los fabricantes.</p>
+<ul>
+  <li>Diagnóstico previo del tipo de cabello</li>
+  <li>Selección del producto según necesidades</li>
+  <li>Aplicación según protocolo técnico</li>
+  <li>Control de tiempos de exposición</li>
+  <li>Acabado y recomendaciones al cliente</li>
+</ul>
+
+<h2>Productos recomendados para profesionales</h2>
+<p>En el mercado español, los productos para ${kw} oscilan entre los 15€ y los 80€ según la gama profesional. Consulta las <a href="/categorias/clippers">comparativas de productos profesionales</a> para más información.</p>
+
+<table class="data-table">
+  <thead><tr><th>Gama</th><th>Precio orientativo</th><th>Idóneo para</th></tr></thead>
+  <tbody>
+    <tr><td>Iniciación</td><td>15-30€</td><td>Salones en formación</td></tr>
+    <tr><td>Profesional</td><td>30-60€</td><td>Uso diario intensivo</td></tr>
+    <tr><td>Premium</td><td>60-80€</td><td>Resultados de alta demanda</td></tr>
+  </tbody>
+</table>
+
+<div class="expert-verdict">
+  <p class="verdict-title">⚡ Veredicto del Experto</p>
+  <p>Dominar ${kw} es una inversión en la calidad de tu servicio. Consulta con tu distribuidor de confianza para recibir formación actualizada sobre las últimas técnicas y productos disponibles en España. Mantente actualizado a través de <a href="/blog">nuestra guía completa del salón</a>.</p>
+</div>
+
+<div class="faq-section">
+  <h2>Preguntas frecuentes</h2>
+  <div class="faq-item">
+    <h3>¿Cuánto tiempo tarda el servicio de ${kw}?</h3>
+    <p>El tiempo varía según el tipo de cabello y la técnica aplicada, generalmente entre 30 y 90 minutos. Un diagnóstico previo permite optimizar el proceso y ofrecer al cliente una estimación precisa.</p>
+  </div>
+  <div class="faq-item">
+    <h3>¿Qué productos profesionales se recomiendan para ${kw}?</h3>
+    <p>Las marcas de referencia para profesionales en España incluyen L'Oréal Professionnel, Schwarzkopf Professional y Wella Professionals. La elección depende del resultado deseado y el tipo de cabello del cliente.</p>
+  </div>
+  <div class="faq-item">
+    <h3>¿Cada cuánto se recomienda repetir el tratamiento?</h3>
+    <p>Depende de la técnica y del cabello de cada cliente, aunque el promedio en salones españoles es cada 4-8 semanas. Establece un protocolo de mantenimiento personalizado para fidelizar al cliente.</p>
+  </div>
+</div>`,
+        content_en: `<p>${kw} is one of the most in-demand techniques among professional hairdressers and barbers. This guide covers the essential aspects every salon professional must master.</p>
+
+<h2>Why mastering ${kw} makes a difference</h2>
+<p>Professionals who master ${kw} report higher client satisfaction and better-rated services. Brands like Wahl Professional, BaByliss Pro and Andis have developed specific products to optimize this service.</p>
+
+<h2>Professional technique step by step</h2>
+<p>Proper application of ${kw} requires hair preparation, product selection and following manufacturer-recommended protocols.</p>
+<ul>
+  <li>Pre-service hair diagnosis</li>
+  <li>Product selection based on client needs</li>
+  <li>Application following technical protocol</li>
+  <li>Processing time management</li>
+  <li>Finishing and client aftercare recommendations</li>
+</ul>
+
+<div class="expert-verdict">
+  <p class="verdict-title">⚡ Expert Verdict</p>
+  <p>Mastering ${kw} is an investment in your service quality. Consult with your trusted distributor for updated training on the latest techniques and products. Stay current through <a href="/blog">our complete salon guide</a>.</p>
+</div>
+
+<div class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <h3>How long does a ${kw} service take?</h3>
+    <p>Time varies by hair type and technique, typically 30 to 90 minutes. A pre-service consultation allows you to optimize the process and give the client an accurate estimate.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What professional products are recommended for ${kw}?</h3>
+    <p>Leading brands for US professionals include Wahl Professional, Andis, Oster, and BaByliss Pro. The right choice depends on desired results and the client's hair type.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How often should ${kw} treatments be repeated?</h3>
+    <p>It depends on the technique and individual hair, but most salon professionals recommend every 4-8 weeks. Establish a personalized maintenance protocol to build client loyalty.</p>
+  </div>
+</div>`,
+        read_time_minutes: 4,
+        has_expert_verdict: true,
+        has_data_viz: true,
+        has_faq: true,
         keywords: [post.target_keyword],
         internal_links: ['/blog'],
         external_links: [],
-        author: 'Equipo GuiaDelSalon',
+        author: isUSFallback ? 'GuiaDelSalon Team' : 'Equipo GuiaDelSalon',
         lang: post.lang || 'es',
         market: post.market || 'es',
         schema_markup: null,

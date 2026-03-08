@@ -210,7 +210,83 @@ async function run() {
     await publishAll(finalPlan, config);
   }
 
+  // ── FASE 6: Retry posts faltantes ────────────────────────────────────────────
+  const publishedCount = finalPlan.posts.filter(p => !p._failed).length;
+  if (publishedCount < 5) {
+    const failedPosts = finalPlan.posts.filter(p => p._failed);
+    console.log(`\n⚠️  Solo ${publishedCount}/5 posts generados. Reintentando ${failedPosts.length} post(s) fallidos...`);
+    fs.appendFileSync(PIPELINE_LOG, `[${new Date().toISOString()}] RETRY ${failedPosts.length} posts fallidos\n`);
+
+    for (const failedPost of failedPosts) {
+      console.log(`  🔄 Reintentando slot ${failedPost.slot} (${failedPost.type})...`);
+      try {
+        const retryPost = {
+          ...failedPost,
+          _failed: false,
+          // Si es post US y falló, convertir a core ES con el topic existente
+          ...(failedPost.market === 'us' ? {
+            type:   'core',
+            lang:   'es',
+            market: 'es',
+            topic:  failedPost.topic,
+          } : {}),
+        };
+
+        const researched = await researchAllPosts({ ...finalPlan, posts: [retryPost] });
+
+        if (config.SUPABASE_URL && config.SUPABASE_ANON_KEY) {
+          researched.posts[0].relatedPosts = await getRelatedPostLinks(
+            researched.posts[0], config.SUPABASE_URL, config.SUPABASE_ANON_KEY
+          );
+        }
+
+        const written = await writeAllPosts(researched);
+        const withImages = await processImages(written, config);
+
+        const retryFinal = {
+          ...withImages,
+          posts: withImages.posts.map(p => ({
+            ...p,
+            published_at: new Date(`${TODAY}T10:00:00Z`).toISOString(),
+          })),
+        };
+
+        if (!dryRun) {
+          await publishAll(retryFinal, config);
+        }
+
+        const idx = finalPlan.posts.findIndex(p => p.slot === failedPost.slot);
+        if (idx !== -1) finalPlan.posts[idx] = retryFinal.posts[0];
+
+        console.log(`  ✅ Slot ${failedPost.slot} recuperado en el retry`);
+        fs.appendFileSync(PIPELINE_LOG, `[${new Date().toISOString()}] RETRY_SUCCESS slot=${failedPost.slot}\n`);
+
+      } catch (retryErr) {
+        console.error(`  ❌ Retry también falló para slot ${failedPost.slot}: ${retryErr.message}`);
+        fs.appendFileSync(PIPELINE_LOG, `[${new Date().toISOString()}] RETRY_FAILED slot=${failedPost.slot} err=${retryErr.message}\n`);
+      }
+    }
+
+    const recoveredCount = finalPlan.posts.filter(p => !p._failed).length;
+    console.log(`\n📊 Resultado tras retry: ${recoveredCount}/5 posts publicados`);
+  }
+
   fs.writeFileSync(path.join(OUTPUT_DIR, 'daily_plan_final.json'), JSON.stringify(finalPlan, null, 2));
+
+  // ── ALERTA: Pipeline incompleto ───────────────────────────────────────────
+  const totalPublished = finalPlan.posts.filter(p => !p._failed).length;
+  if (totalPublished < 5) {
+    const alertMsg = `[${new Date().toISOString()}] ALERTA: Solo ${totalPublished}/5 posts publicados el ${TODAY}\n`;
+    fs.appendFileSync(PIPELINE_LOG, alertMsg);
+    fs.writeFileSync(
+      path.join(GLOBAL_OUTPUT_DIR, 'last_incomplete.txt'),
+      `${TODAY}: ${totalPublished}/5 posts\n${finalPlan.posts.filter(p => p._failed).map(p => `  - slot ${p.slot} (${p.type}): ${p.target_keyword}`).join('\n')}\n`
+    );
+    console.warn(`\n⚠️  PIPELINE INCOMPLETO: ${totalPublished}/5 posts — ver last_incomplete.txt`);
+  } else {
+    const incompleteFile = path.join(GLOBAL_OUTPUT_DIR, 'last_incomplete.txt');
+    if (fs.existsSync(incompleteFile)) fs.unlinkSync(incompleteFile);
+  }
 
   // ── Finalización ─────────────────────────────────────────────────────────
   const elapsed    = Math.round((Date.now() - start) / 1000);

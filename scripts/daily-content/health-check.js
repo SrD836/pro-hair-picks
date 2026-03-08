@@ -32,6 +32,17 @@ const lastSuccessDate = lastSuccessRaw.slice(0, 10);
 
 if (lastSuccessDate === today) {
   console.log(`OK: Pipeline completado hoy a las ${lastSuccessRaw.slice(11, 19)} UTC`);
+
+  // Verificar si el último día fue incompleto (< 5 posts)
+  const LAST_INCOMPLETE_PATH = path.join(__dirname, 'output', 'last_incomplete.txt');
+  if (fs.existsSync(LAST_INCOMPLETE_PATH)) {
+    const incompleteContent = fs.readFileSync(LAST_INCOMPLETE_PATH, 'utf8').trim();
+    if (incompleteContent.startsWith(today)) {
+      console.warn(`ALERTA: Pipeline de hoy fue INCOMPLETO:\n${incompleteContent}`);
+      // No salir con error — el pipeline corrió pero fue parcial
+    }
+  }
+
   process.exit(0);
 }
 
