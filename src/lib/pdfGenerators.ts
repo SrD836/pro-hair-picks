@@ -6,13 +6,13 @@ import jsPDF from "jspdf";
 
 // ── Shared helpers ──────────────────────────────────────────────────────────────
 
-const ESPRESSO = [45, 34, 24] as const;
-const GOLD = [196, 169, 125] as const;
-const ORANGE = [236, 91, 19] as const;
-const GRAY = [120, 120, 120] as const;
-const GREEN = [76, 175, 124] as const;
-const AMBER = [228, 184, 74] as const;
-const RED = [224, 107, 82] as const;
+const ESPRESSO: [number, number, number] = [45, 34, 24];
+const GOLD: [number, number, number] = [196, 169, 125];
+const ORANGE: [number, number, number] = [236, 91, 19];
+const GRAY: [number, number, number] = [120, 120, 120];
+const GREEN: [number, number, number] = [76, 175, 124];
+const AMBER: [number, number, number] = [228, 184, 74];
+const RED: [number, number, number] = [224, 107, 82];
 
 function header(doc: jsPDF, title: string, subtitle: string) {
   doc.setFontSize(9);
