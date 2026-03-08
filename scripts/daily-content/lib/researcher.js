@@ -115,10 +115,11 @@ async function researchAllPosts(dailyPlan) {
   const enriched = [];
   for (const post of dailyPlan.posts) {
     console.log(`  📡 Investigando [${post.type}] slot ${post.slot}...`);
-    if (post.type === 'bridge') {
-      enriched.push(await researchBridgePost(post));
-    } else if (post.type === 'core_us') {
+    if (post.market === 'us') {
+      // Slots 3, 4, 5 (core_us y bridge_us) — siempre investigación US
       enriched.push(await researchCorePostUS(post));
+    } else if (post.type === 'bridge') {
+      enriched.push(await researchBridgePost(post));
     } else {
       enriched.push(await researchCorePost(post));
     }

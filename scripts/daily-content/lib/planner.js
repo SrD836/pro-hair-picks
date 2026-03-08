@@ -126,49 +126,51 @@ async function planDay(date, { usedKeywords = null, supabaseUrl = null, anonKey 
   const hasTrendES = trends.es && trends.es.length > 0;
   const hasTrendUS = trends.us && trends.us.length > 0;
 
-  // ── Obtener topics desde Semrush keywords (con fallback al TOPICS_POOL) ──
-  let topicES0, topicES1, topicUS, topicBridge, topicNegocio;
+  // ── Obtener topics: 2 ES + 3 US ───────────────────────────────────────────
+  let topicES0, topicNegocio, topicUS0, topicUS1, topicBridgeUS;
   try {
-    // Slots 1, 2, 4, 5 — SIEMPRE mercado ES
+    // Slots 1, 2 — mercado ES
     topicES0     = getKeywordForDay('es', date, 0, usedKeywords);
-    topicES1     = getKeywordForDay('es', date, 1, usedKeywords);
-    topicNegocio = getKeywordForDay('es', date, 3, usedKeywords);
+    topicNegocio = getKeywordForDay('es', date, 1, usedKeywords);
 
-    // Slot 4 (bridge): trending ES si disponible, si no Excel ES
-    topicBridge = hasTrendES
-      ? trends.es[0]
-      : getKeywordForDay('es', date, 2, usedKeywords);
-
-    // Slot 3 (core_us): SIEMPRE mercado US — trending US si disponible
-    topicUS = hasTrendUS
+    // Slots 3, 4 — mercado US (offsets distintos para no repetir keyword)
+    topicUS0 = hasTrendUS
       ? trends.us[0]
       : getKeywordForDay('us', date, 0, usedKeywords);
+    topicUS1 = getKeywordForDay('us', date, 1, usedKeywords);
+
+    // Slot 5 bridge_us — trending US (índice 1) o Excel US offset 2
+    topicBridgeUS = (hasTrendUS && trends.us[1])
+      ? trends.us[1]
+      : getKeywordForDay('us', date, 2, usedKeywords);
 
     console.log('  ✓ Keywords cargadas desde Semrush Excel');
-    if (hasTrendES) console.log(`  ✓ Bridge slot 4 → tendencia ES: "${topicBridge}"`);
-    if (hasTrendUS) console.log(`  ✓ Core US slot 3 → tendencia US: "${topicUS}"`);
+    if (hasTrendUS) console.log(`  ✓ Slot 3 → tendencia US: "${topicUS0}"`);
+    if (hasTrendUS && trends.us[1]) console.log(`  ✓ Slot 5 bridge_us → tendencia US: "${topicBridgeUS}"`);
   } catch (err) {
     console.warn(`  ⚠️  keyword-loader falló (${err.message}) — usando TOPICS_POOL fallback`);
     const dayNum   = new Date(date).getDate();
     const monthNum = new Date(date).getMonth();
     const pick = (arr, offset) => arr[(dayNum + monthNum * 3 + offset) % arr.length];
-    topicES0     = pick(TOPICS_POOL.core, 0);
-    topicES1     = pick(TOPICS_POOL.core, 7);
-    topicBridge  = hasTrendES ? trends.es[0] : pick(TOPICS_POOL.bridge, 0);
-    topicNegocio = pick(TOPICS_POOL.negocio, 0);
-    // Slot 3: SIEMPRE US
-    topicUS = hasTrendUS ? trends.us[0] : pick(TOPICS_POOL.core_us, 0);
+    topicES0      = pick(TOPICS_POOL.core, 0);
+    topicNegocio  = pick(TOPICS_POOL.negocio, 0);
+    topicUS0      = hasTrendUS ? trends.us[0] : pick(TOPICS_POOL.core_us, 0);
+    topicUS1      = pick(TOPICS_POOL.core_us, 3);
+    topicBridgeUS = (hasTrendUS && trends.us[1]) ? trends.us[1] : pick(TOPICS_POOL.bridge, 0);
   }
 
-  // ── Slots: separación ES/US estricta ─────────────────────────────────────
-  // Slots 1, 2, 4, 5 → SIEMPRE lang:'es' market:'es'
-  // Slot 3           → SIEMPRE lang:'en' market:'us'
+  // ── Slots: 2 ES + 3 US ───────────────────────────────────────────────────
+  // Slot 1: core ES      — lang:'es' market:'es'
+  // Slot 2: negocio ES   — lang:'es' market:'es'
+  // Slot 3: core_us      — lang:'en' market:'us' (trending US o Excel offset 0)
+  // Slot 4: core_us      — lang:'en' market:'us' (Excel offset 1)
+  // Slot 5: bridge_us    — lang:'en' market:'us' (trending US[1] o Excel offset 2)
   const slots = [
-    { slot: 1, type: 'core',    lang: 'es', market: 'es', topic: topicES0 },
-    { slot: 2, type: 'core',    lang: 'es', market: 'es', topic: topicES1 },
-    { slot: 3, type: 'core_us', lang: 'en', market: 'us', topic: topicUS  },
-    { slot: 4, type: 'bridge',  lang: 'es', market: 'es', topic: topicBridge },
-    { slot: 5, type: 'negocio', lang: 'es', market: 'es', topic: topicNegocio },
+    { slot: 1, type: 'core',      lang: 'es', market: 'es', topic: topicES0 },
+    { slot: 2, type: 'negocio',   lang: 'es', market: 'es', topic: topicNegocio },
+    { slot: 3, type: 'core_us',   lang: 'en', market: 'us', topic: topicUS0 },
+    { slot: 4, type: 'core_us',   lang: 'en', market: 'us', topic: topicUS1 },
+    { slot: 5, type: 'bridge_us', lang: 'en', market: 'us', topic: topicBridgeUS },
   ];
 
   console.log('  Generando slug, meta y secondary keywords SEO...');

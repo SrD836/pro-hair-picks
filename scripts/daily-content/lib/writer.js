@@ -315,7 +315,7 @@ function callClaudeWithRetry(prompt, options = {}, maxRetries = 2) {
 }
 
 async function writePost(post, date) {
-  const isUS = post.type === 'core_us';
+  const isUS = post.market === 'us';
   console.log(`  ✍️  Escribiendo [${post.type}] slot ${post.slot}: ${(post.topic || '').slice(0, 55)}...`);
   const internalLinks = getInternalLinks(post);
 
