@@ -254,17 +254,19 @@ export default function ExpertVerdict() {
           </p>
         </div>
 
-        {/* References */}
-        <div className="mt-10 pt-8 border-t border-[#C4A97D]/15">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#C4A97D]/60 mb-5">
-            Referencias bibliográficas (APA 7.ª ed.)
-          </p>
-          <ol className="space-y-3 list-none p-0">
+        {/* References — collapsible */}
+        <details className="mt-10 pt-8 border-t border-[#C4A97D]/15 group">
+          <summary className="flex items-center gap-2 cursor-pointer text-xs font-bold uppercase tracking-widest text-[#C4A97D]/60 hover:text-[#C4A97D]/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
+            <BookOpen className="w-3.5 h-3.5" />
+            Referencias bibliográficas (APA 7.ª ed.) — {SOURCES.length} fuentes
+            <ChevronDown className="w-3.5 h-3.5 ml-auto transition-transform group-open:rotate-180" />
+          </summary>
+          <ol className="space-y-3 list-none p-0 mt-5">
             {SOURCES.map((s) => (
               <SourceItem key={s.id} s={s} />
             ))}
           </ol>
-        </div>
+        </details>
       </div>
     </motion.section>
   );
