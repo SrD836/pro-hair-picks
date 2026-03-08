@@ -13,6 +13,8 @@
 const XLSX = require('xlsx');
 const path = require('path');
 
+const KEYWORDS_DIR = path.join('C:', 'Users', 'david', 'Desktop', 'keywords');
+
 const FILTERS = {
   es: {
     intents:      ['Informational', 'Commercial'],
@@ -29,7 +31,10 @@ const FILTERS = {
 };
 
 function loadKeywords(lang) {
-  const file = path.join(__dirname, 'data', `keywords_${lang}.xlsx`);
+  const desktopFile = lang === 'es' ? path.join(KEYWORDS_DIR, 'guiadelsalon_keywords_ES.xlsx') : null;
+  const file = (desktopFile && require('fs').existsSync(desktopFile))
+    ? desktopFile
+    : path.join(__dirname, 'data', `keywords_${lang}.xlsx`);
   const wb   = XLSX.readFile(file);
   const ws   = wb.Sheets[wb.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(ws);
@@ -65,7 +70,7 @@ function loadKeywords(lang) {
  * Retorna array de objetos { keyword, cluster, score, volume, kd }
  */
 function loadClusteredKeywords() {
-  const file = path.join(__dirname, '..', 'semrush', 'output', 'guiadelsalon_keywords_clustered_ES.xlsx');
+  const file = path.join(KEYWORDS_DIR, 'guiadelsalon_keywords_clustered_ES.xlsx');
   if (!require('fs').existsSync(file)) {
     console.warn('  ⚠️  guiadelsalon_keywords_clustered_ES.xlsx no encontrado — usando solo keywords_es.xlsx');
     return [];
