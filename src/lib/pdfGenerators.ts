@@ -10,6 +10,7 @@ import { WIZARD_TOOL_ORDER, TOOLS_CONFIG } from '@/data/tools.config';
 
 const ESPRESSO: [number, number, number] = [45, 34, 24];
 const GOLD: [number, number, number] = [196, 169, 125];
+const CREAM: [number, number, number] = [245, 240, 232];
 const ORANGE: [number, number, number] = [236, 91, 19];
 const GRAY: [number, number, number] = [120, 120, 120];
 const GREEN: [number, number, number] = [76, 175, 124];
@@ -503,7 +504,6 @@ function multiPageFooter(doc: jsPDF) {
 }
 
 export function generateCompletePDF(session: WizardSession) {
-  const CREAM_COLOR: [number, number, number] = [245, 240, 232];
   const doc = new jsPDF();
   const pw = 210;
   const dateStr = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
@@ -516,15 +516,15 @@ export function generateCompletePDF(session: WizardSession) {
   doc.setTextColor(...GOLD);
   doc.text('INFORME COMPLETO', pw / 2, 20, { align: 'center' });
   doc.setFontSize(24);
-  doc.setTextColor(...CREAM_COLOR);
+  doc.setTextColor(...CREAM);
   doc.text('Diagnóstico Capilar Integral', pw / 2, 36, { align: 'center' });
   doc.setFontSize(9);
-  doc.setTextColor(CREAM_COLOR[0], CREAM_COLOR[1], CREAM_COLOR[2]);
+  doc.setTextColor(CREAM[0], CREAM[1], CREAM[2]);
   doc.text(`Generado el ${dateStr}`, pw / 2, 44, { align: 'center' });
 
   // Summary card
   const cardX = 15, cardY = 54, cardW = pw - 30;
-  doc.setFillColor(...CREAM_COLOR);
+  doc.setFillColor(...CREAM);
   doc.roundedRect(cardX, cardY, cardW, 230, 6, 6, 'F');
 
   let y = cardY + 14;
@@ -815,8 +815,6 @@ export function generateCompletePDF(session: WizardSession) {
 }
 
 // ── Master Color Card PDF ────────────────────────────────────────────────────
-
-const CREAM: [number, number, number] = [245, 240, 232];
 
 export function generateMasterColorCardPDF(selections: Record<number, unknown>) {
   const doc = new jsPDF();

@@ -422,7 +422,7 @@ const Navbar = () => {
                               Mis diagnósticos
                             </Link>
                             <button
-                              onClick={() => { supabase.auth.signOut(); setOpenDropdown(null); }}
+                              onClick={() => { supabase.auth.signOut().catch(console.error); setOpenDropdown(null); }}
                               className="w-full flex items-center gap-2 px-2 py-2.5 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
                             >
                               <LogOut className="w-4 h-4" />
@@ -537,7 +537,7 @@ const Navbar = () => {
                       Mis diagnósticos
                     </Link>
                     <button
-                      onClick={() => { supabase.auth.signOut(); setMobileOpen(false); }}
+                      onClick={() => { supabase.auth.signOut().catch(console.error); setMobileOpen(false); }}
                       className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
                     >
                       <LogOut className="w-4 h-4" />

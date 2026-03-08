@@ -41,3 +41,17 @@ CREATE POLICY "Users can insert own profile"
 ON public.user_profiles FOR INSERT
 TO authenticated
 WITH CHECK (auth.uid() = id);
+
+-- updated_at auto-update trigger
+CREATE OR REPLACE FUNCTION public.set_updated_at()
+RETURNS trigger AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS set_user_profiles_updated_at ON public.user_profiles;
+CREATE TRIGGER set_user_profiles_updated_at
+  BEFORE UPDATE ON public.user_profiles
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();

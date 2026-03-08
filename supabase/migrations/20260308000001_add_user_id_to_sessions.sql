@@ -29,9 +29,3 @@ ON hair_diagnostic_sessions FOR INSERT
 TO anon
 WITH CHECK (user_id IS NULL);
 
--- SELECT for anonymous users (read back their own sessions)
-DROP POLICY IF EXISTS "Anon can read own session" ON hair_diagnostic_sessions;
-CREATE POLICY "Anon can read own session"
-ON hair_diagnostic_sessions FOR SELECT
-TO anon
-USING (user_id IS NULL);
