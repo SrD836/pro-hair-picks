@@ -573,7 +573,18 @@ export default function DiagnosticoCapilarPage() {
           <div className="w-full max-w-3xl mt-10 space-y-6">
             {isWizardMode && (
               <button
-                onClick={() => completeWizardModule({ summary: `${riskLevel} — ${scores.total} pts`, score: scores.total, rawResult: { scores, riskLevel } })}
+                onClick={() => completeWizardModule({
+                  summary: `${riskLevel} — ${scores.total} pts`,
+                  score: scores.total,
+                  rawResult: {
+                    scores,
+                    riskLevel,
+                    healthPct,
+                    riskLabel: t(`diagnostico.risk${capitalize(riskLevel)}Label`),
+                    protocol: t(`diagnostico.risk${capitalize(riskLevel)}Protocol`),
+                    products: products.map(p => ({ name: p.name, description: p.description })),
+                  },
+                })}
                 className="w-full flex items-center justify-center gap-2 h-14 rounded-xl bg-accent-orange text-white font-bold hover:bg-accent-orange-hover transition-all">
                 Continuar Diagnóstico <ArrowRight className="w-4 h-4" />
               </button>
