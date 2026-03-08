@@ -189,7 +189,7 @@ function Step3({ selection, onSelect }: { selection: unknown; onSelect: (v: stri
     {
       id: 'ambos',
       label: 'Todos me quedan bien',
-      img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCl1oHY-L4dFnEz-Jqsdq1BfNFzIVgbuBuB4JqogGOHjhyUqb2jXXrlwKdxq8Rfffgd0V8MMObD9H1ApuQBAiZ7I3Ct2-ama5cJ356vvfnCWHcmb26HenuURXULjfDth9EcYla5uHzb1-TBZlfiB9cKaMuCNUK6Jh7NWnwl15e_RlxTb0N0LB0cC60KQn5-E7piB8H5LyNhZ0E_2sXmVtRp5GzpMoG3uY0JsWA4thTkS1pK13rI19_fkPIXAsYKNbVQMQOd8I_k_sED'
+      img: '/images/wizard/jewelry-both.webp'
     },
   ];
 
