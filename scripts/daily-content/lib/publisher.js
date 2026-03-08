@@ -123,7 +123,7 @@ INSERT INTO blog_posts (
   bridge_trend_topic, meta_description,
   internal_links, external_links,
   schema_markup, market, lang,
-  hreflang, canonical
+  hreflang, canonical, cluster
 ) VALUES (
   ${sqlEscape(post.slug)},
   ${sqlEscape(post.title)},
@@ -152,7 +152,8 @@ INSERT INTO blog_posts (
   ${sqlEscape(post.market || 'es')},
   ${sqlEscape(post.lang || 'es')},
   ${sqlEscape(post.hreflang || (post.market === 'us' ? 'en-us' : 'es'))},
-  ${sqlEscape(post.canonical || `https://guiadelsalon.com/blog/${post.slug}`)}
+  ${sqlEscape(post.canonical || `https://guiadelsalon.com/blog/${post.slug}`)},
+  ${sqlEscape(post.cluster || null)}
 )
 RETURNING id, slug`;
 

@@ -5,7 +5,7 @@
  * Keywords: cargadas desde Semrush Excel via keyword-loader.js
  */
 const { callClaude, extractJSON }  = require('./claude-cli');
-const { getKeywordForDay }         = require('../keyword-loader');
+const { getKeywordForDay, getKeywordForDayByCluster, getTopClusterForDay } = require('../keyword-loader');
 const { getTrendingKeywords }      = require('../trend-analyzer');
 
 // TOPICS_POOL mantenido como fallback si keyword-loader falla
@@ -111,6 +111,78 @@ async function ensureUniqueSlug(slug, supabaseUrl, anonKey) {
 }
 
 /**
+ * Valida si una keyword tiene sentido como artículo para GuiaDelSalon.com.
+ * 3 niveles para minimizar llamadas a Claude:
+ *   1. Regex noise (0ms) → rechazo inmediato
+ *   2. Regex sector (0ms) → aprobación inmediata
+ *   3. Claude -p (≈20s) → solo casos ambiguos
+ */
+async function validateKeyword(keyword) {
+  const kw = keyword.toLowerCase();
+
+  const NOISE_PATTERNS = [
+    /\bperro\b/, /\bgato\b/, /\bmascotas?\b/, /\bfútbol\b/, /\bfutbol\b/,
+    /\bpelé\b/, /\bpele\b/, /mbappe/, /\balcaraz\b/, /\bgriezmann\b/,
+    /\buñas?\b/, /\bpiercing\b/, /\btattoo\b/, /\btatuaje\b/,
+    /\bmanicura\b/, /\bpestañas?\b/, /microblading/, /\bhifu\b/,
+    /\bsauna\b/, /reflexologia/, /\bmasajes?\b/, /\bpiña\b/,
+    /\bmembrillo\b/, /\balmendra\b/, /navalvillar/, /peleas?\s+\w/,
+    /\bvacas?\b/, /\bperuan[ao]\b.*pelo/, /recetar?\s/, /\bhuevos?\b/,
+    /cocer\b/, /\bchicle\b/, /quiste/, /\bdiastasis\b/, /\bsolarium\b/,
+    /\bgua\s*sha\b/, /\blampara\s+de\s+sal\b/, /cacharel/,
+  ];
+  if (NOISE_PATTERNS.some(p => p.test(kw))) {
+    return { valid: false, reason: 'Ruido detectado por pre-filter', suggestedCluster: null };
+  }
+
+  const SECTOR_PATTERNS = [
+    /\bpelo\b/, /\bcabello\b/, /\bcorte\b/, /\bpeluquer/, /\bbarbería?\b/,
+    /\bbalayage\b/, /\bmechas?\b/, /\btinte\b/, /\bcoloraci/, /\bkeratina\b/,
+    /\bsecador\b/, /\bplancha\b/, /\bmaquinilla\b/, /\bclipper\b/,
+    /\btrimmer\b/, /\bfade\b/, /\bdegradado\b/, /\brizos?\b/, /\brizador\b/,
+    /\bpeinado\b/, /\btrenza\b/, /\bmoño\b/, /\brecogido\b/,
+    /\bshampoo\b/, /\bchampu\b/, /\bacondicionador\b/, /\bmascarilla\b/,
+    /\balopecia\b/, /\bcanas?\b/, /\bcaspa\b/, /\bminoxidil\b/,
+    /\bbarba\b/, /\bafeitado\b/, /\bnavaja\b/, /\bpomada\b/,
+    /salon\s+de\s+belleza/, /software\s+peluquer/, /gestión\s+sal/,
+    /\bundertcut\b/, /\bwolf\s+cut\b/, /\bbuzz\s+cut\b/,
+    /\bpixie\b/, /\bflequillo\b/,
+  ];
+  if (SECTOR_PATTERNS.some(p => p.test(kw))) {
+    return { valid: true, reason: 'Aprobado por sector-pattern', suggestedCluster: null };
+  }
+
+  // Caso ambiguo — llamar a Claude
+  const prompt = `Evalúa si esta keyword es apropiada para un artículo en GuiaDelSalon.com, \
+una web para PROFESIONALES de peluquería y barbería en España.
+
+Keyword: "${keyword}"
+
+Responde SOLO con JSON:
+{
+  "valid": true,
+  "reason": "1 frase explicando por qué sí o no",
+  "suggested_cluster": "uno de: cortes|coloracion|peinados|barberia|herramientas|tratamientos|productos|capilar_salud|tendencias|gestion|null"
+}
+
+Criterio: válida = el artículo ayudaría a un peluquero/barbero profesional en España.
+Inválida = es ruido (animales, deportes, cocina, celebridades sin relación con el sector).`;
+
+  try {
+    const response = callClaude(prompt, { timeout: 20_000 });
+    const result   = extractJSON(response, false);
+    return {
+      valid:            result.valid === true,
+      reason:           result.reason || '',
+      suggestedCluster: result.suggested_cluster || null,
+    };
+  } catch (err) {
+    console.warn(`    ⚠️  Validación keyword fallida (${err.message}) — aprobando por defecto`);
+    return { valid: true, reason: 'Fallback por error de validación', suggestedCluster: null };
+  }
+}
+
+/**
  * Planifica los 5 posts del día.
  *
  * @param {string} date — 'YYYY-MM-DD'
@@ -128,10 +200,17 @@ async function planDay(date, { usedKeywords = null, supabaseUrl = null, anonKey 
 
   // ── Obtener topics: 2 ES + 3 US ───────────────────────────────────────────
   let topicES0, topicNegocio, topicUS0, topicUS1, topicBridgeUS;
+  let topCluster = 'cortes';
   try {
-    // Slots 1, 2 — mercado ES
-    topicES0     = getKeywordForDay('es', date, 0, usedKeywords);
-    topicNegocio = getKeywordForDay('es', date, 1, usedKeywords);
+    // Slot 1 — cluster de mayor oportunidad del día
+    topCluster   = getTopClusterForDay(date, usedKeywords, new Set(['gestion']));
+    console.log(`  ✓ Top cluster para Slot 1: ${topCluster}`);
+    topicES0     = getKeywordForDayByCluster(topCluster, date, 0, usedKeywords);
+
+    // Slot 2 — cluster gestion/negocio para conectar con Cizura
+    topicNegocio = getKeywordForDayByCluster('gestion', date, 0, usedKeywords)
+                || getKeywordForDayByCluster('barberia', date, 0, usedKeywords)
+                || getKeywordForDay('es', date, 1, usedKeywords);
 
     // Slots 3, 4 — mercado US (offsets distintos para no repetir keyword)
     topicUS0 = hasTrendUS
@@ -166,12 +245,30 @@ async function planDay(date, { usedKeywords = null, supabaseUrl = null, anonKey 
   // Slot 4: core_us      — lang:'en' market:'us' (Excel offset 1)
   // Slot 5: bridge_us    — lang:'en' market:'us' (trending US[1] o Excel offset 2)
   const slots = [
-    { slot: 1, type: 'core',      lang: 'es', market: 'es', topic: topicES0 },
-    { slot: 2, type: 'negocio',   lang: 'es', market: 'es', topic: topicNegocio },
+    { slot: 1, type: 'core',      lang: 'es', market: 'es', topic: topicES0,      cluster: topCluster },
+    { slot: 2, type: 'negocio',   lang: 'es', market: 'es', topic: topicNegocio,  cluster: 'gestion' },
     { slot: 3, type: 'core_us',   lang: 'en', market: 'us', topic: topicUS0 },
     { slot: 4, type: 'core_us',   lang: 'en', market: 'us', topic: topicUS1 },
     { slot: 5, type: 'bridge_us', lang: 'en', market: 'us', topic: topicBridgeUS },
   ];
+
+  // ── VALIDACIÓN DE KEYWORDS ES ─────────────────────────────────────────────
+  console.log('  Validando relevancia de keywords ES...');
+  for (const s of slots.filter(s => s.market === 'es')) {
+    const validation = await validateKeyword(s.topic);
+    if (!validation.valid) {
+      console.warn(`    ⚠️  Keyword inválida [slot ${s.slot}]: "${s.topic}" — ${validation.reason}`);
+      console.warn(`    → Reemplazando con fallback del cluster...`);
+      const cluster  = validation.suggestedCluster || s.cluster || topCluster || 'cortes';
+      const offset   = s.slot + 10;
+      const fallback = getKeywordForDayByCluster(cluster, date, offset, usedKeywords)
+                    || getKeywordForDay('es', date, offset, usedKeywords);
+      console.warn(`    → Nueva keyword: "${fallback}"`);
+      s.topic = fallback;
+    } else {
+      console.log(`    ✓ [slot ${s.slot}] "${s.topic.slice(0, 50)}" — válida`);
+    }
+  }
 
   console.log('  Generando slug, meta y secondary keywords SEO...');
   const prompt = `Eres un experto SEO del sector peluquería/barbería.
@@ -216,6 +313,7 @@ Responde SOLO con un array JSON (sin texto adicional):
     secondary_keywords: keywordsData[i]?.secondary_keywords || [],
     user_question:      keywordsData[i]?.user_question      || '',
     slug:               keywordsData[i]?.slug                || `post-${s.slot}-${date}`,
+    cluster:            s.cluster || null,
     bridge_test: s.type === 'bridge' ? 'pending' : null,
   }));
 

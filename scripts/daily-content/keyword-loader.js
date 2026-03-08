@@ -59,16 +59,59 @@ function loadKeywords(lang) {
     .map(r => r['Keyword']);
 }
 
+/**
+ * Carga keywords del Excel clustered generado por el script de análisis Semrush.
+ * Hoja "🚀 Pipeline Ready" — columnas: keyword, volume, kd, score, cluster, source
+ * Retorna array de objetos { keyword, cluster, score, volume, kd }
+ */
+function loadClusteredKeywords() {
+  const file = path.join(__dirname, '..', 'semrush', 'output', 'guiadelsalon_keywords_clustered_ES.xlsx');
+  if (!require('fs').existsSync(file)) {
+    console.warn('  ⚠️  guiadelsalon_keywords_clustered_ES.xlsx no encontrado — usando solo keywords_es.xlsx');
+    return [];
+  }
+  const wb        = XLSX.readFile(file);
+  const sheetName = wb.SheetNames.find(n => n.includes('Pipeline')) || wb.SheetNames[wb.SheetNames.length - 1];
+  const ws        = wb.Sheets[sheetName];
+  const rows      = XLSX.utils.sheet_to_json(ws);
+  return rows
+    .filter(r => r['keyword'] && r['cluster'] && r['cluster'] !== 'otros')
+    .map(r => ({
+      keyword: String(r['keyword']).trim(),
+      cluster: String(r['cluster']).trim(),
+      score:   parseFloat(r['score'])  || 0,
+      volume:  parseInt(r['volume'])   || 0,
+      kd:      parseInt(r['kd'])       || 0,
+    }))
+    .sort((a, b) => b.score - a.score);
+}
+
 // Cache en memoria — el Excel solo se lee una vez por ejecución
-let cacheES = null;
-let cacheUS = null;
+let cacheES          = null;
+let cacheUS          = null;
+let cacheESClustered = null;
 
 function getKeywords(lang) {
   if (lang === 'us') {
     if (!cacheUS) cacheUS = loadKeywords('us');
     return cacheUS;
   }
-  if (!cacheES) cacheES = loadKeywords('es');
+  if (!cacheES) {
+    // Fusionar keywords_es.xlsx + guiadelsalon_keywords_clustered_ES.xlsx
+    // El clustered tiene prioridad (ya están validadas y clasificadas)
+    const clustered  = loadClusteredKeywords();
+    cacheESClustered = clustered;
+    const base       = loadKeywords('es');
+
+    if (clustered.length > 0) {
+      const clusteredKws = new Set(clustered.map(k => k.keyword.toLowerCase()));
+      const baseFiltered = base.filter(kw => !clusteredKws.has(kw.toLowerCase()));
+      cacheES = [...clustered.map(k => k.keyword), ...baseFiltered];
+      console.log(`  ✓ Keywords ES combinadas: ${clustered.length} clustered + ${baseFiltered.length} base = ${cacheES.length} total`);
+    } else {
+      cacheES = base;
+    }
+  }
   return cacheES;
 }
 
@@ -137,4 +180,61 @@ async function getUsedKeywords(supabaseUrl, anonKey) {
   }
 }
 
-module.exports = { getKeywordForDay, getKeywords, getUsedKeywords };
+/**
+ * Devuelve la keyword para un slot filtrando por cluster específico.
+ * Permite que planner.js asigne clusters distintos por slot.
+ *
+ * @param {string}   cluster      — cluster temático ('cortes', 'gestion', etc.)
+ * @param {string}   date
+ * @param {number}   offset
+ * @param {Set|null} usedKeywords
+ */
+function getKeywordForDayByCluster(cluster, date, offset = 0, usedKeywords = null) {
+  if (!cacheESClustered) {
+    cacheESClustered = loadClusteredKeywords();
+  }
+  const clusterKws = cacheESClustered
+    .filter(k => k.cluster === cluster)
+    .map(k => k.keyword);
+
+  if (clusterKws.length === 0) {
+    return getKeywordForDay('es', date, offset, usedKeywords);
+  }
+
+  const dayIndex = Math.floor((new Date(date) - new Date('2026-01-01')) / 86400000);
+  const baseIdx  = (dayIndex * 5 + offset) % clusterKws.length;
+
+  if (!usedKeywords || usedKeywords.size === 0) return clusterKws[baseIdx];
+
+  for (let i = 0; i < clusterKws.length; i++) {
+    const kw = clusterKws[(baseIdx + i) % clusterKws.length];
+    if (!usedKeywords.has(kw.toLowerCase())) return kw;
+  }
+  return clusterKws[baseIdx];
+}
+
+/**
+ * Devuelve el cluster con mayor score acumulado disponible para el día.
+ * Excluye clusters ya cubiertos esta semana si se pasa el Set.
+ */
+function getTopClusterForDay(date, usedKeywords = null, excludeClusters = new Set()) {
+  if (!cacheESClustered) {
+    cacheESClustered = loadClusteredKeywords();
+  }
+  const clusterScores = {};
+  for (const item of cacheESClustered) {
+    if (excludeClusters.has(item.cluster)) continue;
+    if (usedKeywords && usedKeywords.has(item.keyword.toLowerCase())) continue;
+    if (!clusterScores[item.cluster]) clusterScores[item.cluster] = 0;
+    clusterScores[item.cluster] += item.score;
+  }
+  return Object.entries(clusterScores).sort((a, b) => b[1] - a[1])[0]?.[0] || 'cortes';
+}
+
+module.exports = {
+  getKeywordForDay,
+  getKeywords,
+  getUsedKeywords,
+  getKeywordForDayByCluster,
+  getTopClusterForDay,
+};
