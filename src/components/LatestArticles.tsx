@@ -189,7 +189,7 @@ export default function LatestArticles({ articles, title }: LatestArticlesProps)
 
           {/* Scroll dots indicator */}
           <div className="flex justify-center gap-1.5 mt-4">
-            {Array.from({ length: Math.min(rest.length + 1, 4) }).map((_, i) => (
+            {Array.from({ length: Math.min(rest.length, 4) }).map((_, i) => (
               <div
                 key={i}
                 className={`rounded-full transition-all ${i === 0 ? "w-4 h-1.5 bg-[#C4A97D]" : "w-1.5 h-1.5 bg-[#2D2218]/20"}`}
