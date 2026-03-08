@@ -442,7 +442,7 @@ export const en = {
     actionProtocol: 'Action protocol',
     productsTitle: 'Products recommended for your diagnosis',
     amazonCta: 'See price on Amazon',
-    cizuraBtn: 'Try Cizura free',
+    // removed cizuraBtn
     bibliographyTitle: 'Scientific bibliography',
     bibliographySee: 'View sources',
     bibliographyHide: 'Hide',
