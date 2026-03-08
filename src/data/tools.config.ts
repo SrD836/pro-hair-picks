@@ -73,9 +73,6 @@ export const TOOLS_CONFIG: ToolConfig[] = [
 /** Ordered list for the wizard sequence */
 export const WIZARD_TOOL_ORDER: ToolConfig['id'][] = [
   'diagnostico-capilar',
-  'asesor-color',
-  'compatibilidad-quimica',
-  'recuperacion-capilar',
   'analizador-canicie',
   'analizador-alopecia',
 ];
