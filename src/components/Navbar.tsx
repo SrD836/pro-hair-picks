@@ -24,7 +24,6 @@ function GroupedDropdown({ label, groups, isOpen, onToggle, onClose, onEnter }: 
   return (
     <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
       <button
-        onMouseEnter={() => !isOpen && onToggle()}
         onClick={onToggle}
         className={`flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
           isOpen
