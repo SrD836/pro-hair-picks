@@ -31,7 +31,7 @@ export default function AsesorColorPage() {
   const progress = ((step - 1) / 7) * 100;
 
   if (step === 8) {
-    return <ResultsPage />;
+    return <ResultsPage isWizardMode={isWizardMode} onWizardContinue={() => completeWizardModule({ summary: 'Colorimetría completada', score: 98, rawResult: { selections } })} />;
   }
 
   return (
