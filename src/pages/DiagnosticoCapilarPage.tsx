@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -134,6 +135,7 @@ const REFERENCES: BibReference[] = [
 
 export default function DiagnosticoCapilarPage() {
   const { t, lang } = useLanguage();
+  const { user } = useAuth();
   const [screen, setScreen] = useState<Screen>("intro");
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -174,13 +176,14 @@ export default function DiagnosticoCapilarPage() {
       try {
         await (supabase.from as any)("hair_diagnostic_sessions").insert({
           user_session_id: sessionId,
+          user_id: user?.id ?? null,
           cuticle_score: fs.cuticle, porosity_score: fs.porosity,
           elasticity_score: fs.elasticity, scalp_score: fs.scalp,
           total_score: fs.total, risk_level: fr, answers: fa,
           product_recommendations: fp.map((p) => p.asin),
         });
       } catch { /* best-effort */ }
-    }, [],
+    }, [user],
   );
 
   const goNext = useCallback(async () => {

@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, Search, Menu, X, Scissors } from "lucide-react";
+import { ChevronDown, Search, Menu, X, Scissors, LogOut, User } from "lucide-react";
 import { menGroups, womenGroups, mixedCategories, type CategoryGroup, type CategoryItem } from "@/data/categories";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
 import LanguageSelector from "@/components/LanguageSelector";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import AuthModal from "@/components/AuthModal";
 
 /* ── Desktop: Grouped dropdown (Hombre / Mujer) ─────────────────────────── */
 function GroupedDropdown({ label, groups, isOpen, onToggle, onClose }: {
@@ -280,7 +283,9 @@ const Navbar = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const { t, lang } = useLanguage();
+  const { user } = useAuth();
   const location = useLocation();
   const navRef = useRef<HTMLElement>(null);
 
@@ -380,8 +385,64 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Right: Lang + Search + Hamburger */}
+          {/* Right: Auth + Lang + Search + Hamburger */}
           <div className="flex items-center gap-1.5">
+            {/* Desktop auth */}
+            <div className="hidden md:flex items-center">
+              {user ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setOpenDropdown((prev) => prev === "user" ? null : "user")}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-white/8 transition-colors"
+                  >
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#C4A97D] text-[#2D2218] text-xs font-bold uppercase">
+                      {user.email?.[0] ?? <User className="w-4 h-4" />}
+                    </span>
+                  </button>
+                  <AnimatePresence>
+                    {openDropdown === "user" && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        className="absolute top-full right-0 pt-2 w-52 z-[70]"
+                      >
+                        <div className="bg-[#2D2218] border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
+                          <div className="p-3">
+                            <p className="text-xs text-white/40 px-2 py-1 truncate">{user.email}</p>
+                            <div className="my-1 border-t border-white/8" />
+                            <Link
+                              to="/mi-pelo/mis-resultados"
+                              onClick={close}
+                              className="flex items-center gap-2 px-2 py-2.5 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
+                            >
+                              <User className="w-4 h-4" />
+                              Mis diagnósticos
+                            </Link>
+                            <button
+                              onClick={() => { supabase.auth.signOut(); setOpenDropdown(null); }}
+                              className="w-full flex items-center gap-2 px-2 py-2.5 rounded-xl text-sm text-foreground/80 hover:text-foreground hover:bg-white/5 transition-colors"
+                            >
+                              <LogOut className="w-4 h-4" />
+                              Cerrar sesión
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setAuthModalOpen(true)}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium bg-[#C4A97D] text-[#2D2218] hover:bg-[#C4A97D]/90 transition-colors"
+                >
+                  Iniciar sesión
+                </button>
+              )}
+            </div>
+
             <LanguageSelector />
             <Link
               to="/"
@@ -460,10 +521,43 @@ const Navbar = () => {
                 <Scissors className="w-4 h-4" />
                 {t("nav.courses")}
               </Link>
+
+              {/* Mobile auth */}
+              <div className="border-t border-border/40 pt-3">
+                {user ? (
+                  <div className="space-y-1">
+                    <p className="text-xs text-white/40 px-2 py-1 truncate">{user.email}</p>
+                    <Link
+                      to="/mi-pelo/mis-resultados"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
+                    >
+                      <User className="w-4 h-4" />
+                      Mis diagnósticos
+                    </Link>
+                    <button
+                      onClick={() => { supabase.auth.signOut(); setMobileOpen(false); }}
+                      className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-foreground hover:bg-white/5 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Cerrar sesión
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => { setMobileOpen(false); setAuthModalOpen(true); }}
+                    className="w-full flex items-center justify-center gap-1.5 px-4 py-3 rounded-full text-sm font-medium bg-[#C4A97D] text-[#2D2218] hover:bg-[#C4A97D]/90 transition-colors"
+                  >
+                    Iniciar sesión
+                  </button>
+                )}
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </nav>
   );
 };
