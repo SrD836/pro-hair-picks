@@ -3,6 +3,8 @@
  * Uses jsPDF to create single-page, optimized reports.
  */
 import jsPDF from "jspdf";
+import type { WizardSession } from '@/types/tools.types';
+import { WIZARD_TOOL_ORDER, TOOLS_CONFIG } from '@/data/tools.config';
 
 // ── Shared helpers ──────────────────────────────────────────────────────────────
 
@@ -466,6 +468,350 @@ export function generateRecoveryPDF(data: RecoveryPDFData) {
 
   footer(doc);
   doc.save("calendario-recuperacion-guiadelsalon.pdf");
+}
+
+// ── Complete Diagnostic PDF ──────────────────────────────────────────────────
+
+const TOOL_MAP = Object.fromEntries(TOOLS_CONFIG.map((t) => [t.id, t]));
+
+function riskColor(score: number, max = 100): [number, number, number] {
+  const pct = score / max;
+  return pct <= 0.3 ? GREEN : pct <= 0.6 ? AMBER : RED;
+}
+
+function ensureSpace(doc: jsPDF, y: number, needed: number): number {
+  if (y + needed > 275) {
+    doc.addPage();
+    return 20;
+  }
+  return y;
+}
+
+function multiPageFooter(doc: jsPDF) {
+  const pages = doc.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(7);
+    doc.setTextColor(180, 180, 180);
+    doc.text(
+      `guiadelsalon.com · ${new Date().toLocaleDateString('es-ES')} · Pág. ${i}/${pages}`,
+      105,
+      290,
+      { align: 'center' }
+    );
+  }
+}
+
+export function generateCompletePDF(session: WizardSession) {
+  const CREAM_COLOR: [number, number, number] = [245, 240, 232];
+  const doc = new jsPDF();
+  const pw = 210;
+  const dateStr = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  // ═══ PAGE 1: Cover + Summary ═══
+  doc.setFillColor(...ESPRESSO);
+  doc.rect(0, 0, pw, 297, 'F');
+
+  doc.setFontSize(8);
+  doc.setTextColor(...GOLD);
+  doc.text('INFORME COMPLETO', pw / 2, 20, { align: 'center' });
+  doc.setFontSize(24);
+  doc.setTextColor(...CREAM_COLOR);
+  doc.text('Diagnóstico Capilar Integral', pw / 2, 36, { align: 'center' });
+  doc.setFontSize(9);
+  doc.setTextColor(CREAM_COLOR[0], CREAM_COLOR[1], CREAM_COLOR[2]);
+  doc.text(`Generado el ${dateStr}`, pw / 2, 44, { align: 'center' });
+
+  // Summary card
+  const cardX = 15, cardY = 54, cardW = pw - 30;
+  doc.setFillColor(...CREAM_COLOR);
+  doc.roundedRect(cardX, cardY, cardW, 230, 6, 6, 'F');
+
+  let y = cardY + 14;
+
+  // Overall scores overview
+  doc.setFontSize(10);
+  doc.setTextColor(...ORANGE);
+  doc.text('RESUMEN DE RESULTADOS', cardX + 10, y);
+  y += 10;
+
+  WIZARD_TOOL_ORDER.forEach((toolId) => {
+    const tool = TOOL_MAP[toolId];
+    const result = session.completedModules[toolId];
+    if (!tool || !result) return;
+
+    const score = result.score;
+    doc.setFontSize(9);
+    doc.setTextColor(...ESPRESSO);
+    doc.text(`${tool.emoji} ${tool.title}`, cardX + 10, y);
+
+    if (score != null) {
+      const color = riskColor(score);
+      doc.setTextColor(...color);
+      doc.text(`${score}/100`, cardX + cardW - 10, y, { align: 'right' });
+
+      // bar
+      const barX = cardX + 10, barW = cardW - 50, barH = 3;
+      y += 4;
+      doc.setFillColor(225, 222, 215);
+      doc.roundedRect(barX, y, barW, barH, 1.5, 1.5, 'F');
+      doc.setFillColor(...color);
+      const pct = Math.min(1, score / 100);
+      if (pct > 0) doc.roundedRect(barX, y, Math.max(3, barW * pct), barH, 1.5, 1.5, 'F');
+      y += 6;
+    } else {
+      y += 4;
+    }
+
+    // Summary text
+    doc.setFontSize(8);
+    doc.setTextColor(100, 95, 85);
+    const sLines = doc.splitTextToSize(result.summary, cardW - 24);
+    doc.text(sLines, cardX + 10, y);
+    y += sLines.length * 4 + 8;
+  });
+
+  // Separator
+  doc.setDrawColor(220, 215, 205);
+  doc.setLineWidth(0.3);
+  doc.line(cardX + 10, y, cardX + cardW - 10, y);
+  y += 8;
+
+  // Recommendations
+  doc.setFontSize(10);
+  doc.setTextColor(...ORANGE);
+  doc.text('RECOMENDACIONES', cardX + 10, y);
+  y += 8;
+
+  const recommendations: string[] = [];
+  const alopecia = session.completedModules['analizador-alopecia'];
+  const canicie = session.completedModules['analizador-canicie'];
+  const diag = session.completedModules['diagnostico-capilar'];
+
+  if (alopecia?.rawResult) {
+    const r = alopecia.rawResult;
+    if (typeof r.recommendedAction === 'string') recommendations.push(`Alopecia: ${r.recommendedAction}`);
+    if (typeof r.realisticExpectations === 'string') recommendations.push(`Expectativa: ${r.realisticExpectations}`);
+  }
+  if (canicie?.rawResult) {
+    const r = canicie.rawResult;
+    if (typeof r.realisticExpectations === 'string') recommendations.push(`Canicie: ${r.realisticExpectations}`);
+  }
+  if (diag?.rawResult) {
+    if (typeof diag.rawResult.protocol === 'string') recommendations.push(`Protocolo capilar: ${diag.rawResult.protocol}`);
+  }
+
+  if (recommendations.length) {
+    doc.setFontSize(8);
+    doc.setTextColor(80, 75, 65);
+    for (const rec of recommendations) {
+      if (y > cardY + 225) break;
+      const rLines = doc.splitTextToSize(`→ ${rec}`, cardW - 28);
+      doc.text(rLines, cardX + 14, y);
+      y += rLines.length * 3.8 + 3;
+    }
+  }
+
+  // ═══ PAGE 2: Diagnóstico Capilar detail ═══
+  if (diag?.rawResult) {
+    doc.addPage();
+    const raw = diag.rawResult as Record<string, unknown>;
+
+    doc.setFontSize(9);
+    doc.setTextColor(...GRAY);
+    doc.text('GuiaDelSalon.com · Informe Completo', 105, 12, { align: 'center' });
+    doc.setFontSize(18);
+    doc.setTextColor(...ESPRESSO);
+    doc.text('1. Diagnóstico Capilar', 105, 24, { align: 'center' });
+    doc.setDrawColor(...GOLD);
+    doc.setLineWidth(0.5);
+    doc.line(20, 28, 190, 28);
+
+    y = 36;
+
+    // Health score
+    const healthPct = typeof raw.healthPct === 'number' ? raw.healthPct : (diag.score ?? 0);
+    const riskLabel = typeof raw.riskLabel === 'string' ? raw.riskLabel : String(raw.riskLevel ?? '');
+
+    doc.setFontSize(28);
+    doc.setTextColor(...riskColor(healthPct));
+    doc.text(`${healthPct}/100`, 105, y + 4, { align: 'center' });
+    doc.setFontSize(10);
+    doc.setTextColor(...GRAY);
+    doc.text(riskLabel, 105, y + 12, { align: 'center' });
+    y += 22;
+
+    // Dimension scores
+    const scores = raw.scores as Record<string, number> | undefined;
+    if (scores) {
+      y = scoreBar(doc, 'Cutícula', scores.cuticle ?? 0, 12, 20, y, 170);
+      y = scoreBar(doc, 'Porosidad', scores.porosity ?? 0, 20, 20, y, 170);
+      y = scoreBar(doc, 'Elasticidad', scores.elasticity ?? 0, 21, 20, y, 170);
+      y = scoreBar(doc, 'Cuero Cabelludo', scores.scalp ?? 0, 12, 20, y, 170);
+    }
+
+    // Protocol
+    if (typeof raw.protocol === 'string') {
+      y += 4;
+      y = sectionTitle(doc, 'Protocolo de Acción', y);
+      y = bodyText(doc, raw.protocol, y);
+    }
+
+    // Products
+    const products = raw.products as Array<{ name: string; description: string }> | undefined;
+    if (products?.length) {
+      y += 4;
+      y = sectionTitle(doc, 'Productos Recomendados', y);
+      y = bulletList(doc, products.map((p) => `${p.name} — ${p.description}`), y);
+    }
+  }
+
+  // ═══ PAGE 3: Canicie detail ═══
+  if (canicie?.rawResult) {
+    doc.addPage();
+    const raw = canicie.rawResult as Record<string, unknown>;
+
+    doc.setFontSize(9);
+    doc.setTextColor(...GRAY);
+    doc.text('GuiaDelSalon.com · Informe Completo', 105, 12, { align: 'center' });
+    doc.setFontSize(18);
+    doc.setTextColor(...ESPRESSO);
+    doc.text('2. Análisis de Canicie', 105, 24, { align: 'center' });
+    doc.setDrawColor(...GOLD);
+    doc.setLineWidth(0.5);
+    doc.line(20, 28, 190, 28);
+
+    y = 36;
+
+    doc.setFontSize(11);
+    doc.setTextColor(...ESPRESSO);
+    if (typeof raw.canicieType === 'string') {
+      doc.text(`Tipo: ${raw.canicieType}`, 20, y);
+    }
+    if (typeof raw.onsetClassification === 'string') {
+      doc.text(`Inicio: ${raw.onsetClassification}`, 110, y);
+    }
+    y += 8;
+    if (typeof raw.geneticWeight === 'number') {
+      doc.text(`Peso genético: ${raw.geneticWeight}/10`, 20, y);
+    }
+    if (typeof raw.environmentalWeight === 'number') {
+      doc.text(`Peso ambiental: ${raw.environmentalWeight}/10`, 110, y);
+    }
+    y += 10;
+
+    const modFactors = raw.modifiableFactors as string[] | undefined;
+    if (modFactors?.length) {
+      y = sectionTitle(doc, 'Puedes Actuar Sobre', y);
+      y = bulletList(doc, modFactors, y);
+    }
+
+    const nonModFactors = raw.nonModifiableFactors as string[] | undefined;
+    if (nonModFactors?.length) {
+      y = ensureSpace(doc, y, 20);
+      y = sectionTitle(doc, 'Factores No Modificables', y + 2);
+      y = bulletList(doc, nonModFactors, y);
+    }
+
+    if (raw.structuralCareNeeded) {
+      y = ensureSpace(doc, y, 20);
+      y = sectionTitle(doc, 'Cuidado Estructural', y + 2);
+      y = bodyText(doc, 'Tu pelo canoso necesita hidratación lipídica activa (ceramidas, 18-MEA, aceites ligeros) y protección UV.', y);
+    }
+
+    const recs = raw.recommendations as Array<{ action: string; rationale: string; priority: string }> | undefined;
+    if (recs?.length) {
+      y = ensureSpace(doc, y, 20);
+      y = sectionTitle(doc, 'Recomendaciones', y + 2);
+      y = bulletList(doc, recs.map((r) => `[${r.priority}] ${r.action} — ${r.rationale}`), y);
+    }
+
+    if (typeof raw.realisticExpectations === 'string' && y < 260) {
+      y = ensureSpace(doc, y, 15);
+      y = sectionTitle(doc, 'Expectativa Realista', y + 2);
+      y = bodyText(doc, `"${raw.realisticExpectations}"`, y);
+    }
+  }
+
+  // ═══ PAGE 4: Alopecia detail ═══
+  if (alopecia?.rawResult) {
+    doc.addPage();
+    const raw = alopecia.rawResult as Record<string, unknown>;
+
+    doc.setFontSize(9);
+    doc.setTextColor(...GRAY);
+    doc.text('GuiaDelSalon.com · Informe Completo', 105, 12, { align: 'center' });
+    doc.setFontSize(18);
+    doc.setTextColor(...ESPRESSO);
+    doc.text('3. Análisis de Alopecia', 105, 24, { align: 'center' });
+    doc.setDrawColor(...GOLD);
+    doc.setLineWidth(0.5);
+    doc.line(20, 28, 190, 28);
+
+    y = 38;
+
+    const riskScore = typeof raw.riskScore === 'number' ? raw.riskScore : (alopecia.score ?? 0);
+    const riskLevel = typeof raw.riskLevel === 'string' ? raw.riskLevel : '';
+    const riskType = typeof raw.riskType === 'string' ? raw.riskType : '';
+
+    doc.setFontSize(28);
+    doc.setTextColor(...riskColor(riskScore));
+    doc.text(`Riesgo: ${riskScore}/100`, 105, y, { align: 'center' });
+    doc.setFontSize(9);
+    doc.setTextColor(...GRAY);
+    doc.text(`Nivel: ${riskLevel} · Tipo: ${riskType}`, 105, y + 7, { align: 'center' });
+
+    y += 16;
+
+    if (typeof raw.recommendedAction === 'string') {
+      y = sectionTitle(doc, 'Acción Recomendada', y);
+      y = bodyText(doc, raw.recommendedAction, y);
+    }
+
+    if (typeof raw.estimatedProgression === 'string') {
+      y = sectionTitle(doc, 'Progresión Estimada', y + 2);
+      y = bodyText(doc, raw.estimatedProgression, y);
+    }
+
+    const modF = raw.modifiableFactors as string[] | undefined;
+    if (modF?.length) {
+      y = ensureSpace(doc, y, 15);
+      y = sectionTitle(doc, 'Factores Modificables', y + 2);
+      y = bulletList(doc, modF, y);
+    }
+
+    const nonModF = raw.nonModifiableFactors as string[] | undefined;
+    if (nonModF?.length) {
+      y = ensureSpace(doc, y, 15);
+      y = sectionTitle(doc, 'Factores No Modificables', y + 2);
+      y = bulletList(doc, nonModF, y);
+    }
+
+    const evidenceOpts = raw.evidenceOptions as Array<{ name: string; realistic_expectation: string }> | undefined;
+    if (evidenceOpts?.length) {
+      y = ensureSpace(doc, y, 15);
+      y = sectionTitle(doc, 'Opciones con Respaldo Científico', y + 2);
+      y = bulletList(doc, evidenceOpts.map((o) => `${o.name}: ${o.realistic_expectation}`), y);
+    }
+
+    const myths = raw.mythAlerts as string[] | undefined;
+    if (myths?.length && y < 250) {
+      y = ensureSpace(doc, y, 15);
+      y = sectionTitle(doc, 'Alertas sobre Mitos', y + 2);
+      y = bulletList(doc, myths, y);
+    }
+
+    if (typeof raw.realisticExpectations === 'string') {
+      y = ensureSpace(doc, y, 15);
+      y = sectionTitle(doc, 'Expectativa Realista', y + 2);
+      y = bodyText(doc, `"${raw.realisticExpectations}"`, y);
+    }
+  }
+
+  // Footer on all pages
+  multiPageFooter(doc);
+
+  doc.save('diagnostico-completo-guiadelsalon.pdf');
 }
 
 // ── Master Color Card PDF ────────────────────────────────────────────────────

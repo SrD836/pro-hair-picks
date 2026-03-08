@@ -104,6 +104,34 @@ export default function MiPeloPage() {
           ))}
         </div>
 
+        {/* ── DIAGNÓSTICO COMPLETO CARD ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-4"
+        >
+          <Link
+            to="/mi-pelo/diagnostico-completo"
+            className="block bg-gradient-to-r from-espresso to-[#3a2d1e] rounded-2xl p-6 md:p-8 border-2 border-gold relative overflow-hidden hover:border-gold/80 transition-all group"
+          >
+            <div className="absolute top-4 right-4 bg-gold text-espresso text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+              Diagnóstico Completo
+            </div>
+            <div className="max-w-lg">
+              <h3 className="text-cream font-display font-bold text-2xl italic mb-2 group-hover:text-gold transition-colors">
+                Informe Capilar 360°
+              </h3>
+              <p className="text-cream/60 text-sm mb-5 leading-relaxed">
+                Análisis completo de salud capilar, canicie y alopecia en un solo informe. El diagnóstico más completo de GuiaDelSalon.
+              </p>
+              <p className="text-gold text-xs font-bold uppercase tracking-wider">
+                ~15 min · 3 diagnósticos · 1 informe completo →
+              </p>
+            </div>
+          </Link>
+        </motion.div>
+
       </div>
 
       {/* Auth / History */}
