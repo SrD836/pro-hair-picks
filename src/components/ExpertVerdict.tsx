@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Quote, ExternalLink } from "lucide-react";
+import { Quote, ExternalLink, BookOpen, ChevronDown } from "lucide-react";
 
 // ─── Sources (APA 7th ed.) — static trusted content ──────────────────────────
 
