@@ -25,8 +25,8 @@ export default function CanicieAnalyzerPage() {
   const { isWizardMode, completeWizardModule } = useWizardReturn('analizador-canicie');
   const [started, setStarted] = useState(false);
 
-  const handleWizardComplete = (summary: string, score?: number) => {
-    completeWizardModule({ summary, score, rawResult: { summary } });
+  const handleWizardComplete = (summary: string, score?: number, rawData?: Record<string, unknown>) => {
+    completeWizardModule({ summary, score, rawResult: rawData ?? { summary } });
   };
 
   return (

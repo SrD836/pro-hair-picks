@@ -1505,7 +1505,7 @@ function RiskReport({
 type MainView = "library" | "form" | "report";
 
 interface AlopeciaAnalyzerProps {
-  wizardContinue?: (summary: string, score?: number) => void;
+  wizardContinue?: (summary: string, score?: number, rawData?: Record<string, unknown>) => void;
 }
 
 export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerProps = {}) {
@@ -1682,7 +1682,19 @@ export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerPro
                 <button
                   onClick={() => wizardContinue(
                     `Riesgo ${report.risk_level} — ${report.risk_score}/100`,
-                    report.risk_score
+                    report.risk_score,
+                    {
+                      riskLevel: report.risk_level,
+                      riskScore: report.risk_score,
+                      riskType: report.risk_type,
+                      estimatedProgression: report.estimated_progression,
+                      modifiableFactors: report.modifiable_factors,
+                      nonModifiableFactors: report.non_modifiable_factors,
+                      recommendedAction: report.recommended_action,
+                      evidenceOptions: report.evidence_based_options.map(o => ({ name: o.name, realistic_expectation: o.realistic_expectation })),
+                      realisticExpectations: report.realistic_expectations,
+                      mythAlerts: report.myth_alerts,
+                    }
                   )}
                   className="px-8 py-4 bg-accent-orange text-white font-bold uppercase tracking-widest rounded-xl hover:bg-accent-orange-hover transition-colors text-sm flex items-center gap-2"
                 >
