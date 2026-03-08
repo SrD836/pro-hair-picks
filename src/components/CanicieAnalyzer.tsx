@@ -767,9 +767,11 @@ const PRIORITY_COLORS = {
 function DiagnosticReport({
   report,
   onReset,
+  hideDownload,
 }: {
   report: CanicieReport;
   onReset: () => void;
+  hideDownload?: boolean;
 }) {
   return (
     <motion.div
