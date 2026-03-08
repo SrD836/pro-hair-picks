@@ -573,17 +573,6 @@ export default function ColorMatchPage() {
               ) : null;
             })()}
 
-            {/* CTA Cizura */}
-            <div className="mt-6 bg-espresso rounded-3xl p-6 flex flex-col md:flex-row items-center gap-4">
-              <div className="flex-1">
-                <p className="text-gold text-xs font-bold uppercase tracking-widest mb-1">Para profesionales</p>
-                <p className="text-cream font-bold text-lg leading-snug">¿Eres estilista? Gestiona citas, fichas de color y historial de clientes.</p>
-                <p className="text-cream/50 text-sm mt-1">Cizura — software de salón español, sin comisiones</p>
-              </div>
-              <Link to="/gestion-peluqueria" className="whitespace-nowrap bg-gold text-espresso px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-wide hover:bg-gold-light transition-colors">
-                Ver Cizura →
-              </Link>
-            </div>
 
             {/* Disclaimer */}
             <p className="text-espresso/30 text-xs text-center mt-6">

@@ -88,21 +88,6 @@ export default function MiPeloPage() {
           ))}
         </div>
 
-        {/* CTA Cizura */}
-        <div className="max-w-5xl mx-auto mt-8 bg-espresso-dark rounded-2xl p-8 flex flex-col md:flex-row items-center gap-6 border border-cocoa">
-          <div className="flex-1">
-            <p className="text-gold text-xs font-bold uppercase tracking-widest mb-2">Para profesionales</p>
-            <p className="text-cream text-xl font-bold leading-snug">
-              Estos diagnósticos tardan minutos. Cizura te ahorra horas de gestión cada semana.
-            </p>
-            <p className="text-cream/40 text-sm mt-1">Software de salón español — sin comisiones ocultas</p>
-          </div>
-          <Link to="/gestion-peluqueria"
-            className="whitespace-nowrap bg-gold text-espresso px-8 py-4 rounded-xl font-bold uppercase tracking-wide hover:bg-gold-light transition-colors"
-          >
-            Conocer Cizura →
-          </Link>
-        </div>
       </div>
 
       {/* Auth / History */}
