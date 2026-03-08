@@ -684,7 +684,7 @@ export default function InciChecker() {
               <button
                 onClick={handleScan}
                 disabled={isScanning || scanInput.trim().length < 3}
-                className="w-full py-3 rounded-xl font-semibold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-full mt-4 py-3 rounded-xl font-semibold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{ background: "#2D2218", color: "#F5F0E8" }}
               >
                 {isScanning ? (
