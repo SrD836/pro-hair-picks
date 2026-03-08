@@ -295,6 +295,20 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { t, lang } = useLanguage();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const scheduleClose = useCallback(() => {
+    closeTimer.current = setTimeout(() => setOpenDropdown(null), 150);
+  }, []);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
+
+  useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
