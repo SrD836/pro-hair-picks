@@ -154,7 +154,7 @@ function HairToolsDropdown({ isOpen, onToggle, onClose, onEnter }: {
   ];
 
   return (
-    <div className="relative" onMouseLeave={onClose}>
+    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onClose}>
       <button
         onMouseEnter={() => !isOpen && onToggle()}
         onClick={onToggle}
