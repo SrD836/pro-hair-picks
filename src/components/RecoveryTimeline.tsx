@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { generateRecoveryPDF } from "@/lib/pdfGenerators";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
