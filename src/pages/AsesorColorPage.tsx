@@ -2,8 +2,9 @@
 // Diseño: Google AI Studio — Expert Color Matcher wizard
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Palette, X, ArrowRight, ArrowLeft, CheckCircle2, Check, AlertTriangle, Download, ShieldCheck, Sparkles } from 'lucide-react';
+import { useWizardReturn } from '@/hooks/useWizardReturn';
 
 const STEPS = [
   { id: 1, title: 'Tono de piel' },
