@@ -501,12 +501,10 @@ function brandedPage(doc: jsPDF, opts: {
 
   let y = 18;
   if (opts.badge) {
-    // Badge pill
-    doc.setFillColor(GOLD[0], GOLD[1], GOLD[2]);
-    doc.setGState(new (doc as any).GState({ opacity: 0.15 }));
+    // Badge pill (light gold tint)
+    doc.setFillColor(220, 210, 195);
     const bw = doc.setFontSize(7).getTextWidth(opts.badge) + 14;
     doc.roundedRect(pw / 2 - bw / 2, y - 4, bw, 8, 4, 4, 'F');
-    doc.setGState(new (doc as any).GState({ opacity: 1 }));
     doc.setFontSize(7);
     doc.setTextColor(...GOLD);
     doc.text(opts.badge, pw / 2, y + 1, { align: 'center' });
