@@ -572,10 +572,10 @@ function drawScoreCircle(
   }
   // Number
   doc.setFontSize(22);
-  doc.setTextColor(...ESPRESSO);
+  doc.setTextColor(...CREAM);
   doc.text(`${score}`, cx, cy + 3, { align: 'center' });
   doc.setFontSize(7);
-  doc.setTextColor(140, 135, 125);
+  doc.setTextColor(...GOLD);
   doc.text(`/ ${max}`, cx, cy + 9, { align: 'center' });
 }
 
