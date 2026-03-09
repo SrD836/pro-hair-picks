@@ -31,7 +31,7 @@ function getSessionId() {
 
 const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const isEN = lang === "en";
   const queryClient = useQueryClient();
   const sessionId = getSessionId();
@@ -73,7 +73,7 @@ const BlogPostPage = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("blog_posts")
-        .select("id, slug, title, cover_image_url, read_time_minutes, published_at")
+        .select("id, slug, title, title_en, cover_image_url, read_time_minutes, published_at")
         .eq("is_published", true)
         .eq("category", post!.category!)
         .neq("id", post!.id)
@@ -114,7 +114,7 @@ const BlogPostPage = () => {
       if (keywords.length > 0) {
         const { data } = await supabase
           .from("blog_posts")
-          .select("id, title, slug, excerpt, published_at")
+          .select("id, title, title_en, slug, excerpt, excerpt_en, published_at")
           .eq("is_published", true)
           .overlaps("keywords", keywords)
           .neq("id", post!.id)
@@ -125,7 +125,7 @@ const BlogPostPage = () => {
       if (post!.category) {
         const { data } = await supabase
           .from("blog_posts")
-          .select("id, title, slug, excerpt, published_at")
+          .select("id, title, title_en, slug, excerpt, excerpt_en, published_at")
           .eq("is_published", true)
           .eq("category", post!.category)
           .neq("id", post!.id)
@@ -135,7 +135,7 @@ const BlogPostPage = () => {
       }
       const { data: fallback } = await supabase
         .from("blog_posts")
-        .select("id, title, slug, excerpt, published_at")
+        .select("id, title, title_en, slug, excerpt, excerpt_en, published_at")
         .eq("is_published", true)
         .neq("id", post!.id)
         .order("published_at", { ascending: false })
@@ -148,13 +148,11 @@ const BlogPostPage = () => {
   /* Vote mutation */
   const voteMutation = useMutation({
     mutationFn: async (reaction: "like" | "dislike") => {
-      // Insert reaction
       await supabase.from("blog_reactions").insert({
         post_id: post!.id,
         session_id: sessionId,
         reaction,
       });
-      // Update counter on blog_posts
       const field = reaction === "like" ? "likes" : "dislikes";
       const current = post![field] ?? 0;
       await supabase
@@ -165,7 +163,7 @@ const BlogPostPage = () => {
     onSuccess: (_, reaction) => {
       setVoted(reaction);
       queryClient.invalidateQueries({ queryKey: ["blog-post", slug] });
-      toast({ title: "¡Gracias por tu voto!" });
+      toast({ title: t("blog.thankVote") });
     },
   });
 
@@ -179,7 +177,7 @@ const BlogPostPage = () => {
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
-    toast({ title: "Enlace copiado" });
+    toast({ title: t("blog.linkCopied") });
   };
 
   const shareTwitter = () => {
@@ -190,12 +188,14 @@ const BlogPostPage = () => {
     window.open(`https://wa.me/?text=${encodeURIComponent(post?.title + " " + window.location.href)}`, "_blank");
   };
 
-  if (isLoading) return <div className="container mx-auto px-4 py-20"><ScissorsSpinner /></div>;
-   if (!post) return <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Post no encontrado</div>;
+  const dateLang = isEN ? "en-US" : "es-ES";
 
-   const localTitle = (isEN && post.title_en) || post.title;
-   const localExcerpt = (isEN && post.excerpt_en) || post.excerpt;
-   const localContent = (isEN && post.content_en) || post.content;
+  if (isLoading) return <div className="container mx-auto px-4 py-20"><ScissorsSpinner /></div>;
+  if (!post) return <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">{t("blog.notFound")}</div>;
+
+  const localTitle = (isEN && post.title_en) || post.title;
+  const localExcerpt = (isEN && post.excerpt_en) || post.excerpt;
+  const localContent = (isEN && post.content_en) || post.content;
 
   return (
     <article className="min-h-screen bg-background">
@@ -215,25 +215,25 @@ const BlogPostPage = () => {
       </Helmet>
       {/* Hero */}
       <div className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={post.cover_image_url || FALLBACK_IMAGE} alt={post.title} className="w-full h-full object-cover" loading="eager" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 max-w-4xl mx-auto">
-            {post.category && <Badge variant="secondary" className="mb-3">{post.category}</Badge>}
-            <h1 className="font-display text-3xl md:text-5xl text-foreground leading-tight">{localTitle}</h1>
-            <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
-              {post.read_time_minutes && (
-                <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {post.read_time_minutes} min lectura</span>
-              )}
-              {post.published_at && (
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  {new Date(post.published_at).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}
-                </span>
-              )}
-              {post.author && <span>Por {post.author}</span>}
-            </div>
+        <img src={post.cover_image_url || FALLBACK_IMAGE} alt={post.title} className="w-full h-full object-cover" loading="eager" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 max-w-4xl mx-auto">
+          {post.category && <Badge variant="secondary" className="mb-3">{(isEN && (post as any).category_en) || post.category}</Badge>}
+          <h1 className="font-display text-3xl md:text-5xl text-foreground leading-tight">{localTitle}</h1>
+          <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
+            {post.read_time_minutes && (
+              <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {post.read_time_minutes} {t("blog.minRead")}</span>
+            )}
+            {post.published_at && (
+              <span className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                {new Date(post.published_at).toLocaleDateString(dateLang, { day: "numeric", month: "long", year: "numeric" })}
+              </span>
+            )}
+            {post.author && <span>{t("blog.byAuthor")} {post.author}</span>}
           </div>
         </div>
+      </div>
 
       {/* Content + sidebar */}
       <div className="container mx-auto px-4 py-10">
@@ -242,12 +242,11 @@ const BlogPostPage = () => {
           <div className="flex-1 max-w-[720px] mx-auto lg:mx-0">
             <Breadcrumb
               items={[
-                { label: "Inicio", href: "/" },
+                { label: t("blog.breadcrumbHome"), href: "/" },
                 { label: "Blog", href: "/blog" },
                 { label: post.title.length > 40 ? post.title.slice(0, 40) + "…" : post.title },
               ]}
             />
-
 
             {/* Article body */}
             <div
@@ -277,9 +276,9 @@ const BlogPostPage = () => {
 
             {/* Share buttons */}
             <div className="flex items-center gap-3 mt-10 pt-6 border-t border-border">
-              <span className="text-sm text-muted-foreground mr-2">Compartir:</span>
+              <span className="text-sm text-muted-foreground mr-2">{t("blog.share")}</span>
               <Button variant="outline" size="sm" onClick={copyLink} className="gap-1.5">
-                <Link2 className="w-4 h-4" /> Copiar link
+                <Link2 className="w-4 h-4" /> {t("blog.copyLink")}
               </Button>
               <Button variant="outline" size="sm" onClick={shareTwitter} className="gap-1.5">
                 𝕏
@@ -291,7 +290,7 @@ const BlogPostPage = () => {
 
             {/* Likes/Dislikes */}
             <div className="mt-8 p-6 bg-card rounded-xl border border-border text-center">
-              <p className="text-foreground font-display text-lg mb-4">¿Te ha sido útil este artículo?</p>
+              <p className="text-foreground font-display text-lg mb-4">{t("blog.useful")}</p>
               <div className="flex justify-center gap-4">
                 <motion.button
                   whileTap={{ scale: 1.3 }}
@@ -320,16 +319,16 @@ const BlogPostPage = () => {
               </div>
             </div>
 
-            {/* Section A: Productos relacionados */}
+            {/* Section A: Related products */}
             {relatedProducts.length > 0 && (
               <div className="mt-12 border-t border-border pt-8">
-                <h2 className="font-display text-xl font-bold text-[#2D2218] mb-6">Productos relacionados</h2>
+                <h2 className="font-display text-xl font-bold text-secondary mb-6">{t("blog.relatedProducts")}</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {relatedProducts.map((product) => (
                     <Link
                       key={product.id}
                       to={`/productos/${product.slug ?? toProductSlug(product.name)}`}
-                      className="group flex flex-col rounded-lg border border-border bg-card overflow-hidden hover:border-[#C4A97D]/50 transition-colors"
+                      className="group flex flex-col rounded-lg border border-border bg-card overflow-hidden hover:border-secondary/50 transition-colors"
                     >
                       {product.image_url ? (
                         <img
@@ -342,12 +341,12 @@ const BlogPostPage = () => {
                         <div className="w-full h-28 bg-muted rounded-t-lg" />
                       )}
                       <div className="p-3 flex flex-col gap-1">
-                        <span className="text-xs font-semibold text-[#2D2218] line-clamp-2 group-hover:text-[#C4A97D] transition-colors">
+                        <span className="text-xs font-semibold text-foreground line-clamp-2 group-hover:text-secondary transition-colors">
                           {product.name}
                         </span>
                         {product.amazon_rating != null && (
                           <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Star className="w-3 h-3 fill-[#C4A97D] text-[#C4A97D]" />
+                            <Star className="w-3 h-3 fill-secondary text-secondary" />
                             {product.amazon_rating.toFixed(1)}
                           </span>
                         )}
@@ -358,23 +357,23 @@ const BlogPostPage = () => {
               </div>
             )}
 
-            {/* Section B: Artículos relacionados */}
+            {/* Section B: Related articles */}
             {relatedArticles.length > 0 && (
               <div className="mt-12 border-t border-border pt-8">
-                <h2 className="font-display text-xl font-bold text-[#2D2218] mb-6">Artículos relacionados</h2>
+                <h2 className="font-display text-xl font-bold text-secondary mb-6">{t("blog.relatedArticles")}</h2>
                 <ul className="space-y-4">
-                  {relatedArticles.map((article) => (
+                  {relatedArticles.map((article: any) => (
                     <li key={article.id} className="group">
                       <Link
                         to={`/blog/${article.slug}`}
                         className="block hover:opacity-80 transition-opacity"
                       >
-                        <span className="font-semibold text-[#2D2218] group-hover:text-[#C4A97D] transition-colors text-sm">
-                          {article.title}
+                        <span className="font-semibold text-foreground group-hover:text-secondary transition-colors text-sm">
+                          {(isEN && article.title_en) || article.title}
                         </span>
-                        {article.excerpt && (
+                        {(article.excerpt || article.excerpt_en) && (
                           <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                            {article.excerpt.slice(0, 100)}{article.excerpt.length > 100 ? "…" : ""}
+                            {(() => { const ex = (isEN && article.excerpt_en) || article.excerpt || ""; return ex.slice(0, 100) + (ex.length > 100 ? "…" : ""); })()}
                           </p>
                         )}
                       </Link>
@@ -387,10 +386,10 @@ const BlogPostPage = () => {
             {/* Related (mobile) */}
             {related.length > 0 && (
               <div className="mt-12 lg:hidden">
-                <h3 className="font-display text-xl text-foreground mb-4">Artículos relacionados</h3>
+                <h3 className="font-display text-xl text-foreground mb-4">{t("blog.relatedArticles")}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {related.map((r) => (
-                    <RelatedCard key={r.id} post={r} />
+                  {related.map((r: any) => (
+                    <RelatedCard key={r.id} post={r} isEN={isEN} />
                   ))}
                 </div>
               </div>
@@ -401,10 +400,10 @@ const BlogPostPage = () => {
           {related.length > 0 && (
             <aside className="hidden lg:block w-72 shrink-0">
               <div className="sticky top-24">
-                <h3 className="font-display text-lg text-foreground mb-4">Relacionados</h3>
+                <h3 className="font-display text-lg text-foreground mb-4">{t("blog.related")}</h3>
                 <div className="space-y-4">
-                  {related.map((r) => (
-                    <RelatedCard key={r.id} post={r} />
+                  {related.map((r: any) => (
+                    <RelatedCard key={r.id} post={r} isEN={isEN} />
                   ))}
                 </div>
               </div>
@@ -416,15 +415,16 @@ const BlogPostPage = () => {
   );
 };
 
-function RelatedCard({ post }: { post: any }) {
+function RelatedCard({ post, isEN }: { post: any; isEN: boolean }) {
+  const localTitle = (isEN && post.title_en) || post.title;
   return (
     <Link
       to={`/blog/${post.slug}`}
       className="block bg-card border border-border rounded-lg overflow-hidden hover:border-secondary/40 transition-colors"
     >
-      <img src={post.cover_image_url || FALLBACK_IMAGE} alt={post.title} className="w-full h-32 object-cover" loading="lazy" />
+      <img src={post.cover_image_url || FALLBACK_IMAGE} alt={localTitle} className="w-full h-32 object-cover" loading="lazy" />
       <div className="p-3">
-        <h4 className="font-display text-sm text-foreground line-clamp-2">{post.title}</h4>
+        <h4 className="font-display text-sm text-foreground line-clamp-2">{localTitle}</h4>
         {post.read_time_minutes && (
           <span className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
             <Clock className="w-3 h-3" /> {post.read_time_minutes} min
