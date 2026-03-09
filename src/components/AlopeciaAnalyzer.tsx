@@ -1509,7 +1509,7 @@ interface AlopeciaAnalyzerProps {
 }
 
 export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerProps = {}) {
-  const [view, setView] = useState<MainView>("library");
+  const [view, setView] = useState<MainView>("form");
   const [report, setReport] = useState<AlopeciaReport | null>(null);
   const reportRef = useRef<HTMLDivElement>(null);
 
@@ -1593,8 +1593,8 @@ export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerPro
   };
 
   const navItems: { key: MainView; label: string }[] = [
-    { key: "library", label: "Biblioteca científica" },
     { key: "form", label: "Análisis personalizado" },
+    { key: "library", label: "Biblioteca científica" },
     ...(report ? [{ key: "report" as MainView, label: "Mi informe" }] : []),
   ];
 
