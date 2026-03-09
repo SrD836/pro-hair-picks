@@ -678,34 +678,34 @@ export type Database = {
       }
       diagnostico_completo: {
         Row: {
+          alopecia_data: Json | null
+          canicie_data: Json | null
+          capilar_data: Json | null
+          created_at: string | null
           id: string
+          overall_score: number | null
           user_id: string | null
           user_session_id: string | null
-          capilar_data: Json | null
-          canicie_data: Json | null
-          alopecia_data: Json | null
-          overall_score: number | null
-          created_at: string
         }
         Insert: {
+          alopecia_data?: Json | null
+          canicie_data?: Json | null
+          capilar_data?: Json | null
+          created_at?: string | null
           id?: string
+          overall_score?: number | null
           user_id?: string | null
           user_session_id?: string | null
-          capilar_data?: Json | null
-          canicie_data?: Json | null
-          alopecia_data?: Json | null
-          overall_score?: number | null
-          created_at?: string
         }
         Update: {
+          alopecia_data?: Json | null
+          canicie_data?: Json | null
+          capilar_data?: Json | null
+          created_at?: string | null
           id?: string
+          overall_score?: number | null
           user_id?: string | null
           user_session_id?: string | null
-          capilar_data?: Json | null
-          canicie_data?: Json | null
-          alopecia_data?: Json | null
-          overall_score?: number | null
-          created_at?: string
         }
         Relationships: []
       }
@@ -723,6 +723,7 @@ export type Database = {
           risk_level: string
           scalp_score: number
           total_score: number
+          user_id: string | null
           user_session_id: string
         }
         Insert: {
@@ -738,6 +739,7 @@ export type Database = {
           risk_level: string
           scalp_score?: number
           total_score?: number
+          user_id?: string | null
           user_session_id: string
         }
         Update: {
@@ -753,6 +755,7 @@ export type Database = {
           risk_level?: string
           scalp_score?: number
           total_score?: number
+          user_id?: string | null
           user_session_id?: string
         }
         Relationships: []
@@ -1129,35 +1132,27 @@ export type Database = {
       }
       user_profiles: {
         Row: {
-          id: string
-          email: string | null
+          created_at: string | null
           display_name: string | null
-          created_at: string
-          updated_at: string
+          email: string | null
+          id: string
+          updated_at: string | null
         }
         Insert: {
-          id: string
-          email?: string | null
+          created_at?: string | null
           display_name?: string | null
-          created_at?: string
-          updated_at?: string
+          email?: string | null
+          id: string
+          updated_at?: string | null
         }
         Update: {
-          id?: string
-          email?: string | null
+          created_at?: string | null
           display_name?: string | null
-          created_at?: string
-          updated_at?: string
+          email?: string | null
+          id?: string
+          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
