@@ -1593,8 +1593,8 @@ export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerPro
   };
 
   const navItems: { key: MainView; label: string }[] = [
-    { key: "library", label: "Biblioteca científica" },
     { key: "form", label: "Análisis personalizado" },
+    { key: "library", label: "Biblioteca científica" },
     ...(report ? [{ key: "report" as MainView, label: "Mi informe" }] : []),
   ];
 

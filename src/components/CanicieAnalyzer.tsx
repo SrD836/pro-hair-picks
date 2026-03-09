@@ -1044,8 +1044,8 @@ export default function CanicieAnalyzer({ wizardContinue }: CanicieAnalyzerProps
   };
 
   const navItems: { key: MainView; label: string }[] = [
-    { key: "library", label: "Biblioteca científica" },
     { key: "form", label: "Diagnóstico personalizado" },
+    { key: "library", label: "Biblioteca científica" },
     ...(report ? [{ key: "report" as MainView, label: "Mi informe" }] : []),
   ];
 
