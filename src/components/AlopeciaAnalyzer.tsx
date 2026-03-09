@@ -1509,7 +1509,7 @@ interface AlopeciaAnalyzerProps {
 }
 
 export default function AlopeciaAnalyzer({ wizardContinue }: AlopeciaAnalyzerProps = {}) {
-  const [view, setView] = useState<MainView>("library");
+  const [view, setView] = useState<MainView>("form");
   const [report, setReport] = useState<AlopeciaReport | null>(null);
   const reportRef = useRef<HTMLDivElement>(null);
 
