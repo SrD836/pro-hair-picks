@@ -976,7 +976,7 @@ interface CanicieAnalyzerProps {
 }
 
 export default function CanicieAnalyzer({ wizardContinue }: CanicieAnalyzerProps = {}) {
-  const [view, setView] = useState<MainView>("library");
+  const [view, setView] = useState<MainView>("form");
   const [report, setReport] = useState<CanicieReport | null>(null);
 
   // Fetch factors
