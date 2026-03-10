@@ -35,6 +35,7 @@
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Content-Type = "text/html; charset=UTF-8"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
 
 [[headers]]
   for = "/"
@@ -116,6 +117,19 @@
     Content-Type = "application/xml; charset=UTF-8"
 
 # ── Redirects ─────────────────────────────────────────────────────────────────
+
+# 301: HTTP → HTTPS (fuerza conexión segura)
+[[redirects]]
+  from = "http://guiadelsalon.com/*"
+  to = "https://guiadelsalon.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.guiadelsalon.com/*"
+  to = "https://guiadelsalon.com/:splat"
+  status = 301
+  force = true
 
 # 301: /categoria/ → /categorias/ (corrección SEO legacy)
 [[redirects]]
