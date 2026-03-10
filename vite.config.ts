@@ -30,17 +30,19 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    minify: "esbuild",
     rollupOptions: {
       output: {
         // Hash de contenido para cache busting seguro con max-age=31536000
         assetFileNames: "assets/[name]-[hash][extname]",
         chunkFileNames: "assets/[name]-[hash].js",
         entryFileNames: "assets/[name]-[hash].js",
+        compact: true,
         manualChunks: {
           "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-ui": ["framer-motion", "lucide-react"],
           "vendor-supabase": ["@supabase/supabase-js"],
-          "vendor-motion": ["framer-motion"],   // separado para reducir reflows en main bundle
-          "vendor-charts": ["recharts"],         // solo se carga en páginas de analytics
+          "vendor-charts": ["recharts"],
           "vendor-query": ["@tanstack/react-query"],
         },
       },
