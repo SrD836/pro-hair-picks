@@ -75,7 +75,7 @@ const Hero = () => {
           </span>
         </motion.div>
 
-        {/* Title */}
+        {/* Title — keyword-rich H1 for SEO crawlers */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -84,9 +84,9 @@ const Hero = () => {
           style={{ fontSize: "clamp(2.6rem, 6vw, 4.2rem)" }}
         >
           {lang === "es" ? (
-            <>El catálogo que tu<br /><span style={{ color: "#C4A97D" }}>salón necesita</span></>
+            <>Equipamiento Profesional de<br /><span style={{ color: "#C4A97D" }}>Peluquería y Barbería</span></>
           ) : (
-            <>The catalog your<br /><span style={{ color: "#C4A97D" }}>salon needs</span></>
+            <>Professional Equipment for<br /><span style={{ color: "#C4A97D" }}>Salons & Barbershops</span></>
           )}
         </motion.h1>
 
@@ -95,9 +95,19 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.38 }}
-          className="text-[#F5F0E8]/65 text-sm md:text-base mb-9 leading-relaxed max-w-sm"
+          className="text-[#F5F0E8]/65 text-sm md:text-base mb-4 leading-relaxed max-w-sm"
         >
           {t("hero.subtitle")}
+        </motion.p>
+
+        {/* Body copy — boosts word count and keyword density for SEO; hidden on mobile to preserve hero layout */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.45 }}
+          className="hidden md:block text-[#F5F0E8]/45 text-xs leading-relaxed max-w-sm mb-9"
+        >
+          {t("hero.bodyCopy")}
         </motion.p>
 
         {/* Single CTA */}
@@ -105,6 +115,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
+          className="md:mt-0 mt-9"
         >
           <Link
             to="/categorias"

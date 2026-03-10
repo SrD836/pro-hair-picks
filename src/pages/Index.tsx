@@ -18,6 +18,15 @@ const websiteSchema = JSON.stringify({
   },
 });
 
+const organizationSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Guía del Salón",
+  url: "https://guiadelsalon.com",
+  logo: "https://guiadelsalon.com/logo.png",
+  sameAs: [],
+});
+
 const Index = () => {
   const { t } = useLanguage();
 
@@ -30,6 +39,7 @@ const Index = () => {
       />
       <Helmet>
         <script type="application/ld+json">{websiteSchema}</script>
+        <script type="application/ld+json">{organizationSchema}</script>
       </Helmet>
       <Hero />
       <PhotoSections />
