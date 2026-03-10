@@ -107,7 +107,11 @@ const PhotoSections = () => {
             className="group relative rounded-2xl overflow-hidden"
             style={{ minHeight: 380 }}
           >
-            <Link to={categories[0].href} className="block w-full h-full absolute inset-0">
+            <Link
+              to={categories[0].href}
+              className="block w-full h-full absolute inset-0"
+              aria-label={`${t("bento.explore")} ${t(categories[0].titleKey) || categories[0].defaultTitle}`}
+            >
               <picture>
                 <source srcSet={categories[0].image} type="image/webp" />
                 <img
@@ -171,7 +175,11 @@ const PhotoSections = () => {
                 className="group relative rounded-2xl overflow-hidden flex-1"
                 style={{ minHeight: 180 }}
               >
-                <Link to={cat.href} className="block w-full h-full absolute inset-0">
+                <Link
+                    to={cat.href}
+                    className="block w-full h-full absolute inset-0"
+                    aria-label={`${t("bento.explore")} ${t(cat.titleKey) || cat.defaultTitle}`}
+                  >
                   <picture>
                     <source srcSet={cat.image} type="image/webp" />
                     <img
@@ -227,6 +235,7 @@ const PhotoSections = () => {
           <Link
             to="/categorias"
             className="text-xs text-[#C4A97D] hover:text-[#F5F0E8] transition-colors flex items-center gap-1"
+            aria-label={lang === "es" ? "Ver todas las categorías de equipamiento" : "Browse all equipment categories"}
           >
             {lang === "es" ? "Ver todo" : "See all"} <ArrowRight className="w-3 h-3" />
           </Link>
@@ -269,6 +278,7 @@ const PhotoSections = () => {
                     to={href}
                     className="block rounded-2xl overflow-hidden group"
                     style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${accent}20` }}
+                    aria-label={product.name}
                   >
                     {/* Image */}
                     <div className="relative h-28 overflow-hidden bg-[#2d1f10]">

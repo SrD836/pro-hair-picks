@@ -77,6 +77,7 @@ const HomeBlogPreview = () => {
             to="/blog"
             className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold transition-all group"
             style={{ color: "#C4A97D" }}
+            aria-label={isEN ? "View all professional hairdressing blog articles" : "Ver todos los artículos del blog de peluquería"}
           >
             {t("blog.viewAll")}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -196,6 +197,7 @@ const HomeBlogPreview = () => {
               color: "#C4A97D",
               border: "1px solid rgba(196,169,125,0.25)",
             }}
+            aria-label={isEN ? "View all professional hairdressing blog articles" : "Ver todos los artículos del blog de peluquería"}
           >
             {t("blog.viewAll")} <ArrowRight className="w-4 h-4" />
           </Link>
