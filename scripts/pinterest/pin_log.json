@@ -125,6 +125,76 @@
       "pin_after": null,
       "pinterest_id": "1133218325009932706",
       "error": null
+    },
+    {
+      "timestamp": "2026-03-10T19:18:58.292Z",
+      "decision": "publicado",
+      "pin_before": {
+        "title": "Que es el Color Match Capilar y como elegir el tono perfecto",
+        "description": "Descubre como el analisis de color capilar profesional te ayuda a elegir el tinte ideal para tu cabello. Guia completa con tecnicas de coloristas expertos.",
+        "link": "https://guiadelsalon.com/color-match",
+        "board_id": "1133218393678035986",
+        "image_url": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&h=630&fit=crop"
+      },
+      "pin_after": null,
+      "pinterest_id": "1133218325010485506",
+      "error": null
+    },
+    {
+      "timestamp": "2026-03-10T19:45:20.361Z",
+      "decision": "publicado",
+      "pin_before": {
+        "title": "Cortes de cabello para hombres mayores de 50: cómo lucir elegante y moderno en 2026",
+        "description": "✂️ Cortes para hombres maduros: luce elegante y moderno en 2026. Para profesionales. → Guía completa en GuiaDelSalon.com",
+        "link": "https://guiadelsalon.com/blog/cortes-cabello-hombres-mayores-50-elegantes-modernos",
+        "board_id": "1133218393678035986",
+        "image_url": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&h=1800&fit=crop"
+      },
+      "pin_after": null,
+      "pinterest_id": "1133218325010486770",
+      "error": null
+    },
+    {
+      "timestamp": "2026-03-10T19:45:29.416Z",
+      "decision": "publicado",
+      "pin_before": {
+        "title": "Cuidado del cabello texturizado: técnicas que todo estilista debe dominar en 2026",
+        "description": "✂️ Cuidado del cabello texturizado en salones de EE.UU. → Guía completa en GuiaDelSalon.com",
+        "link": "https://guiadelsalon.com/blog/cuidado-cabello-texturizado-salones-eeuu-tecnicas-2026",
+        "board_id": "1133218393678035986",
+        "image_url": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&h=1800&fit=crop"
+      },
+      "pin_after": null,
+      "pinterest_id": "1133218325010486779",
+      "error": null
+    },
+    {
+      "timestamp": "2026-03-10T19:45:31.589Z",
+      "decision": "publicado",
+      "pin_before": {
+        "title": "Decoloración en cabello oscuro: productos y técnicas que menos dañan en 2026",
+        "description": "✂️🎨 Decoloración en cabello oscuro: productos y técnicas que menos dañan en 2026. → Guía completa en GuiaDelSalon.com",
+        "link": "https://guiadelsalon.com/blog/decoloracion-cabello-oscuro-productos-tecnicas-menos-danan-2026",
+        "board_id": "1133218393678035986",
+        "image_url": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&h=1800&fit=crop"
+      },
+      "pin_after": null,
+      "pinterest_id": "1133218325010486782",
+      "error": null
+    },
+    {
+      "timestamp": "2026-03-10T19:45:33.761Z",
+      "decision": "publicado",
+      "pin_before": {
+        "title": "Extensiones de cabello en 2026: tipos, duraciones y cuáles te dan mejor margen en el salón",
+        "description": "✂️ Extensiones 2026: tipos, duraciones y mejor margen en salón. Para estilistas. → Guía completa en GuiaDelSalon.com",
+        "link": "https://guiadelsalon.com/blog/extensiones-cabello-tipos-duraciones-margen-salon-2026",
+        "board_id": "1133218393678035986",
+        "image_url": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&h=1800&fit=crop"
+      },
+      "pin_after": null,
+      "pinterest_id": "1133218325010486786",
+      "error": null
     }
   ]
 }

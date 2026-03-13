@@ -83,9 +83,27 @@ function showPreview(pin, index, total) {
   console.log('| Descripcion: ' + pad(pin.description, W - 13) + ' |');
   console.log('| URL destino: ' + pad(pin.link, W - 13) + ' |');
   console.log('| Tablero:     ' + pad(pin.board_id, W - 13) + ' |');
-  console.log('| Imagen:      ' + pad(pin.image_url, W - 13) + ' |');
+  const imgDisplay = pin.image_source === 'local'
+    ? '[local] ' + (pin.image_file || '(sin archivo)')
+    : (pin.image_url || '(sin imagen)');
+  console.log('| Imagen:      ' + pad(imgDisplay, W - 13) + ' |');
   console.log('+-' + '-'.repeat(W) + '-+');
   console.log('');
+}
+
+// ── Imagen local → base64 ─────────────────────────────────────────────────
+const MIME_MAP = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', gif: 'image/gif' };
+const IMAGENES_DIR = path.join(__dirname, 'imagenes');
+
+function loadLocalImageAsBase64(filename) {
+  const filePath = path.join(IMAGENES_DIR, filename);
+  if (!fs.existsSync(filePath)) {
+    throw new Error('Imagen local no encontrada: ' + filePath);
+  }
+  const ext = path.extname(filename).toLowerCase().slice(1);
+  const contentType = MIME_MAP[ext] || 'image/jpeg';
+  const data = fs.readFileSync(filePath).toString('base64');
+  return { data, contentType };
 }
 
 // ── Publicar Pin via API v5 ────────────────────────────────────────────────
@@ -96,19 +114,37 @@ function publishPin(pin) {
       reject(new Error('El link debe apuntar a guiadelsalon.com: ' + pin.link));
       return;
     }
-    const body = JSON.stringify({
-      board_id:    pin.board_id,
-      title:       pin.title,
-      description: pin.description,
-      link:        pin.link,
-      media_source: {
+    let mediaSource;
+    if (pin.image_source === 'local') {
+      let imgData;
+      try {
+        imgData = loadLocalImageAsBase64(pin.image_file);
+      } catch (e) {
+        reject(e);
+        return;
+      }
+      mediaSource = {
+        source_type:  'image_base64',
+        data:         imgData.data,
+        content_type: imgData.contentType,
+      };
+    } else {
+      mediaSource = {
         source_type: 'image_url',
         url:         pin.image_url,
-      },
+      };
+    }
+
+    const body = JSON.stringify({
+      board_id:     pin.board_id,
+      title:        pin.title,
+      description:  pin.description,
+      link:         pin.link,
+      media_source: mediaSource,
     });
 
     const options = {
-      hostname: 'api.pinterest.com',
+      hostname: 'api-sandbox.pinterest.com',
       path:     '/v5/pins',
       method:   'POST',
       headers: {

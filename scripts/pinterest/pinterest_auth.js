@@ -151,7 +151,7 @@ function exchangeCodeForTokens(code) {
   }).toString();
 
   const options = {
-    hostname: 'api.pinterest.com',
+    hostname: 'api-sandbox.pinterest.com',
     path:     '/v5/oauth/token',
     method:   'POST',
     headers: {
