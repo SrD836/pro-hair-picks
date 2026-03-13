@@ -2,6 +2,13 @@
   publish = "dist"
   command  = "npm run build"
 
+# ── Edge Functions ────────────────────────────────────────────────────────────
+# Inyecta <link rel="canonical"> en el HTML estático antes de servirlo,
+# así Semrush y cualquier bot sin JS ven el canonical correcto por página.
+[[edge_functions]]
+  path = "/*"
+  function = "canonical"
+
 # ── Cache para assets con hash de Vite ───────────────────────────────────────
 [[headers]]
   for = "/assets/*"
